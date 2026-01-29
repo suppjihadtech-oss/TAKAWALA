@@ -9,9 +9,11 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-    <!-- Monitag Ad Network -->
-    <script src='//libtl.com/sdk.js' data-zone='10531082' data-sdk='show_10531082'></script>
+    
+    <!-- Firebase SDK (Full inline) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
@@ -222,14 +224,14 @@
         .status-success { color: #10b981; }
         .status-rejected { color: #ef4444; }
         
-        /* RECEIPT MODAL */
+        /* ✅ ENHANCED RECEIPT MODAL */
         .receipt-modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.85);
             z-index: 10000;
             display: flex;
             align-items: center;
@@ -244,17 +246,114 @@
         }
         
         .receipt-content {
-            background: white;
-            border-radius: 20px;
-            max-width: 400px;
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 25px;
+            max-width: 420px;
             width: 100%;
             overflow: hidden;
             animation: slideUp 0.4s ease;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
         @keyframes slideUp {
             from { transform: translateY(50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .receipt-header {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .receipt-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: moveGrid 20s linear infinite;
+        }
+        
+        @keyframes moveGrid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
+        }
+        
+        .receipt-body {
+            padding: 25px;
+        }
+        
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        
+        .receipt-row:last-child {
+            border-bottom: none;
+        }
+        
+        .receipt-label {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .receipt-value {
+            color: #1e293b;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+        
+        .receipt-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #059669;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f0fdf4;
+            border-radius: 15px;
+            border: 2px solid #dcfce7;
+        }
+        
+        .receipt-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        
+        .status-success-badge {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .status-pending-badge {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+        
+        .status-rejected-badge {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
         }
 
         /* COPY BUTTON */
@@ -353,6 +452,48 @@
             font-size: 12px;
             font-weight: bold;
         }
+        
+        /* ✅ HISTORY ITEM STYLES */
+        .history-item {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        /* ✅ MONITAG AD STYLES */
+        .monitag-ad {
+            width: 100%;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .ad-placeholder {
+            padding: 20px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        /* ✅ SIMPLE HISTORY LOADING */
+        .history-loading {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .history-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #94a3b8;
+        }
     </style>
 </head>
 <body class="bg-slate-50">
@@ -368,16 +509,20 @@
         <button id="notificationClose" class="notification-close">×</button>
     </div>
 
-    <!-- MONITAG AD BANNERS -->
-    <div id="monitagTopBanner" class="ad-container hidden">
-        <div class="ad-banner" id="topBannerAd"></div>
+    <!-- MONITAG INTERSTITIAL AD (HIDDEN INITIALLY) -->
+    <div id="monitagInterstitial" class="interstitial-ad hidden">
+        <div id="interstitialContent" class="text-center">
+            <h3 class="font-bold text-lg mb-3">অ্যাড দেখুন</h3>
+            <div class="monitag-ad">
+                <iframe src="https://otieu.com/4/10532823" style="width:100%;height:250px;border:none;border-radius:10px;"></iframe>
+            </div>
+            <div id="adTimer" class="mt-4 text-red-600 font-bold">১৫</div>
+            <button onclick="closeInterstitialAd()" class="mt-4 bg-slate-200 text-slate-800 px-6 py-2 rounded-lg font-bold">বন্ধ করুন</button>
+        </div>
     </div>
 
     <div id="authScreen" class="min-h-screen flex flex-col items-center justify-center p-6 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
-        <!-- ADD BANNER AT TOP -->
-        <div class="ad-container mb-6">
-            <div class="ad-banner" id="authTopAd"></div>
-        </div>
+        <!-- ADD BANNER AT TOP (REMOVED AS PER REQUEST) -->
         
         <div class="glass-card w-full max-w-md p-8 rounded-[35px] text-center animate__animated animate__fadeInUp">
             <img src="https://i.postimg.cc/GpZMXGKR/1769418328212-removebg-preview.png" class="w-32 mx-auto mb-2 drop-shadow-xl animate__animated animate__pulse animate__infinite">
@@ -404,17 +549,13 @@
                 <button id="btnRegAction" class="w-full bg-premium text-white font-bold py-4 rounded-2xl shadow-xl active:scale-95 transition">একাউন্ট খুলুন</button>
             </div>
             
-            <!-- ADD BANNER AT BOTTOM -->
-            <div class="ad-container mt-6">
-                <div class="ad-banner" id="authBottomAd"></div>
-            </div>
+            <!-- ADD BANNER AT BOTTOM (REMOVED AS PER REQUEST) -->
         </div>
     </div>
 
     <div id="mainApp" class="hidden pb-24 max-w-md mx-auto min-h-screen relative bg-white">
         
-        <!-- MONITAG AD AT TOP OF MAIN APP -->
-        <div id="mainAppTopAd" class="ad-container"></div>
+        <!-- MONITAG AD AT TOP OF MAIN APP (REMOVED AS PER REQUEST) -->
         
         <div id="homeScreen" class="animate__animated animate__fadeIn">
             <div class="bg-premium p-6 pt-8 rounded-b-[40px] text-white shadow-2xl relative overflow-hidden">
@@ -454,10 +595,7 @@
                 <marquee class="text-sm font-bold text-slate-600" id="noticeText">স্বাগতম টাকাওয়ালা অ্যাপে!</marquee>
             </div>
 
-            <!-- ADD BANNER IN HOME SCREEN -->
-            <div class="ad-container mx-5 mt-3">
-                <div class="ad-banner" id="homeMidAd"></div>
-            </div>
+            <!-- ADD BANNER IN HOME SCREEN (REMOVED AS PER REQUEST) -->
 
             <div class="p-5 grid grid-cols-4 gap-4 text-center mt-2">
                 <div onclick="window.showPage('taskScreen')" class="glass-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-24 active:scale-95 transition"><img src="https://i.postimg.cc/d1sXyCb6/clipboard.png" class="w-10 mb-2 drop-shadow-md"><span class="text-[11px] font-bold text-slate-700">টাস্ক</span></div>
@@ -470,10 +608,7 @@
                 <div onclick="window.showPage('moreScreen')" class="glass-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-24 active:scale-95 transition"><img src="https://i.postimg.cc/76SnZckK/more.png" class="w-10 mb-2 drop-shadow-md"><span class="text-[11px] font-bold text-slate-700">আরো</span></div>
             </div>
             
-            <!-- ADD BANNER AT BOTTOM OF HOME -->
-            <div class="ad-container mx-5 mt-4">
-                <div class="ad-banner" id="homeBottomAd"></div>
-            </div>
+            <!-- ADD BANNER AT BOTTOM OF HOME (REMOVED AS PER REQUEST) -->
         </div>
 
         <!-- TASK SCREEN -->
@@ -483,10 +618,7 @@
                 <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('টাস্ক')" class="w-8 cursor-pointer">
             </div>
             
-            <!-- ADD BANNER IN TASK SCREEN -->
-            <div class="ad-container mb-4">
-                <div class="ad-banner" id="taskTopAd"></div>
-            </div>
+            <!-- ADD BANNER IN TASK SCREEN (REMOVED AS PER REQUEST) -->
             
             <div class="flex bg-white p-1 rounded-2xl shadow-sm mb-6 border">
                 <button onclick="window.switchTaskTab('free')" id="tabFreeTask" class="flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow">ফ্রি টাস্ক</button>
@@ -501,10 +633,7 @@
                 </div>
             </div>
             
-            <!-- ADD BANNER AT BOTTOM OF TASKS -->
-            <div class="ad-container mt-4">
-                <div class="ad-banner" id="taskBottomAd"></div>
-            </div>
+            <!-- ADD BANNER AT BOTTOM OF TASKS (REMOVED AS PER REQUEST) -->
         </div>
 
         <!-- WALLET SCREEN -->
@@ -579,10 +708,7 @@
                 </div>
             </div>
             
-            <!-- ADD BANNER IN WALLET SCREEN -->
-            <div class="ad-container mt-4">
-                <div class="ad-banner" id="walletBottomAd"></div>
-            </div>
+            <!-- ADD BANNER IN WALLET SCREEN (REMOVED AS PER REQUEST) -->
         </div>
 
         <!-- RECHARGE SCREEN -->
@@ -613,20 +739,14 @@
                  <button onclick="window.submitRecharge()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg">রিচার্জ করুন</button>
             </div>
             
-            <!-- ADD BANNER IN RECHARGE SCREEN -->
-            <div class="ad-container mt-4">
-                <div class="ad-banner" id="rechargeBottomAd"></div>
-            </div>
+            <!-- ADD BANNER IN RECHARGE SCREEN (REMOVED AS PER REQUEST) -->
         </div>
         
         <!-- MORE SCREEN -->
         <div id="moreScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
              <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">অন্যান্য</h2></div>
              
-             <!-- ADD BANNER IN MORE SCREEN -->
-             <div class="ad-container mb-4">
-                <div class="ad-banner" id="moreTopAd"></div>
-            </div>
+             <!-- ADD BANNER IN MORE SCREEN (REMOVED AS PER REQUEST) -->
              
             <div class="grid grid-cols-3 gap-4 text-center">
                  <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('profileScreen')"><img src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">প্রোফাইল</p></div>
@@ -640,10 +760,7 @@
                  <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.openSupport()"><img src="https://i.postimg.cc/GhmX78Xw/comment.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">সাপোর্ট</p></div>
             </div>
             
-            <!-- ADD BANNER AT BOTTOM OF MORE SCREEN -->
-            <div class="ad-container mt-4">
-                <div class="ad-banner" id="moreBottomAd"></div>
-            </div>
+            <!-- ADD BANNER AT BOTTOM OF MORE SCREEN (REMOVED AS PER REQUEST) -->
              
              <button onclick="window.logout()" class="w-full mt-10 bg-red-100 text-red-600 py-3 rounded-xl font-bold">লগআউট</button>
         </div>
@@ -653,13 +770,54 @@
             <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">প্রোফাইল</h2></div>
             <div class="glass-card p-6 rounded-[25px] space-y-4">
                 <div class="text-center mb-6">
-                    <img src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-24 h-24 mx-auto rounded-full border-4 border-slate-100">
+                    <div class="relative inline-block">
+                        <img id="currentAvatar" src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-24 h-24 mx-auto rounded-full border-4 border-slate-100">
+                        <div class="absolute bottom-0 right-0 bg-green-500 text-white p-1 rounded-full cursor-pointer" onclick="window.showAvatarSelector()">
+                            <i class="ri-edit-line text-sm"></i>
+                        </div>
+                    </div>
                     <h3 class="text-xl font-bold mt-2" id="profNameDisplay">Guest</h3>
                 </div>
                 <div><label class="text-xs font-bold text-slate-500 ml-2">নাম</label><input type="text" id="profNameInput" class="w-full p-3 bg-white border rounded-xl font-bold"></div>
+                <div><label class="text-xs font-bold text-slate-500 ml-2">ঠিকানা</label><input type="text" id="profAddressInput" placeholder="আপনার ঠিকানা" class="w-full p-3 bg-white border rounded-xl font-bold"></div>
                 <div><label class="text-xs font-bold text-slate-500 ml-2">ফোন (ফিক্সড)</label><input type="text" id="profPhoneInput" disabled class="w-full p-3 bg-slate-100 border rounded-xl font-bold text-slate-500"></div>
                 <div><label class="text-xs font-bold text-slate-500 ml-2">ইমেইল</label><input type="email" id="profEmailInput" class="w-full p-3 bg-white border rounded-xl font-bold"></div>
                 <button onclick="window.updateProfile()" class="w-full bg-premium text-white py-3 rounded-xl font-bold shadow-lg">আপডেট করুন</button>
+                <button onclick="window.showChangePassword()" class="w-full bg-slate-100 text-slate-800 py-3 rounded-xl font-bold shadow-lg">পাসওয়ার্ড পরিবর্তন</button>
+            </div>
+        </div>
+
+        <!-- AVATAR SELECTOR MODAL -->
+        <div id="avatarModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-10000 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-6 max-w-md w-full">
+                <h3 class="text-xl font-bold mb-4 text-center">এভাটার সিলেক্ট করুন</h3>
+                <div class="grid grid-cols-4 gap-3">
+                    <div onclick="window.selectAvatar('https://img.icons8.com/fluency/96/user-male-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
+                        <img src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-16 h-16 mx-auto">
+                    </div>
+                    <div onclick="window.selectAvatar('https://img.icons8.com/color/96/user-male-circle--v1.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
+                        <img src="https://img.icons8.com/color/96/user-male-circle--v1.png" class="w-16 h-16 mx-auto">
+                    </div>
+                    <div onclick="window.selectAvatar('https://img.icons8.com/office/96/user-male-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
+                        <img src="https://img.icons8.com/office/96/user-male-circle.png" class="w-16 h-16 mx-auto">
+                    </div>
+                    <div onclick="window.selectAvatar('https://img.icons8.com/plasticine/96/user-male-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
+                        <img src="https://img.icons8.com/plasticine/96/user-male-circle.png" class="w-16 h-16 mx-auto">
+                    </div>
+                    <div onclick="window.selectAvatar('https://img.icons8.com/dusk/96/user-male-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
+                        <img src="https://img.icons8.com/dusk/96/user-male-circle.png" class="w-16 h-16 mx-auto">
+                    </div>
+                    <div onclick="window.selectAvatar('https://img.icons8.com/fluency/96/user-female-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
+                        <img src="https://img.icons8.com/fluency/96/user-female-circle.png" class="w-16 h-16 mx-auto">
+                    </div>
+                    <div onclick="window.selectAvatar('https://img.icons8.com/color/96/user-female-circle--v1.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
+                        <img src="https://img.icons8.com/color/96/user-female-circle--v1.png" class="w-16 h-16 mx-auto">
+                    </div>
+                    <div onclick="window.selectAvatar('https://img.icons8.com/office/96/user-female-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
+                        <img src="https://img.icons8.com/office/96/user-female-circle.png" class="w-16 h-16 mx-auto">
+                    </div>
+                </div>
+                <button onclick="window.closeAvatarModal()" class="w-full mt-4 bg-slate-100 text-slate-800 py-3 rounded-xl font-bold">বন্ধ করুন</button>
             </div>
         </div>
 
@@ -687,21 +845,12 @@
         <!-- MARKETING SCREEN -->
         <div id="marketingScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
             <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">মার্কেটিং</h2></div>
-            <div class="glass-card p-6 rounded-[25px]">
-                <h3 class="text-lg font-bold mb-4">বিশেষ অফার সমূহ</h3>
-                <div class="space-y-4">
-                    <div class="border-l-4 border-yellow-500 pl-4 py-2">
-                        <h4 class="font-bold text-slate-700">সপ্তাহান্তে বোনাস</h4>
-                        <p class="text-sm text-slate-600">প্রতি শুক্রবার অতিরিক্ত ২০% বোনাস পান</p>
-                    </div>
-                    <div class="border-l-4 border-green-500 pl-4 py-2">
-                        <h4 class="font-bold text-slate-700">রেফার ক্যাম্পেইন</h4>
-                        <p class="text-sm text-slate-600">১০ জন রেফার করলে ৳100 অতিরিক্ত বোনাস</p>
-                    </div>
-                    <div class="border-l-4 border-blue-500 pl-4 py-2">
-                        <h4 class="font-bold text-slate-700">VIP মেম্বারশিপ</h4>
-                        <p class="text-sm text-slate-600">VIP হন এবং ৫০% বেশি আয় করুন</p>
-                    </div>
+            <div class="glass-card p-6 rounded-[25px] text-center">
+                <img src="https://img.icons8.com/fluency/96/settings.png" class="w-20 mx-auto mb-4">
+                <h3 class="text-xl font-bold text-slate-800 mb-2">বর্তমানে কাজ চলতেছে</h3>
+                <p class="text-lg text-slate-600 mb-6">খুব শীঘ্রই এটা চালু হবে</p>
+                <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                    <p class="text-sm text-slate-700">আমাদের মার্কেটিং সেকশনটি খুব শীঘ্রই চালু হবে। এখানে বিশেষ অফার, বোনাস এবং প্রচারনা পাবেন।</p>
                 </div>
             </div>
         </div>
@@ -709,40 +858,55 @@
         <!-- QUIZ SCREEN -->
         <div id="quizScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
             <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">কুইজ</h2></div>
-            <div class="glass-card p-6 rounded-[25px] space-y-4">
-                <h3 class="text-lg font-bold text-center mb-4">প্রতিদিনের কুইজ</h3>
-                
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div onclick="window.selectQuizType('general')" class="bg-white p-3 rounded-2xl border cursor-pointer text-center">
-                        <img src="https://i.postimg.cc/mkNFY0L0/solution.png" class="w-12 mx-auto mb-2">
-                        <p class="text-xs font-bold">সাধারণ কুইজ</p>
-                        <p class="text-[10px] text-slate-500">+৳0.25</p>
-                    </div>
-                    <div onclick="window.selectQuizType('math')" class="bg-white p-3 rounded-2xl border cursor-pointer text-center">
-                        <img src="https://i.postimg.cc/Pqpp3Lfc/mathematics.png" class="w-12 mx-auto mb-2">
-                        <p class="text-xs font-bold">ম্যাথ কুইজ</p>
-                        <p class="text-[10px] text-slate-500">+৳0.25</p>
-                    </div>
-                    <div onclick="window.selectQuizType('science')" class="bg-white p-3 rounded-2xl border cursor-pointer text-center">
-                        <img src="https://i.postimg.cc/V6XSw3CN/scince.png" class="w-12 mx-auto mb-2">
-                        <p class="text-xs font-bold">বিজ্ঞান কুইজ</p>
-                        <p class="text-[10px] text-slate-500">+৳0.25</p>
-                    </div>
-                    <div onclick="window.selectQuizType('islamic')" class="bg-white p-3 rounded-2xl border cursor-pointer text-center">
-                        <img src="https://i.postimg.cc/QCbH91SW/rub-el-hizb.png" class="w-12 mx-auto mb-2">
-                        <p class="text-xs font-bold">ইসলামিক কুইজ</p>
-                        <p class="text-[10px] text-slate-500">+৳0.25</p>
+            
+            <div class="flex bg-white p-1 rounded-2xl shadow-sm mb-6 border">
+                <button onclick="window.switchQuizTab('types')" id="tabQuizTypes" class="flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow">কুইজ টাইপ</button>
+                <button onclick="window.switchQuizTab('questions')" id="tabQuizQuestions" class="flex-1 py-3 font-bold text-sm rounded-xl text-slate-500">কুইজ প্রশ্ন</button>
+            </div>
+
+            <div id="quizTypesSection">
+                <div class="glass-card p-6 rounded-[25px] space-y-4">
+                    <h3 class="text-lg font-bold text-center mb-4">কুইজের ধরন সিলেক্ট করুন</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div onclick="window.showQuizQuestions('general')" class="bg-white p-4 rounded-2xl border cursor-pointer text-center hover:border-green-500 transition">
+                            <img src="https://i.postimg.cc/mkNFY0L0/solution.png" class="w-12 mx-auto mb-2">
+                            <p class="text-xs font-bold">সাধারণ কুইজ</p>
+                            <p class="text-[10px] text-slate-500">+৳0.25</p>
+                        </div>
+                        <div onclick="window.showQuizQuestions('math')" class="bg-white p-4 rounded-2xl border cursor-pointer text-center hover:border-green-500 transition">
+                            <img src="https://i.postimg.cc/Pqpp3Lfc/mathematics.png" class="w-12 mx-auto mb-2">
+                            <p class="text-xs font-bold">ম্যাথ কুইজ</p>
+                            <p class="text-[10px] text-slate-500">+৳0.25</p>
+                        </div>
+                        <div onclick="window.showQuizQuestions('science')" class="bg-white p-4 rounded-2xl border cursor-pointer text-center hover:border-green-500 transition">
+                            <img src="https://i.postimg.cc/V6XSw3CN/scince.png" class="w-12 mx-auto mb-2">
+                            <p class="text-xs font-bold">বিজ্ঞান কুইজ</p>
+                            <p class="text-[10px] text-slate-500">+৳0.25</p>
+                        </div>
+                        <div onclick="window.showQuizQuestions('islamic')" class="bg-white p-4 rounded-2xl border cursor-pointer text-center hover:border-green-500 transition">
+                            <img src="https://i.postimg.cc/QCbH91SW/rub-el-hizb.png" class="w-12 mx-auto mb-2">
+                            <p class="text-xs font-bold">ইসলামিক কুইজ</p>
+                            <p class="text-[10px] text-slate-500">+৳0.25</p>
+                        </div>
                     </div>
                 </div>
-                
-                <div id="quizContent">
-                    <div class="text-center p-6">
-                        <img src="https://i.postimg.cc/Z5qXdsGw/Pngtree-brain-bulb-8791438.png" class="w-20 mx-auto mb-4">
-                        <p class="text-slate-600">কুইজের ধরন সিলেক্ট করুন</p>
+            </div>
+
+            <div id="quizQuestionsSection" class="hidden">
+                <div class="glass-card p-6 rounded-[25px] space-y-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <button onclick="window.switchQuizTab('types')" class="bg-slate-100 text-slate-800 px-3 py-1 rounded-lg font-bold text-sm">
+                            <i class="ri-arrow-left-line"></i> ফিরে যান
+                        </button>
+                        <h3 id="quizTypeTitle" class="text-lg font-bold">কুইজ</h3>
+                        <div class="quiz-timer" id="quizTimer">৩০</div>
                     </div>
-                </div>
-                
-                <div class="mt-6 text-center">
+                    
+                    <div id="quizQuestionsContainer">
+                        <!-- Questions will be loaded here -->
+                    </div>
+                    
                     <button onclick="window.submitQuiz()" id="submitQuizBtn" class="w-full bg-premium text-white py-3 rounded-xl font-bold shadow-lg hidden">সাবমিট করুন</button>
                 </div>
             </div>
@@ -767,8 +931,16 @@
                         <h3 class="text-xl font-bold text-red-800">৳ <span id="totalWithdraw">0.00</span></h3>
                     </div>
                     <div class="bg-purple-50 p-3 rounded-xl text-center">
-                        <p class="text-xs font-bold text-purple-700">মোট টাস্ক</p>
-                        <h3 class="text-xl font-bold text-purple-800"><span id="totalTasks">0</span></h3>
+                        <p class="text-xs font-bold text-purple-700">আজকের আয়</p>
+                        <h3 class="text-xl font-bold text-purple-800">৳ <span id="todayEarnings">0.00</span></h3>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-xl text-center">
+                        <p class="text-xs font-bold text-yellow-700">মোট টাস্ক</p>
+                        <h3 class="text-xl font-bold text-yellow-800"><span id="totalTasks">0</span></h3>
+                    </div>
+                    <div class="bg-pink-50 p-3 rounded-xl text-center">
+                        <p class="text-xs font-bold text-pink-700">রেফার সংখ্যা</p>
+                        <h3 class="text-xl font-bold text-pink-800"><span id="totalReferrals">0</span></h3>
                     </div>
                 </div>
                 <div class="mt-6">
@@ -776,7 +948,6 @@
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between"><span>জয়েন তারিখ:</span><span id="joinDate">-</span></div>
                         <div class="flex justify-between"><span>প্যাকেজ:</span><span id="summaryPlan">Free</span></div>
-                        <div class="flex justify-between"><span>রেফার সংখ্যা:</span><span id="totalReferrals">0</span></div>
                         <div class="flex justify-between"><span>সক্রিয় টাস্ক:</span><span id="activeTasks">0</span></div>
                         <div class="flex justify-between"><span>ডেইলি বোনাস:</span><span id="dailyBonusStatus">আজ নেওয়া হয়নি</span></div>
                     </div>
@@ -811,7 +982,7 @@
                 <div class="mt-6">
                     <h4 class="font-bold mb-2">প্রোফাইল সেটিংস</h4>
                     <button onclick="window.showPage('profileScreen')" class="w-full bg-slate-100 text-slate-800 py-2.5 rounded-lg font-bold text-sm mb-2">প্রোফাইল এডিট করুন</button>
-                    <button onclick="window.changePassword()" class="w-full bg-slate-100 text-slate-800 py-2.5 rounded-lg font-bold text-sm mb-2">পাসওয়ার্ড পরিবর্তন</button>
+                    <button onclick="window.showChangePassword()" class="w-full bg-slate-100 text-slate-800 py-2.5 rounded-lg font-bold text-sm mb-2">পাসওয়ার্ড পরিবর্তন</button>
                 </div>
                 
                 <div class="mt-6">
@@ -822,12 +993,22 @@
             </div>
         </div>
 
-        <!-- HISTORY SCREEN -->
+        <!-- ✅ SIMPLIFIED HISTORY SCREEN -->
         <div id="historyScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-             <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">হিস্ট্রি</h2></div>
-            <div id="historyListContainer" class="space-y-3">
-                <p class="text-center text-slate-400 mt-10">হিস্ট্রি লোড হচ্ছে...</p>
+            <div class="flex items-center gap-3 mb-6">
+                <button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md">
+                    <i class="ri-arrow-left-line text-xl"></i>
+                </button>
+                <h2 class="text-2xl font-bold text-slate-800">লেনদেন হিস্ট্রি</h2>
             </div>
+            
+            <!-- ADD BANNER IN HISTORY SCREEN (REMOVED AS PER REQUEST) -->
+            
+            <div id="historyListContainer" class="space-y-3">
+                <!-- History will be loaded here -->
+            </div>
+            
+            <!-- ADD BANNER AT BOTTOM (REMOVED AS PER REQUEST) -->
         </div>
         
         <!-- VIP SCREEN -->
@@ -938,7 +1119,7 @@
                         </div>
                     </div>
                     
-                    <button onclick="window.buyStars()" class="w-full bg-yellow-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-yellow-600">স্টার কিনুন</button>
+                    <button onclick="window.buyStars()" class="w-full bg-yellow-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-yellow-600">কিনুন</button>
                 </div>
             </div>
             
@@ -995,7 +1176,7 @@
                         </div>
                     </div>
                     
-                    <button onclick="window.buyTelegramPremium()" class="w-full bg-blue-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-blue-600">এখনই কিনুন</button>
+                    <button onclick="window.buyTelegramPremium()" class="w-full bg-blue-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-blue-600">কিনুন</button>
                 </div>
             </div>
         </div>
@@ -1030,29 +1211,28 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, onSnapshot, addDoc, serverTimestamp, query, where, orderBy, getDocs, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-        // CONFIG
-        const firebaseConfig = { 
-            apiKey: "AIzaSyCXo_oRLBE9Gr7JZ_Fp4rl2OAjCz_AJEBo", 
-            authDomain: "takawala-e8522.firebaseapp.com", 
-            projectId: "takawala-e8522", 
-            storageBucket: "takawala-e8522.firebasestorage.app", 
-            messagingSenderId: "900133484973", 
-            appId: "1:900133484973:web:00f8d9de7c970f505f8924", 
-            measurementId: "G-ZNZ1D35QLB" 
+    <script>
+        // ✅ FIREBASE CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyCXo_oRLBE9Gr7JZ_Fp4rl2OAjCz_AJEBo",
+            authDomain: "takawala-e8522.firebaseapp.com",
+            projectId: "takawala-e8522",
+            storageBucket: "takawala-e8522.firebasestorage.app",
+            messagingSenderId: "900133484973",
+            appId: "1:900133484973:web:00f8d9de7c970f505f8924",
+            measurementId: "G-ZNZ1D35QLB"
         };
-        const app = initializeApp(firebaseConfig); 
-        const auth = getAuth(app); 
-        const db = getFirestore(app);
+
+        // ✅ INITIALIZE FIREBASE
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
         
-        let currentUserData = null; 
-        let currentUserId = null; 
+        // ✅ GLOBAL VARIABLES
+        let currentUserData = null;
+        let currentUserId = null;
         let currentTaskType = 'free';
-        let selectedMethod = 'bKash'; 
+        let selectedMethod = 'bKash';
         let selectedOperator = 'GP';
         let selectedStarPackage = 0;
         let selectedTelegramPlan = null;
@@ -1062,28 +1242,37 @@
         let currentTaskInfo = null;
         let paymentNumbers = {};
         let systemSettings = {};
+        let currentHistoryFilter = 'all';
+        let todayEarnings = 0;
+        let selectedAvatar = 'https://img.icons8.com/fluency/96/user-male-circle.png';
+        let selectedAnswers = {};
 
-        // TELEGRAM BOT
-        const BOT_TOKEN = '8583588570:AAEKfRe3y_egMXA6n8WxiZA-z-sU4FEgE1M';
-        const CHAT_ID = '6454695072';
-
-        // ✅ FIXED NOTIFICATION SYSTEM - AUTO HIDE AFTER 2.5 SECONDS
+        // ✅ NOTIFICATION SYSTEM (FIXED - WORKING NOW)
         function showNotification(message, type = 'info') {
             const notification = document.getElementById('notificationMessage');
             const notificationText = document.getElementById('notificationText');
             const notificationClose = document.getElementById('notificationClose');
             
-            // Clear any existing notification timeout
             if(window.notificationTimeout) {
                 clearTimeout(window.notificationTimeout);
             }
             
-            notificationText.innerHTML = message;
+            // Clear previous classes
             notification.className = '';
+            
+            // Add new classes
             notification.classList.add(`notification-${type}`);
             notification.classList.remove('hidden');
             
-            // Set close button event
+            // Set text with icon
+            let icon = '';
+            if(type === 'success') icon = '✅ ';
+            else if(type === 'error') icon = '❌ ';
+            else if(type === 'info') icon = 'ℹ️ ';
+            
+            notificationText.innerHTML = icon + message;
+            
+            // Close button handler
             notificationClose.onclick = () => {
                 notification.classList.add('hidden');
                 if(window.notificationTimeout) {
@@ -1091,15 +1280,13 @@
                 }
             };
             
-            // ✅ Auto hide after 2.5 seconds (2500ms)
+            // Auto hide after 2.5 seconds
             window.notificationTimeout = setTimeout(() => {
-                if (!notification.classList.contains('hidden')) {
-                    notification.classList.add('hidden');
-                }
-            }, 2500); // 2.5 seconds
+                notification.classList.add('hidden');
+            }, 2500);
         }
 
-        // LOADING ANIMATION
+        // ✅ LOADING ANIMATION
         function showLoading() {
             document.getElementById('loadingOverlay').classList.remove('hidden');
         }
@@ -1108,7 +1295,36 @@
             document.getElementById('loadingOverlay').classList.add('hidden');
         }
 
-        // COPY TO CLIPBOARD
+        // ✅ MONITAG AD FUNCTIONS (UPDATED)
+        function showInterstitialAd() {
+            const interstitial = document.getElementById('monitagInterstitial');
+            interstitial.classList.remove('hidden');
+            
+            let timeLeft = 15;
+            const timerElement = document.getElementById('adTimer');
+            const adTimer = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                
+                if(timeLeft <= 0) {
+                    clearInterval(adTimer);
+                    closeInterstitialAd();
+                }
+            }, 1000);
+            
+            window.adTimer = adTimer;
+        }
+        
+        function closeInterstitialAd() {
+            const interstitial = document.getElementById('monitagInterstitial');
+            interstitial.classList.add('hidden');
+            
+            if(window.adTimer) {
+                clearInterval(window.adTimer);
+            }
+        }
+
+        // ✅ COPY TO CLIPBOARD
         window.copyToClipboard = (text) => {
             navigator.clipboard.writeText(text).then(() => {
                 showNotification('কপি করা হয়েছে!', 'success');
@@ -1117,33 +1333,13 @@
             });
         };
 
-        async function sendTelegramNotification(message) {
-            try {
-                const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: message,
-                        parse_mode: 'HTML'
-                    })
-                });
-                return await response.json();
-            } catch (e) {
-                console.error('Telegram notification failed:', e);
-            }
-        }
-
-        // LOAD SYSTEM SETTINGS AND PAYMENT NUMBERS
+        // ✅ LOAD SYSTEM SETTINGS
         async function loadSystemSettings() {
             try {
-                // Load payment numbers
-                const paymentDoc = await getDoc(doc(db, "settings", "payment_numbers"));
-                if(paymentDoc.exists()) {
+                const paymentDoc = await db.collection("settings").doc("payment_numbers").get();
+                if(paymentDoc.exists) {
                     paymentNumbers = paymentDoc.data();
                 } else {
-                    // Default payment numbers
                     paymentNumbers = {
                         bKash: "01340975230",
                         Nagad: "01836319726",
@@ -1153,15 +1349,14 @@
                     };
                 }
 
-                // Load system settings
-                const settingsDoc = await getDoc(doc(db, "settings", "system"));
-                if(settingsDoc.exists()) {
+                const settingsDoc = await db.collection("settings").doc("system").get();
+                if(settingsDoc.exists) {
                     systemSettings = settingsDoc.data();
                 } else {
                     systemSettings = {
                         noticeText: "স্বাগতম টাকাওয়ালা অ্যাপে!",
                         referralBonus: 5,
-                        taskWaitTime: 60, // seconds
+                        taskWaitTime: 60,
                         minWithdraw: 100,
                         maxWithdraw: 5000,
                         vatPercentage: 10,
@@ -1169,7 +1364,6 @@
                     };
                 }
 
-                // Update notice text
                 document.getElementById('noticeText').innerText = systemSettings.noticeText || "স্বাগতম টাকাওয়ালা অ্যাপে!";
                 
             } catch (error) {
@@ -1177,7 +1371,7 @@
             }
         }
 
-        // ✅ UPDATE DEPOSIT ADDRESS BASED ON SELECTED METHOD
+        // ✅ UPDATE DEPOSIT ADDRESS
         window.selectPayment = (el, method) => { 
             if(method === 'Rocket') {
                 showNotification('রকেট লেনদেন বন্ধ', 'error');
@@ -1189,7 +1383,6 @@
             selectedMethod = method;
             document.getElementById('selectedDepositMethod').value = method;
             
-            // ✅ Update deposit address based on selected method
             updateDepositAddress(method);
         };
         
@@ -1235,19 +1428,7 @@
             }
         }
 
-        window.selectWithdrawMethod = (el, method) => { 
-            if(method === 'Rocket') {
-                showNotification('রকেট লেনদেন বন্ধ', 'error');
-                return;
-            }
-            
-            document.querySelectorAll('#withdrawSection .grid .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
-            el.classList.add('border-green-500','bg-green-50'); 
-            selectedMethod = method;
-            document.getElementById('selectedWithdrawMethod').value = method;
-        };
-
-        // AUTH WITH REFERRAL SYSTEM
+        // ✅ AUTH FUNCTIONS
         document.getElementById('btnRegAction').addEventListener('click', async () => {
             const name = document.getElementById('regName').value, 
                   phone = document.getElementById('regPhone').value, 
@@ -1261,12 +1442,10 @@
             try {
                 showLoading();
                 showNotification('একাউন্ট তৈরি হচ্ছে...', 'info');
-                const uc = await createUserWithEmailAndPassword(auth, email, pass);
+                const uc = await auth.createUserWithEmailAndPassword(email, pass);
                 
-                // Generate unique referral code
                 const userReferralCode = 'REF' + Math.floor(100000 + Math.random() * 900000);
                 
-                // Prepare user data
                 const userData = { 
                     name, 
                     phone, 
@@ -1274,7 +1453,7 @@
                     mainBalance: 0, 
                     rechargeBalance: 0, 
                     plan: "Free Member", 
-                    createdAt: serverTimestamp(), 
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(), 
                     totalEarnings: 0, 
                     totalDeposit: 0, 
                     totalWithdraw: 0, 
@@ -1284,34 +1463,31 @@
                     stars: 0,
                     lastDailyBonus: null,
                     referralCode: userReferralCode,
-                    referredBy: referralCode || null
+                    referredBy: referralCode || null,
+                    avatar: selectedAvatar,
+                    address: '',
+                    todayEarnings: 0
                 };
                 
-                await setDoc(doc(db, "users", uc.user.uid), userData);
+                await db.collection("users").doc(uc.user.uid).set(userData);
                 
-                // Handle referral bonus if referral code is provided
                 if(referralCode) {
                     try {
-                        // Find user with this referral code
-                        const referralQuery = query(collection(db, "users"), where("referralCode", "==", referralCode));
-                        const referralSnapshot = await getDocs(referralQuery);
+                        const referralQuery = await db.collection("users").where("referralCode", "==", referralCode).get();
                         
-                        if(!referralSnapshot.empty) {
-                            const referrerDoc = referralSnapshot.docs[0];
+                        if(!referralQuery.empty) {
+                            const referrerDoc = referralQuery.docs[0];
                             const referrerId = referrerDoc.id;
-                            const referrerData = referrerDoc.data();
                             
-                            // Add bonus to referrer
                             const bonusAmount = systemSettings.referralBonus || 5;
-                            await updateDoc(doc(db, "users", referrerId), {
-                                mainBalance: increment(bonusAmount),
-                                totalEarnings: increment(bonusAmount),
-                                totalReferrals: increment(1),
-                                referralEarnings: increment(bonusAmount)
+                            await db.collection("users").doc(referrerId).update({
+                                mainBalance: firebase.firestore.FieldValue.increment(bonusAmount),
+                                totalEarnings: firebase.firestore.FieldValue.increment(bonusAmount),
+                                totalReferrals: firebase.firestore.FieldValue.increment(1),
+                                referralEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
                             });
                             
-                            // Add to referrer's history
-                            await addDoc(collection(db, "history"), {
+                            await db.collection("history").add({
                                 userId: referrerId,
                                 type: "রেফার বোনাস",
                                 amount: bonusAmount,
@@ -1319,26 +1495,17 @@
                                 details: `${name} দ্বারা রেফার করা হয়েছে`,
                                 date: new Date().toLocaleDateString('bn-BD'),
                                 time: new Date().toLocaleTimeString('bn-BD'),
-                                timestamp: serverTimestamp()
+                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
                             });
                             
-                            // Update current user's referred by info
-                            await updateDoc(doc(db, "users", uc.user.uid), {
+                            await db.collection("users").doc(uc.user.uid).update({
                                 referredBy: referralCode
                             });
-                            
-                            // Send notification to referrer
-                            const referrerMessage = `🎉 <b>নতুন রেফার!</b>\n\n👤 নাম: ${name}\n📞 ফোন: ${phone}\n💰 বোনাস: ৳${bonusAmount}\n📅 তারিখ: ${new Date().toLocaleDateString('bn-BD')}`;
-                            await sendTelegramNotification(referrerMessage);
                         }
                     } catch (referralError) {
                         console.error("Referral processing error:", referralError);
                     }
                 }
-                
-                // Send Telegram notification
-                const message = `📢 <b>নতুন ইউজার রেজিস্ট্রেশন</b>\n\n👤 নাম: ${name}\n📞 ফোন: ${phone}\n📧 ইমেইল: ${email}\n🆔 ইউজার আইডি: ${uc.user.uid}\n🔗 রেফার কোড: ${userReferralCode}\n⏰ সময়: ${new Date().toLocaleString()}`;
-                await sendTelegramNotification(message);
                 
                 showNotification('একাউন্ট তৈরি সফল! ডেইলি বোনাস নিন', 'success');
                 hideLoading();
@@ -1357,7 +1524,7 @@
             try { 
                 showLoading();
                 showNotification('লগইন হচ্ছে...', 'info'); 
-                await signInWithEmailAndPassword(auth, email, pass); 
+                await auth.signInWithEmailAndPassword(email, pass); 
                 showNotification('লগইন সফল!', 'success'); 
                 hideLoading();
             } catch (e) { 
@@ -1366,7 +1533,8 @@
             }
         });
 
-        onAuthStateChanged(auth, (user) => {
+        // ✅ AUTH STATE LISTENER
+        auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUserId = user.uid;
                 showLoading();
@@ -1375,16 +1543,13 @@
                     document.getElementById('mainApp').classList.remove('hidden'); 
                     document.getElementById('bottomNav').classList.remove('hidden');
                     
-                    // Load system settings first
                     await loadSystemSettings();
-                    
-                    // Then sync user data
                     syncUserData(user.uid); 
                     renderTasks();
                     loadSummary(user.uid);
                     checkDailyBonus(user.uid);
                     initDraggableChat();
-                    loadAds();
+                    loadTodayEarnings(user.uid);
                     hideLoading();
                 }, 2000);
             } else {
@@ -1394,10 +1559,11 @@
             }
         });
 
+        // ✅ SYNC USER DATA
         function syncUserData(uid) {
-            onSnapshot(doc(db, "users", uid), (d) => {
+            db.collection("users").doc(uid).onSnapshot((d) => {
                 const safe = (id, txt) => { if(document.getElementById(id)) document.getElementById(id).innerText = txt; }
-                if(d.exists()) {
+                if(d.exists) {
                     currentUserData = d.data();
                     safe('userNameDisplay', currentUserData.name); 
                     safe('profNameDisplay', currentUserData.name);
@@ -1409,10 +1575,19 @@
                     safe('referralCount', currentUserData.totalReferrals || 0);
                     safe('referralEarnings', currentUserData.referralEarnings || 0);
                     
+                    // Update profile inputs
                     if(document.getElementById('profNameInput')) document.getElementById('profNameInput').value = currentUserData.name;
                     if(document.getElementById('profPhoneInput')) document.getElementById('profPhoneInput').value = currentUserData.phone;
                     if(document.getElementById('profEmailInput')) document.getElementById('profEmailInput').value = currentUserData.email;
+                    if(document.getElementById('profAddressInput')) document.getElementById('profAddressInput').value = currentUserData.address || '';
                     
+                    // Update avatar
+                    if(currentUserData.avatar) {
+                        selectedAvatar = currentUserData.avatar;
+                        document.getElementById('currentAvatar').src = selectedAvatar;
+                    }
+                    
+                    // ✅ FIXED REFERRAL LINK
                     if(document.getElementById('referralLink')) {
                         document.getElementById('referralLink').innerText = `https://t.me/TAKA_WALA_TG_BOT?start=ref_${uid}`;
                     }
@@ -1426,27 +1601,59 @@
                     safe('mainBalanceDisplay', "0.00");
                 }
             }, (err) => { 
-                safe('userNameDisplay', "Error"); 
+                console.error("Error syncing user data:", err);
             });
             
-            // Load system settings separately
-            onSnapshot(doc(db, "settings", "system"), (d) => { 
-                if(d.exists()) {
+            db.collection("settings").doc("system").onSnapshot((d) => { 
+                if(d.exists) {
                     systemSettings = d.data();
                     document.getElementById('noticeText').innerText = d.data().noticeText || "স্বাগতম!";
                 }
             });
             
-            // Load payment numbers
-            onSnapshot(doc(db, "settings", "payment_numbers"), (d) => {
-                if(d.exists()) {
+            db.collection("settings").doc("payment_numbers").onSnapshot((d) => {
+                if(d.exists) {
                     paymentNumbers = d.data();
                 }
             });
         }
 
+        // ✅ LOAD TODAY'S EARNINGS
+        async function loadTodayEarnings(uid) {
+            try {
+                const today = new Date();
+                const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+                
+                const querySnapshot = await db.collection("history")
+                    .where("userId", "==", uid)
+                    .where("timestamp", ">=", todayStart)
+                    .where("timestamp", "<", todayEnd)
+                    .where("amount", ">", 0)
+                    .get();
+                
+                let todayTotal = 0;
+                querySnapshot.forEach(doc => {
+                    const data = doc.data();
+                    todayTotal += parseFloat(data.amount) || 0;
+                });
+                
+                todayEarnings = todayTotal;
+                document.getElementById('todayEarnings').textContent = todayTotal.toFixed(2);
+                
+                // Update today's earnings in user document
+                await db.collection("users").doc(uid).update({
+                    todayEarnings: todayTotal
+                });
+                
+            } catch (error) {
+                console.error("Error loading today's earnings:", error);
+            }
+        }
+
+        // ✅ TASK FUNCTIONS
         function renderTasks() {
-            onSnapshot(collection(db, "tasks"), (snap) => {
+            db.collection("tasks").onSnapshot((snap) => {
                 const list = document.getElementById('taskListContainer'); 
                 if(!list) return; 
                 
@@ -1454,7 +1661,6 @@
                 list.innerHTML = '';
                 
                 if(snap.empty) { 
-                    // Show demo tasks if no tasks in database
                     list.innerHTML = `
                     <div class="glass-card p-3 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp">
                         <div class="flex items-center gap-3"><img src="https://i.postimg.cc/TYLvN32V/telegram.png" class="w-10"><div><h4 class="font-bold text-slate-700">Telegram Channel</h4><p class="text-[10px] text-slate-400">আমাদের চ্যানেল সাবস্ক্রাইব করুন</p></div></div>
@@ -1487,61 +1693,588 @@
             });
         }
 
-        async function loadSummary(uid) {
+        // ✅ SIMPLE HISTORY SYSTEM (FIXED)
+        window.loadHistory = () => {
+            window.showPage('historyScreen');
+            document.getElementById('historyListContainer').innerHTML = `
+                <div class="history-loading">
+                    <div class="animate-pulse">
+                        <div class="h-4 bg-slate-200 rounded w-3/4 mx-auto mb-4"></div>
+                        <div class="h-20 bg-slate-100 rounded-lg mb-3"></div>
+                        <div class="h-20 bg-slate-100 rounded-lg mb-3"></div>
+                        <div class="h-20 bg-slate-100 rounded-lg"></div>
+                    </div>
+                </div>
+            `;
+            
+            loadSimpleHistory();
+        };
+        
+        async function loadSimpleHistory() {
+            showLoading();
+            
+            try {
+                const querySnapshot = await db.collection("history")
+                    .where("userId", "==", currentUserId)
+                    .orderBy("timestamp", "desc")
+                    .limit(20)
+                    .get();
+                
+                const list = document.getElementById('historyListContainer'); 
+                if(!list) return; 
+                
+                list.innerHTML = '';
+                
+                if(querySnapshot.empty) { 
+                    list.innerHTML = `
+                    <div class="history-empty">
+                        <img src="https://i.postimg.cc/VNTvSLRX/transaction-history.png" class="w-20 mx-auto mb-4 opacity-30">
+                        <p class="text-slate-400">কোনো লেনদেন হিস্ট্রি নেই</p>
+                        <p class="text-sm text-slate-500 mt-2">আপনার প্রথম লেনদেন করুন</p>
+                    </div>`; 
+                    hideLoading();
+                    return; 
+                }
+                
+                querySnapshot.forEach(doc => {
+                    const h = doc.data(); 
+                    const date = h.date || new Date().toLocaleDateString('bn-BD');
+                    const time = h.time || new Date().toLocaleTimeString('bn-BD');
+                    
+                    let icon = '';
+                    let bgColor = '';
+                    
+                    if(h.type.includes('Recharge') || h.type.includes('রিচার্জ')) {
+                        icon = 'https://i.postimg.cc/jjdpNH5b/payment-method.png';
+                        bgColor = 'bg-blue-100';
+                    } else if(h.type.includes('Withdraw') || h.type.includes('উত্তোলন')) {
+                        icon = 'https://i.postimg.cc/wMdF5zV5/withdraw.png';
+                        bgColor = 'bg-red-100';
+                    } else if(h.type.includes('Deposit') || h.type.includes('ডিপোজিট')) {
+                        icon = 'https://i.postimg.cc/7ZGpHH5q/save-money.png';
+                        bgColor = 'bg-green-100';
+                    } else if(h.type.includes('Task') || h.type.includes('টাস্ক')) {
+                        icon = 'https://i.postimg.cc/d1sXyCb6/clipboard.png';
+                        bgColor = 'bg-purple-100';
+                    } else if(h.type.includes('Bonus') || h.type.includes('বোনাস')) {
+                        icon = 'https://i.postimg.cc/qqLQKVHV/bonus.png';
+                        bgColor = 'bg-yellow-100';
+                    } else if(h.type.includes('Transfer') || h.type.includes('ট্রান্সফার')) {
+                        icon = 'https://i.postimg.cc/VNTvSLRX/transaction-history.png';
+                        bgColor = 'bg-indigo-100';
+                    } else if(h.type.includes('কুইজ') || h.type.includes('Quiz')) {
+                        icon = 'https://i.postimg.cc/mkNFY0L0/solution.png';
+                        bgColor = 'bg-pink-100';
+                    } else {
+                        icon = 'https://i.postimg.cc/VNTvSLRX/transaction-history.png';
+                        bgColor = 'bg-slate-100';
+                    }
+                    
+                    let statusIcon = '';
+                    let statusColor = '';
+                    if(h.status === 'Pending') {
+                        statusIcon = '🕙';
+                        statusColor = 'text-yellow-600';
+                    } else if(h.status === 'Success') {
+                        statusIcon = '✅';
+                        statusColor = 'text-green-600';
+                    } else if(h.status === 'Rejected') {
+                        statusIcon = '❌';
+                        statusColor = 'text-red-600';
+                    }
+                    
+                    const amount = parseFloat(h.amount) || 0;
+                    const amountColor = amount > 0 ? 'text-green-600' : 'text-red-600';
+                    const amountSign = amount > 0 ? '+' : '';
+                    
+                    list.innerHTML += `
+                    <div class="history-item glass-card p-4 rounded-2xl flex items-center gap-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 ${bgColor} rounded-xl flex items-center justify-center">
+                                <img src="${icon}" class="w-7 h-7">
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-bold text-slate-700 truncate">${h.type}</h4>
+                                <span class="font-bold ${amountColor} whitespace-nowrap">${amountSign}৳${Math.abs(amount).toFixed(2)}</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-1">
+                                <p class="text-[11px] text-slate-500 truncate">${date} • ${time}</p>
+                                <span class="text-sm ${statusColor}">${statusIcon}</span>
+                            </div>
+                            ${h.method ? `<p class="text-[10px] text-slate-600 mt-1 truncate">${h.method}</p>` : ''}
+                            ${h.details ? `<p class="text-[10px] text-slate-500 mt-1 truncate">${h.details}</p>` : ''}
+                        </div>
+                        <button onclick="window.showReceipt(${JSON.stringify({...h, id: doc.id}).replace(/"/g, '&quot;')})" class="text-[10px] bg-premium text-white px-3 py-1.5 rounded-lg font-bold whitespace-nowrap">
+                            রিসিট
+                        </button>
+                    </div>`;
+                });
+                hideLoading();
+            } catch (error) {
+                console.error("Error loading history:", error);
+                document.getElementById('historyListContainer').innerHTML = `
+                <div class="history-empty">
+                    <p class="text-red-400">হিস্ট্রি লোড করতে সমস্যা হয়েছে</p>
+                    <button onclick="window.loadHistory()" class="mt-2 text-sm text-blue-600 font-bold">আবার চেষ্টা করুন</button>
+                </div>`;
+                hideLoading();
+            }
+        }
+
+        // ✅ ENHANCED RECEIPT MODAL (FIXED)
+        window.showReceipt = (transaction) => {
+            const existingModal = document.getElementById('receiptModal');
+            if(existingModal) {
+                existingModal.remove();
+            }
+            
+            const receiptModal = document.createElement('div');
+            receiptModal.className = 'receipt-modal';
+            receiptModal.id = 'receiptModal';
+            
+            let statusBadge = '';
+            let statusText = '';
+            if(transaction.status === 'Success') {
+                statusBadge = '<span class="receipt-status status-success-badge">✅ সফল</span>';
+                statusText = 'সফল';
+            } else if(transaction.status === 'Pending') {
+                statusBadge = '<span class="receipt-status status-pending-badge">🕙 পেন্ডিং</span>';
+                statusText = 'পেন্ডিং';
+            } else if(transaction.status === 'Rejected') {
+                statusBadge = '<span class="receipt-status status-rejected-badge">❌ রিজেক্ট</span>';
+                statusText = 'রিজেক্ট';
+            }
+            
+            let icon = '';
+            let typeText = transaction.type || 'লেনদেন';
+            
+            if(typeText.includes('ডিপোজিট') || typeText.includes('Deposit')) {
+                icon = 'https://i.postimg.cc/7ZGpHH5q/save-money.png';
+            } else if(typeText.includes('উত্তোলন') || typeText.includes('Withdraw')) {
+                icon = 'https://i.postimg.cc/wMdF5zV5/withdraw.png';
+            } else if(typeText.includes('রিচার্জ') || typeText.includes('Recharge')) {
+                icon = 'https://i.postimg.cc/jjdpNH5b/payment-method.png';
+            } else if(typeText.includes('টাস্ক') || typeText.includes('Task')) {
+                icon = 'https://i.postimg.cc/d1sXyCb6/clipboard.png';
+            } else if(typeText.includes('বোনাস') || typeText.includes('Bonus')) {
+                icon = 'https://i.postimg.cc/qqLQKVHV/bonus.png';
+            } else if(typeText.includes('কুইজ') || typeText.includes('Quiz')) {
+                icon = 'https://i.postimg.cc/mkNFY0L0/solution.png';
+            } else if(typeText.includes('রেফার') || typeText.includes('Referral')) {
+                icon = 'https://i.postimg.cc/c4xbp54V/add-friend.png';
+            } else {
+                icon = 'https://i.postimg.cc/VNTvSLRX/transaction-history.png';
+            }
+            
+            const amount = parseFloat(transaction.amount) || 0;
+            const amountColor = amount > 0 ? 'text-green-600' : 'text-red-600';
+            const amountSign = amount > 0 ? '+' : '';
+            
+            let receiptRows = '';
+            
+            receiptRows += `
+                <div class="receipt-row">
+                    <span class="receipt-label">লেনদেন আইডি</span>
+                    <span class="receipt-value">${transaction.trxId || transaction.id || 'N/A'}</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">ধরণ</span>
+                    <span class="receipt-value">${typeText}</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">তারিখ</span>
+                    <span class="receipt-value">${transaction.date || new Date().toLocaleDateString('bn-BD')}</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">সময়</span>
+                    <span class="receipt-value">${transaction.time || new Date().toLocaleTimeString('bn-BD')}</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">স্ট্যাটাস</span>
+                    <span class="receipt-value">${statusBadge}</span>
+                </div>
+            `;
+            
+            if(transaction.method) {
+                receiptRows += `
+                    <div class="receipt-row">
+                        <span class="receipt-label">পদ্ধতি</span>
+                        <span class="receipt-value">${transaction.method}</span>
+                    </div>
+                `;
+            }
+            
+            if(transaction.accountNumber || transaction.phone) {
+                receiptRows += `
+                    <div class="receipt-row">
+                        <span class="receipt-label">অ্যাকাউন্ট/ফোন</span>
+                        <span class="receipt-value">${transaction.accountNumber || transaction.phone || 'N/A'}</span>
+                    </div>
+                `;
+            }
+            
+            if(transaction.vat) {
+                receiptRows += `
+                    <div class="receipt-row">
+                        <span class="receipt-label">ভ্যাট</span>
+                        <span class="receipt-value">৳${transaction.vat}</span>
+                    </div>
+                `;
+            }
+            
+            if(transaction.receivedAmount) {
+                receiptRows += `
+                    <div class="receipt-row">
+                        <span class="receipt-label">প্রাপ্ত পরিমাণ</span>
+                        <span class="receipt-value text-green-600">৳${transaction.receivedAmount}</span>
+                    </div>
+                `;
+            }
+            
+            if(transaction.details) {
+                receiptRows += `
+                    <div class="receipt-row">
+                        <span class="receipt-label">বিস্তারিত</span>
+                        <span class="receipt-value" style="text-align: left;">${transaction.details}</span>
+                    </div>
+                `;
+            }
+            
+            receiptModal.innerHTML = `
+                <div class="receipt-content">
+                    <div class="receipt-header">
+                        <h2 class="text-xl font-bold text-white mb-2">টাকাওয়ালা রিসিট</h2>
+                        <p class="text-sm text-white/80">অফিসিয়াল লেনদেন রিসিট</p>
+                    </div>
+                    
+                    <div class="receipt-body">
+                        <div class="text-center mb-6">
+                            <img src="${icon}" class="w-20 h-20 mx-auto mb-4">
+                            <div class="receipt-amount ${amountColor}">
+                                ${amountSign}৳${Math.abs(amount).toFixed(2)}
+                            </div>
+                            <p class="text-sm text-slate-600 mt-2">${typeText}</p>
+                        </div>
+                        
+                        <div class="space-y-1">
+                            ${receiptRows}
+                        </div>
+                        
+                        <div class="mt-8 pt-6 border-t border-slate-200">
+                            <button onclick="document.getElementById('receiptModal').remove()" class="w-full bg-premium text-white py-3.5 rounded-xl font-bold shadow-lg hover:opacity-90 transition">
+                                রিসিট বন্ধ করুন
+                            </button>
+                            <p class="text-center text-xs text-slate-500 mt-3">
+                                এই রিসিটটি আইনগত প্রমাণ হিসেবে ব্যবহারযোগ্য
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(receiptModal);
+            
+            receiptModal.addEventListener('click', (e) => {
+                if(e.target === receiptModal) {
+                    receiptModal.remove();
+                }
+            });
+        };
+
+        // ✅ QUIZ FUNCTIONS (UPDATED)
+        window.switchQuizTab = (tab) => {
+            document.getElementById('tabQuizTypes').className = tab === 'types' ? 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow' : 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
+            document.getElementById('tabQuizQuestions').className = tab === 'questions' ? 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow' : 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
+            
+            document.getElementById('quizTypesSection').classList.toggle('hidden', tab !== 'types');
+            document.getElementById('quizQuestionsSection').classList.toggle('hidden', tab !== 'questions');
+        };
+
+        window.showQuizQuestions = (type) => {
+            currentQuizType = type;
+            selectedAnswers = {};
+            
+            // Quiz titles
+            const quizTitles = {
+                general: 'সাধারণ কুইজ',
+                math: 'ম্যাথ কুইজ',
+                science: 'বিজ্ঞান কুইজ',
+                islamic: 'ইসলামিক কুইজ'
+            };
+            
+            document.getElementById('quizTypeTitle').textContent = quizTitles[type] || 'কুইজ';
+            
+            // Demo questions for each type
+            const demoQuestions = {
+                general: [
+                    {
+                        question: "বাংলাদেশের রাজধানীর নাম কি?",
+                        options: ["কলকাতা", "ঢাকা", "চট্টগ্রাম", "খুলনা"],
+                        answer: 1
+                    },
+                    {
+                        question: "বাংলাদেশের জাতীয় ফুল কি?",
+                        options: ["গোলাপ", "শাপলা", "কমল", "জবা"],
+                        answer: 1
+                    },
+                    {
+                        question: "বাংলাদেশের মুদ্রার নাম কি?",
+                        options: ["রুপি", "টাকা", "ডলার", "ইয়েন"],
+                        answer: 1
+                    }
+                ],
+                math: [
+                    {
+                        question: "২ + ২ = কত?",
+                        options: ["৩", "৪", "৫", "৬"],
+                        answer: 1
+                    },
+                    {
+                        question: "১০ × ৫ = কত?",
+                        options: ["৫০", "১৫", "২০", "১০০"],
+                        answer: 0
+                    },
+                    {
+                        question: "১০০ ÷ ১০ = কত?",
+                        options: ["১", "৫", "১০", "২০"],
+                        answer: 2
+                    }
+                ],
+                science: [
+                    {
+                        question: "পানির রাসায়নিক সংকেত কি?",
+                        options: ["H2O", "CO2", "O2", "NaCl"],
+                        answer: 0
+                    },
+                    {
+                        question: "পৃথিবী সূর্যের চারদিকে ঘুরতে কত সময় নেয়?",
+                        options: ["২৪ ঘণ্টা", "৩০ দিন", "৩৬৫ দিন", "৭ দিন"],
+                        answer: 2
+                    },
+                    {
+                        question: "মানুষের দেহে কয়টি হাড় আছে?",
+                        options: ["১০৬", "২০৬", "৩০৬", "৪০৬"],
+                        answer: 1
+                    }
+                ],
+                islamic: [
+                    {
+                        question: "ইসলামের প্রথম স্তম্ভ কি?",
+                        options: ["নামাজ", "রোজা", "শাহাদাহ", "হজ্জ"],
+                        answer: 2
+                    },
+                    {
+                        question: "মুসলমানদের কিবলা কোথায়?",
+                        options: ["মদিনা", "মক্কা", "জেরুজালেম", "কায়রো"],
+                        answer: 1
+                    },
+                    {
+                        question: "পবিত্র কোরআনে কয়টি সূরা আছে?",
+                        options: ["১১৪", "১২৪", "১৩৪", "১৪৪"],
+                        answer: 0
+                    }
+                ]
+            };
+            
+            const questions = demoQuestions[type] || demoQuestions.general;
+            let questionsHtml = '';
+            
+            questions.forEach((q, qIndex) => {
+                let optionsHtml = '';
+                q.options.forEach((option, oIndex) => {
+                    optionsHtml += `
+                        <div class="flex items-center p-3 bg-white rounded-xl border cursor-pointer hover:bg-slate-50 mb-2" onclick="window.selectQuizAnswer(${qIndex}, ${oIndex})">
+                            <input type="radio" name="quizQuestion${qIndex}" id="q${qIndex}o${oIndex}" class="mr-3">
+                            <label for="q${qIndex}o${oIndex}" class="flex-1 cursor-pointer">${option}</label>
+                        </div>
+                    `;
+                });
+                
+                questionsHtml += `
+                    <div class="mb-6 p-4 bg-slate-50 rounded-xl">
+                        <h4 class="font-bold text-slate-700 mb-3">${qIndex + 1}. ${q.question}</h4>
+                        <div class="space-y-2">
+                            ${optionsHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('quizQuestionsContainer').innerHTML = questionsHtml;
+            document.getElementById('submitQuizBtn').classList.remove('hidden');
+            
+            window.switchQuizTab('questions');
+            startQuizTimer();
+        };
+        
+        window.selectQuizAnswer = (questionIndex, answerIndex) => {
+            selectedAnswers[questionIndex] = answerIndex;
+            
+            // Update radio button visually
+            const radio = document.getElementById(`q${questionIndex}o${answerIndex}`);
+            if(radio) {
+                radio.checked = true;
+            }
+        };
+        
+        function startQuizTimer() {
+            if(quizTimer) clearInterval(quizTimer);
+            
+            let timeLeft = 180; // 3 minutes
+            const timerElement = document.getElementById('quizTimer');
+            
+            quizTimer = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                
+                if(timeLeft <= 0) {
+                    clearInterval(quizTimer);
+                    showNotification('সময় শেষ! আবার চেষ্টা করুন', 'error');
+                    window.switchQuizTab('types');
+                }
+            }, 1000);
+        }
+        
+        window.submitQuiz = async () => {
+            const questionsCount = Object.keys(selectedAnswers).length;
+            if(questionsCount === 0) {
+                showNotification('দয়া করে সব প্রশ্নের উত্তর দিন', 'error');
+                return;
+            }
+            
+            showLoading();
+            showNotification('কুইজ চেক করা হচ্ছে...', 'info');
+            
+            // For demo, calculate score
+            setTimeout(async () => {
+                try {
+                    const demoQuestions = {
+                        general: 3, math: 3, science: 3, islamic: 3
+                    };
+                    
+                    const totalQuestions = demoQuestions[currentQuizType] || 3;
+                    const correctAnswers = Math.floor(Math.random() * totalQuestions) + 1; // Random for demo
+                    const reward = correctAnswers * 0.25;
+                    
+                    const userRef = db.collection("users").doc(currentUserId);
+                    await userRef.update({
+                        mainBalance: firebase.firestore.FieldValue.increment(reward),
+                        totalEarnings: firebase.firestore.FieldValue.increment(reward),
+                        totalTasks: firebase.firestore.FieldValue.increment(1),
+                        todayEarnings: firebase.firestore.FieldValue.increment(reward)
+                    });
+                    
+                    await db.collection("history").add({
+                        userId: currentUserId,
+                        type: `${currentQuizType} কুইজ পুরস্কার`,
+                        amount: reward,
+                        status: "Success",
+                        details: `${correctAnswers}/${totalQuestions} প্রশ্ন সঠিক`,
+                        date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Update today's earnings display
+                    todayEarnings += reward;
+                    document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
+                    
+                    showNotification(`কুইজ সফল! ৳${reward.toFixed(2)} পুরস্কার পেয়েছেন`, 'success');
+                    hideLoading();
+                    
+                    if(quizTimer) clearInterval(quizTimer);
+                    
+                    document.getElementById('quizQuestionsContainer').innerHTML = `
+                        <div class="text-center p-6">
+                            <div class="text-green-500 text-6xl mb-4">✅</div>
+                            <h4 class="text-xl font-bold text-green-700 mb-2">কুইজ সফল!</h4>
+                            <p class="text-slate-600 mb-2">আপনি ${correctAnswers}/${totalQuestions} প্রশ্নের সঠিক উত্তর দিয়েছেন</p>
+                            <p class="text-slate-700 font-bold mb-4">আপনি ৳${reward.toFixed(2)} পুরস্কার পেয়েছেন</p>
+                            <button onclick="window.switchQuizTab('types')" class="mt-4 bg-premium text-white px-6 py-2 rounded-xl font-bold">
+                                নতুন কুইজ শুরু করুন
+                            </button>
+                        </div>
+                    `;
+                    
+                    document.getElementById('submitQuizBtn').classList.add('hidden');
+                    
+                } catch (error) {
+                    console.error("Quiz submission error:", error);
+                    showNotification('কুইজ সাবমিট করতে সমস্যা হয়েছে', 'error');
+                    hideLoading();
+                }
+            }, 1500);
+        };
+
+        // ✅ PROFILE FUNCTIONS
+        window.showAvatarSelector = () => {
+            document.getElementById('avatarModal').classList.remove('hidden');
+        };
+        
+        window.closeAvatarModal = () => {
+            document.getElementById('avatarModal').classList.add('hidden');
+        };
+        
+        window.selectAvatar = (avatarUrl) => {
+            selectedAvatar = avatarUrl;
+            document.getElementById('currentAvatar').src = avatarUrl;
+            window.closeAvatarModal();
+            showNotification('এভাটার সিলেক্ট করা হয়েছে', 'success');
+        };
+        
+        window.updateProfile = async () => { 
             try {
                 showLoading();
-                const userDoc = await getDoc(doc(db, "users", uid));
-                if(userDoc.exists()) {
-                    const data = userDoc.data();
-                    document.getElementById('totalEarnings').innerText = (data.totalEarnings || 0).toFixed(2);
-                    document.getElementById('totalDeposit').innerText = (data.totalDeposit || 0).toFixed(2);
-                    document.getElementById('totalWithdraw').innerText = (data.totalWithdraw || 0).toFixed(2);
-                    document.getElementById('totalTasks').innerText = data.totalTasks || '0';
-                    document.getElementById('summaryPlan').innerText = data.plan || 'Free';
-                    document.getElementById('totalReferrals').innerText = data.totalReferrals || '0';
-                    document.getElementById('referralCount').innerText = data.totalReferrals || '0';
-                    document.getElementById('referralEarnings').innerText = data.referralEarnings || 0;
-                    
-                    // Calculate active tasks
-                    const tasksSnap = await getDocs(query(collection(db, "tasks")));
-                    document.getElementById('activeTasks').innerText = tasksSnap.size || '0';
-                    
-                    // Calculate daily bonus status
-                    const today = new Date().toDateString();
-                    const lastBonus = data.lastDailyBonus ? new Date(data.lastDailyBonus.toDate()).toDateString() : null;
-                    document.getElementById('dailyBonusStatus').innerText = lastBonus === today ? 'আজ নেওয়া হয়েছে' : 'আজ নেওয়া হয়নি';
-                }
+                await db.collection("users").doc(currentUserId).update({ 
+                    name: document.getElementById('profNameInput').value, 
+                    email: document.getElementById('profEmailInput').value,
+                    address: document.getElementById('profAddressInput').value,
+                    avatar: selectedAvatar
+                }); 
+                showNotification('প্রোফাইল আপডেট হয়েছে', 'success'); 
                 hideLoading();
             } catch (e) {
-                console.error("Error loading summary:", e);
+                showNotification('প্রোফাইল আপডেট করতে সমস্যা হয়েছে', 'error');
                 hideLoading();
             }
-        }
-
-        async function checkDailyBonus(uid) {
-            try {
-                const userDoc = await getDoc(doc(db, "users", uid));
-                if(userDoc.exists()) {
-                    const data = userDoc.data();
-                    const today = new Date().toDateString();
-                    const lastBonus = data.lastDailyBonus ? new Date(data.lastDailyBonus.toDate()).toDateString() : null;
-                    
-                    if(lastBonus === today) {
-                        document.getElementById('dailyBonusStatus').innerText = 'আজ নেওয়া হয়েছে';
-                    } else {
-                        document.getElementById('dailyBonusStatus').innerText = 'আজ নেওয়া হয়নি';
+        };
+        
+        window.showChangePassword = async () => {
+            const { value: newPassword } = await Swal.fire({
+                title: 'নতুন পাসওয়ার্ড দিন',
+                input: 'password',
+                inputLabel: 'নতুন পাসওয়ার্ড (৬+ সংখ্যা)',
+                inputPlaceholder: 'নতুন পাসওয়ার্ড দিন',
+                showCancelButton: true,
+                confirmButtonText: 'পরিবর্তন করুন',
+                cancelButtonText: 'বাতিল',
+                inputValidator: (value) => {
+                    if (!value || value.length < 6) {
+                        return 'পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে';
                     }
                 }
-            } catch (e) {
-                console.error("Error checking daily bonus:", e);
+            });
+            
+            if (newPassword) {
+                try {
+                    showLoading();
+                    const user = auth.currentUser;
+                    await user.updatePassword(newPassword);
+                    showNotification('পাসওয়ার্ড পরিবর্তন সফল', 'success');
+                    hideLoading();
+                } catch (error) {
+                    showNotification('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে', 'error');
+                    hideLoading();
+                }
             }
-        }
+        };
 
-        // TASK COMPLETION WITH PROOF SUBMISSION
+        // ✅ TASK COMPLETION
         window.completeTask = async (taskId, reward, taskType, title, description, link) => {
             if(!currentUserData) return;
             
-            // Store task info for later use
             currentTaskInfo = {
                 taskId,
                 reward,
@@ -1551,20 +2284,21 @@
                 link
             };
             
-            // Open the task link in new tab
-            window.open(link, '_blank');
+            showInterstitialAd();
             
-            // Start timer for 60 seconds
+            setTimeout(() => {
+                window.open(link, '_blank');
+            }, 500);
+            
             startTaskTimer();
             
-            // Show notification
             showNotification('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ১ মিনিট পর প্রুফ সাবমিট করুন।', 'info');
         };
         
         function startTaskTimer() {
             if(taskTimer) clearInterval(taskTimer);
             
-            let timeLeft = systemSettings.taskWaitTime || 60; // 60 seconds default
+            let timeLeft = systemSettings.taskWaitTime || 60;
             const startTime = Date.now();
             
             taskTimer = setInterval(() => {
@@ -1577,7 +2311,6 @@
                 }
             }, 1000);
             
-            // Auto show proof form after time
             setTimeout(() => {
                 if(taskTimer) {
                     clearInterval(taskTimer);
@@ -1607,17 +2340,6 @@
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-slate-700 mb-2">ইউটিউব চ্যানেল লিংক</label>
                         <input type="url" id="proofYoutubeLink" placeholder="https://youtube.com/@channel" class="w-full p-3 border rounded-lg">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold text-slate-700 mb-2">স্ক্রিনশট লিংক</label>
-                        <input type="url" id="proofScreenshot" placeholder="https://example.com/screenshot.png" class="w-full p-3 border rounded-lg">
-                    </div>
-                `;
-            } else if(currentTaskInfo.taskType === 'facebook') {
-                proofFields = `
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold text-slate-700 mb-2">ফেসবুক প্রোফাইল লিংক</label>
-                        <input type="url" id="proofFacebookLink" placeholder="https://facebook.com/username" class="w-full p-3 border rounded-lg">
                     </div>
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-slate-700 mb-2">স্ক্রিনশট লিংক</label>
@@ -1659,17 +2381,15 @@
             showNotification('প্রুফ সাবমিট হচ্ছে...', 'info');
             
             try {
-                // Create pending task request with proof
                 const proofData = {
                     telegramUsername: document.getElementById('proofTelegramUsername')?.value || '',
                     screenshot: document.getElementById('proofScreenshot')?.value || '',
                     youtubeLink: document.getElementById('proofYoutubeLink')?.value || '',
-                    facebookLink: document.getElementById('proofFacebookLink')?.value || '',
                     details: document.getElementById('proofDetails')?.value || '',
                     link: document.getElementById('proofLink')?.value || ''
                 };
                 
-                await addDoc(collection(db, "pending_requests"), { 
+                await db.collection("pending_requests").add({ 
                     userId: currentUserId, 
                     type: "টাস্ক সম্পন্ন", 
                     taskId: currentTaskInfo.taskId,
@@ -1682,23 +2402,8 @@
                     status: "Pending",
                     date: new Date().toLocaleDateString('bn-BD'),
                     time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: serverTimestamp()
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                
-                // Send Telegram notification to admin with proof details
-                let proofText = '';
-                if(currentTaskInfo.taskType === 'telegram') {
-                    proofText = `📱 Telegram: ${proofData.telegramUsername}\n📸 Screenshot: ${proofData.screenshot}`;
-                } else if(currentTaskInfo.taskType === 'youtube') {
-                    proofText = `📺 YouTube: ${proofData.youtubeLink}\n📸 Screenshot: ${proofData.screenshot}`;
-                } else if(currentTaskInfo.taskType === 'facebook') {
-                    proofText = `📘 Facebook: ${proofData.facebookLink}\n📸 Screenshot: ${proofData.screenshot}`;
-                } else {
-                    proofText = `📝 Details: ${proofData.details}\n🔗 Link: ${proofData.link}`;
-                }
-                
-                const message = `📋 <b>নতুন টাস্ক প্রুফ সাবমিশন</b>\n\n👤 ইউজার: ${currentUserData.name}\n📞 ফোন: ${currentUserData.phone}\n📌 টাস্ক: ${currentTaskInfo.title}\n💰 পরিমাণ: ৳${currentTaskInfo.reward}\n\n📊 <b>প্রুফ ডিটেইলস:</b>\n${proofText}\n\n⏰ সময়: ${new Date().toLocaleString()}`;
-                await sendTelegramNotification(message);
                 
                 showNotification('প্রুফ সফলভাবে সাবমিট হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
                 hideLoading();
@@ -1710,18 +2415,616 @@
             }
         };
 
-        // DRAGGABLE CHAT FUNCTIONALITY
-        function initDraggableChat() {
+        // ✅ WALLET FUNCTIONS
+        window.calculateDepositVAT = () => {
+            const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
+            const vatPercentage = systemSettings.vatPercentage || 10;
+            const vat = amount * (vatPercentage / 100);
+            const total = amount + vat;
+            document.getElementById('vatCalculation').innerHTML = `ভ্যাট (${vatPercentage}%): ৳${vat.toFixed(2)} | মোট: ৳${total.toFixed(2)}`;
+        };
+        
+        window.calculateWithdrawVAT = () => {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+            const vatPercentage = systemSettings.vatPercentage || 10;
+            const vat = amount * (vatPercentage / 100);
+            const received = amount - vat;
+            document.getElementById('withdrawVat').innerHTML = `ভ্যাট (${vatPercentage}%): ৳${vat.toFixed(2)} | প্রাপ্ত: ৳${received.toFixed(2)}`;
+        };
+        
+        window.calculateRechargeFee = () => {
+            const amount = parseFloat(document.getElementById('rechAmount').value) || 0;
+            const fee = systemSettings.rechargeFee || 5;
+            const total = amount + fee;
+            document.getElementById('rechargeFee').innerHTML = `সার্ভিস চার্জ: ৳${fee.toFixed(2)} | মোট: ৳${total.toFixed(2)}`;
+        };
+
+        window.submitDeposit = async () => {
+            const trxId = document.getElementById('depositTrxId').value.trim();
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const method = document.getElementById('selectedDepositMethod').value;
+            
+            if(!trxId || !amount || amount <= 0) {
+                showNotification('সঠিক তথ্য দিন', 'error');
+                return;
+            }
+            
+            if(!method) {
+                showNotification('পেমেন্ট মেথড সিলেক্ট করুন', 'error');
+                return;
+            }
+            
+            showLoading();
+            showNotification('ডিপোজিট রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
+            
+            try {
+                const vatPercentage = systemSettings.vatPercentage || 10;
+                const vat = amount * (vatPercentage / 100);
+                const totalAmount = amount + vat;
+                
+                await db.collection("pending_requests").add({ 
+                    userId: currentUserId, 
+                    type: "ডিপোজিট", 
+                    amount: amount, 
+                    vat: vat,
+                    totalAmount: totalAmount,
+                    trxId: trxId,
+                    method: method,
+                    userName: currentUserData.name,
+                    userPhone: currentUserData.phone,
+                    status: "Pending",
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showNotification('ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
+                hideLoading();
+                
+                document.getElementById('depositTrxId').value = '';
+                document.getElementById('depositAmount').value = '';
+                window.calculateDepositVAT();
+                
+            } catch (e) {
+                showNotification('ডিপোজিট রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
+                hideLoading();
+            }
+        };
+        
+        window.submitWithdraw = async () => {
+            const number = document.getElementById('withdrawNumber').value.trim();
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const method = document.getElementById('selectedWithdrawMethod').value;
+            
+            if(!number || !amount || amount <= 0) {
+                showNotification('সঠিক তথ্য দিন', 'error');
+                return;
+            }
+            
+            if(!method) {
+                showNotification('উত্তোলন মেথড সিলেক্ট করুন', 'error');
+                return;
+            }
+            
+            const minWithdraw = systemSettings.minWithdraw || 100;
+            const maxWithdraw = systemSettings.maxWithdraw || 5000;
+            
+            if(amount < minWithdraw) {
+                showNotification(`ন্যূনতম উত্তোলন পরিমাণ ৳${minWithdraw}`, 'error');
+                return;
+            }
+            
+            if(amount > maxWithdraw) {
+                showNotification(`সর্বোচ্চ উত্তোলন পরিমাণ ৳${maxWithdraw}`, 'error');
+                return;
+            }
+            
+            const vatPercentage = systemSettings.vatPercentage || 10;
+            const vat = amount * (vatPercentage / 100);
+            const received = amount - vat;
+            
+            if(currentUserData.mainBalance < amount) {
+                showNotification('পর্যাপ্ত ব্যালেন্স নেই', 'error');
+                return;
+            }
+            
+            showLoading();
+            showNotification('উত্তোলন রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
+            
+            try {
+                const userRef = db.collection("users").doc(currentUserId);
+                await userRef.update({
+                    mainBalance: firebase.firestore.FieldValue.increment(-amount),
+                    totalWithdraw: firebase.firestore.FieldValue.increment(amount)
+                });
+                
+                await db.collection("pending_requests").add({ 
+                    userId: currentUserId, 
+                    type: "উত্তোলন", 
+                    amount: amount, 
+                    vat: vat,
+                    receivedAmount: received,
+                    accountNumber: number,
+                    method: method,
+                    userName: currentUserData.name,
+                    userPhone: currentUserData.phone,
+                    status: "Pending",
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                await db.collection("history").add({
+                    userId: currentUserId,
+                    type: "উত্তোলন",
+                    amount: -amount,
+                    status: "Pending",
+                    details: `${method} - ${number}`,
+                    vat: vat,
+                    receivedAmount: received,
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showNotification('উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
+                hideLoading();
+                
+                document.getElementById('withdrawNumber').value = '';
+                document.getElementById('withdrawAmount').value = '';
+                window.calculateWithdrawVAT();
+                
+            } catch (e) {
+                showNotification('উত্তোলন রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
+                hideLoading();
+            }
+        };
+        
+        window.submitRecharge = async () => { 
+            const phone = document.getElementById('rechPhone').value.trim();
+            const amount = parseFloat(document.getElementById('rechAmount').value);
+            const operator = document.getElementById('selectedOperator').value;
+            
+            if(!phone || !amount || amount <= 0) {
+                showNotification('সঠিক তথ্য দিন', 'error');
+                return;
+            }
+            
+            const fee = systemSettings.rechargeFee || 5;
+            const totalAmount = amount + fee;
+            
+            if(currentUserData.rechargeBalance < totalAmount) {
+                showNotification('পর্যাপ্ত রিচার্জ ব্যালেন্স নেই', 'error');
+                return;
+            }
+            
+            showLoading();
+            showNotification('রিচার্জ রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
+            
+            try {
+                const userRef = db.collection("users").doc(currentUserId);
+                await userRef.update({
+                    rechargeBalance: firebase.firestore.FieldValue.increment(-totalAmount)
+                });
+                
+                await db.collection("recharge_requests").add({ 
+                    userId: currentUserId, 
+                    phone: phone, 
+                    amount: amount, 
+                    fee: fee,
+                    totalAmount: totalAmount,
+                    operator: operator,
+                    status: 'Pending', 
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                }); 
+                
+                await db.collection("history").add({
+                    userId: currentUserId,
+                    type: "রিচার্জ",
+                    amount: -totalAmount,
+                    status: "Pending",
+                    details: `${operator} - ${phone}`,
+                    fee: fee,
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showNotification('রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে', 'success'); 
+                hideLoading();
+                
+                document.getElementById('rechPhone').value = '';
+                document.getElementById('rechAmount').value = '';
+                window.calculateRechargeFee();
+                
+            } catch (e) {
+                showNotification('রিচার্জ রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
+                hideLoading();
+            }
+        };
+        
+        window.transferBalance = async () => {
+            const am = parseFloat(document.getElementById('transferAmount').value);
+            if(!am || am <= 0 || currentUserData.mainBalance < am) {
+                showNotification('ব্যালেন্স নেই বা ভুল পরিমাণ', 'error');
+                return;
+            }
+            
+            showLoading();
+            showNotification('ট্রান্সফার হচ্ছে...', 'info');
+            
+            try {
+                const userRef = db.collection("users").doc(currentUserId);
+                
+                await userRef.update({
+                    mainBalance: firebase.firestore.FieldValue.increment(-am),
+                    rechargeBalance: firebase.firestore.FieldValue.increment(am)
+                });
+                
+                await db.collection("history").add({
+                    userId: currentUserId,
+                    type: "ব্যালেন্স ট্রান্সফার",
+                    amount: am,
+                    status: "Success",
+                    details: "মেইন ব্যালেন্স থেকে রিচার্জ ব্যালেন্স",
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showNotification(`৳${am} টাকা সফলভাবে ট্রান্সফার হয়েছে`, 'success');
+                hideLoading();
+                
+                document.getElementById('transferAmount').value = '';
+                
+            } catch (e) {
+                showNotification('ট্রান্সফার করতে সমস্যা হয়েছে', 'error');
+                hideLoading();
+            }
+        };
+
+        // ✅ SUMMARY FUNCTIONS
+        async function loadSummary(uid) {
+            try {
+                showLoading();
+                const userDoc = await db.collection("users").doc(uid).get();
+                if(userDoc.exists) {
+                    const data = userDoc.data();
+                    document.getElementById('totalEarnings').innerText = (data.totalEarnings || 0).toFixed(2);
+                    document.getElementById('totalDeposit').innerText = (data.totalDeposit || 0).toFixed(2);
+                    document.getElementById('totalWithdraw').innerText = (data.totalWithdraw || 0).toFixed(2);
+                    document.getElementById('totalTasks').innerText = data.totalTasks || '0';
+                    document.getElementById('summaryPlan').innerText = data.plan || 'Free';
+                    document.getElementById('totalReferrals').innerText = data.totalReferrals || '0';
+                    document.getElementById('referralCount').innerText = data.totalReferrals || '0';
+                    document.getElementById('referralEarnings').innerText = data.referralEarnings || 0;
+                    document.getElementById('todayEarnings').innerText = (data.todayEarnings || 0).toFixed(2);
+                    todayEarnings = data.todayEarnings || 0;
+                    
+                    const tasksSnap = await db.collection("tasks").get();
+                    document.getElementById('activeTasks').innerText = tasksSnap.size || '0';
+                    
+                    const today = new Date().toDateString();
+                    const lastBonus = data.lastDailyBonus ? new Date(data.lastDailyBonus.toDate()).toDateString() : null;
+                    document.getElementById('dailyBonusStatus').innerText = lastBonus === today ? 'আজ নেওয়া হয়েছে' : 'আজ নেওয়া হয়নি';
+                }
+                hideLoading();
+            } catch (e) {
+                console.error("Error loading summary:", e);
+                hideLoading();
+            }
+        }
+
+        async function checkDailyBonus(uid) {
+            try {
+                const userDoc = await db.collection("users").doc(uid).get();
+                if(userDoc.exists) {
+                    const data = userDoc.data();
+                    const today = new Date().toDateString();
+                    const lastBonus = data.lastDailyBonus ? new Date(data.lastDailyBonus.toDate()).toDateString() : null;
+                    
+                    if(lastBonus === today) {
+                        document.getElementById('dailyBonusStatus').innerText = 'আজ নেওয়া হয়েছে';
+                    } else {
+                        document.getElementById('dailyBonusStatus').innerText = 'আজ নেওয়া হয়নি';
+                    }
+                }
+            } catch (e) {
+                console.error("Error checking daily bonus:", e);
+            }
+        }
+
+        window.showDailyBonus = async () => {
+            if(!currentUserId) return;
+            
+            try {
+                const userDoc = await db.collection("users").doc(currentUserId).get();
+                if(userDoc.exists) {
+                    const data = userDoc.data();
+                    const today = new Date().toDateString();
+                    const lastBonus = data.lastDailyBonus ? new Date(data.lastDailyBonus.toDate()).toDateString() : null;
+                    
+                    if(lastBonus === today) {
+                        showNotification('আপনি আজকে ইতিমধ্যেই ডেইলি বোনাস নিয়েছেন', 'info');
+                        return;
+                    }
+                    
+                    const bonusAmount = Math.floor(2 + Math.random() * 2);
+                    
+                    const result = await Swal.fire({
+                        title: 'ডেইলি বোনাস',
+                        html: `আজকের ডেইলি বোনাস: <b>৳${bonusAmount}</b><br><br>এই বোনাস নিতে চান?`,
+                        showCancelButton: true,
+                        confirmButtonText: 'হ্যাঁ, নিন',
+                        cancelButtonText: 'না',
+                        confirmButtonColor: '#059669',
+                        icon: 'info'
+                    });
+                    
+                    if (result.isConfirmed) {
+                        showLoading();
+                        
+                        const userRef = db.collection("users").doc(currentUserId);
+                        
+                        await userRef.update({
+                            mainBalance: firebase.firestore.FieldValue.increment(bonusAmount),
+                            totalEarnings: firebase.firestore.FieldValue.increment(bonusAmount),
+                            lastDailyBonus: firebase.firestore.FieldValue.serverTimestamp(),
+                            todayEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
+                        });
+                        
+                        // Update today's earnings display
+                        todayEarnings += bonusAmount;
+                        document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
+                        
+                        await db.collection("history").add({
+                            userId: currentUserId,
+                            type: "ডেইলি বোনাস",
+                            amount: bonusAmount,
+                            status: "Success",
+                            details: "নিয়মিত ডেইলি বোনাস",
+                            date: new Date().toLocaleDateString('bn-BD'),
+                            time: new Date().toLocaleTimeString('bn-BD'),
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        
+                        showNotification(`৳${bonusAmount} ডেইলি বোনাস সফলভাবে যোগ হয়েছে!`, 'success');
+                        checkDailyBonus(currentUserId);
+                        hideLoading();
+                    }
+                }
+            } catch (e) {
+                console.error("Error showing daily bonus:", e);
+                showNotification('ডেইলি বোনাস লোড করতে সমস্যা হয়েছে', 'error');
+                hideLoading();
+            }
+        };
+
+        // ✅ OTHER FUNCTIONS
+        window.copyReferralLink = () => {
+            const link = document.getElementById('referralLink').innerText;
+            navigator.clipboard.writeText(link);
+            showNotification('রেফার লিংক কপি হয়েছে!', 'success');
+        };
+        
+        window.openSupport = () => {
+            window.open('https://t.me/TAKAR_WALA_ADMIN', '_blank');
+        };
+        
+        window.buyPackage = async (packageType) => {
+            const packages = {
+                silver: "সিলভার প্যাকেজ (৳500)",
+                gold: "গোল্ড প্যাকেজ (৳1000)", 
+                platinum: "প্লাটিনাম প্যাকেজ (৳2000)"
+            };
+            
+            const message = `আসসালামু আলাইকুম আমি ${packages[packageType]} কিনতে চাই।`;
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${encodedMessage}`, '_blank');
+            showNotification('টেলিগ্রামে এডমিনের সাথে কথা বলুন', 'info');
+        };
+        
+        window.logout = () => {
+            auth.signOut();
+            showNotification('লগআউট সফল', 'success');
+        };
+        
+        window.showRules = (t) => {
+            Swal.fire({
+                title: `${t} নিয়মাবলী`,
+                html: `
+                    <div class="text-left">
+                        <p><b>১.</b> সকল ট্রানজেকশন এডমিন এপ্রুভ করবেন</p>
+                        <p><b>২.</b> ভুয়া তথ্য দিলে একাউন্ট বন্ধ হয়ে যাবে</p>
+                        <p><b>৩.</b> রেফার করলে প্রতি রেফার ৳5 বোনাস</p>
+                        <p><b>৪.</b> উত্তোলনে ১০% ভ্যাট কাটা হবে</p>
+                        <p><b>৫.</b> প্রতিদিন ১টি ডেইলি বোনাস পাওয়া যাবে</p>
+                    </div>
+                `,
+                confirmButtonText: 'বুঝেছি'
+            });
+        };
+        
+        window.showDriveOffer = () => {
+            showNotification('ড্রাইভ অফার শীঘ্রই আসছে!', 'info');
+        };
+
+        // ✅ GLOBAL WINDOW FUNCTIONS
+        window.toggleAuthTab = (t) => {
+            document.getElementById('loginForm').classList.toggle('hidden', t!=='login');
+            document.getElementById('registerForm').classList.toggle('hidden', t!=='register');
+            document.getElementById('btnTabLogin').className = t==='login'?'flex-1 py-3 rounded-full text-sm font-bold bg-premium text-white shadow-lg':'flex-1 py-3 rounded-full text-sm font-bold text-slate-500';
+            document.getElementById('btnTabRegister').className = t==='register'?'flex-1 py-3 rounded-full text-sm font-bold bg-premium text-white shadow-lg':'flex-1 py-3 rounded-full text-sm font-bold text-slate-500';
+        };
+        
+        window.showPage = (id) => { 
+            showLoading();
             setTimeout(() => {
-                const tawkChat = document.querySelector('#tawk-chat-icon');
-                if(tawkChat) {
-                    tawkChat.style.position = 'fixed';
-                    tawkChat.style.cursor = 'move';
-                    tawkChat.style.zIndex = '9998';
-                    makeDraggable(tawkChat);
+                document.querySelectorAll('#mainApp > div').forEach(d => { 
+                    if(d.id !== 'bottomNav') d.classList.add('hidden'); 
+                }); 
+                document.getElementById(id).classList.remove('hidden'); 
+                
+                if(id === 'summaryScreen' && currentUserId) {
+                    loadSummary(currentUserId);
+                }
+                if(id === 'subscriptionScreen') {
+                    window.switchSubscriptionTab('stars');
+                }
+                if(id === 'walletScreen') {
+                    updateDepositAddress(selectedMethod || 'bKash');
+                }
+                if(id === 'quizScreen') {
+                    window.switchQuizTab('types');
                 }
                 
-                // Also make notification icon draggable
+                hideLoading();
+            }, 500);
+        };
+        
+        window.toggleWalletTab = (t) => {
+            ['deposit','withdraw','transfer'].forEach(id => document.getElementById(id+'Section').classList.add('hidden'));
+            document.getElementById(t+'Section').classList.remove('hidden');
+            ['tabDeposit','tabWithdraw','tabTransfer'].forEach(id => document.getElementById(id).className = 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500');
+            document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).className = 'flex-1 py-3 font-bold text-sm rounded-xl bg-slate-800 text-white shadow';
+            
+            if(t === 'deposit') {
+                document.getElementById('depositAmount').addEventListener('input', window.calculateDepositVAT);
+                window.calculateDepositVAT();
+            } else if(t === 'withdraw') {
+                document.getElementById('withdrawAmount').addEventListener('input', window.calculateWithdrawVAT);
+                window.calculateWithdrawVAT();
+            }
+        };
+        
+        window.switchTaskTab = (type) => {
+            currentTaskType = type;
+            document.getElementById('tabFreeTask').className = type==='free'?'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow':'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
+            document.getElementById('tabVipTask').className = type==='vip'?'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow':'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
+            renderTasks();
+        };
+        
+        window.selectOperator = (el, operator) => { 
+            document.querySelectorAll('#rechargeScreen .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
+            el.classList.add('border-green-500','bg-green-50'); 
+            selectedOperator = operator;
+            document.getElementById('selectedOperator').value = operator;
+        };
+        
+        window.selectWithdrawMethod = (el, method) => { 
+            if(method === 'Rocket') {
+                showNotification('রকেট লেনদেন বন্ধ', 'error');
+                return;
+            }
+            
+            document.querySelectorAll('#withdrawSection .grid .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
+            el.classList.add('border-green-500','bg-green-50'); 
+            selectedMethod = method;
+            document.getElementById('selectedWithdrawMethod').value = method;
+        };
+
+        // ✅ SUBSCRIPTION FUNCTIONS
+        window.switchSubscriptionTab = (tab) => {
+            document.getElementById('tabStars').className = tab === 'stars' ? 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow' : 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
+            document.getElementById('tabTelegram').className = tab === 'telegram' ? 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow' : 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
+            
+            document.getElementById('starsSection').classList.toggle('hidden', tab !== 'stars');
+            document.getElementById('telegramSection').classList.toggle('hidden', tab !== 'telegram');
+        };
+        
+        window.selectStarPackage = (stars) => {
+            selectedStarPackage = stars;
+            document.getElementById('selectedStars').textContent = stars;
+            
+            let price = 0;
+            if(stars === 100) price = 290;
+            else if(stars === 250) price = 652.5;
+            else if(stars === 500) price = 1305;
+            
+            document.getElementById('totalStarPrice').textContent = price;
+        };
+        
+        window.selectTelegramPlan = (plan) => {
+            selectedTelegramPlan = plan;
+            let planText = '';
+            let price = 0;
+            
+            if(plan === '1month') {
+                planText = '১ মাসের প্যাকেজ';
+                price = 600;
+            } else if(plan === '3month') {
+                planText = '৩ মাসের প্যাকেজ';
+                price = 1550;
+            } else if(plan === '1year') {
+                planText = '১ বছরের প্যাকেজ';
+                price = 3900;
+            }
+            
+            document.getElementById('selectedPlanText').textContent = planText;
+            document.getElementById('selectedPlanPrice').textContent = price;
+        };
+        
+        window.buyStars = () => {
+            if(selectedStarPackage === 0) {
+                showNotification('দয়া করে স্টার প্যাকেজ সিলেক্ট করুন', 'error');
+                return;
+            }
+            
+            const message = `আসসালামু আলাইকুম আমি ${selectedStarPackage} স্টার কিনতে চাই।`;
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${encodedMessage}`, '_blank');
+            showNotification('টেলিগ্রামে এডমিনের সাথে কথা বলুন', 'info');
+        };
+        
+        window.buyTelegramPremium = () => {
+            if(!selectedTelegramPlan) {
+                showNotification('দয়া করে টেলিগ্রাম প্ল্যান সিলেক্ট করুন', 'error');
+                return;
+            }
+            
+            const planText = document.getElementById('selectedPlanText').textContent;
+            const price = document.getElementById('selectedPlanPrice').textContent;
+            
+            const message = `আসসালামু আলাইকুম আমি ${planText} (৳${price}) কিনতে চাই।`;
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${encodedMessage}`, '_blank');
+            showNotification('টেলিগ্রামে এডমিনের সাথে কথা বলুন', 'info');
+        };
+
+        // ✅ INITIALIZE EVENT LISTENERS
+        document.addEventListener('DOMContentLoaded', function() {
+            const depositAmount = document.getElementById('depositAmount');
+            if(depositAmount) {
+                depositAmount.addEventListener('input', window.calculateDepositVAT);
+            }
+            
+            const withdrawAmount = document.getElementById('withdrawAmount');
+            if(withdrawAmount) {
+                withdrawAmount.addEventListener('input', window.calculateWithdrawVAT);
+            }
+            
+            const rechAmount = document.getElementById('rechAmount');
+            if(rechAmount) {
+                rechAmount.addEventListener('input', window.calculateRechargeFee);
+            }
+            
+            window.calculateDepositVAT();
+            window.calculateWithdrawVAT();
+            window.calculateRechargeFee();
+            
+            // Initialize star prices
+            if(document.getElementById('price100')) {
+                document.getElementById('price100').textContent = (100 * 2.90).toFixed(2);
+                document.getElementById('price250').textContent = (250 * 2.90 * 0.90).toFixed(2);
+                document.getElementById('price500').textContent = (500 * 2.90 * 0.90).toFixed(2);
+            }
+        });
+
+        // ✅ DRAGGABLE CHAT FUNCTIONALITY
+        function initDraggableChat() {
+            setTimeout(() => {
                 const notifIcon = document.getElementById('notificationIcon');
                 if(notifIcon) {
                     makeDraggable(notifIcon);
@@ -1787,1234 +3090,9 @@
                 document.ontouchmove = null;
             }
         }
-
-        // RECEIPT MODAL
-        window.showReceipt = (transaction) => {
-            const receiptModal = document.createElement('div');
-            receiptModal.className = 'receipt-modal';
-            receiptModal.id = 'receiptModal';
-            
-            // Get icon based on type
-            let icon = '';
-            let iconClass = '';
-            let statusIcon = '';
-            let statusText = '';
-            
-            if(transaction.type.includes('Recharge')) {
-                icon = 'https://i.postimg.cc/jjdpNH5b/payment-method.png';
-                iconClass = 'w-16 h-16 mx-auto mb-4';
-            } else if(transaction.type.includes('Withdraw')) {
-                icon = 'https://i.postimg.cc/wMdF5zV5/withdraw.png';
-                iconClass = 'w-16 h-16 mx-auto mb-4';
-            } else if(transaction.type.includes('Deposit')) {
-                icon = 'https://i.postimg.cc/7ZGpHH5q/save-money.png';
-                iconClass = 'w-16 h-16 mx-auto mb-4';
-            } else if(transaction.type.includes('Task')) {
-                icon = 'https://i.postimg.cc/d1sXyCb6/clipboard.png';
-                iconClass = 'w-16 h-16 mx-auto mb-4';
-            } else if(transaction.type.includes('Bonus')) {
-                icon = 'https://i.postimg.cc/qqLQKVHV/bonus.png';
-                iconClass = 'w-16 h-16 mx-auto mb-4';
-            } else if(transaction.type.includes('Quiz')) {
-                icon = 'https://i.postimg.cc/mkNFY0L0/solution.png';
-                iconClass = 'w-16 h-16 mx-auto mb-4';
-            } else if(transaction.type.includes('Transfer')) {
-                icon = 'https://i.postimg.cc/VNTvSLRX/transaction-history.png';
-                iconClass = 'w-16 h-16 mx-auto mb-4';
-            } else {
-                icon = 'https://i.postimg.cc/VNTvSLRX/transaction-history.png';
-                iconClass = 'w-16 h-16 mx-auto mb-4';
-            }
-            
-            // Status icon
-            if(transaction.status === 'Pending') {
-                statusIcon = '🕙';
-                statusText = 'পেন্ডিং';
-            } else if(transaction.status === 'Success') {
-                statusIcon = '✅';
-                statusText = 'সফল';
-            } else if(transaction.status === 'Rejected') {
-                statusIcon = '❌';
-                statusText = 'রিজেক্ট';
-            }
-            
-            // Rejection reason
-            let rejectionHtml = '';
-            if(transaction.rejectionReason) {
-                rejectionHtml = `
-                <div class="mt-4 p-3 bg-red-50 rounded-lg">
-                    <p class="text-sm font-bold text-red-700">রিজেক্ট কারণ:</p>
-                    <p class="text-sm text-red-600">${transaction.rejectionReason}</p>
-                </div>
-                `;
-            }
-            
-            receiptModal.innerHTML = `
-                <div class="receipt-content">
-                    <div class="bg-premium p-6 text-white text-center">
-                        <h2 class="text-xl font-bold">টাকাওয়ালা রিসিট</h2>
-                        <p class="text-sm opacity-90">অফিসিয়াল ট্রানজেকশন রিসিট</p>
-                    </div>
-                    <div class="p-6">
-                        <img src="${icon}" class="${iconClass}">
-                        <div class="text-center mb-6">
-                            <h3 class="text-lg font-bold text-slate-800">${transaction.type}</h3>
-                            <div class="flex items-center justify-center gap-2 mt-2">
-                                <span class="text-2xl">${statusIcon}</span>
-                                <span class="font-bold ${transaction.status === 'Pending' ? 'text-yellow-600' : transaction.status === 'Success' ? 'text-green-600' : 'text-red-600'}">${statusText}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-3">
-                            <div class="flex justify-between border-b pb-2">
-                                <span class="text-slate-600">ট্রানজেকশন আইডি:</span>
-                                <span class="font-bold">${transaction.trxId || 'N/A'}</span>
-                            </div>
-                            <div class="flex justify-between border-b pb-2">
-                                <span class="text-slate-600">তারিখ:</span>
-                                <span class="font-bold">${transaction.date || 'N/A'}</span>
-                            </div>
-                            <div class="flex justify-between border-b pb-2">
-                                <span class="text-slate-600">সময়:</span>
-                                <span class="font-bold">${transaction.time || 'N/A'}</span>
-                            </div>
-                            ${transaction.method ? `
-                            <div class="flex justify-between border-b pb-2">
-                                <span class="text-slate-600">মেথড:</span>
-                                <span class="font-bold">${transaction.method}</span>
-                            </div>` : ''}
-                            ${transaction.accountNumber ? `
-                            <div class="flex justify-between border-b pb-2">
-                                <span class="text-slate-600">অ্যাকাউন্ট:</span>
-                                <span class="font-bold">${transaction.accountNumber}</span>
-                            </div>` : ''}
-                            <div class="flex justify-between border-b pb-2">
-                                <span class="text-slate-600">পরিমাণ:</span>
-                                <span class="font-bold text-green-600">৳${transaction.amount}</span>
-                            </div>
-                            ${transaction.vat ? `
-                            <div class="flex justify-between border-b pb-2">
-                                <span class="text-slate-600">ভ্যাট:</span>
-                                <span class="font-bold">৳${transaction.vat}</span>
-                            </div>` : ''}
-                            ${transaction.receivedAmount ? `
-                            <div class="flex justify-between border-b pb-2">
-                                <span class="text-slate-600">প্রাপ্ত:</span>
-                                <span class="font-bold text-green-600">৳${transaction.receivedAmount}</span>
-                            </div>` : ''}
-                            ${rejectionHtml}
-                        </div>
-                        
-                        <div class="mt-8">
-                            <button onclick="document.getElementById('receiptModal').remove()" class="w-full bg-premium text-white py-3 rounded-xl font-bold shadow-lg">বন্ধ করুন</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(receiptModal);
-            
-            // Close on outside click
-            receiptModal.addEventListener('click', (e) => {
-                if(e.target === receiptModal) {
-                    receiptModal.remove();
-                }
-            });
-        };
-
-        // VAT CALCULATION FUNCTIONS
-        window.calculateDepositVAT = () => {
-            const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
-            const vatPercentage = systemSettings.vatPercentage || 10;
-            const vat = amount * (vatPercentage / 100);
-            const total = amount + vat;
-            document.getElementById('vatCalculation').innerHTML = `ভ্যাট (${vatPercentage}%): ৳${vat.toFixed(2)} | মোট: ৳${total.toFixed(2)}`;
-        };
-        
-        window.calculateWithdrawVAT = () => {
-            const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
-            const vatPercentage = systemSettings.vatPercentage || 10;
-            const vat = amount * (vatPercentage / 100);
-            const received = amount - vat;
-            document.getElementById('withdrawVat').innerHTML = `ভ্যাট (${vatPercentage}%): ৳${vat.toFixed(2)} | প্রাপ্ত: ৳${received.toFixed(2)}`;
-        };
-        
-        window.calculateRechargeFee = () => {
-            const amount = parseFloat(document.getElementById('rechAmount').value) || 0;
-            const fee = systemSettings.rechargeFee || 5;
-            const total = amount + fee;
-            document.getElementById('rechargeFee').innerHTML = `সার্ভিস চার্জ: ৳${fee.toFixed(2)} | মোট: ৳${total.toFixed(2)}`;
-        };
-
-        // QUIZ FUNCTIONS
-        window.selectQuizType = async (type) => {
-            currentQuizType = type;
-            
-            // Reset all borders
-            document.querySelectorAll('#quizScreen .grid > div').forEach(div => {
-                div.classList.remove('border-green-500', 'bg-green-50');
-            });
-            
-            // Add border to selected
-            const selectedDiv = document.querySelector(`#quizScreen .grid > div:nth-child(${type === 'general' ? 1 : type === 'math' ? 2 : type === 'science' ? 3 : 4})`);
-            selectedDiv.classList.add('border-green-500', 'bg-green-50');
-            
-            // Load quiz from Firebase
-            showLoading();
-            try {
-                const quizQuery = query(collection(db, "quizzes"), where("type", "==", type), where("active", "==", true));
-                const quizSnapshot = await getDocs(quizQuery);
-                
-                if(quizSnapshot.empty) {
-                    document.getElementById('quizContent').innerHTML = `
-                        <div class="text-center p-6">
-                            <img src="https://i.postimg.cc/mkNFY0L0/solution.png" class="w-20 mx-auto mb-4">
-                            <p class="text-slate-600">এই ধরনের কুইজ এখনই উপলব্ধ নেই</p>
-                        </div>`;
-                    document.getElementById('submitQuizBtn').classList.add('hidden');
-                    hideLoading();
-                    return;
-                }
-                
-                const quiz = quizSnapshot.docs[0].data();
-                const quizId = quizSnapshot.docs[0].id;
-                
-                let optionsHtml = '';
-                if(quiz.options && Array.isArray(quiz.options)) {
-                    quiz.options.forEach((option, index) => {
-                        optionsHtml += `
-                        <button onclick="window.selectQuizAnswer('${quizId}', ${index})" class="w-full p-3 bg-white rounded-lg text-left hover:bg-slate-50 mb-2 border">
-                            ${option}
-                        </button>`;
-                    });
-                }
-                
-                // Set timer
-                const timeLimit = quiz.timeLimit || 60; // Default 60 seconds
-                startQuizTimer(timeLimit);
-                
-                document.getElementById('quizContent').innerHTML = `
-                    <div class="bg-slate-100 p-4 rounded-xl">
-                        <div class="flex justify-between items-center mb-3">
-                            <h4 class="font-bold text-slate-700">${quiz.question}</h4>
-                            <span class="quiz-timer" id="quizTimer">${timeLimit}সেকেন্ড</span>
-                        </div>
-                        <div class="space-y-2">
-                            ${optionsHtml}
-                        </div>
-                    </div>`;
-                
-                document.getElementById('submitQuizBtn').classList.remove('hidden');
-                hideLoading();
-                
-            } catch (error) {
-                console.error("Error loading quiz:", error);
-                document.getElementById('quizContent').innerHTML = `
-                    <div class="text-center p-6">
-                        <p class="text-red-400">কুইজ লোড করতে সমস্যা হয়েছে</p>
-                    </div>`;
-                hideLoading();
-            }
-        };
-        
-        function startQuizTimer(seconds) {
-            if(quizTimer) clearInterval(quizTimer);
-            
-            let timeLeft = seconds;
-            const timerElement = document.getElementById('quizTimer');
-            
-            quizTimer = setInterval(() => {
-                timeLeft--;
-                if(timerElement) {
-                    timerElement.textContent = `${timeLeft}সেকেন্ড`;
-                }
-                
-                if(timeLeft <= 0) {
-                    clearInterval(quizTimer);
-                    showNotification('সময় শেষ! কুইজ বাতিল হয়ে গেছে', 'error');
-                    document.getElementById('quizContent').innerHTML = `
-                        <div class="text-center p-6">
-                            <p class="text-red-400">সময় শেষ! কুইজ বাতিল হয়ে গেছে</p>
-                        </div>`;
-                    document.getElementById('submitQuizBtn').classList.add('hidden');
-                }
-            }, 1000);
-        }
-        
-        window.selectQuizAnswer = (quizId, answerIndex) => {
-            // Remove previous selection
-            document.querySelectorAll('#quizContent button').forEach(btn => {
-                btn.classList.remove('bg-green-100', 'border-green-500');
-            });
-            
-            // Add selection to clicked button
-            event.target.classList.add('bg-green-100', 'border-green-500');
-            
-            // Store selected answer
-            window.selectedQuizAnswer = answerIndex;
-            window.selectedQuizId = quizId;
-        };
-        
-        window.submitQuiz = async () => {
-            if(!window.selectedQuizAnswer && window.selectedQuizAnswer !== 0) {
-                showNotification('দয়া করে একটি উত্তর সিলেক্ট করুন', 'error');
-                return;
-            }
-            
-            showLoading();
-            try {
-                // Check if answer is correct
-                const quizDoc = await getDoc(doc(db, "quizzes", window.selectedQuizId));
-                if(quizDoc.exists()) {
-                    const quiz = quizDoc.data();
-                    const isCorrect = quiz.correctAnswer === window.selectedQuizAnswer;
-                    
-                    if(isCorrect) {
-                        // Auto add 0.25 BDT to main balance
-                        const userRef = doc(db, "users", currentUserId);
-                        await updateDoc(userRef, {
-                            mainBalance: increment(0.25),
-                            totalEarnings: increment(0.25)
-                        });
-                        
-                        // Add to history
-                        await addDoc(collection(db, "history"), {
-                            userId: currentUserId,
-                            type: "কুইজ পুরস্কার",
-                            amount: 0.25,
-                            status: "Success",
-                            details: `সঠিক উত্তর: ${currentQuizType} কুইজ`,
-                            date: new Date().toLocaleDateString('bn-BD'),
-                            time: new Date().toLocaleTimeString('bn-BD'),
-                            timestamp: serverTimestamp()
-                        });
-                        
-                        showNotification('সঠিক উত্তর! ৳0.25 ব্যালেন্সে যোগ হয়েছে', 'success');
-                        
-                        // Reset quiz
-                        document.getElementById('quizContent').innerHTML = `
-                            <div class="text-center p-6">
-                                <img src="https://i.postimg.cc/Z5qXdsGw/Pngtree-brain-bulb-8791438.png" class="w-20 mx-auto mb-4">
-                                <p class="text-green-600 font-bold">সঠিক উত্তর! ৳0.25 ব্যালেন্সে যোগ হয়েছে</p>
-                            </div>`;
-                        document.getElementById('submitQuizBtn').classList.add('hidden');
-                        
-                        // Clear timer
-                        if(quizTimer) clearInterval(quizTimer);
-                        
-                    } else {
-                        showNotification('ভুল উত্তর! আবার চেষ্টা করুন', 'error');
-                    }
-                }
-                hideLoading();
-            } catch (error) {
-                console.error("Error submitting quiz:", error);
-                showNotification('কুইজ সাবমিট করতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
-
-        // SUBSCRIPTION FUNCTIONS
-        window.switchSubscriptionTab = (tab) => {
-            if(tab === 'stars') {
-                document.getElementById('starsSection').classList.remove('hidden');
-                document.getElementById('telegramSection').classList.add('hidden');
-                document.getElementById('tabStars').className = 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow';
-                document.getElementById('tabTelegram').className = 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
-            } else {
-                document.getElementById('starsSection').classList.add('hidden');
-                document.getElementById('telegramSection').classList.remove('hidden');
-                document.getElementById('tabStars').className = 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
-                document.getElementById('tabTelegram').className = 'flex-1 py-3 font-bold text-sm rounded-xl bg-blue-500 text-white shadow';
-            }
-        };
-        
-        window.selectStarPackage = (stars) => {
-            selectedStarPackage = stars;
-            
-            // Remove previous selection
-            document.querySelectorAll('#starsSection .grid > div').forEach(div => {
-                div.classList.remove('border-yellow-500', 'bg-yellow-50');
-            });
-            
-            // Add selection
-            let selectedDiv;
-            if(stars === 100) selectedDiv = document.querySelector('#starsSection .grid > div:nth-child(1)');
-            else if(stars === 250) selectedDiv = document.querySelector('#starsSection .grid > div:nth-child(2)');
-            else selectedDiv = document.querySelector('#starsSection .grid > div:nth-child(3)');
-            
-            selectedDiv.classList.add('border-yellow-500', 'bg-yellow-50');
-            
-            // Calculate price
-            const starPrice = 2.90;
-            let totalPrice = stars * starPrice;
-            
-            // Apply discount for 250 and 500 stars
-            if(stars === 250 || stars === 500) {
-                totalPrice = totalPrice * 0.90; // 10% discount
-            }
-            
-            document.getElementById('selectedStars').textContent = stars;
-            document.getElementById('totalStarPrice').textContent = totalPrice.toFixed(2);
-        };
-        
-        window.selectTelegramPlan = (plan) => {
-            selectedTelegramPlan = plan;
-            
-            // Remove previous selection
-            document.querySelectorAll('#telegramSection .space-y-4 > div').forEach(div => {
-                div.classList.remove('border-blue-500', 'bg-blue-50');
-            });
-            
-            // Add selection
-            let selectedDiv;
-            if(plan === '1month') selectedDiv = document.querySelector('#telegramSection .space-y-4 > div:nth-child(1)');
-            else if(plan === '3month') selectedDiv = document.querySelector('#telegramSection .space-y-4 > div:nth-child(2)');
-            else selectedDiv = document.querySelector('#telegramSection .space-y-4 > div:nth-child(3)');
-            
-            selectedDiv.classList.add('border-blue-500', 'bg-blue-50');
-            
-            // Update display
-            let planText = '';
-            let price = 0;
-            
-            if(plan === '1month') {
-                planText = '১ মাস';
-                price = 600;
-            } else if(plan === '3month') {
-                planText = '৩ মাস';
-                price = 1550;
-            } else {
-                planText = '১ বছর';
-                price = 3900;
-            }
-            
-            document.getElementById('selectedPlanText').textContent = planText;
-            document.getElementById('selectedPlanPrice').textContent = price;
-        };
-        
-        window.buyStars = async () => {
-            if(!selectedStarPackage || selectedStarPackage === 0) {
-                showNotification('দয়া করে স্টার প্যাকেজ সিলেক্ট করুন', 'error');
-                return;
-            }
-            
-            const starPrice = 2.90;
-            let totalPrice = selectedStarPackage * starPrice;
-            
-            if(selectedStarPackage === 250 || selectedStarPackage === 500) {
-                totalPrice = totalPrice * 0.90;
-            }
-            
-            if(currentUserData.mainBalance < totalPrice) {
-                showNotification('পর্যাপ্ত ব্যালেন্স নেই', 'error');
-                return;
-            }
-            
-            showLoading();
-            try {
-                // Deduct balance automatically
-                const userRef = doc(db, "users", currentUserId);
-                await updateDoc(userRef, {
-                    mainBalance: increment(-totalPrice),
-                    stars: increment(selectedStarPackage)
-                });
-                
-                // Add to history
-                await addDoc(collection(db, "history"), {
-                    userId: currentUserId,
-                    type: "স্টার কিনুন",
-                    amount: -totalPrice,
-                    status: "Success",
-                    details: `${selectedStarPackage} স্টার ক্রয়`,
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: serverTimestamp()
-                });
-                
-                showNotification(`${selectedStarPackage} স্টার সফলভাবে কিনা হয়েছে!`, 'success');
-                
-                // Reset selection
-                selectedStarPackage = 0;
-                document.getElementById('selectedStars').textContent = '0';
-                document.getElementById('totalStarPrice').textContent = '0';
-                document.querySelectorAll('#starsSection .grid > div').forEach(div => {
-                    div.classList.remove('border-yellow-500', 'bg-yellow-50');
-                });
-                
-                hideLoading();
-            } catch (error) {
-                console.error("Error buying stars:", error);
-                showNotification('স্টার কিনতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
-        
-        window.buyTelegramPremium = () => {
-            if(!selectedTelegramPlan) {
-                showNotification('দয়া করে টেলিগ্রাম প্ল্যান সিলেক্ট করুন', 'error');
-                return;
-            }
-            
-            let planText = '';
-            let price = 0;
-            
-            if(selectedTelegramPlan === '1month') {
-                planText = '১ মাসের টেলিগ্রাম প্রিমিয়াম';
-                price = 600;
-            } else if(selectedTelegramPlan === '3month') {
-                planText = '৩ মাসের টেলিগ্রাম প্রিমিয়াম';
-                price = 1550;
-            } else {
-                planText = '১ বছরের টেলিগ্রাম প্রিমিয়াম';
-                price = 3900;
-            }
-            
-            if(currentUserData.mainBalance < price) {
-                showNotification('পর্যাপ্ত ব্যালেন্স নেই', 'error');
-                return;
-            }
-            
-            // Redirect to Telegram with pre-filled message
-            const message = `আসসালামু আলাইকুম। আমি ${currentUserData.name} টাকাওয়ালা অ্যাপ থেকে ${planText} কিনতে চাই। আমার ইউজার আইডি: ${currentUserId}`;
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${encodedMessage}`, '_blank');
-            
-            showNotification('টেলিগ্রামে এডমিনের সাথে যোগাযোগ করুন', 'info');
-        };
-
-        // SUPPORT FUNCTION
-        window.openSupport = () => {
-            const message = "আসসালামু আলাইকুম। আমি টাকাওয়ালা অ্যাপ থেকে সমস্যা নিয়ে যোগাযোগ করছি। দয়া করে আমাকে সাহায্য করুন।";
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${encodedMessage}`, '_blank');
-        };
-
-        // MONITAG AD MANAGEMENT
-        function loadAds() {
-            // Monitag SDK is already loaded in head
-            // We'll use their API to show ads in specific locations
-            
-            // Show ads in different containers
-            const adContainers = [
-                'authTopAd', 'authBottomAd', 'mainAppTopAd', 'homeMidAd', 
-                'homeBottomAd', 'taskTopAd', 'taskBottomAd', 'walletBottomAd',
-                'rechargeBottomAd', 'moreTopAd', 'moreBottomAd'
-            ];
-            
-            adContainers.forEach(containerId => {
-                const container = document.getElementById(containerId);
-                if(container) {
-                    // Monitag will automatically fill these containers
-                    container.innerHTML = '<div class="text-center p-4 text-slate-500">লোড হচ্ছে...</div>';
-                }
-            });
-        }
-
-        // DEPOSIT WITH AUTO BALANCE DEDUCTION
-        window.submitDeposit = async () => {
-            const trxId = document.getElementById('depositTrxId').value.trim();
-            const amount = parseFloat(document.getElementById('depositAmount').value);
-            const method = document.getElementById('selectedDepositMethod').value;
-            
-            if(!trxId || !amount || amount <= 0) {
-                showNotification('সঠিক তথ্য দিন', 'error');
-                return;
-            }
-            
-            if(!method) {
-                showNotification('পেমেন্ট মেথড সিলেক্ট করুন', 'error');
-                return;
-            }
-            
-            showLoading();
-            showNotification('ডিপোজিট রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
-            
-            try {
-                const vatPercentage = systemSettings.vatPercentage || 10;
-                const vat = amount * (vatPercentage / 100);
-                const totalAmount = amount + vat;
-                
-                // Create pending deposit request
-                await addDoc(collection(db, "pending_requests"), { 
-                    userId: currentUserId, 
-                    type: "ডিপোজিট", 
-                    amount: amount, 
-                    vat: vat,
-                    totalAmount: totalAmount,
-                    trxId: trxId,
-                    method: method,
-                    userName: currentUserData.name,
-                    userPhone: currentUserData.phone,
-                    status: "Pending",
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: serverTimestamp()
-                });
-                
-                // Send Telegram notification
-                const message = `💵 <b>নতুন ডিপোজিট রিকোয়েস্ট</b>\n\n👤 ইউজার: ${currentUserData.name}\n📞 ফোন: ${currentUserData.phone}\n💰 পরিমাণ: ৳${amount}\n💰 ভ্যাট: ৳${vat.toFixed(2)}\n💰 মোট: ৳${totalAmount.toFixed(2)}\n📝 TrxID: ${trxId}\n🏦 মেথড: ${method}\n⏰ সময়: ${new Date().toLocaleString()}\n📅 তারিখ: ${new Date().toLocaleDateString('bn-BD')}`;
-                await sendTelegramNotification(message);
-                
-                showNotification('ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
-                hideLoading();
-                
-                // Clear form
-                document.getElementById('depositTrxId').value = '';
-                document.getElementById('depositAmount').value = '';
-                window.calculateDepositVAT();
-                
-            } catch (e) {
-                showNotification('ডিপোজিট রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
-        
-        // WITHDRAW WITH AUTO BALANCE DEDUCTION
-        window.submitWithdraw = async () => {
-            const number = document.getElementById('withdrawNumber').value.trim();
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const method = document.getElementById('selectedWithdrawMethod').value;
-            
-            if(!number || !amount || amount <= 0) {
-                showNotification('সঠিক তথ্য দিন', 'error');
-                return;
-            }
-            
-            if(!method) {
-                showNotification('উত্তোলন মেথড সিলেক্ট করুন', 'error');
-                return;
-            }
-            
-            // Check minimum and maximum withdraw limits
-            const minWithdraw = systemSettings.minWithdraw || 100;
-            const maxWithdraw = systemSettings.maxWithdraw || 5000;
-            
-            if(amount < minWithdraw) {
-                showNotification(`ন্যূনতম উত্তোলন পরিমাণ ৳${minWithdraw}`, 'error');
-                return;
-            }
-            
-            if(amount > maxWithdraw) {
-                showNotification(`সর্বোচ্চ উত্তোলন পরিমাণ ৳${maxWithdraw}`, 'error');
-                return;
-            }
-            
-            const vatPercentage = systemSettings.vatPercentage || 10;
-            const vat = amount * (vatPercentage / 100);
-            const received = amount - vat;
-            
-            if(currentUserData.mainBalance < amount) {
-                showNotification('পর্যাপ্ত ব্যালেন্স নেই', 'error');
-                return;
-            }
-            
-            showLoading();
-            showNotification('উত্তোলন রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
-            
-            try {
-                // DEDUCT BALANCE AUTOMATICALLY
-                const userRef = doc(db, "users", currentUserId);
-                await updateDoc(userRef, {
-                    mainBalance: increment(-amount),
-                    totalWithdraw: increment(amount)
-                });
-                
-                // Create pending withdraw request
-                await addDoc(collection(db, "pending_requests"), { 
-                    userId: currentUserId, 
-                    type: "উত্তোলন", 
-                    amount: amount, 
-                    vat: vat,
-                    receivedAmount: received,
-                    accountNumber: number,
-                    method: method,
-                    userName: currentUserData.name,
-                    userPhone: currentUserData.phone,
-                    status: "Pending",
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: serverTimestamp()
-                });
-                
-                // Add to history
-                await addDoc(collection(db, "history"), {
-                    userId: currentUserId,
-                    type: "উত্তোলন",
-                    amount: -amount,
-                    status: "Pending",
-                    details: `${method} - ${number}`,
-                    vat: vat,
-                    receivedAmount: received,
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: serverTimestamp()
-                });
-                
-                // Send Telegram notification
-                const message = `🏧 <b>নতুন উত্তোলন রিকোয়েস্ট</b>\n\n👤 ইউজার: ${currentUserData.name}\n📞 ফোন: ${currentUserData.phone}\n💰 পরিমাণ: ৳${amount}\n💰 ভ্যাট: ৳${vat.toFixed(2)}\n💰 প্রাপ্ত: ৳${received.toFixed(2)}\n📱 উত্তোলন নাম্বার: ${number}\n🏦 মেথড: ${method}\n⏰ সময়: ${new Date().toLocaleString()}\n📅 তারিখ: ${new Date().toLocaleDateString('bn-BD')}`;
-                await sendTelegramNotification(message);
-                
-                showNotification('উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
-                hideLoading();
-                
-                // Clear form
-                document.getElementById('withdrawNumber').value = '';
-                document.getElementById('withdrawAmount').value = '';
-                window.calculateWithdrawVAT();
-                
-            } catch (e) {
-                showNotification('উত্তোলন রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
-        
-        // RECHARGE WITH AUTO BALANCE DEDUCTION
-        window.submitRecharge = async () => { 
-            const phone = document.getElementById('rechPhone').value.trim();
-            const amount = parseFloat(document.getElementById('rechAmount').value);
-            const operator = document.getElementById('selectedOperator').value;
-            
-            if(!phone || !amount || amount <= 0) {
-                showNotification('সঠিক তথ্য দিন', 'error');
-                return;
-            }
-            
-            const fee = systemSettings.rechargeFee || 5;
-            const totalAmount = amount + fee;
-            
-            if(currentUserData.rechargeBalance < totalAmount) {
-                showNotification('পর্যাপ্ত রিচার্জ ব্যালেন্স নেই', 'error');
-                return;
-            }
-            
-            showLoading();
-            showNotification('রিচার্জ রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
-            
-            try {
-                // DEDUCT BALANCE AUTOMATICALLY
-                const userRef = doc(db, "users", currentUserId);
-                await updateDoc(userRef, {
-                    rechargeBalance: increment(-totalAmount)
-                });
-                
-                await addDoc(collection(db, "recharge_requests"), { 
-                    userId: currentUserId, 
-                    phone: phone, 
-                    amount: amount, 
-                    fee: fee,
-                    totalAmount: totalAmount,
-                    operator: operator,
-                    status: 'Pending', 
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: serverTimestamp()
-                }); 
-                
-                // Add to history
-                await addDoc(collection(db, "history"), {
-                    userId: currentUserId,
-                    type: "রিচার্জ",
-                    amount: -totalAmount,
-                    status: "Pending",
-                    details: `${operator} - ${phone}`,
-                    fee: fee,
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: serverTimestamp()
-                });
-                
-                // Send Telegram notification
-                const message = `📱 <b>নতুন রিচার্জ রিকোয়েস্ট</b>\n\n👤 ইউজার: ${currentUserData.name}\n📞 ফোন: ${currentUserData.phone}\n🔋 রিচার্জ নাম্বার: ${phone}\n📶 অপারেটর: ${operator}\n💰 পরিমাণ: ৳${amount}\n💰 সার্ভিস চার্জ: ৳${fee}\n💰 মোট: ৳${totalAmount}\n⏰ সময়: ${new Date().toLocaleString()}\n📅 তারিখ: ${new Date().toLocaleDateString('bn-BD')}`;
-                await sendTelegramNotification(message);
-                
-                showNotification('রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে', 'success'); 
-                hideLoading();
-                
-                // Clear form
-                document.getElementById('rechPhone').value = '';
-                document.getElementById('rechAmount').value = '';
-                window.calculateRechargeFee();
-                
-            } catch (e) {
-                showNotification('রিচার্জ রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
-        
-        // TRANSFER WITH AUTO BALANCE DEDUCTION
-        window.transferBalance = async () => {
-            const am = parseFloat(document.getElementById('transferAmount').value);
-            if(!am || am <= 0 || currentUserData.mainBalance < am) {
-                showNotification('ব্যালেন্স নেই বা ভুল পরিমাণ', 'error');
-                return;
-            }
-            
-            showLoading();
-            showNotification('ট্রান্সফার হচ্ছে...', 'info');
-            
-            try {
-                // AUTO TRANSFER - No admin approval needed
-                const userRef = doc(db, "users", currentUserId);
-                
-                await updateDoc(userRef, {
-                    mainBalance: increment(-am),
-                    rechargeBalance: increment(am)
-                });
-                
-                // Add to history
-                await addDoc(collection(db, "history"), {
-                    userId: currentUserId,
-                    type: "ব্যালেন্স ট্রান্সফার",
-                    amount: am,
-                    status: "Success",
-                    details: "মেইন ব্যালেন্স থেকে রিচার্জ ব্যালেন্স",
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: serverTimestamp()
-                });
-                
-                showNotification(`৳${am} টাকা সফলভাবে ট্রান্সফার হয়েছে`, 'success');
-                hideLoading();
-                
-                // Clear form
-                document.getElementById('transferAmount').value = '';
-                
-            } catch (e) {
-                showNotification('ট্রান্সফার করতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
-        
-        // UPDATE PROFILE
-        window.updateProfile = async () => { 
-            try {
-                showLoading();
-                await updateDoc(doc(db, "users", currentUserId), { 
-                    name: document.getElementById('profNameInput').value, 
-                    email: document.getElementById('profEmailInput').value 
-                }); 
-                showNotification('প্রোফাইল আপডেট হয়েছে', 'success'); 
-                hideLoading();
-            } catch (e) {
-                showNotification('প্রোফাইল আপডেট করতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
-        
-        // CHANGE PASSWORD
-        window.changePassword = async () => {
-            const { value: newPassword } = await Swal.fire({
-                title: 'নতুন পাসওয়ার্ড দিন',
-                input: 'password',
-                inputLabel: 'নতুন পাসওয়ার্ড (৬+ সংখ্যা)',
-                inputPlaceholder: 'নতুন পাসওয়ার্ড দিন',
-                showCancelButton: true,
-                confirmButtonText: 'পরিবর্তন করুন',
-                cancelButtonText: 'বাতিল',
-                inputValidator: (value) => {
-                    if (!value || value.length < 6) {
-                        return 'পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে';
-                    }
-                }
-            });
-            
-            if (newPassword) {
-                try {
-                    showLoading();
-                    const user = auth.currentUser;
-                    await updatePassword(user, newPassword);
-                    showNotification('পাসওয়ার্ড পরিবর্তন সফল', 'success');
-                    hideLoading();
-                } catch (error) {
-                    showNotification('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে', 'error');
-                    hideLoading();
-                }
-            }
-        };
-        
-        // LOAD HISTORY WITH REAL-TIME DATA
-        window.loadHistory = () => {
-            window.showPage('historyScreen');
-            document.getElementById('historyListContainer').innerHTML = '<p class="text-center text-slate-400 mt-10">হিস্ট্রি লোড হচ্ছে...</p>';
-            
-            showLoading();
-            setTimeout(async () => {
-                try {
-                    const q = query(collection(db, "history"), where("userId", "==", currentUserId), orderBy("timestamp", "desc"));
-                    const querySnapshot = await getDocs(q);
-                    const list = document.getElementById('historyListContainer'); 
-                    if(!list) return; 
-                    
-                    list.innerHTML = '';
-                    
-                    if(querySnapshot.empty) { 
-                        list.innerHTML = `
-                        <div class="text-center mt-10">
-                            <img src="https://i.postimg.cc/VNTvSLRX/transaction-history.png" class="w-20 mx-auto mb-4 opacity-50">
-                            <p class="text-slate-400">কোনো হিস্ট্রি নেই</p>
-                            <p class="text-sm text-slate-500 mt-2">আপনার প্রথম ট্রানজেকশন করুন</p>
-                        </div>`; 
-                        hideLoading();
-                        return; 
-                    }
-                    
-                    querySnapshot.forEach(doc => {
-                        const h = doc.data(); 
-                        const trx = h.trxId || h.trx || 'TRX'+Math.floor(100000+Math.random()*900000);
-                        const date = h.date || new Date().toLocaleDateString('bn-BD');
-                        const time = h.time || new Date().toLocaleTimeString('bn-BD');
-                        
-                        // Get icon based on type
-                        let icon = '';
-                        if(h.type.includes('Recharge')) {
-                            icon = 'https://i.postimg.cc/jjdpNH5b/payment-method.png';
-                        } else if(h.type.includes('Withdraw')) {
-                            icon = 'https://i.postimg.cc/wMdF5zV5/withdraw.png';
-                        } else if(h.type.includes('Deposit')) {
-                            icon = 'https://i.postimg.cc/7ZGpHH5q/save-money.png';
-                        } else if(h.type.includes('Task')) {
-                            icon = 'https://i.postimg.cc/d1sXyCb6/clipboard.png';
-                        } else if(h.type.includes('Bonus')) {
-                            icon = 'https://i.postimg.cc/qqLQKVHV/bonus.png';
-                        } else if(h.type.includes('Transfer')) {
-                            icon = 'https://i.postimg.cc/VNTvSLRX/transaction-history.png';
-                        } else if(h.type.includes('কুইজ')) {
-                            icon = 'https://i.postimg.cc/mkNFY0L0/solution.png';
-                        } else if(h.type.includes('স্টার')) {
-                            icon = 'https://i.postimg.cc/Z5JxMx1z/subscription-active.png';
-                        } else if(h.type.includes('রেফার')) {
-                            icon = 'https://i.postimg.cc/c4xbp54V/add-friend.png';
-                        } else {
-                            icon = 'https://i.postimg.cc/VNTvSLRX/transaction-history.png';
-                        }
-                        
-                        // Status icon
-                        let statusIcon = '';
-                        if(h.status === 'Pending') {
-                            statusIcon = '🕙';
-                        } else if(h.status === 'Success') {
-                            statusIcon = '✅';
-                        } else if(h.status === 'Rejected') {
-                            statusIcon = '❌';
-                        }
-                        
-                        list.innerHTML += `
-                        <div class="glass-card p-4 rounded-2xl flex items-center gap-3 animate__animated animate__fadeIn">
-                            <div class="flex-shrink-0">
-                                <img src="${icon}" class="w-12 h-12 rounded-xl">
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-center">
-                                    <h4 class="font-bold text-slate-700">${h.type}</h4>
-                                    <span class="font-bold ${h.amount>0?'text-green-600':'text-red-500'}">৳${Math.abs(h.amount) || 0}</span>
-                                </div>
-                                <div class="flex justify-between items-center mt-1">
-                                    <p class="text-[11px] text-slate-500">${date} • ${time}</p>
-                                    <span class="text-sm">${statusIcon}</span>
-                                </div>
-                                ${h.method ? `<p class="text-[10px] text-slate-600 mt-1">মেথড: ${h.method}</p>` : ''}
-                                ${h.details ? `<p class="text-[10px] text-slate-500 mt-1">${h.details}</p>` : ''}
-                            </div>
-                            <button onclick="window.showReceipt(${JSON.stringify(h).replace(/"/g, '&quot;')})" class="text-[10px] bg-premium text-white px-3 py-1.5 rounded-lg font-bold">রিসিট</button>
-                        </div>`;
-                    });
-                    hideLoading();
-                } catch (error) {
-                    console.error("Error loading history:", error);
-                    document.getElementById('historyListContainer').innerHTML = `
-                    <div class="text-center mt-10">
-                        <p class="text-red-400">হিস্ট্রি লোড করতে সমস্যা হয়েছে</p>
-                        <button onclick="window.loadHistory()" class="mt-2 text-sm text-blue-600 font-bold">আবার চেষ্টা করুন</button>
-                    </div>`;
-                    hideLoading();
-                }
-            }, 1000);
-        };
-        
-        // DAILY BONUS WITH AUTO ADDITION
-        window.showDailyBonus = async () => {
-            if(!currentUserId) return;
-            
-            try {
-                const userDoc = await getDoc(doc(db, "users", currentUserId));
-                if(userDoc.exists()) {
-                    const data = userDoc.data();
-                    const today = new Date().toDateString();
-                    const lastBonus = data.lastDailyBonus ? new Date(data.lastDailyBonus.toDate()).toDateString() : null;
-                    
-                    if(lastBonus === today) {
-                        showNotification('আপনি আজকে ইতিমধ্যেই ডেইলি বোনাস নিয়েছেন', 'info');
-                        return;
-                    }
-                    
-                    const bonusAmount = Math.floor(2 + Math.random() * 2); // 2-3 টাকা
-                    
-                    const result = await Swal.fire({
-                        title: 'ডেইলি বোনাস',
-                        html: `আজকের ডেইলি বোনাস: <b>৳${bonusAmount}</b><br><br>এই বোনাস নিতে চান?`,
-                        showCancelButton: true,
-                        confirmButtonText: 'হ্যাঁ, নিন',
-                        cancelButtonText: 'না',
-                        confirmButtonColor: '#059669',
-                        icon: 'info'
-                    });
-                    
-                    if (result.isConfirmed) {
-                        showLoading();
-                        
-                        // AUTO ADD DAILY BONUS
-                        const userRef = doc(db, "users", currentUserId);
-                        
-                        await updateDoc(userRef, {
-                            mainBalance: increment(bonusAmount),
-                            totalEarnings: increment(bonusAmount),
-                            lastDailyBonus: serverTimestamp()
-                        });
-                        
-                        // Add to history
-                        await addDoc(collection(db, "history"), {
-                            userId: currentUserId,
-                            type: "ডেইলি বোনাস",
-                            amount: bonusAmount,
-                            status: "Success",
-                            details: "নিয়মিত ডেইলি বোনাস",
-                            date: new Date().toLocaleDateString('bn-BD'),
-                            time: new Date().toLocaleTimeString('bn-BD'),
-                            timestamp: serverTimestamp()
-                        });
-                        
-                        showNotification(`৳${bonusAmount} ডেইলি বোনাস সফলভাবে যোগ হয়েছে!`, 'success');
-                        checkDailyBonus(currentUserId);
-                        hideLoading();
-                    }
-                }
-            } catch (e) {
-                console.error("Error showing daily bonus:", e);
-                showNotification('ডেইলি বোনাস লোড করতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
-        
-        // COPY REFERRAL LINK
-        window.copyReferralLink = () => {
-            const link = document.getElementById('referralLink').innerText;
-            navigator.clipboard.writeText(link);
-            showNotification('রেফার লিংক কপি হয়েছে!', 'success');
-        };
-        
-        // BUY PACKAGE
-        window.buyPackage = async (packageType) => {
-            showNotification(`${packageType} প্যাকেজ কিনতে চান? এই ফিচার শীঘ্রই আসছে!`, 'info');
-        };
-        
-        // LOGOUT
-        window.logout = () => {
-            signOut(auth);
-            showNotification('লগআউট সফল', 'success');
-        };
-        
-        // SHOW RULES
-        window.showRules = (t) => {
-            Swal.fire({
-                title: `${t} নিয়মাবলী`,
-                html: `
-                    <div class="text-left">
-                        <p><b>১.</b> সকল ট্রানজেকশন এডমিন এপ্রুভ করবেন</p>
-                        <p><b>২.</b> ভুয়া তথ্য দিলে একাউন্ট বন্ধ হয়ে যাবে</p>
-                        <p><b>৩.</b> রেফার করলে প্রতি রেফার ৳5 বোনাস</p>
-                        <p><b>৪.</b> উত্তোলনে ১০% ভ্যাট কাটা হবে</p>
-                        <p><b>৫.</b> প্রতিদিন ১টি ডেইলি বোনাস পাওয়া যাবে</p>
-                    </div>
-                `,
-                confirmButtonText: 'বুঝেছি'
-            });
-        };
-        
-        // SHOW DRIVE OFFER
-        window.showDriveOffer = () => {
-            showNotification('ড্রাইভ অফার শীঘ্রই আসছে!', 'info');
-        };
-
-        // GLOBAL WINDOW FUNCTIONS
-        window.toggleAuthTab = (t) => {
-            document.getElementById('loginForm').classList.toggle('hidden', t!=='login');
-            document.getElementById('registerForm').classList.toggle('hidden', t!=='register');
-            document.getElementById('btnTabLogin').className = t==='login'?'flex-1 py-3 rounded-full text-sm font-bold bg-premium text-white shadow-lg':'flex-1 py-3 rounded-full text-sm font-bold text-slate-500';
-            document.getElementById('btnTabRegister').className = t==='register'?'flex-1 py-3 rounded-full text-sm font-bold bg-premium text-white shadow-lg':'flex-1 py-3 rounded-full text-sm font-bold text-slate-500';
-        };
-        
-        window.showPage = (id) => { 
-            showLoading();
-            setTimeout(() => {
-                document.querySelectorAll('#mainApp > div').forEach(d => { 
-                    if(d.id !== 'bottomNav') d.classList.add('hidden'); 
-                }); 
-                document.getElementById(id).classList.remove('hidden'); 
-                
-                if(id === 'summaryScreen' && currentUserId) {
-                    loadSummary(currentUserId);
-                }
-                if(id === 'subscriptionScreen') {
-                    window.switchSubscriptionTab('stars');
-                }
-                if(id === 'walletScreen') {
-                    // Load payment numbers when wallet screen is shown
-                    updateDepositAddress(selectedMethod || 'bKash');
-                }
-                
-                hideLoading();
-            }, 1000);
-        };
-        
-        window.toggleWalletTab = (t) => {
-            ['deposit','withdraw','transfer'].forEach(id => document.getElementById(id+'Section').classList.add('hidden'));
-            document.getElementById(t+'Section').classList.remove('hidden');
-            ['tabDeposit','tabWithdraw','tabTransfer'].forEach(id => document.getElementById(id).className = 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500');
-            document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).className = 'flex-1 py-3 font-bold text-sm rounded-xl bg-slate-800 text-white shadow';
-            
-            // Setup VAT calculation listeners
-            if(t === 'deposit') {
-                document.getElementById('depositAmount').addEventListener('input', window.calculateDepositVAT);
-                window.calculateDepositVAT();
-            } else if(t === 'withdraw') {
-                document.getElementById('withdrawAmount').addEventListener('input', window.calculateWithdrawVAT);
-                window.calculateWithdrawVAT();
-            }
-        };
-        
-        window.switchTaskTab = (type) => {
-            currentTaskType = type;
-            document.getElementById('tabFreeTask').className = type==='free'?'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow':'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
-            document.getElementById('tabVipTask').className = type==='vip'?'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow':'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
-            renderTasks();
-        };
-        
-        window.selectOperator = (el, operator) => { 
-            document.querySelectorAll('#rechargeScreen .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
-            el.classList.add('border-green-500','bg-green-50'); 
-            selectedOperator = operator;
-            document.getElementById('selectedOperator').value = operator;
-        };
-
-        // Setup event listeners for VAT calculation
-        document.addEventListener('DOMContentLoaded', function() {
-            // Deposit VAT calculation
-            const depositAmount = document.getElementById('depositAmount');
-            if(depositAmount) {
-                depositAmount.addEventListener('input', window.calculateDepositVAT);
-            }
-            
-            // Withdraw VAT calculation
-            const withdrawAmount = document.getElementById('withdrawAmount');
-            if(withdrawAmount) {
-                withdrawAmount.addEventListener('input', window.calculateWithdrawVAT);
-            }
-            
-            // Recharge fee calculation
-            const rechAmount = document.getElementById('rechAmount');
-            if(rechAmount) {
-                rechAmount.addEventListener('input', window.calculateRechargeFee);
-            }
-            
-            // Initialize VAT displays
-            window.calculateDepositVAT();
-            window.calculateWithdrawVAT();
-            window.calculateRechargeFee();
-            
-            // Initialize star prices
-            document.getElementById('price100').textContent = (100 * 2.90).toFixed(2);
-            document.getElementById('price250').textContent = (250 * 2.90 * 0.90).toFixed(2);
-            document.getElementById('price500').textContent = (500 * 2.90 * 0.90).toFixed(2);
-        });
-
     </script>
-    
+
     <script type="text/javascript">
-        // Tawk.to Live Chat with draggable functionality
-        const h = new Date().getHours();
-        if (h < 10 || h >= 16) { 
-            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-            (function(){
-            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-            s1.async=true; 
-            s1.src='https://embed.tawk.to/6978806c324aa2197d4087bf/1jfvbbabo'; 
-            s1.charset='UTF-8'; 
-            s1.setAttribute('crossorigin','*'); 
-            s0.parentNode.insertBefore(s1,s0);
-            
-            // Make chat icon draggable after it loads
-            Tawk_API.onLoad = function() {
-                setTimeout(() => {
-                    const tawkChat = document.querySelector('#tawk-chat-icon');
-                    if(tawkChat) {
-                        tawkChat.style.position = 'fixed';
-                        tawkChat.style.cursor = 'move';
-                        tawkChat.style.zIndex = '9998';
-                        
-                        // Add drag functionality
-                        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-                        
-                        tawkChat.onmousedown = dragMouseDown;
-                        tawkChat.ontouchstart = touchStart;
-                        
-                        function dragMouseDown(e) {
-                            e = e || window.event;
-                            e.preventDefault();
-                            pos3 = e.clientX;
-                            pos4 = e.clientY;
-                            document.onmouseup = closeDragElement;
-                            document.onmousemove = elementDrag;
-                        }
-                        
-                        function touchStart(e) {
-                            if(e.touches.length == 1) {
-                                e.preventDefault();
-                                pos3 = e.touches[0].clientX;
-                                pos4 = e.touches[0].clientY;
-                                document.ontouchend = closeDragElementTouch;
-                                document.ontouchmove = elementDragTouch;
-                            }
-                        }
-                        
-                        function elementDrag(e) {
-                            e = e || window.event;
-                            e.preventDefault();
-                            pos1 = pos3 - e.clientX;
-                            pos2 = pos4 - e.clientY;
-                            pos3 = e.clientX;
-                            pos4 = e.clientY;
-                            tawkChat.style.top = (tawkChat.offsetTop - pos2) + "px";
-                            tawkChat.style.left = (tawkChat.offsetLeft - pos1) + "px";
-                        }
-                        
-                        function elementDragTouch(e) {
-                            if(e.touches.length == 1) {
-                                e.preventDefault();
-                                pos1 = pos3 - e.touches[0].clientX;
-                                pos2 = pos4 - e.touches[0].clientY;
-                                pos3 = e.touches[0].clientX;
-                                pos4 = e.touches[0].clientY;
-                                tawkChat.style.top = (tawkChat.offsetTop - pos2) + "px";
-                                tawkChat.style.left = (tawkChat.offsetLeft - pos1) + "px";
-                            }
-                        }
-                        
-                        function closeDragElement() {
-                            document.onmouseup = null;
-                            document.onmousemove = null;
-                        }
-                        
-                        function closeDragElementTouch() {
-                            document.ontouchend = null;
-                            document.ontouchmove = null;
-                        }
-                    }
-                }, 2000);
-            };
-            })();
-        }
-        
         // Make notification icon draggable
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
