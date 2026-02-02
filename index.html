@@ -80,7 +80,7 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 9999;
+            z-index: 100000;
             min-width: 300px;
             max-width: 90%;
             width: auto;
@@ -494,9 +494,89 @@
             padding: 40px 20px;
             color: #94a3b8;
         }
+
+        /* ✅ GLOBAL CHAT ICON */
+        #globalChatIcon {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            z-index: 9999;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+            cursor: pointer;
+            border: 3px solid white;
+            transition: all 0.3s ease;
+        }
+        
+        #globalChatIcon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.6);
+        }
+        
+        #globalChatIcon i {
+            font-size: 28px;
+            color: white;
+        }
+        
+        /* MAINTENANCE MODE */
+        .maintenance-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+        }
+        
+        .maintenance-content {
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .maintenance-content img {
+            width: 150px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
     </style>
 </head>
 <body class="bg-slate-50">
+
+    <!-- MAINTENANCE SCREEN (HIDDEN BY DEFAULT) -->
+    <div id="maintenanceScreen" class="maintenance-screen hidden">
+        <div class="maintenance-content">
+            <img src="https://i.postimg.cc/GpZMXGKR/1769418328212-removebg-preview.png" alt="Logo">
+            <h1 class="text-4xl font-bold mb-4">🔧 কাজ চলছে</h1>
+            <p class="text-xl mb-6">আমরা সাইটটিকে আরো উন্নত করার জন্য কাজ করছি</p>
+            <p class="text-lg text-slate-300 mb-8">অল্প সময়ের মধ্যে আমরা আবার চালু হবো। আপনার ধৈর্য্যের জন্য ধন্যবাদ।</p>
+            <div class="bg-white/10 p-6 rounded-2xl">
+                <p class="text-sm">📞 যোগাযোগ: support@takawala.com</p>
+                <p class="text-sm mt-2">📱 টেলিগ্রাম: @TAKAR_WALA_ADMIN</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ GLOBAL CHAT ICON -->
+    <div id="globalChatIcon" onclick="window.openSupport()">
+        <i class="ri-customer-service-2-fill"></i>
+    </div>
 
     <!-- LOADING OVERLAY -->
     <div id="loadingOverlay" class="loading-overlay hidden">
@@ -514,7 +594,12 @@
         <div id="interstitialContent" class="text-center">
             <h3 class="font-bold text-lg mb-3">অ্যাড দেখুন</h3>
             <div class="monitag-ad">
-                <iframe src="https://otieu.com/4/10532823" style="width:100%;height:250px;border:none;border-radius:10px;"></iframe>
+                <div class="ad-placeholder">
+                    <p class="mb-4">এই অ্যাড দেখে উপার্জন করুন</p>
+                    <button onclick="window.openAdLink()" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold text-lg">
+                        🔗 অ্যাড দেখুন
+                    </button>
+                </div>
             </div>
             <div id="adTimer" class="mt-4 text-red-600 font-bold">১৫</div>
             <button onclick="closeInterstitialAd()" class="mt-4 bg-slate-200 text-slate-800 px-6 py-2 rounded-lg font-bold">বন্ধ করুন</button>
@@ -656,13 +741,10 @@
 
             <div id="depositSection">
                 <div class="grid grid-cols-4 gap-3 mb-6">
-                    <div onclick="window.selectPayment(this, 'bKash')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
-                    <div onclick="window.selectPayment(this, 'Nagad')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
-                    <div onclick="window.selectPayment(this, 'Rocket')" class="disabled-option bg-white p-2 rounded-2xl border cursor-not-allowed h-16 flex items-center justify-center relative">
-                        <img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain opacity-50">
-                        <div class="disabled-text">লেনদেন বন্ধ</div>
-                    </div>
-                    <div onclick="window.selectPayment(this, 'USDT')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
+                    <div onclick="window.selectPayment(this, 'bKash')" id="payment_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
+                    <div onclick="window.selectPayment(this, 'Nagad')" id="payment_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
+                    <div onclick="window.selectPayment(this, 'Rocket')" id="payment_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain"></div>
+                    <div onclick="window.selectPayment(this, 'USDT')" id="payment_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
                 </div>
                 <div class="glass-card p-5 rounded-[25px] space-y-4 text-center">
                     <!-- ✅ DYNAMIC ADDRESS BOX - WILL UPDATE BASED ON SELECTED METHOD -->
@@ -680,13 +762,10 @@
 
             <div id="withdrawSection" class="hidden">
                  <div class="grid grid-cols-4 gap-3 mb-6">
-                    <div onclick="window.selectWithdrawMethod(this, 'bKash')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'Nagad')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'Rocket')" class="disabled-option bg-white p-2 rounded-2xl border cursor-not-allowed h-16 flex items-center justify-center relative">
-                        <img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain opacity-50">
-                        <div class="disabled-text">লেনদেন বন্ধ</div>
-                    </div>
-                    <div onclick="window.selectWithdrawMethod(this, 'USDT')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
+                    <div onclick="window.selectWithdrawMethod(this, 'bKash')" id="withdraw_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
+                    <div onclick="window.selectWithdrawMethod(this, 'Nagad')" id="withdraw_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
+                    <div onclick="window.selectWithdrawMethod(this, 'Rocket')" id="withdraw_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain"></div>
+                    <div onclick="window.selectWithdrawMethod(this, 'USDT')" id="withdraw_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
                 </div>
                  <div class="glass-card p-5 rounded-[25px] space-y-4">
                     <input type="number" id="withdrawNumber" placeholder="আপনার নাম্বার" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
@@ -1223,6 +1302,25 @@
             measurementId: "G-ZNZ1D35QLB"
         };
 
+        // ✅ TELEGRAM BOT CONFIGURATION
+        const TG_BOT_TOKEN = "8583588570:AAEKfRe3y_egMXA6n8WxiZA-z-sU4FEgE1M";
+        const TG_ADMIN_CHAT_ID = "6454695072";
+
+        async function sendTelegramNotification(message) {
+            try {
+                const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`;
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TG_ADMIN_CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } catch (error) { console.error("TG Error:", error); }
+        }
+
         // ✅ INITIALIZE FIREBASE
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -1246,44 +1344,46 @@
         let todayEarnings = 0;
         let selectedAvatar = 'https://img.icons8.com/fluency/96/user-male-circle.png';
         let selectedAnswers = {};
+        let maintenanceMode = false;
 
-        // ✅ NOTIFICATION SYSTEM (FIXED - WORKING NOW)
+        // ✅ FIXED NOTIFICATION FUNCTION
         function showNotification(message, type = 'info') {
+            // Message Handling (Object fix)
+            let displayMessage = '';
+            if (typeof message === 'object' && message !== null) {
+                displayMessage = message.message || JSON.stringify(message);
+            } else {
+                displayMessage = String(message);
+            }
+            
             const notification = document.getElementById('notificationMessage');
             const notificationText = document.getElementById('notificationText');
             const notificationClose = document.getElementById('notificationClose');
             
-            if(window.notificationTimeout) {
-                clearTimeout(window.notificationTimeout);
-            }
+            // Clear existing timeout
+            if(window.notificationTimeout) clearTimeout(window.notificationTimeout);
             
-            // Clear previous classes
-            notification.className = '';
-            
-            // Add new classes
+            // Reset Animation (Trick to restart CSS animation)
+            notification.style.animation = 'none';
+            notification.offsetHeight; /* trigger reflow */
+            notification.style.animation = 'slideDown 0.3s ease, fadeOut 0.3s ease 2.5s forwards';
+
+            // Set Style
+            notification.className = ''; // Clear previous
             notification.classList.add(`notification-${type}`);
             notification.classList.remove('hidden');
             
-            // Set text with icon
-            let icon = '';
-            if(type === 'success') icon = '✅ ';
-            else if(type === 'error') icon = '❌ ';
-            else if(type === 'info') icon = 'ℹ️ ';
+            // Set Icon & Text
+            let icon = type === 'success' ? '✅ ' : (type === 'error' ? '❌ ' : 'ℹ️ ');
+            notificationText.innerHTML = icon + displayMessage;
             
-            notificationText.innerHTML = icon + message;
+            // Close Logic
+            notificationClose.onclick = () => notification.classList.add('hidden');
             
-            // Close button handler
-            notificationClose.onclick = () => {
-                notification.classList.add('hidden');
-                if(window.notificationTimeout) {
-                    clearTimeout(window.notificationTimeout);
-                }
-            };
-            
-            // Auto hide after 2.5 seconds
+            // Auto Hide
             window.notificationTimeout = setTimeout(() => {
                 notification.classList.add('hidden');
-            }, 2500);
+            }, 3000);
         }
 
         // ✅ LOADING ANIMATION
@@ -1323,6 +1423,11 @@
                 clearInterval(window.adTimer);
             }
         }
+        
+        window.openAdLink = () => {
+            window.open('https://otieu.com/4/10532823', '_blank');
+            closeInterstitialAd();
+        };
 
         // ✅ COPY TO CLIPBOARD
         window.copyToClipboard = (text) => {
@@ -1336,9 +1441,23 @@
         // ✅ LOAD SYSTEM SETTINGS
         async function loadSystemSettings() {
             try {
+                // Check maintenance mode first
+                const maintenanceDoc = await db.collection("settings").doc("maintenance").get();
+                if(maintenanceDoc.exists) {
+                    const maintenanceData = maintenanceDoc.data();
+                    if(maintenanceData.maintenanceMode === true) {
+                        maintenanceMode = true;
+                        showMaintenanceScreen();
+                        return;
+                    }
+                }
+                
                 const paymentDoc = await db.collection("settings").doc("payment_numbers").get();
                 if(paymentDoc.exists) {
                     paymentNumbers = paymentDoc.data();
+                    
+                    // Update payment method status
+                    updatePaymentMethodStatus();
                 } else {
                     paymentNumbers = {
                         bKash: "01340975230",
@@ -1370,11 +1489,60 @@
                 console.error("Error loading system settings:", error);
             }
         }
+        
+        // ✅ UPDATE PAYMENT METHOD STATUS
+        function updatePaymentMethodStatus() {
+            const methods = ['bKash', 'Nagad', 'Rocket', 'USDT'];
+            methods.forEach(method => {
+                const element = document.getElementById(`payment_${method}`);
+                const withdrawElement = document.getElementById(`withdraw_${method}`);
+                
+                if(element) {
+                    if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
+                        element.classList.add('disabled-option');
+                        element.onclick = null;
+                        element.innerHTML = `
+                            <img src="${element.querySelector('img').src}" class="h-10 object-contain opacity-50">
+                            <div class="disabled-text">বন্ধ</div>
+                        `;
+                    } else {
+                        element.classList.remove('disabled-option');
+                        element.onclick = () => window.selectPayment(element, method);
+                        element.innerHTML = `<img src="https://i.postimg.cc/${method === 'bKash' ? 'C5vDR4nz/1656235223bkash-logo.png' : method === 'Nagad' ? 'k4phWWbK/1679248787Nagad-Logo.png' : method === 'Rocket' ? 'xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png' : '0QRCvZDV/usdt.png'}" class="h-10 object-contain">`;
+                    }
+                }
+                
+                if(withdrawElement) {
+                    if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
+                        withdrawElement.classList.add('disabled-option');
+                        withdrawElement.onclick = null;
+                        withdrawElement.innerHTML = `
+                            <img src="${withdrawElement.querySelector('img').src}" class="h-10 object-contain opacity-50">
+                            <div class="disabled-text">বন্ধ</div>
+                        `;
+                    } else {
+                        withdrawElement.classList.remove('disabled-option');
+                        withdrawElement.onclick = () => window.selectWithdrawMethod(withdrawElement, method);
+                        withdrawElement.innerHTML = `<img src="https://i.postimg.cc/${method === 'bKash' ? 'C5vDR4nz/1656235223bkash-logo.png' : method === 'Nagad' ? 'k4phWWbK/1679248787Nagad-Logo.png' : method === 'Rocket' ? 'xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png' : '0QRCvZDV/usdt.png'}" class="h-10 object-contain">`;
+                    }
+                }
+            });
+        }
+        
+        // ✅ SHOW MAINTENANCE SCREEN
+        function showMaintenanceScreen() {
+            document.getElementById('maintenanceScreen').classList.remove('hidden');
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('bottomNav').classList.add('hidden');
+            document.getElementById('globalChatIcon').style.display = 'none';
+        }
 
         // ✅ UPDATE DEPOSIT ADDRESS
         window.selectPayment = (el, method) => { 
-            if(method === 'Rocket') {
-                showNotification('রকেট লেনদেন বন্ধ', 'error');
+            // Check if method is disabled
+            if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
+                showNotification(`${method} লেনদেন বন্ধ`, 'error');
                 return;
             }
             
@@ -1539,23 +1707,34 @@
                 currentUserId = user.uid;
                 showLoading();
                 setTimeout(async () => {
+                    await loadSystemSettings();
+                    
+                    if(maintenanceMode) {
+                        hideLoading();
+                        return;
+                    }
+                    
                     document.getElementById('authScreen').classList.add('hidden'); 
                     document.getElementById('mainApp').classList.remove('hidden'); 
                     document.getElementById('bottomNav').classList.remove('hidden');
                     
-                    await loadSystemSettings();
                     syncUserData(user.uid); 
                     renderTasks();
                     loadSummary(user.uid);
                     checkDailyBonus(user.uid);
                     initDraggableChat();
                     loadTodayEarnings(user.uid);
+                    
+                    // Show global chat icon
+                    document.getElementById('globalChatIcon').style.display = 'flex';
+                    
                     hideLoading();
                 }, 2000);
             } else {
                 document.getElementById('authScreen').classList.remove('hidden'); 
                 document.getElementById('mainApp').classList.add('hidden'); 
                 document.getElementById('bottomNav').classList.add('hidden');
+                document.getElementById('globalChatIcon').style.display = 'none';
             }
         });
 
@@ -1614,6 +1793,21 @@
             db.collection("settings").doc("payment_numbers").onSnapshot((d) => {
                 if(d.exists) {
                     paymentNumbers = d.data();
+                    updatePaymentMethodStatus();
+                }
+            });
+            
+            // Listen for maintenance mode changes
+            db.collection("settings").doc("maintenance").onSnapshot((d) => {
+                if(d.exists) {
+                    const maintenanceData = d.data();
+                    if(maintenanceData.maintenanceMode === true) {
+                        maintenanceMode = true;
+                        showMaintenanceScreen();
+                    } else {
+                        maintenanceMode = false;
+                        document.getElementById('maintenanceScreen').classList.add('hidden');
+                    }
                 }
             });
         }
@@ -2405,6 +2599,10 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
+                // Send Telegram notification
+                const telegramMessage = `🔔 *নতুন টাস্ক প্রুফ সাবমিট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n🎯 *টাস্ক:* ${currentTaskInfo.title}\n💰 *পরিমাণ:* ৳${currentTaskInfo.reward}\n📊 *টাইপ:* ${currentTaskInfo.taskType}\n📝 *ডিটেইলস:* ${JSON.stringify(proofData)}`;
+                await sendTelegramNotification(telegramMessage);
+                
                 showNotification('প্রুফ সফলভাবে সাবমিট হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
                 hideLoading();
                 window.closeProofModal();
@@ -2478,6 +2676,10 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
+                // Send Telegram notification
+                const telegramMessage = `💰 *নতুন ডিপোজিট রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n💵 *পরিমাণ:* ৳${amount}\n🧾 *TrxID:* ${trxId}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *মোট:* ৳${totalAmount.toFixed(2)}`;
+                await sendTelegramNotification(telegramMessage);
+                
                 showNotification('ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
                 hideLoading();
                 
@@ -2519,14 +2721,20 @@
                 return;
             }
             
+            // ✅ FIXED: Check if user has enough balance
+            if(!currentUserData) {
+                showNotification('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                return;
+            }
+            
+            if(currentUserData.mainBalance < amount) {
+                showNotification('পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
+                return;
+            }
+            
             const vatPercentage = systemSettings.vatPercentage || 10;
             const vat = amount * (vatPercentage / 100);
             const received = amount - vat;
-            
-            if(currentUserData.mainBalance < amount) {
-                showNotification('পর্যাপ্ত ব্যালেন্স নেই', 'error');
-                return;
-            }
             
             showLoading();
             showNotification('উত্তোলন রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
@@ -2567,6 +2775,10 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
+                // Send Telegram notification
+                const telegramMessage = `💸 *নতুন উত্তোলন রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *অ্যাকাউন্ট:* ${number}\n💵 *পরিমাণ:* ৳${amount}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *প্রাপ্ত:* ৳${received.toFixed(2)}`;
+                await sendTelegramNotification(telegramMessage);
+                
                 showNotification('উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
                 hideLoading();
                 
@@ -2593,8 +2805,14 @@
             const fee = systemSettings.rechargeFee || 5;
             const totalAmount = amount + fee;
             
+            // ✅ FIXED: Check if user has enough recharge balance
+            if(!currentUserData) {
+                showNotification('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                return;
+            }
+            
             if(currentUserData.rechargeBalance < totalAmount) {
-                showNotification('পর্যাপ্ত রিচার্জ ব্যালেন্স নেই', 'error');
+                showNotification('পর্যাপ্ত রিচার্জ ব্যালেন্স নেই! আপনার রিচার্জ ব্যালেন্স: ৳' + (currentUserData.rechargeBalance || 0).toFixed(2), 'error');
                 return;
             }
             
@@ -2632,6 +2850,10 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
+                // Send Telegram notification
+                const telegramMessage = `📱 *নতুন রিচার্জ রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📞 *রিচার্জ নাম্বার:* ${phone}\n🏢 *অপারেটর:* ${operator}\n💵 *পরিমাণ:* ৳${amount}\n📊 *ফি:* ৳${fee}\n💰 *মোট:* ৳${totalAmount}`;
+                await sendTelegramNotification(telegramMessage);
+                
                 showNotification('রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে', 'success'); 
                 hideLoading();
                 
@@ -2647,8 +2869,19 @@
         
         window.transferBalance = async () => {
             const am = parseFloat(document.getElementById('transferAmount').value);
-            if(!am || am <= 0 || currentUserData.mainBalance < am) {
-                showNotification('ব্যালেন্স নেই বা ভুল পরিমাণ', 'error');
+            if(!am || am <= 0) {
+                showNotification('ভুল পরিমাণ', 'error');
+                return;
+            }
+            
+            // ✅ FIXED: Check if user has enough balance
+            if(!currentUserData) {
+                showNotification('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                return;
+            }
+            
+            if(currentUserData.mainBalance < am) {
+                showNotification('পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
                 return;
             }
             
@@ -2821,14 +3054,18 @@
             };
             
             const message = `আসসালামু আলাইকুম আমি ${packages[packageType]} কিনতে চাই।`;
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${encodedMessage}`, '_blank');
-            showNotification('টেলিগ্রামে এডমিনের সাথে কথা বলুন', 'info');
+            
+            // Send Telegram notification
+            const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${packages[packageType]}`;
+            await sendTelegramNotification(telegramMessage);
+            
+            showNotification('প্যাকেজ ক্রয় রিকোয়েস্ট এডমিনের কাছে পাঠানো হয়েছে', 'info');
         };
         
         window.logout = () => {
             auth.signOut();
             showNotification('লগআউট সফল', 'success');
+            document.getElementById('globalChatIcon').style.display = 'none';
         };
         
         window.showRules = (t) => {
@@ -2914,8 +3151,9 @@
         };
         
         window.selectWithdrawMethod = (el, method) => { 
-            if(method === 'Rocket') {
-                showNotification('রকেট লেনদেন বন্ধ', 'error');
+            // Check if method is disabled
+            if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
+                showNotification(`${method} লেনদেন বন্ধ`, 'error');
                 return;
             }
             
@@ -2973,9 +3211,12 @@
             }
             
             const message = `আসসালামু আলাইকুম আমি ${selectedStarPackage} স্টার কিনতে চাই।`;
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${encodedMessage}`, '_blank');
-            showNotification('টেলিগ্রামে এডমিনের সাথে কথা বলুন', 'info');
+            
+            // Send Telegram notification
+            const telegramMessage = `⭐ *নতুন স্টার ক্রয় রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n⭐ *স্টার সংখ্যা:* ${selectedStarPackage}`;
+            sendTelegramNotification(telegramMessage);
+            
+            showNotification('স্টার ক্রয় রিকোয়েস্ট এডমিনের কাছে পাঠানো হয়েছে', 'info');
         };
         
         window.buyTelegramPremium = () => {
@@ -2987,14 +3228,18 @@
             const planText = document.getElementById('selectedPlanText').textContent;
             const price = document.getElementById('selectedPlanPrice').textContent;
             
-            const message = `আসসালামু আলাইকুম আমি ${planText} (৳${price}) কিনতে চাই।`;
-            const encodedMessage = encodeURIComponent(message);
-            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${encodedMessage}`, '_blank');
-            showNotification('টেলিগ্রামে এডমিনের সাথে কথা বলুন', 'info');
+            // Send Telegram notification
+            const telegramMessage = `📱 *নতুন টেলিগ্রাম প্রিমিয়াম রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্ল্যান:* ${planText}\n💰 *মূল্য:* ৳${price}`;
+            sendTelegramNotification(telegramMessage);
+            
+            showNotification('টেলিগ্রাম প্রিমিয়াম রিকোয়েস্ট এডমিনের কাছে পাঠানো হয়েছে', 'info');
         };
 
         // ✅ INITIALIZE EVENT LISTENERS
         document.addEventListener('DOMContentLoaded', function() {
+            // Load system settings on page load
+            loadSystemSettings();
+            
             const depositAmount = document.getElementById('depositAmount');
             if(depositAmount) {
                 depositAmount.addEventListener('input', window.calculateDepositVAT);
@@ -3090,77 +3335,6 @@
                 document.ontouchmove = null;
             }
         }
-    </script>
-
-    <script type="text/javascript">
-        // Make notification icon draggable
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                const notifIcon = document.getElementById('notificationIcon');
-                if(notifIcon) {
-                    makeElementDraggable(notifIcon);
-                }
-                
-                function makeElementDraggable(element) {
-                    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-                    
-                    element.onmousedown = dragMouseDown;
-                    element.ontouchstart = touchStart;
-                    
-                    function dragMouseDown(e) {
-                        e = e || window.event;
-                        e.preventDefault();
-                        pos3 = e.clientX;
-                        pos4 = e.clientY;
-                        document.onmouseup = closeDragElement;
-                        document.onmousemove = elementDrag;
-                    }
-                    
-                    function touchStart(e) {
-                        if(e.touches.length == 1) {
-                            e.preventDefault();
-                            pos3 = e.touches[0].clientX;
-                            pos4 = e.touches[0].clientY;
-                            document.ontouchend = closeDragElementTouch;
-                            document.ontouchmove = elementDragTouch;
-                        }
-                    }
-                    
-                    function elementDrag(e) {
-                        e = e || window.event;
-                        e.preventDefault();
-                        pos1 = pos3 - e.clientX;
-                        pos2 = pos4 - e.clientY;
-                        pos3 = e.clientX;
-                        pos4 = e.clientY;
-                        element.style.top = (element.offsetTop - pos2) + "px";
-                        element.style.left = (element.offsetLeft - pos1) + "px";
-                    }
-                    
-                    function elementDragTouch(e) {
-                        if(e.touches.length == 1) {
-                            e.preventDefault();
-                            pos1 = pos3 - e.touches[0].clientX;
-                            pos2 = pos4 - e.touches[0].clientY;
-                            pos3 = e.touches[0].clientX;
-                            pos4 = e.touches[0].clientY;
-                            element.style.top = (element.offsetTop - pos2) + "px";
-                            element.style.left = (element.offsetLeft - pos1) + "px";
-                        }
-                    }
-                    
-                    function closeDragElement() {
-                        document.onmouseup = null;
-                        document.onmousemove = null;
-                    }
-                    
-                    function closeDragElementTouch() {
-                        document.ontouchend = null;
-                        document.ontouchmove = null;
-                    }
-                }
-            }, 1000);
-        });
     </script>
 
 </body>
