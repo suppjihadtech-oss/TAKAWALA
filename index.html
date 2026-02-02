@@ -1321,6 +1321,78 @@
             } catch (error) { console.error("TG Error:", error); }
         }
 
+        // ✅ GLOBAL DEMO QUESTIONS FOR QUIZ
+        const demoQuestions = {
+            general: [
+                {
+                    question: "বাংলাদেশের রাজধানীর নাম কি?",
+                    options: ["কলকাতা", "ঢাকা", "চট্টগ্রাম", "খুলনা"],
+                    answer: 1
+                },
+                {
+                    question: "বাংলাদেশের জাতীয় ফুল কি?",
+                    options: ["গোলাপ", "শাপলা", "কমল", "জবা"],
+                    answer: 1
+                },
+                {
+                    question: "বাংলাদেশের মুদ্রার নাম কি?",
+                    options: ["রুপি", "টাকা", "ডলার", "ইয়েন"],
+                    answer: 1
+                }
+            ],
+            math: [
+                {
+                    question: "২ + ২ = কত?",
+                    options: ["৩", "৪", "৫", "৬"],
+                    answer: 1
+                },
+                {
+                    question: "১০ × ৫ = কত?",
+                    options: ["৫০", "১৫", "২০", "১০০"],
+                    answer: 0
+                },
+                {
+                    question: "১০০ ÷ ১০ = কত?",
+                    options: ["১", "৫", "১০", "২০"],
+                    answer: 2
+                }
+            ],
+            science: [
+                {
+                    question: "পানির রাসায়নিক সংকেত কি?",
+                    options: ["H2O", "CO2", "O2", "NaCl"],
+                    answer: 0
+                },
+                {
+                    question: "পৃথিবী সূর্যের চারদিকে ঘুরতে কত সময় নেয়?",
+                    options: ["২৪ ঘণ্টা", "৩০ দিন", "৩৬৫ দিন", "৭ দিন"],
+                    answer: 2
+                },
+                {
+                    question: "মানুষের দেহে কয়টি হাড় আছে?",
+                    options: ["১০৬", "২০৬", "৩০৬", "৪০৬"],
+                    answer: 1
+                }
+            ],
+            islamic: [
+                {
+                    question: "ইসলামের প্রথম স্তম্ভ কি?",
+                    options: ["নামাজ", "রোজা", "শাহাদাহ", "হজ্জ"],
+                    answer: 2
+                },
+                {
+                    question: "মুসলমানদের কিবলা কোথায়?",
+                    options: ["মদিনা", "মক্কা", "জেরুজালেম", "কায়রো"],
+                    answer: 1
+                },
+                {
+                    question: "পবিত্র কোরআনে কয়টি সূরা আছে?",
+                    options: ["১১৪", "১২৪", "১৩৪", "১৪৪"],
+                    answer: 0
+                }
+            ]
+        };
+
         // ✅ INITIALIZE FIREBASE
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -1475,7 +1547,7 @@
                     systemSettings = {
                         noticeText: "স্বাগতম টাকাওয়ালা অ্যাপে!",
                         referralBonus: 5,
-                        taskWaitTime: 60,
+                        taskWaitTime: 15, // ✅ CHANGED FROM 60 TO 15 SECONDS
                         minWithdraw: 100,
                         maxWithdraw: 5000,
                         vatPercentage: 10,
@@ -1498,7 +1570,12 @@
                 const withdrawElement = document.getElementById(`withdraw_${method}`);
                 
                 if(element) {
-                    if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
+                    // ✅ FIX 4: USDT should always be enabled in deposit
+                    if(method === 'USDT') {
+                        element.classList.remove('disabled-option');
+                        element.onclick = () => window.selectPayment(element, method);
+                        element.innerHTML = `<img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain">`;
+                    } else if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
                         element.classList.add('disabled-option');
                         element.onclick = null;
                         element.innerHTML = `
@@ -1540,8 +1617,10 @@
 
         // ✅ UPDATE DEPOSIT ADDRESS
         window.selectPayment = (el, method) => { 
-            // Check if method is disabled
-            if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
+            // ✅ FIX 4: USDT should always be enabled
+            if(method === 'USDT') {
+                // USDT is always enabled in deposit
+            } else if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
                 showNotification(`${method} লেনদেন বন্ধ`, 'error');
                 return;
             }
@@ -2200,78 +2279,6 @@
             
             document.getElementById('quizTypeTitle').textContent = quizTitles[type] || 'কুইজ';
             
-            // Demo questions for each type
-            const demoQuestions = {
-                general: [
-                    {
-                        question: "বাংলাদেশের রাজধানীর নাম কি?",
-                        options: ["কলকাতা", "ঢাকা", "চট্টগ্রাম", "খুলনা"],
-                        answer: 1
-                    },
-                    {
-                        question: "বাংলাদেশের জাতীয় ফুল কি?",
-                        options: ["গোলাপ", "শাপলা", "কমল", "জবা"],
-                        answer: 1
-                    },
-                    {
-                        question: "বাংলাদেশের মুদ্রার নাম কি?",
-                        options: ["রুপি", "টাকা", "ডলার", "ইয়েন"],
-                        answer: 1
-                    }
-                ],
-                math: [
-                    {
-                        question: "২ + ২ = কত?",
-                        options: ["৩", "৪", "৫", "৬"],
-                        answer: 1
-                    },
-                    {
-                        question: "১০ × ৫ = কত?",
-                        options: ["৫০", "১৫", "২০", "১০০"],
-                        answer: 0
-                    },
-                    {
-                        question: "১০০ ÷ ১০ = কত?",
-                        options: ["১", "৫", "১০", "২০"],
-                        answer: 2
-                    }
-                ],
-                science: [
-                    {
-                        question: "পানির রাসায়নিক সংকেত কি?",
-                        options: ["H2O", "CO2", "O2", "NaCl"],
-                        answer: 0
-                    },
-                    {
-                        question: "পৃথিবী সূর্যের চারদিকে ঘুরতে কত সময় নেয়?",
-                        options: ["২৪ ঘণ্টা", "৩০ দিন", "৩৬৫ দিন", "৭ দিন"],
-                        answer: 2
-                    },
-                    {
-                        question: "মানুষের দেহে কয়টি হাড় আছে?",
-                        options: ["১০৬", "২০৬", "৩০৬", "৪০৬"],
-                        answer: 1
-                    }
-                ],
-                islamic: [
-                    {
-                        question: "ইসলামের প্রথম স্তম্ভ কি?",
-                        options: ["নামাজ", "রোজা", "শাহাদাহ", "হজ্জ"],
-                        answer: 2
-                    },
-                    {
-                        question: "মুসলমানদের কিবলা কোথায়?",
-                        options: ["মদিনা", "মক্কা", "জেরুজালেম", "কায়রো"],
-                        answer: 1
-                    },
-                    {
-                        question: "পবিত্র কোরআনে কয়টি সূরা আছে?",
-                        options: ["১১৪", "১২৪", "১৩৪", "১৪৪"],
-                        answer: 0
-                    }
-                ]
-            };
-            
             const questions = demoQuestions[type] || demoQuestions.general;
             let questionsHtml = '';
             
@@ -2338,68 +2345,77 @@
                 return;
             }
             
+            // ✅ FIX 2: REAL QUIZ LOGIC - Calculate actual score
+            const questions = demoQuestions[currentQuizType] || demoQuestions.general;
+            let correctAnswers = 0;
+            const totalQuestions = questions.length;
+            
+            // Check each answer
+            for(let i = 0; i < totalQuestions; i++) {
+                if(selectedAnswers[i] !== undefined && selectedAnswers[i] === questions[i].answer) {
+                    correctAnswers++;
+                }
+            }
+            
+            // Calculate reward: 0.25 per correct answer
+            const reward = correctAnswers * 0.25;
+            
+            if(reward === 0) {
+                showNotification('দুঃখিত, আপনি কোন প্রশ্নের সঠিক উত্তর দেননি', 'error');
+                return;
+            }
+            
             showLoading();
             showNotification('কুইজ চেক করা হচ্ছে...', 'info');
             
-            // For demo, calculate score
-            setTimeout(async () => {
-                try {
-                    const demoQuestions = {
-                        general: 3, math: 3, science: 3, islamic: 3
-                    };
-                    
-                    const totalQuestions = demoQuestions[currentQuizType] || 3;
-                    const correctAnswers = Math.floor(Math.random() * totalQuestions) + 1; // Random for demo
-                    const reward = correctAnswers * 0.25;
-                    
-                    const userRef = db.collection("users").doc(currentUserId);
-                    await userRef.update({
-                        mainBalance: firebase.firestore.FieldValue.increment(reward),
-                        totalEarnings: firebase.firestore.FieldValue.increment(reward),
-                        totalTasks: firebase.firestore.FieldValue.increment(1),
-                        todayEarnings: firebase.firestore.FieldValue.increment(reward)
-                    });
-                    
-                    await db.collection("history").add({
-                        userId: currentUserId,
-                        type: `${currentQuizType} কুইজ পুরস্কার`,
-                        amount: reward,
-                        status: "Success",
-                        details: `${correctAnswers}/${totalQuestions} প্রশ্ন সঠিক`,
-                        date: new Date().toLocaleDateString('bn-BD'),
-                        time: new Date().toLocaleTimeString('bn-BD'),
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    // Update today's earnings display
-                    todayEarnings += reward;
-                    document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
-                    
-                    showNotification(`কুইজ সফল! ৳${reward.toFixed(2)} পুরস্কার পেয়েছেন`, 'success');
-                    hideLoading();
-                    
-                    if(quizTimer) clearInterval(quizTimer);
-                    
-                    document.getElementById('quizQuestionsContainer').innerHTML = `
-                        <div class="text-center p-6">
-                            <div class="text-green-500 text-6xl mb-4">✅</div>
-                            <h4 class="text-xl font-bold text-green-700 mb-2">কুইজ সফল!</h4>
-                            <p class="text-slate-600 mb-2">আপনি ${correctAnswers}/${totalQuestions} প্রশ্নের সঠিক উত্তর দিয়েছেন</p>
-                            <p class="text-slate-700 font-bold mb-4">আপনি ৳${reward.toFixed(2)} পুরস্কার পেয়েছেন</p>
-                            <button onclick="window.switchQuizTab('types')" class="mt-4 bg-premium text-white px-6 py-2 rounded-xl font-bold">
-                                নতুন কুইজ শুরু করুন
-                            </button>
-                        </div>
-                    `;
-                    
-                    document.getElementById('submitQuizBtn').classList.add('hidden');
-                    
-                } catch (error) {
-                    console.error("Quiz submission error:", error);
-                    showNotification('কুইজ সাবমিট করতে সমস্যা হয়েছে', 'error');
-                    hideLoading();
-                }
-            }, 1500);
+            try {
+                const userRef = db.collection("users").doc(currentUserId);
+                await userRef.update({
+                    mainBalance: firebase.firestore.FieldValue.increment(reward),
+                    totalEarnings: firebase.firestore.FieldValue.increment(reward),
+                    totalTasks: firebase.firestore.FieldValue.increment(1),
+                    todayEarnings: firebase.firestore.FieldValue.increment(reward)
+                });
+                
+                await db.collection("history").add({
+                    userId: currentUserId,
+                    type: `${currentQuizType} কুইজ পুরস্কার`,
+                    amount: reward,
+                    status: "Success",
+                    details: `${correctAnswers}/${totalQuestions} প্রশ্ন সঠিক`,
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update today's earnings display
+                todayEarnings += reward;
+                document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
+                
+                showNotification(`কুইজ সফল! ৳${reward.toFixed(2)} পুরস্কার পেয়েছেন`, 'success');
+                hideLoading();
+                
+                if(quizTimer) clearInterval(quizTimer);
+                
+                document.getElementById('quizQuestionsContainer').innerHTML = `
+                    <div class="text-center p-6">
+                        <div class="text-green-500 text-6xl mb-4">✅</div>
+                        <h4 class="text-xl font-bold text-green-700 mb-2">কুইজ সফল!</h4>
+                        <p class="text-slate-600 mb-2">আপনি ${correctAnswers}/${totalQuestions} প্রশ্নের সঠিক উত্তর দিয়েছেন</p>
+                        <p class="text-slate-700 font-bold mb-4">আপনি ৳${reward.toFixed(2)} পুরস্কার পেয়েছেন</p>
+                        <button onclick="window.switchQuizTab('types')" class="mt-4 bg-premium text-white px-6 py-2 rounded-xl font-bold">
+                            নতুন কুইজ শুরু করুন
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('submitQuizBtn').classList.add('hidden');
+                
+            } catch (error) {
+                console.error("Quiz submission error:", error);
+                showNotification('কুইজ সাবমিট করতে সমস্যা হয়েছে', 'error');
+                hideLoading();
+            }
         };
 
         // ✅ PROFILE FUNCTIONS
@@ -2427,6 +2443,10 @@
                     address: document.getElementById('profAddressInput').value,
                     avatar: selectedAvatar
                 }); 
+                
+                // ✅ FIX 5: Update avatar immediately
+                document.getElementById('currentAvatar').src = selectedAvatar;
+                
                 showNotification('প্রোফাইল আপডেট হয়েছে', 'success'); 
                 hideLoading();
             } catch (e) {
@@ -2486,13 +2506,14 @@
             
             startTaskTimer();
             
-            showNotification('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ১ মিনিট পর প্রুফ সাবমিট করুন।', 'info');
+            showNotification('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ১৫ সেকেন্ড পর প্রুফ সাবমিট করুন।', 'info');
         };
         
         function startTaskTimer() {
             if(taskTimer) clearInterval(taskTimer);
             
-            let timeLeft = systemSettings.taskWaitTime || 60;
+            // ✅ FIX 3: Changed from 60 to 15 seconds
+            let timeLeft = 15; // 15 seconds instead of 60
             const startTime = Date.now();
             
             taskTimer = setInterval(() => {
@@ -3046,20 +3067,81 @@
             window.open('https://t.me/TAKAR_WALA_ADMIN', '_blank');
         };
         
+        // ✅ FIX 1: AUTOMATIC PACKAGE PURCHASE
         window.buyPackage = async (packageType) => {
-            const packages = {
-                silver: "সিলভার প্যাকেজ (৳500)",
-                gold: "গোল্ড প্যাকেজ (৳1000)", 
-                platinum: "প্লাটিনাম প্যাকেজ (৳2000)"
+            if(!currentUserData) {
+                showNotification('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                return;
+            }
+            
+            const packagePrices = {
+                silver: 500,
+                gold: 1000,
+                platinum: 2000
             };
             
-            const message = `আসসালামু আলাইকুম আমি ${packages[packageType]} কিনতে চাই।`;
+            const packageNames = {
+                silver: "সিলভার প্যাকেজ",
+                gold: "গোল্ড প্যাকেজ", 
+                platinum: "প্লাটিনাম প্যাকেজ"
+            };
             
-            // Send Telegram notification
-            const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${packages[packageType]}`;
-            await sendTelegramNotification(telegramMessage);
+            const price = packagePrices[packageType];
+            const name = packageNames[packageType];
             
-            showNotification('প্যাকেজ ক্রয় রিকোয়েস্ট এডমিনের কাছে পাঠানো হয়েছে', 'info');
+            // Check balance
+            if(currentUserData.mainBalance < price) {
+                showNotification(`পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳${currentUserData.mainBalance.toFixed(2)}, প্রয়োজন: ৳${price}`, 'error');
+                return;
+            }
+            
+            const result = await Swal.fire({
+                title: `${name} কিনতে চান?`,
+                html: `মূল্য: <b>৳${price}</b><br><br>আপনার ব্যালেন্স: ৳${currentUserData.mainBalance.toFixed(2)}<br>কিনলে ব্যালেন্স: ৳${(currentUserData.mainBalance - price).toFixed(2)}`,
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, কিনুন',
+                cancelButtonText: 'বাতিল',
+                confirmButtonColor: '#059669',
+                icon: 'question'
+            });
+            
+            if (result.isConfirmed) {
+                showLoading();
+                try {
+                    const userRef = db.collection("users").doc(currentUserId);
+                    
+                    // Deduct balance and update plan
+                    await userRef.update({
+                        mainBalance: firebase.firestore.FieldValue.increment(-price),
+                        plan: name,
+                        totalDeposit: firebase.firestore.FieldValue.increment(price)
+                    });
+                    
+                    // Add to history
+                    await db.collection("history").add({
+                        userId: currentUserId,
+                        type: `${name} ক্রয়`,
+                        amount: -price,
+                        status: "Success",
+                        details: `${name} প্যাকেজ সফলভাবে ক্রয় করা হয়েছে`,
+                        date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Send Telegram notification
+                    const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় সফল*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${price}\n✅ *স্ট্যাটাস:* Success`;
+                    await sendTelegramNotification(telegramMessage);
+                    
+                    showNotification(`${name} সফলভাবে ক্রয় করা হয়েছে!`, 'success');
+                    hideLoading();
+                    
+                } catch (e) {
+                    console.error("Package purchase error:", e);
+                    showNotification('প্যাকেজ ক্রয় করতে সমস্যা হয়েছে', 'error');
+                    hideLoading();
+                }
+            }
         };
         
         window.logout = () => {
