@@ -51,7 +51,7 @@
             border-radius: 20px;
             padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            display: none;
+            
         }
 
         /* PREMIUM GRADIENT */
@@ -900,6 +900,103 @@
         input:checked + .toggle-slider:before {
             transform: translateX(24px);
         }
+
+        /* ✅ NEW LOGIN NOTICE MODAL STYLES */
+        .login-notice-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 100000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .login-notice-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            max-width: 450px;
+            width: 100%;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            transform: translateY(20px);
+            animation: slideUpNotice 0.6s ease forwards;
+        }
+        
+        @keyframes slideUpNotice {
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .login-notice-header {
+            background: linear-gradient(135deg, #059669, #047857);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-notice-header h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .login-notice-header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+        }
+        
+        .login-notice-body {
+            padding: 30px 25px;
+            text-align: center;
+        }
+        
+        .notice-icon {
+            font-size: 60px;
+            color: #059669;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .notice-message {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #1e293b;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        
+        .notice-btn {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(5, 150, 105, 0.3);
+        }
+        
+        .notice-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(5, 150, 105, 0.4);
+        }
     </style>
 </head>
 <body class="bg-slate-50">
@@ -938,6 +1035,25 @@
         <div class="toast-icon"></div>
         <div class="toast-content">
             <p id="toastMessage"></p>
+        </div>
+    </div>
+
+    <!-- ✅ NEW LOGIN NOTICE MODAL -->
+    <div id="loginNoticeModal" class="login-notice-modal hidden">
+        <div class="login-notice-content">
+            <div class="login-notice-header">
+                <h2 id="noticeTitle">গুরুত্বপূর্ণ নোটিশ</h2>
+                <p>Takawala থেকে</p>
+            </div>
+            <div class="login-notice-body">
+                <div class="notice-icon">📢</div>
+                <div class="notice-message" id="noticeMessage">
+                    লোড হচ্ছে...
+                </div>
+                <button onclick="closeLoginNotice()" class="notice-btn">
+                    বন্ধ করুন
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1543,37 +1659,16 @@
         <!-- VIP SCREEN -->
         <div id="vipScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
              <div class="flex justify-between items-center mb-6"><div class="flex items-center gap-3"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">প্যাকেজ</h2></div></div>
+             
+             <!-- ✅ DYNAMIC VIP PACKAGE CONTAINER -->
              <div id="packageListContainer" class="space-y-4">
-                 <!-- VIP PLANS WILL BE LOADED FROM FIREBASE -->
-                 <div class="glass-card p-4 rounded-2xl border-2 border-yellow-500">
-                     <div class="flex justify-between items-center">
-                         <div>
-                             <h3 class="font-bold text-lg text-yellow-700">সিলভার প্যাকেজ</h3>
-                             <p class="text-sm text-slate-600">প্রতিদিন ১০টি অতিরিক্ত টাস্ক</p>
-                         </div>
-                         <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full font-bold">৳500</span>
-                     </div>
-                     <button onclick="window.buyPackage('silver')" class="w-full mt-3 bg-yellow-500 text-white py-2 rounded-lg font-bold">কিনুন</button>
-                 </div>
-                 <div class="glass-card p-4 rounded-2xl border-2 border-purple-500">
-                     <div class="flex justify-between items-center">
-                         <div>
-                             <h3 class="font-bold text-lg text-purple-700">গোল্ড প্যাকেজ</h3>
-                             <p class="text-sm text-slate-600">প্রতিদিন ২৫টি অতিরিক্ত টাস্ক + ২০% বোনাস</p>
-                         </div>
-                         <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full font-bold">৳1000</span>
-                     </div>
-                     <button onclick="window.buyPackage('gold')" class="w-full mt-3 bg-purple-500 text-white py-2 rounded-lg font-bold">কিনুন</button>
-                 </div>
-                 <div class="glass-card p-4 rounded-2xl border-2 border-green-500">
-                     <div class="flex justify-between items-center">
-                         <div>
-                             <h3 class="font-bold text-lg text-green-700">প্লাটিনাম প্যাকেজ</h3>
-                             <p class="text-sm text-slate-600">সকল সুবিধা + ডাইরেক্ট সাপোর্ট</p>
-                         </div>
-                         <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold">৳2000</span>
-                     </div>
-                     <button onclick="window.buyPackage('platinum')" class="w-full mt-3 bg-green-500 text-white py-2 rounded-lg font-bold">কিনুন</button>
+                 <!-- PACKAGES WILL BE LOADED DYNAMICALLY FROM FIREBASE -->
+                 <div class="history-loading">
+                    <div class="animate-pulse">
+                        <div class="h-24 bg-slate-100 rounded-2xl mb-3"></div>
+                        <div class="h-24 bg-slate-100 rounded-2xl mb-3"></div>
+                        <div class="h-24 bg-slate-100 rounded-2xl"></div>
+                    </div>
                  </div>
              </div>
         </div>
@@ -2176,6 +2271,213 @@
             document.getElementById('twaiChatbotIcon').style.display = 'none';
         }
 
+        // ✅ NEW FUNCTION: SHOW LOGIN NOTICE - রিকোয়ারমেন্ট ১
+        async function showLoginNotice() {
+            try {
+                const noticeDoc = await db.collection("settings").doc("popup").get();
+                
+                if(noticeDoc.exists) {
+                    const noticeData = noticeDoc.data();
+                    const title = noticeData.title;
+                    const message = noticeData.message;
+                    
+                    if(title && message) {
+                        document.getElementById('noticeTitle').textContent = title;
+                        document.getElementById('noticeMessage').textContent = message;
+                        document.getElementById('loginNoticeModal').classList.remove('hidden');
+                        return true;
+                    }
+                }
+                return false;
+            } catch (error) {
+                console.error("Error loading login notice:", error);
+                return false;
+            }
+        }
+
+        // ✅ NEW FUNCTION: CLOSE LOGIN NOTICE
+        function closeLoginNotice() {
+            document.getElementById('loginNoticeModal').classList.add('hidden');
+        }
+
+        // ✅ NEW FUNCTION: LOAD DYNAMIC VIP PACKAGES - রিকোয়ারমেন্ট ২
+        async function loadPackages() {
+            try {
+                const packagesSnapshot = await db.collection("packages").get();
+                
+                const packageContainer = document.getElementById('packageListContainer');
+                if(!packageContainer) return;
+                
+                packageContainer.innerHTML = '';
+                
+                if(packagesSnapshot.empty) {
+                    // Auto seeder: Create default packages if collection is empty
+                    await seedDefaultPackages();
+                    await loadPackages(); // Reload after seeding
+                    return;
+                }
+                
+                packagesSnapshot.forEach((doc) => {
+                    const packageData = doc.data();
+                    const packageId = doc.id;
+                    
+                    let borderColor = 'border-yellow-500';
+                    let bgColor = 'bg-yellow-500';
+                    let textColor = 'text-yellow-700';
+                    
+                    if(packageData.name.includes('গোল্ড') || packageData.name.includes('Gold')) {
+                        borderColor = 'border-purple-500';
+                        bgColor = 'bg-purple-500';
+                        textColor = 'text-purple-700';
+                    } else if(packageData.name.includes('প্লাটিনাম') || packageData.name.includes('Platinum')) {
+                        borderColor = 'border-green-500';
+                        bgColor = 'bg-green-500';
+                        textColor = 'text-green-700';
+                    }
+                    
+                    const packageHTML = `
+                        <div class="glass-card p-4 rounded-2xl border-2 ${borderColor}">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-lg ${textColor}">${packageData.name}</h3>
+                                    <p class="text-sm text-slate-600">${packageData.description || 'প্রিমিয়াম সুবিধা'}</p>
+                                    <p class="text-xs text-slate-500 mt-1">মেয়াদ: ${packageData.days || 30} দিন</p>
+                                </div>
+                                <span class="${bgColor.replace('bg-', 'bg-')}100 ${textColor} px-3 py-1 rounded-full font-bold">৳${packageData.price}</span>
+                            </div>
+                            <button onclick="window.buyPackage('${packageId}', ${packageData.price}, '${packageData.name}', ${packageData.days || 30})" class="w-full mt-3 ${bgColor} text-white py-2 rounded-lg font-bold hover:opacity-90 transition">
+                                কিনুন
+                            </button>
+                        </div>
+                    `;
+                    
+                    packageContainer.innerHTML += packageHTML;
+                });
+                
+            } catch (error) {
+                console.error("Error loading packages:", error);
+                const packageContainer = document.getElementById('packageListContainer');
+                if(packageContainer) {
+                    packageContainer.innerHTML = `
+                        <div class="glass-card p-6 rounded-2xl text-center">
+                            <p class="text-red-500 font-bold">প্যাকেজ লোড করতে সমস্যা হয়েছে</p>
+                            <button onclick="window.loadPackages()" class="mt-3 bg-premium text-white px-4 py-2 rounded-lg font-bold">
+                                আবার চেষ্টা করুন
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // ✅ NEW FUNCTION: SEED DEFAULT PACKAGES
+        async function seedDefaultPackages() {
+            try {
+                const defaultPackages = [
+                    {
+                        name: "সিলভার প্যাকেজ",
+                        price: 500,
+                        days: 30,
+                        description: "প্রতিদিন ১০টি অতিরিক্ত টাস্ক",
+                        features: ["১০টি অতিরিক্ত টাস্ক", "বেসিক সাপোর্ট"],
+                        created: firebase.firestore.FieldValue.serverTimestamp()
+                    },
+                    {
+                        name: "গোল্ড প্যাকেজ",
+                        price: 1000,
+                        days: 30,
+                        description: "প্রতিদিন ২৫টি অতিরিক্ত টাস্ক + ২০% বোনাস",
+                        features: ["২৫টি অতিরিক্ত টাস্ক", "২০% এক্সট্রা বোনাস", "প্রিয়রিটি সাপোর্ট"],
+                        created: firebase.firestore.FieldValue.serverTimestamp()
+                    },
+                    {
+                        name: "প্লাটিনাম প্যাকেজ",
+                        price: 2000,
+                        days: 30,
+                        description: "সকল সুবিধা + ডাইরেক্ট সাপোর্ট",
+                        features: ["সকল টাস্ক আনলিমিটেড", "৫০% এক্সট্রা বোনাস", "ডাইরেক্ট এডমিন সাপোর্ট", "স্পেশাল অফার"],
+                        created: firebase.firestore.FieldValue.serverTimestamp()
+                    }
+                ];
+                
+                for(const pkg of defaultPackages) {
+                    await db.collection("packages").add(pkg);
+                }
+                
+                showSmartToast("ডিফল্ট প্যাকেজ তৈরি করা হয়েছে", "success");
+                
+            } catch (error) {
+                console.error("Error seeding default packages:", error);
+            }
+        }
+
+        // ✅ UPDATED BUY PACKAGE FUNCTION - WITH DYNAMIC EXPIRY LOGIC
+        window.buyPackage = async (packageId, price, name, days) => {
+            if(!currentUserData) {
+                showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                return;
+            }
+            
+            if(currentUserData.mainBalance < price) {
+                showSmartToast(`পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳${currentUserData.mainBalance.toFixed(2)}, প্রয়োজন: ৳${price}`, 'error');
+                return;
+            }
+            
+            const result = await Swal.fire({
+                title: `${name} কিনতে চান?`,
+                html: `মূল্য: <b>৳${price}</b><br><br>মেয়াদ: <b>${days} দিন</b><br>আপনার ব্যালেন্স: ৳${currentUserData.mainBalance.toFixed(2)}<br>কিনলে ব্যালেন্স: ৳${(currentUserData.mainBalance - price).toFixed(2)}`,
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, কিনুন',
+                cancelButtonText: 'বাতিল',
+                confirmButtonColor: '#059669',
+                icon: 'question'
+            });
+            
+            if (result.isConfirmed) {
+                showLoading();
+                try {
+                    const userRef = db.collection("users").doc(currentUserId);
+                    
+                    // Calculate expiry date (dynamic days from now)
+                    const today = new Date();
+                    const expiryDate = new Date();
+                    expiryDate.setDate(today.getDate() + days);
+                    
+                    const updateData = {
+                        mainBalance: firebase.firestore.FieldValue.increment(-price),
+                        plan: name,
+                        totalDeposit: firebase.firestore.FieldValue.increment(price),
+                        packageExpiresAt: expiryDate,
+                        packageId: packageId
+                    };
+                    
+                    await userRef.update(updateData);
+                    
+                    await db.collection("history").add({
+                        userId: currentUserId,
+                        type: `${name} ক্রয়`,
+                        amount: -price,
+                        status: "Success",
+                        details: `${name} প্যাকেজ সফলভাবে ক্রয় করা হয়েছে (মেয়াদ: ${days} দিন, শেষ: ${expiryDate.toLocaleDateString('bn-BD')})`,
+                        date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় সফল*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${price}\n📅 *মেয়াদ:* ${days} দিন\n📅 *মেয়াদ শেষ:* ${expiryDate.toLocaleDateString('bn-BD')}\n✅ *স্ট্যাটাস:* Success`;
+                    await sendTelegramNotification(telegramMessage);
+                    
+                    showSmartToast(`${name} সফলভাবে ক্রয় করা হয়েছে! মেয়াদ: ${days} দিন`, 'success');
+                    hideLoading();
+                    
+                } catch (e) {
+                    console.error("Package purchase error:", e);
+                    showSmartToast('প্যাকেজ ক্রয় করতে সমস্যা হয়েছে', 'error');
+                    hideLoading();
+                }
+            }
+        };
+
         // ✅ UPDATE DEPOSIT ADDRESS
         window.selectPayment = (el, method) => { 
             if(method === 'USDT') {
@@ -2344,7 +2646,7 @@
             }
         });
 
-        // ✅ AUTH STATE LISTENER
+        // ✅ AUTH STATE LISTENER WITH LOGIN NOTICE
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUserId = user.uid;
@@ -2372,6 +2674,14 @@
                     // Show icons
                     document.getElementById('globalChatIcon').style.display = 'flex';
                     document.getElementById('twaiChatbotIcon').style.display = 'flex';
+                    
+                    // ✅ SHOW LOGIN NOTICE AFTER SUCCESSFUL LOGIN
+                    setTimeout(async () => {
+                        const noticeShown = await showLoginNotice();
+                        if(noticeShown) {
+                            console.log("Login notice shown successfully");
+                        }
+                    }, 1500);
                     
                     hideLoading();
                 }, 2000);
@@ -2421,7 +2731,8 @@
                             // Package expired, downgrade to free
                             db.collection("users").doc(uid).update({
                                 plan: "Free Member",
-                                packageExpiresAt: firebase.firestore.FieldValue.delete()
+                                packageExpiresAt: firebase.firestore.FieldValue.delete(),
+                                packageId: firebase.firestore.FieldValue.delete()
                             }).then(() => {
                                 showSmartToast("আপনার প্যাকেজের মেয়াদ শেষ, আপনি এখন ফ্রি মেম্বার।", "info");
                             });
@@ -3850,87 +4161,6 @@
             window.open('https://t.me/TAKAR_WALA_ADMIN', '_blank');
         };
         
-        // ✅ ✅ FIXED: VIP PACKAGE WITH EXPIRY LOGIC - রিকোয়ারমেন্ট ৫
-        window.buyPackage = async (packageType) => {
-            if(!currentUserData) {
-                showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
-                return;
-            }
-            
-            const packagePrices = {
-                silver: 500,
-                gold: 1000,
-                platinum: 2000
-            };
-            
-            const packageNames = {
-                silver: "সিলভার প্যাকেজ",
-                gold: "গোল্ড প্যাকেজ", 
-                platinum: "প্লাটিনাম প্যাকেজ"
-            };
-            
-            const price = packagePrices[packageType];
-            const name = packageNames[packageType];
-            
-            if(currentUserData.mainBalance < price) {
-                showSmartToast(`পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳${currentUserData.mainBalance.toFixed(2)}, প্রয়োজন: ৳${price}`, 'error');
-                return;
-            }
-            
-            const result = await Swal.fire({
-                title: `${name} কিনতে চান?`,
-                html: `মূল্য: <b>৳${price}</b><br><br>আপনার ব্যালেন্স: ৳${currentUserData.mainBalance.toFixed(2)}<br>কিনলে ব্যালেন্স: ৳${(currentUserData.mainBalance - price).toFixed(2)}`,
-                showCancelButton: true,
-                confirmButtonText: 'হ্যাঁ, কিনুন',
-                cancelButtonText: 'বাতিল',
-                confirmButtonColor: '#059669',
-                icon: 'question'
-            });
-            
-            if (result.isConfirmed) {
-                showLoading();
-                try {
-                    const userRef = db.collection("users").doc(currentUserId);
-                    
-                    // Calculate expiry date (30 days from now)
-                    const today = new Date();
-                    const expiryDate = new Date();
-                    expiryDate.setDate(today.getDate() + 30);
-                    
-                    const updateData = {
-                        mainBalance: firebase.firestore.FieldValue.increment(-price),
-                        plan: name,
-                        totalDeposit: firebase.firestore.FieldValue.increment(price),
-                        packageExpiresAt: expiryDate
-                    };
-                    
-                    await userRef.update(updateData);
-                    
-                    await db.collection("history").add({
-                        userId: currentUserId,
-                        type: `${name} ক্রয়`,
-                        amount: -price,
-                        status: "Success",
-                        details: `${name} প্যাকেজ সফলভাবে ক্রয় করা হয়েছে (মেয়াদ: ${expiryDate.toLocaleDateString('bn-BD')})`,
-                        date: new Date().toLocaleDateString('bn-BD'),
-                        time: new Date().toLocaleTimeString('bn-BD'),
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় সফল*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${price}\n📅 *মেয়াদ শেষ:* ${expiryDate.toLocaleDateString('bn-BD')}\n✅ *স্ট্যাটাস:* Success`;
-                    await sendTelegramNotification(telegramMessage);
-                    
-                    showSmartToast(`${name} সফলভাবে ক্রয় করা হয়েছে! মেয়াদ: ৩০ দিন`, 'success');
-                    hideLoading();
-                    
-                } catch (e) {
-                    console.error("Package purchase error:", e);
-                    showSmartToast('প্যাকেজ ক্রয় করতে সমস্যা হয়েছে', 'error');
-                    hideLoading();
-                }
-            }
-        };
-        
         window.showDriveOffer = () => {
             window.showPage('driveOfferScreen');
         };
@@ -4096,6 +4326,9 @@
                 }
                 if(id === 'settingsScreen') {
                     loadSettingsFromLocalStorage();
+                }
+                if(id === 'vipScreen') {
+                    loadPackages();
                 }
                 
                 hideLoading();
