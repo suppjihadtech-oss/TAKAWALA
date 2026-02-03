@@ -2015,10 +2015,11 @@
             }
         }
         
-        // ✅ UPDATED AD LINK FUNCTION - রিকোয়ারমেন্ট ৫
+        // ✅ ✅ FIXED: UPDATED AD LINK FUNCTION - রিকোয়ারমেন্ট ৫ (Problem 1)
         window.openAdLink = () => {
             const randomLink = adsterraLinks[Math.floor(Math.random() * adsterraLinks.length)];
-            window.open(randomLink, '_blank');
+            // ✅ FIX: window.open এর পরিবর্তে window.location.href ব্যবহার করা হয়েছে
+            window.location.href = randomLink;
             closeInterstitialAd();
         };
 
@@ -2574,6 +2575,7 @@
                     
                     switch(filterType) {
                         case 'deposit':
+                            // ✅ FIXED: Problem 4 - Deposit filter update
                             typeArray = ['ডিপোজিট', 'Deposit'];
                             break;
                         case 'withdraw':
@@ -2583,12 +2585,14 @@
                             typeArray = ['রিচার্জ', 'Recharge'];
                             break;
                         case 'task':
-                            typeArray = ['টাস্ক', 'Task'];
+                            // ✅ FIXED: Problem 2 - Task filter update
+                            typeArray = ['টাস্ক', 'Task', 'টাস্ক সম্পন্ন'];
                             break;
                         case 'bonus':
                             typeArray = ['বোনাস', 'Bonus', 'ডেইলি বোনাস', 'রেফার বোনাস'];
                             break;
                         case 'quiz':
+                            // ✅ FIXED: Problem 3 - Quiz filter update
                             typeArray = ['কুইজ', 'Quiz'];
                             break;
                         default:
@@ -2635,7 +2639,7 @@
                     } else if(h.type.includes('Deposit') || h.type.includes('ডিপোজিট')) {
                         icon = 'https://i.postimg.cc/7ZGpHH5q/save-money.png';
                         bgColor = 'bg-green-100';
-                    } else if(h.type.includes('Task') || h.type.includes('টাস্ক')) {
+                    } else if(h.type.includes('Task') || h.type.includes('টাস্ক') || h.type.includes('টাস্ক সম্পন্ন')) {
                         icon = 'https://i.postimg.cc/d1sXyCb6/clipboard.png';
                         bgColor = 'bg-purple-100';
                     } else if(h.type.includes('Bonus') || h.type.includes('বোনাস')) {
@@ -2738,7 +2742,7 @@
                 icon = 'https://i.postimg.cc/wMdF5zV5/withdraw.png';
             } else if(typeText.includes('রিচার্জ') || typeText.includes('Recharge')) {
                 icon = 'https://i.postimg.cc/jjdpNH5b/payment-method.png';
-            } else if(typeText.includes('টাস্ক') || typeText.includes('Task')) {
+            } else if(typeText.includes('টাস্ক') || typeText.includes('Task') || typeText.includes('টাস্ক সম্পন্ন')) {
                 icon = 'https://i.postimg.cc/d1sXyCb6/clipboard.png';
             } else if(typeText.includes('বোনাস') || typeText.includes('Bonus')) {
                 icon = 'https://i.postimg.cc/qqLQKVHV/bonus.png';
@@ -3008,12 +3012,13 @@
                 
                 await userRef.update(updateData);
                 
+                // ✅ FIXED: Problem 3 - Quiz history type fixed to "কুইজ"
                 await db.collection("history").add({
                     userId: currentUserId,
-                    type: `${currentQuizType} কুইজ পুরস্কার`,
+                    type: "কুইজ", // ✅ Static type for filter
                     amount: reward,
                     status: "Success",
-                    details: `${correctAnswers}/${totalQuestions} প্রশ্ন সঠিক`,
+                    details: `${currentQuizType} কুইজ - ${correctAnswers}/${totalQuestions} প্রশ্ন সঠিক`,
                     date: new Date().toLocaleDateString('bn-BD'),
                     time: new Date().toLocaleTimeString('bn-BD'),
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -3270,6 +3275,21 @@
                     userPhone: currentUserData.phone,
                     proof: proofData,
                     status: "Pending",
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // ✅ ✅ FIXED: Problem 2 - Task history save added
+                await db.collection("history").add({
+                    userId: currentUserId,
+                    type: "টাস্ক সম্পন্ন", // ✅ Fixed type for filtering
+                    amount: currentTaskInfo.reward,
+                    status: "Pending",
+                    details: `${currentTaskInfo.title} - ${currentTaskInfo.taskType}`,
+                    taskId: currentTaskInfo.taskId,
+                    taskType: currentTaskInfo.taskType,
+                    proof: proofData,
                     date: new Date().toLocaleDateString('bn-BD'),
                     time: new Date().toLocaleTimeString('bn-BD'),
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
