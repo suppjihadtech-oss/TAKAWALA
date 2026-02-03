@@ -4351,12 +4351,31 @@
         };
         
         window.switchTaskTab = (type) => {
-            currentTaskType = type;
-            document.getElementById('tabFreeTask').className = type==='free'?'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow':'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
-            document.getElementById('tabVipTask').className = type==='vip'?'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow':'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
-            renderTasks();
-        };
-        
+    // ফ্রি ইউজার চেক (Security Guard) 👮‍♂️
+    if (type === 'vip') {
+        if (!currentUserData || currentUserData.plan === 'Free Member' || currentUserData.plan.includes('Free')) {
+            Swal.fire({
+                icon: 'error',
+                title: 'অ্যাক্সেস ডিনাইড!',
+                text: 'ভিআইপি টাস্ক করতে হলে আপনাকে ভিআইপি প্যাকেজ কিনতে হবে।',
+                confirmButtonText: 'প্যাকেজ কিনুন',
+                confirmButtonColor: '#059669'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.showPage('vipScreen'); // প্যাকেজ পেজে পাঠিয়ে দিবে
+                }
+            });
+            return; // এখানেই থামিয়ে দিলাম, সামনে এগোবে না
+        }
+    }
+
+    currentTaskType = type;
+    document.getElementById('tabFreeTask').className = type==='free'?'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow':'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
+    document.getElementById('tabVipTask').className = type==='vip'?'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow':'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
+    renderTasks();
+};
+
+ 
         window.selectOperator = (el, operator) => { 
             document.querySelectorAll('#rechargeScreen .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
             el.classList.add('border-green-500','bg-green-50'); 
