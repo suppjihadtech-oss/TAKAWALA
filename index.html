@@ -993,7 +993,7 @@
                 <button onclick="window.askTWAI('টাস্ক কখন আপডেট হয়?')" class="quick-question">১২. টাস্ক কখন আপডেট হয়?</button>
                 <button onclick="window.askTWAI('ডিপোজিট ব্যালেন্স এড হচ্ছে না কেন?')" class="quick-question">১৩. ডিপোজিট ব্যালেন্স এড হচ্ছে না কেন?</button>
                 <button onclick="window.askTWAI('ভুল নাম্বারে টাকা পাঠালে কি করব?')" class="quick-question">১৪. ভুল নাম্বারে টাকা পাঠালে কি করব?</button>
-                <button onclick="window.askTWAI('অ্যাপটি কি রিয়েল?')" class="quick-question">১৫. অ্যাপটি কি রিয়েল?</button>
+                <button onclick="window.askTWAI('অ্যাপটি কি রিয়েল?')" class="quick-question">১৫. অ্যাপটি কি রিয়েল?</button>
                 <button onclick="window.askTWAI('পয়েন্ট এবং টাকার হিসাব কি?')" class="quick-question">১৬. পয়েন্ট এবং টাকার হিসাব কি?</button>
                 <button onclick="window.askTWAI('টেলিগ্রাম সাপোর্টে কথা বলব কিভাবে?')" class="quick-question">১৭. টেলিগ্রাম সাপোর্টে কথা বলব কিভাবে?</button>
                 <button onclick="window.askTWAI('বিকাশে সর্বনিম্ন কত টাকা তোলা যায়?')" class="quick-question">১৮. বিকাশে সর্বনিম্ন কত টাকা তোলা যায়?</button>
@@ -1860,7 +1860,7 @@
             'টাস্ক কখন আপডেট হয়?': 'টাস্ক প্রতিদিন সকাল ৯টা থেকে রাত ১০টা পর্যন্ত আপডেট হয়। নতুন টাস্ক পেতে নিয়মিত চেক করুন।',
             'ডিপোজিট ব্যালেন্স এড হচ্ছে না কেন?': 'ডিপোজিট করার পর এডমিন ম্যানুয়ালি এপ্রুভ করে। সাধারণত ৫-৩০ মিনিট লাগে। বেশি সময় লাগলে টেলিগ্রামে যোগাযোগ করুন।',
             'ভুল নাম্বারে টাকা পাঠালে কি করব?': 'ভুল নাম্বারে টাকা পাঠানোয় আমরা দায়ী নই। দয়া করে সঠিক নাম্বার চেক করে পাঠান।',
-            'অ্যাপটি কি রিয়েল?': 'হ্যাঁ, Takawala একটি বৈধ আর্নিং প্ল্যাটফর্ম। আমরা ২০২৫ সাল থেকে কাজ করছি এবং হাজারো ইউজার পেমেন্ট পেয়েছে।',
+            'অ্যাপটি কি রিয়েল?': 'হ্যাঁ, Takawala একটি বৈধ আর্নিং প্ল্যাটফর্ম। আমরা ২০২৫ সাল থেকে কাজ করছি এবং হাজারো ইউজার পেমেন্ট পেয়েছে।',
             'পয়েন্ট এবং টাকার হিসাব কি?': '১০ পয়েন্ট = ৳১। আপনি টাস্ক, কুইজ, রেফার থেকে পয়েন্ট পাবেন যা টাকায় রূপান্তরযোগ্য।',
             'টেলিগ্রাম সাপোর্টে কথা বলব কিভাবে?': '@TAKAR_WALA_ADMIN এ মেসেজ দিন। সকাল ৯টা থেকে রাত ১০টা পর্যন্ত সাপোর্ট পাওয়া যায়।',
             'বিকাশে সর্বনিম্ন কত টাকা তোলা যায়?': 'বিকাশে ন্যূনতম উত্তোলন ৳৫০ এবং সর্বোচ্চ ৳৫০০০।',
@@ -2410,6 +2410,22 @@
                     if(currentUserData.avatar) {
                         selectedAvatar = currentUserData.avatar;
                         document.getElementById('currentAvatar').src = selectedAvatar;
+                    }
+                    
+                    // ✅ VIP PACKAGE EXPIRY CHECK
+                    if(currentUserData.packageExpiresAt) {
+                        const expiryDate = currentUserData.packageExpiresAt.toDate();
+                        const now = new Date();
+                        
+                        if(now > expiryDate) {
+                            // Package expired, downgrade to free
+                            db.collection("users").doc(uid).update({
+                                plan: "Free Member",
+                                packageExpiresAt: firebase.firestore.FieldValue.delete()
+                            }).then(() => {
+                                showSmartToast("আপনার প্যাকেজের মেয়াদ শেষ, আপনি এখন ফ্রি মেম্বার।", "info");
+                            });
+                        }
                     }
                     
                     // ✅ FIXED REFERRAL LINK
@@ -2972,7 +2988,11 @@
             }, 1000);
         }
         
+        // ✅ ✅ FIXED: QUIZ SUBMISSION REVENUE TRIGGER - রিকোয়ারমেন্ট ৩
         window.submitQuiz = async () => {
+            // ✅ FIX 3: Show ad before quiz submission
+            showInterstitialAd();
+            
             const questionsCount = Object.keys(selectedAnswers).length;
             if(questionsCount === 0) {
                 showSmartToast('দয়া করে সব প্রশ্নের উত্তর দিন', 'error');
@@ -3750,6 +3770,7 @@
             }
         }
 
+        // ✅ ✅ FIXED: DAILY BONUS REVENUE TRIGGER - রিকোয়ারমেন্ট ৩
         window.showDailyBonus = async () => {
             if(!currentUserId) return;
             
@@ -3778,6 +3799,9 @@
                     });
                     
                     if (result.isConfirmed) {
+                        // ✅ FIX 2: Show ad before giving bonus
+                        showInterstitialAd();
+                        
                         showLoading();
                         
                         const userRef = db.collection("users").doc(currentUserId);
@@ -3826,6 +3850,7 @@
             window.open('https://t.me/TAKAR_WALA_ADMIN', '_blank');
         };
         
+        // ✅ ✅ FIXED: VIP PACKAGE WITH EXPIRY LOGIC - রিকোয়ারমেন্ট ৫
         window.buyPackage = async (packageType) => {
             if(!currentUserData) {
                 showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
@@ -3867,27 +3892,35 @@
                 try {
                     const userRef = db.collection("users").doc(currentUserId);
                     
-                    await userRef.update({
+                    // Calculate expiry date (30 days from now)
+                    const today = new Date();
+                    const expiryDate = new Date();
+                    expiryDate.setDate(today.getDate() + 30);
+                    
+                    const updateData = {
                         mainBalance: firebase.firestore.FieldValue.increment(-price),
                         plan: name,
-                        totalDeposit: firebase.firestore.FieldValue.increment(price)
-                    });
+                        totalDeposit: firebase.firestore.FieldValue.increment(price),
+                        packageExpiresAt: expiryDate
+                    };
+                    
+                    await userRef.update(updateData);
                     
                     await db.collection("history").add({
                         userId: currentUserId,
                         type: `${name} ক্রয়`,
                         amount: -price,
                         status: "Success",
-                        details: `${name} প্যাকেজ সফলভাবে ক্রয় করা হয়েছে`,
+                        details: `${name} প্যাকেজ সফলভাবে ক্রয় করা হয়েছে (মেয়াদ: ${expiryDate.toLocaleDateString('bn-BD')})`,
                         date: new Date().toLocaleDateString('bn-BD'),
                         time: new Date().toLocaleTimeString('bn-BD'),
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় সফল*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${price}\n✅ *স্ট্যাটাস:* Success`;
+                    const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় সফল*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${price}\n📅 *মেয়াদ শেষ:* ${expiryDate.toLocaleDateString('bn-BD')}\n✅ *স্ট্যাটাস:* Success`;
                     await sendTelegramNotification(telegramMessage);
                     
-                    showSmartToast(`${name} সফলভাবে ক্রয় করা হয়েছে!`, 'success');
+                    showSmartToast(`${name} সফলভাবে ক্রয় করা হয়েছে! মেয়াদ: ৩০ দিন`, 'success');
                     hideLoading();
                     
                 } catch (e) {
