@@ -138,6 +138,87 @@
             flex-shrink: 0;
         }
 
+        /* ✅ NEW SMART NOTIFICATION (TOAST) - রিকোয়ারমেন্ট ২ */
+        .smart-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999999;
+            min-width: 320px;
+            max-width: 90%;
+            padding: 16px 20px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDownFade 0.4s ease, fadeOutUp 0.4s ease 2s forwards;
+            border-left: 4px solid;
+        }
+        
+        @keyframes slideDownFade {
+            from { 
+                top: -100px; 
+                opacity: 0; 
+                transform: translateX(-50%) scale(0.9);
+            }
+            to { 
+                top: 20px; 
+                opacity: 1; 
+                transform: translateX(-50%) scale(1);
+            }
+        }
+        
+        @keyframes fadeOutUp {
+            from { 
+                top: 20px; 
+                opacity: 1; 
+                transform: translateX(-50%) scale(1);
+            }
+            to { 
+                top: -100px; 
+                opacity: 0; 
+                transform: translateX(-50%) scale(0.9);
+                visibility: hidden;
+            }
+        }
+        
+        .toast-success {
+            border-left-color: #10b981;
+        }
+        
+        .toast-info {
+            border-left-color: #3b82f6;
+        }
+        
+        .toast-error {
+            border-left-color: #ef4444;
+        }
+        
+        .toast-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .toast-success .toast-icon { color: #10b981; }
+        .toast-info .toast-icon { color: #3b82f6; }
+        .toast-error .toast-icon { color: #ef4444; }
+        
+        .toast-content {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .toast-content p {
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 1.4;
+            margin: 0;
+        }
+
         /* LOADING ANIMATION */
         .loading-overlay {
             position: fixed;
@@ -546,7 +627,7 @@
             50% { transform: scale(1.05); }
         }
         
-        /* ✅ TWAI CHATBOT STYLES */
+        /* ✅ UPDATED TWAI CHATBOT STYLES - রিকোয়ারমেন্ট ১ */
         #twaiChatbotIcon {
             position: fixed;
             bottom: 170px;
@@ -594,7 +675,7 @@
             background: white;
             border-radius: 20px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             max-height: 80vh;
             display: flex;
             flex-direction: column;
@@ -641,11 +722,12 @@
         }
         
         .message-bubble {
-            max-width: 80%;
+            max-width: 85%;
             padding: 10px 15px;
             border-radius: 18px;
             font-size: 14px;
             line-height: 1.4;
+            word-wrap: break-word;
         }
         
         .user-bubble {
@@ -666,26 +748,35 @@
             margin-top: 4px;
         }
         
+        /* ✅ UPDATED QUICK QUESTIONS GRID - 20 QUESTIONS */
         .quick-questions {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
-            margin-top: 10px;
+            padding: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+            border-top: 1px solid #e2e8f0;
+            background: #f8fafc;
         }
         
         .quick-question {
-            background: #e2e8f0;
-            border: none;
-            padding: 8px 10px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 10px 12px;
             border-radius: 10px;
             font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
             text-align: left;
+            color: #1e293b;
+            font-weight: 500;
         }
         
         .quick-question:hover {
-            background: #cbd5e1;
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
         }
         
         .chatbot-input {
@@ -702,6 +793,7 @@
             border-radius: 20px;
             outline: none;
             font-size: 14px;
+            background: #f8fafc;
         }
         
         .chatbot-input button {
@@ -713,8 +805,13 @@
             margin-left: 10px;
             cursor: pointer;
             font-weight: bold;
+            transition: background 0.3s;
         }
         
+        .chatbot-input button:hover {
+            background: #7c3aed;
+        }
+
         /* ✅ DRIVE OFFER SCREEN */
         #driveOfferScreen {
             background: linear-gradient(135deg, #1e293b, #0f172a);
@@ -757,6 +854,52 @@
             background: #059669;
             color: white;
         }
+        
+        /* ✅ SETTINGS TOGGLE STYLES */
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #059669;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
     </style>
 </head>
 <body class="bg-slate-50">
@@ -767,7 +910,7 @@
             <img src="https://i.postimg.cc/GpZMXGKR/1769418328212-removebg-preview.png" alt="Logo">
             <h1 class="text-4xl font-bold mb-4">🔧 কাজ চলছে</h1>
             <p class="text-xl mb-6">আমরা সাইটটিকে আরো উন্নত করার জন্য কাজ করছি</p>
-            <p class="text-lg text-slate-300 mb-8">অল্প সময়ের মধ্যে আমরা আবার চালু হবো। আপনার ধৈর্য্যের জন্য ধন্যবাদ।</p>
+            <p class="text-lg text-slate-300 mb-8">অল্প সময়ের মধ্যে আমরা আবার চালু হবো। আপনার ধৈর্য্যের জন্য ধন্যবাদ।</p>
             <div class="bg-white/10 p-6 rounded-2xl">
                 <p class="text-sm">📞 যোগাযোগ: support@takawala.com</p>
                 <p class="text-sm mt-2">📱 টেলিগ্রাম: @TAKAR_WALA_ADMIN</p>
@@ -780,7 +923,7 @@
         <i class="ri-customer-service-2-fill"></i>
     </div>
     
-    <!-- ✅ TWAI CHATBOT ICON -->
+    <!-- ✅ UPDATED TWAI CHATBOT ICON -->
     <div id="twaiChatbotIcon" onclick="window.openTWAI()">
         <i class="ri-robot-2-fill"></i>
     </div>
@@ -790,10 +933,12 @@
         <img src="https://i.postimg.cc/GpZMXGKR/1769418328212-removebg-preview.png" class="loading-logo">
     </div>
 
-    <!-- ✅ NOTIFICATION MESSAGE - AUTO HIDE AFTER 2.5 SECONDS -->
-    <div id="notificationMessage" class="hidden">
-        <span id="notificationText" class="text-container"></span>
-        <button id="notificationClose" class="notification-close">×</button>
+    <!-- ✅ NEW SMART NOTIFICATION (TOAST) - রিকোয়ারমেন্ট ২ -->
+    <div id="smartToast" class="smart-toast hidden">
+        <div class="toast-icon"></div>
+        <div class="toast-content">
+            <p id="toastMessage"></p>
+        </div>
     </div>
 
     <!-- MONITAG INTERSTITIAL AD (HIDDEN INITIALLY) -->
@@ -813,7 +958,7 @@
         </div>
     </div>
 
-    <!-- ✅ TWAI CHATBOT MODAL -->
+    <!-- ✅ UPDATED TWAI CHATBOT MODAL - রিকোয়ারমেন্ট ১ -->
     <div id="twaiModal" class="chatbot-modal hidden">
         <div class="chatbot-content">
             <div class="chatbot-header">
@@ -832,15 +977,28 @@
                 </div>
             </div>
             
-            <div class="quick-questions p-4 border-t">
-                <button onclick="window.askTWAI('টাস্ক')" class="quick-question">টাস্ক</button>
-                <button onclick="window.askTWAI('উইথড্র')" class="quick-question">উইথড্র</button>
-                <button onclick="window.askTWAI('ডিপোজিট')" class="quick-question">ডিপোজিট</button>
-                <button onclick="window.askTWAI('রিচার্জ')" class="quick-question">রিচার্জ</button>
-                <button onclick="window.askTWAI('কুইজ')" class="quick-question">কুইজ</button>
-                <button onclick="window.askTWAI('প্যাকেজ')" class="quick-question">প্যাকেজ</button>
-                <button onclick="window.askTWAI('ব্যান')" class="quick-question">ব্যান</button>
-                <button onclick="window.askTWAI('দেরি')" class="quick-question">দেরি</button>
+            <!-- ✅ UPDATED: 20 QUESTIONS GRID - রিকোয়ারমেন্ট ১ -->
+            <div class="quick-questions" id="quickQuestionsGrid">
+                <button onclick="window.askTWAI('কিভাবে কাজ করব?')" class="quick-question">১. কিভাবে কাজ করব?</button>
+                <button onclick="window.askTWAI('টাকা তুলব কিভাবে?')" class="quick-question">২. টাকা তুলব কিভাবে?</button>
+                <button onclick="window.askTWAI('রেফার বোনাস কত?')" class="quick-question">৩. রেফার বোনাস কত?</button>
+                <button onclick="window.askTWAI('পেমেন্ট পেতে কতক্ষণ লাগে?')" class="quick-question">৪. পেমেন্ট পেতে কতক্ষণ লাগে?</button>
+                <button onclick="window.askTWAI('পাসওয়ার্ড ভুলে গেছি, কি করব?')" class="quick-question">৫. পাসওয়ার্ড ভুলে গেছি, কি করব?</button>
+                <button onclick="window.askTWAI('একাউন্ট ব্যান হলে কি করব?')" class="quick-question">৬. একাউন্ট ব্যান হলে কি করব?</button>
+                <button onclick="window.askTWAI('মিনিমাম উইথড্র কত?')" class="quick-question">৭. মিনিমাম উইথড্র কত?</button>
+                <button onclick="window.askTWAI('ভ্যাট বা চার্জ কত কাটে?')" class="quick-question">৮. ভ্যাট বা চার্জ কত কাটে?</button>
+                <button onclick="window.askTWAI('এক ফোনে কয়টি একাউন্ট করা যাবে?')" class="quick-question">৯. এক ফোনে কয়টি একাউন্ট করা যাবে?</button>
+                <button onclick="window.askTWAI('কুইজ খেলার নিয়ম কি?')" class="quick-question">১০. কুইজ খেলার নিয়ম কি?</button>
+                <button onclick="window.askTWAI('ভিপিএন (VPN) ব্যবহার করব কিনা?')" class="quick-question">১১. ভিপিএন ব্যবহার করব কিনা?</button>
+                <button onclick="window.askTWAI('টাস্ক কখন আপডেট হয়?')" class="quick-question">১২. টাস্ক কখন আপডেট হয়?</button>
+                <button onclick="window.askTWAI('ডিপোজিট ব্যালেন্স এড হচ্ছে না কেন?')" class="quick-question">১৩. ডিপোজিট ব্যালেন্স এড হচ্ছে না কেন?</button>
+                <button onclick="window.askTWAI('ভুল নাম্বারে টাকা পাঠালে কি করব?')" class="quick-question">১৪. ভুল নাম্বারে টাকা পাঠালে কি করব?</button>
+                <button onclick="window.askTWAI('অ্যাপটি কি রিয়েল?')" class="quick-question">১৫. অ্যাপটি কি রিয়েল?</button>
+                <button onclick="window.askTWAI('পয়েন্ট এবং টাকার হিসাব কি?')" class="quick-question">১৬. পয়েন্ট এবং টাকার হিসাব কি?</button>
+                <button onclick="window.askTWAI('টেলিগ্রাম সাপোর্টে কথা বলব কিভাবে?')" class="quick-question">১৭. টেলিগ্রাম সাপোর্টে কথা বলব কিভাবে?</button>
+                <button onclick="window.askTWAI('বিকাশে সর্বনিম্ন কত টাকা তোলা যায়?')" class="quick-question">১৮. বিকাশে সর্বনিম্ন কত টাকা তোলা যায়?</button>
+                <button onclick="window.askTWAI('নগদে সর্বনিম্ন কত টাকা তোলা যায়?')" class="quick-question">১৯. নগদে সর্বনিম্ন কত টাকা তোলা যায়?</button>
+                <button onclick="window.askTWAI('এডমিন কখন লাইনে থাকে?')" class="quick-question">২০. এডমিন কখন লাইনে থাকে?</button>
             </div>
             
             <div class="chatbot-input">
@@ -921,7 +1079,7 @@
 
             <div class="mx-5 -mt-5 bg-white p-3 rounded-2xl shadow-lg border border-slate-100 flex items-center gap-3 relative z-20">
                 <img src="https://i.postimg.cc/6p7RQSVx/megaphone.png" class="w-6 h-6 animate-pulse">
-                <marquee class="text-sm font-bold text-slate-600" id="noticeText">স্বাগতম টাকাওয়ালা অ্যাপে!</marquee>
+                <marquee class="text-sm font-bold text-slate-600" id="noticeText">স্বাগতম টাকাওয়ালা অ্যাপে!</marquee>
             </div>
 
             <!-- ADD BANNER IN HOME SCREEN (REMOVED AS PER REQUEST) -->
@@ -968,7 +1126,7 @@
         <!-- WALLET SCREEN -->
         <div id="walletScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
             <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-3"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">ওয়ালেট</h2></div>
+                <div class="flex items-center gap-3"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">ওয়ালেট</h2></div>
                 <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('লেনদেন')" class="w-8 cursor-pointer">
             </div>
 
@@ -1027,7 +1185,7 @@
                     </div>
                     <input type="number" id="transferAmount" placeholder="পরিমাণ" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none text-center text-xl">
                     <button onclick="window.transferBalance()" class="w-full bg-slate-800 text-white font-bold py-3.5 rounded-xl shadow-lg">ট্রান্সফার করুন</button>
-                    <p class="text-xs text-red-500">* রিচার্জ ব্যালেন্স থেকে মেইন ব্যালেন্সে নেওয়া যাবে না।</p>
+                    <p class="text-xs text-red-500">* রিচার্জ ব্যালেন্স থেকে মেইন ব্যালেন্সে নেওয়া যাবে না।</p>
                 </div>
             </div>
             
@@ -1305,7 +1463,7 @@
             </div>
         </div>
 
-        <!-- SETTINGS SCREEN -->
+        <!-- ✅ UPDATED SETTINGS SCREEN - রিকোয়ারমেন্ট ৫ -->
         <div id="settingsScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
             <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">সেটিংস</h2></div>
             <div class="glass-card p-6 rounded-[25px] space-y-4">
@@ -1313,19 +1471,31 @@
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
                         <span>নোটিফিকেশন</span>
-                        <input type="checkbox" class="toggle" checked>
+                        <label class="toggle">
+                            <input type="checkbox" id="notificationToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                     <div class="flex justify-between items-center">
                         <span>ডার্ক মোড</span>
-                        <input type="checkbox" class="toggle">
+                        <label class="toggle">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                     <div class="flex justify-between items-center">
                         <span>সাউন্ড</span>
-                        <input type="checkbox" class="toggle" checked>
+                        <label class="toggle">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                     <div class="flex justify-between items-center">
                         <span>ভাইব্রেশন</span>
-                        <input type="checkbox" class="toggle" checked>
+                        <label class="toggle">
+                            <input type="checkbox" id="vibrationToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
                     </div>
                 </div>
                 
@@ -1545,18 +1715,19 @@
     <!-- BOTTOM NAV -->
     <div id="bottomNav" class="hidden fixed bottom-4 left-4 right-4 bottom-nav bg-white/90 backdrop-blur-md shadow-2xl rounded-2xl flex justify-around py-2.5 z-50 border border-white/50">
         <div onclick="window.showPage('homeScreen')" class="text-center cursor-pointer text-green-600"><i class="ri-home-5-fill text-xl"></i><p class="text-[9px] font-bold">হোম</p></div>
-        <div onclick="window.showPage('walletScreen')" class="text-center cursor-pointer text-slate-400"><i class="ri-wallet-3-line text-xl"></i><p class="text-[9px] font-bold">ওয়ালেট</p></div>
+        <div onclick="window.showPage('walletScreen')" class="text-center cursor-pointer text-slate-400"><i class="ri-wallet-3-line text-xl"></i><p class="text-[9px] font-bold">ওয়ালেট</p></div>
         <div onclick="window.showPage('taskScreen')" class="text-center cursor-pointer -mt-8 relative"><div class="bg-premium p-3.5 rounded-full shadow-lg shadow-green-500/40 border-4 border-slate-50"><img src="https://i.postimg.cc/d1sXyCb6/clipboard.png" class="w-6 invert brightness-0"></div><p class="text-[9px] font-bold mt-1 text-slate-600">টাস্ক</p></div>
         <div onclick="window.loadHistory()" class="text-center cursor-pointer text-slate-400"><i class="ri-history-line text-xl"></i><p class="text-[9px] font-bold">হিস্ট্রি</p></div>
         <div onclick="window.showPage('moreScreen')" class="text-center cursor-pointer text-slate-400"><i class="ri-menu-4-line text-xl"></i><p class="text-[9px] font-bold">প্রোফাইল</p></div>
     </div>
 
-    <!-- PROOF SUBMISSION MODAL -->
+    <!-- ✅ UPDATED PROOF SUBMISSION MODAL - রিকোয়ারমেন্ট ৩ -->
     <div id="proofModal" class="proof-modal hidden">
         <div class="proof-content">
             <div class="bg-premium p-6 text-white text-center">
                 <h2 class="text-xl font-bold">টাস্ক প্রুফ সাবমিট</h2>
                 <p class="text-sm opacity-90">টাস্ক সম্পন্ন করার প্রমাণ দিন</p>
+                <div class="task-timer" id="proofTimer">৫</div>
             </div>
             <div class="p-6">
                 <div id="proofFormContainer">
@@ -1673,18 +1844,61 @@
             ]
         };
 
-        // ✅ TWAI CHATBOT RESPONSES
+        // ✅ UPDATED TWAI RESPONSES - 20 QUESTIONS - রিকোয়ারমেন্ট ১
         const twaiResponses = {
-            'টাস্ক': 'টাস্ক অপশনে গিয়ে ভিউ বা সাবস্ক্রাইব টাস্কগুলো সম্পন্ন করে প্রুফ জমা দিন।',
-            'উইথড্র': 'ওয়ালেট > উত্তোলনে যান। মিনিমাম ৫০ টাকা হলে উইথড্র দিতে পারবেন।',
-            'ডিপোজিট': 'ওয়ালেট > ডিপোজিটে যান। মেথড সিলেক্ট করে টাকা পাঠিয়ে TrxID দিন।',
-            'রিচার্জ': 'রিচার্জ অপশনে গিয়ে অপারেটর সিলেক্ট করে নাম্বার ও অ্যামাউন্ট দিন।',
-            'কুইজ': 'কুইজ অপশনে সঠিক উত্তর দিয়ে আয় করতে পারেন। প্রতিটি কুইজ দিনে একবার খেলা যাবে।',
-            'ব্যান': 'ভুল তথ্য বা ফেক প্রুফ দিলে একাউন্ট ব্যান হতে পারে। সততার সাথে কাজ করুন।',
-            'প্যাকেজ': 'ভিআইপি অপশন থেকে প্যাকেজ কিনলে ইনকাম বাড়বে। ব্যালেন্স থাকলে অটোমেটিক কেনা যাবে।',
-            'সাবস্ক্রিপশন': 'সাবস্ক্রিপশন অপশন থেকে টেলিগ্রাম প্রিমিয়াম বা স্টার কিনতে পারবেন।',
-            'দেরি': 'অতিরিক্ত রিকোয়েস্টের কারণে মাঝে মাঝে দেরি হতে পারে। ধৈর্য ধরুন।'
+            'কিভাবে কাজ করব?': 'টাস্ক অপশনে গিয়ে ফ্রি/ভিআইপি টাস্ক সিলেক্ট করুন। টাস্কে ক্লিক করলে অ্যাড দেখাবে, অ্যাড দেখে নির্দিষ্ট সময় পর প্রুফ সাবমিট করুন। এডমিন এপ্রুভ করলে টাকা যোগ হবে।',
+            'টাকা তুলব কিভাবে?': 'ওয়ালেট > উত্তোলনে যান। মিনিমাম ৫০ টাকা উত্তোলন করতে পারবেন। বিকাশ/নগদ/রকেট সিলেক্ট করে নাম্বার দিন। উত্তোলনের সময় সকাল ৯-১০টা এবং বিকাল ৩-৯:৩০টা।',
+            'রেফার বোনাস কত?': 'প্রতি রেফারে আপনি পাবেন ৳৫ বোনাস। আপনার রেফার যখন প্রথম কাজ করবে তখনই বোনাস পাবেন।',
+            'পেমেন্ট পেতে কতক্ষণ লাগে?': 'সাধারণত ৫-৩০ মিনিটের মধ্যে পেমেন্ট হয়ে যায়। তবে ব্যানকিং সমস্যা বা উচ্চ চাপের সময় ১-২ ঘণ্টা লাগতে পারে।',
+            'পাসওয়ার্ড ভুলে গেছি, কি করব?': 'লগইন পেইজে "পাসওয়ার্ড ভুলে গেছি" অপশন নেই। টেলিগ্রাম সাপোর্টে যোগাযোগ করুন অথবা নতুন একাউন্ট খুলুন।',
+            'একাউন্ট ব্যান হলে কি করব?': 'ভুয়া তথ্য, একাধিক একাউন্ট, বা নিয়ম ভঙ্গ করলে ব্যান হতে পারে। ব্যান হলে টেলিগ্রাম সাপোর্টে যোগাযোগ করুন।',
+            'মিনিমাম উইথড্র কত?': 'ন্যূনতম উত্তোলন পরিমাণ ৳৫০। ফ্রি ইউজারদের জন্য দৈনিক ১ বার, ভিআইপিদের জন্য ২ বার উত্তোলন করা যায়।',
+            'ভ্যাট বা চার্জ কত কাটে?': 'উত্তোলনে ১০% ভ্যাট কাটা হয়। অর্থাৎ ৳১০০ উত্তোলনে ৳৯০ পাবেন। ডিপোজিটে কোনো চার্জ নেই।',
+            'এক ফোনে কয়টি একাউন্ট করা যাবে?': 'এক ফোনে শুধুমাত্র ১টি একাউন্ট করা যাবে। একাধিক একাউন্ট করলে সবগুলো ব্যান হয়ে যাবে।',
+            'কুইজ খেলার নিয়ম কি?': 'কুইজ অপশনে গিয়ে টাইপ সিলেক্ট করুন। প্রতিটি কুইজে ৩টি প্রশ্ন থাকে। প্রতিটি সঠিক উত্তরে ৳০.২৫ পাবেন।',
+            'ভিপিএন (VPN) ব্যবহার করব কিনা?': 'না, ভিপিএন ব্যবহার করবেন না। ভিপিএন ব্যবহার করলে একাউন্ট সাসপেন্ড হতে পারে।',
+            'টাস্ক কখন আপডেট হয়?': 'টাস্ক প্রতিদিন সকাল ৯টা থেকে রাত ১০টা পর্যন্ত আপডেট হয়। নতুন টাস্ক পেতে নিয়মিত চেক করুন।',
+            'ডিপোজিট ব্যালেন্স এড হচ্ছে না কেন?': 'ডিপোজিট করার পর এডমিন ম্যানুয়ালি এপ্রুভ করে। সাধারণত ৫-৩০ মিনিট লাগে। বেশি সময় লাগলে টেলিগ্রামে যোগাযোগ করুন।',
+            'ভুল নাম্বারে টাকা পাঠালে কি করব?': 'ভুল নাম্বারে টাকা পাঠানোয় আমরা দায়ী নই। দয়া করে সঠিক নাম্বার চেক করে পাঠান।',
+            'অ্যাপটি কি রিয়েল?': 'হ্যাঁ, Takawala একটি বৈধ আর্নিং প্ল্যাটফর্ম। আমরা ২০২৫ সাল থেকে কাজ করছি এবং হাজারো ইউজার পেমেন্ট পেয়েছে।',
+            'পয়েন্ট এবং টাকার হিসাব কি?': '১০ পয়েন্ট = ৳১। আপনি টাস্ক, কুইজ, রেফার থেকে পয়েন্ট পাবেন যা টাকায় রূপান্তরযোগ্য।',
+            'টেলিগ্রাম সাপোর্টে কথা বলব কিভাবে?': '@TAKAR_WALA_ADMIN এ মেসেজ দিন। সকাল ৯টা থেকে রাত ১০টা পর্যন্ত সাপোর্ট পাওয়া যায়।',
+            'বিকাশে সর্বনিম্ন কত টাকা তোলা যায়?': 'বিকাশে ন্যূনতম উত্তোলন ৳৫০ এবং সর্বোচ্চ ৳৫০০০।',
+            'নগদে সর্বনিম্ন কত টাকা তোলা যায়?': 'নগদে ন্যূনতম উত্তোলন ৳৫০ এবং সর্বোচ্চ ৳৫০০০।',
+            'এডমিন কখন লাইনে থাকে?': 'এডমিন সাধারণত সকাল ৯টা থেকে রাত ১০টা পর্যন্ত লাইনে থাকে। শুক্রবার সকাল ৮টা থেকে রাত ৯:৩০টা পর্যন্ত।',
+            'default': 'দুঃখিত, আমি এই প্রশ্নের উত্তর জানি না। অন্য কিছু জিজ্ঞাসা করুন অথবা নিচের প্রশ্নগুলো থেকে সিলেক্ট করুন।'
         };
+
+        // ✅ ADSTERRA ADS LINKS - রিকোয়ারমেন্ট ৫
+        const adsterraLinks = [
+            'https://www.effectivegatecpm.com/t24spqed1?key=7dead7af0eb6b2081051d790a9f95d1b',
+            'https://www.effectivegatecpm.com/dt5xiqg93?key=69751766d294f4706935c6d1f690ea51',
+            'https://www.effectivegatecpm.com/c6dvsywif5?key=91b430d7c920d751eaf19bfc7106e45d',
+            'https://www.effectivegatecpm.com/q0cc46jma?key=8131e64ae71dd95e34995b8326d2ab81',
+            'https://www.effectivegatecpm.com/skjxxk20uj?key=5c7946889852184605cd841244ecaf8d',
+            'https://www.effectivegatecpm.com/qy6201wn?key=a1b1d956fe60158f669f837297a01895',
+            'https://www.effectivegatecpm.com/f97068jz?key=afdd10b69fab899952ebc24c6c4a2898',
+            'https://www.effectivegatecpm.com/cvcrrrps?key=5058530abbd00c92c632cc0ad8b71c58'
+        ];
+
+        // ✅ WITHDRAW/RECHARGE SCHEDULE - রিকোয়ারমেন্ট ৪
+        const withdrawalSchedule = {
+            friday: { start: 8, end: 21.5 }, // 8:00 AM to 9:30 PM
+            otherDays: { morning: { start: 9, end: 10 }, evening: { start: 15, end: 21.5 } } // 9-10 AM, 3-9:30 PM
+        };
+
+        function isWithinWithdrawalSchedule() {
+            const now = new Date();
+            const day = now.getDay(); // 0 = Sunday, 5 = Friday
+            const hour = now.getHours() + (now.getMinutes() / 60);
+            
+            if (day === 5) { // Friday
+                return hour >= withdrawalSchedule.friday.start && hour <= withdrawalSchedule.friday.end;
+            } else {
+                return (hour >= withdrawalSchedule.otherDays.morning.start && hour <= withdrawalSchedule.otherDays.morning.end) ||
+                       (hour >= withdrawalSchedule.otherDays.evening.start && hour <= withdrawalSchedule.otherDays.evening.end);
+            }
+        }
 
         // ✅ INITIALIZE FIREBASE
         firebase.initializeApp(firebaseConfig);
@@ -1712,9 +1926,10 @@
         let maintenanceMode = false;
         let userWithdrawCount = 0;
         let userRechargeCount = 0;
+        let proofTimer = null;
 
-        // ✅ FIXED NOTIFICATION FUNCTION
-        function showNotification(message, type = 'info') {
+        // ✅ SMART TOAST NOTIFICATION FUNCTION - রিকোয়ারমেন্ট ২
+        function showSmartToast(message, type = 'info') {
             // Message Handling (Object fix)
             let displayMessage = '';
             if (typeof message === 'object' && message !== null) {
@@ -1723,34 +1938,43 @@
                 displayMessage = String(message);
             }
             
-            const notification = document.getElementById('notificationMessage');
-            const notificationText = document.getElementById('notificationText');
-            const notificationClose = document.getElementById('notificationClose');
+            const toast = document.getElementById('smartToast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = toast.querySelector('.toast-icon');
             
             // Clear existing timeout
-            if(window.notificationTimeout) clearTimeout(window.notificationTimeout);
+            if(window.toastTimeout) clearTimeout(window.toastTimeout);
             
-            // Reset Animation (Trick to restart CSS animation)
-            notification.style.animation = 'none';
-            notification.offsetHeight; /* trigger reflow */
-            notification.style.animation = 'slideDown 0.3s ease, fadeOut 0.3s ease 2.5s forwards';
+            // Reset Animation
+            toast.style.animation = 'none';
+            toast.offsetHeight; /* trigger reflow */
+            toast.style.animation = 'slideDownFade 0.4s ease, fadeOutUp 0.4s ease 2s forwards';
 
             // Set Style
-            notification.className = ''; // Clear previous
-            notification.classList.add(`notification-${type}`);
-            notification.classList.remove('hidden');
+            toast.className = 'smart-toast';
+            toast.classList.add(`toast-${type}`);
+            toast.classList.remove('hidden');
             
             // Set Icon & Text
-            let icon = type === 'success' ? '✅ ' : (type === 'error' ? '❌ ' : 'ℹ️ ');
-            notificationText.innerHTML = icon + displayMessage;
+            if(type === 'success') {
+                toastIcon.innerHTML = '✔';
+            } else if(type === 'error') {
+                toastIcon.innerHTML = '✖';
+            } else {
+                toastIcon.innerHTML = 'ℹ';
+            }
             
-            // Close Logic
-            notificationClose.onclick = () => notification.classList.add('hidden');
+            toastMessage.innerHTML = displayMessage;
             
             // Auto Hide
-            window.notificationTimeout = setTimeout(() => {
-                notification.classList.add('hidden');
-            }, 3000);
+            window.toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2000);
+        }
+
+        // ✅ OLD NOTIFICATION FUNCTION (KEPT FOR BACKWARD COMPATIBILITY)
+        function showNotification(message, type = 'info') {
+            showSmartToast(message, type);
         }
 
         // ✅ LOADING ANIMATION
@@ -1762,7 +1986,7 @@
             document.getElementById('loadingOverlay').classList.add('hidden');
         }
 
-        // ✅ MONITAG AD FUNCTIONS (UPDATED WITH ROTATION)
+        // ✅ MONITAG AD FUNCTIONS
         function showInterstitialAd() {
             const interstitial = document.getElementById('monitagInterstitial');
             interstitial.classList.remove('hidden');
@@ -1791,15 +2015,9 @@
             }
         }
         
+        // ✅ UPDATED AD LINK FUNCTION - রিকোয়ারমেন্ট ৫
         window.openAdLink = () => {
-            // ✅ রিকোয়ারমেন্ট ৮: ৩টি লিংক র্যান্ডমলি ব্যবহার
-            const adLinks = [
-                'https://otieu.com/4/10532824',
-                'https://otieu.com/4/10556225', 
-                'https://otieu.com/4/10532823'
-            ];
-            
-            const randomLink = adLinks[Math.floor(Math.random() * adLinks.length)];
+            const randomLink = adsterraLinks[Math.floor(Math.random() * adsterraLinks.length)];
             window.open(randomLink, '_blank');
             closeInterstitialAd();
         };
@@ -1807,9 +2025,9 @@
         // ✅ COPY TO CLIPBOARD
         window.copyToClipboard = (text) => {
             navigator.clipboard.writeText(text).then(() => {
-                showNotification('কপি করা হয়েছে!', 'success');
+                showSmartToast('কপি করা হয়েছে!', 'success');
             }).catch(() => {
-                showNotification('কপি করতে সমস্যা হয়েছে', 'error');
+                showSmartToast('কপি করতে সমস্যা হয়েছে', 'error');
             });
         };
 
@@ -1848,9 +2066,9 @@
                     systemSettings = settingsDoc.data();
                 } else {
                     systemSettings = {
-                        noticeText: "স্বাগতম টাকাওয়ালা অ্যাপে!",
+                        noticeText: "স্বাগতম টাকাওয়ালা অ্যাপে!",
                         referralBonus: 5,
-                        taskWaitTime: 15, // ✅ CHANGED FROM 60 TO 15 SECONDS
+                        taskWaitTime: 5, // ✅ CHANGED FROM 15 TO 5 SECONDS - রিকোয়ারমেন্ট ৩
                         minWithdraw: 100,
                         maxWithdraw: 5000,
                         vatPercentage: 10,
@@ -1860,7 +2078,7 @@
                     };
                 }
 
-                document.getElementById('noticeText').innerText = systemSettings.noticeText || "স্বাগতম টাকাওয়ালা অ্যাপে!";
+                document.getElementById('noticeText').innerText = systemSettings.noticeText || "স্বাগতম টাকাওয়ালা অ্যাপে!";
                 
                 // Load user today counts
                 await loadUserTodayCounts();
@@ -1912,7 +2130,6 @@
                 const withdrawElement = document.getElementById(`withdraw_${method}`);
                 
                 if(element) {
-                    // ✅ FIX 4: USDT should always be enabled in deposit
                     if(method === 'USDT') {
                         element.classList.remove('disabled-option');
                         element.onclick = () => window.selectPayment(element, method);
@@ -1960,11 +2177,10 @@
 
         // ✅ UPDATE DEPOSIT ADDRESS
         window.selectPayment = (el, method) => { 
-            // ✅ FIX 4: USDT should always be enabled
             if(method === 'USDT') {
                 // USDT is always enabled in deposit
             } else if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
-                showNotification(`${method} লেনদেন বন্ধ`, 'error');
+                showSmartToast(`${method} লেনদেন বন্ধ`, 'error');
                 return;
             }
             
@@ -2026,12 +2242,12 @@
                   pass = document.getElementById('regPass').value,
                   referralCode = document.getElementById('regReferralCode').value.trim();
             
-            if(!name || !phone || !email || !pass) return showNotification('সব তথ্য দিন', 'error');
-            if(pass.length < 6) return showNotification('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');
+            if(!name || !phone || !email || !pass) return showSmartToast('সব তথ্য দিন', 'error');
+            if(pass.length < 6) return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');
             
             try {
                 showLoading();
-                showNotification('একাউন্ট তৈরি হচ্ছে...', 'info');
+                showSmartToast('একাউন্ট তৈরি হচ্ছে...', 'info');
                 const uc = await auth.createUserWithEmailAndPassword(email, pass);
                 
                 const userReferralCode = 'REF' + Math.floor(100000 + Math.random() * 900000);
@@ -2101,10 +2317,10 @@
                     }
                 }
                 
-                showNotification('একাউন্ট তৈরি সফল! ডেইলি বোনাস নিন', 'success');
+                showSmartToast('একাউন্ট তৈরি সফল! ডেইলি বোনাস নিন', 'success');
                 hideLoading();
             } catch (e) { 
-                showNotification(e.message, 'error');
+                showSmartToast(e.message, 'error');
                 hideLoading();
             }
         });
@@ -2113,16 +2329,16 @@
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPass').value;
             
-            if(!email || !pass) return showNotification('ইমেইল ও পাসওয়ার্ড দিন', 'error');
+            if(!email || !pass) return showSmartToast('ইমেইল ও পাসওয়ার্ড দিন', 'error');
             
             try { 
                 showLoading();
-                showNotification('লগইন হচ্ছে...', 'info'); 
+                showSmartToast('লগইন হচ্ছে...', 'info'); 
                 await auth.signInWithEmailAndPassword(email, pass); 
-                showNotification('লগইন সফল!', 'success'); 
+                showSmartToast('লগইন সফল!', 'success'); 
                 hideLoading();
             } catch (e) { 
-                showNotification('ভুল ইমেইল বা পাসওয়ার্ড', 'error'); 
+                showSmartToast('ভুল ইমেইল বা পাসওয়ার্ড', 'error'); 
                 hideLoading();
             }
         });
@@ -2150,6 +2366,7 @@
                     checkDailyBonus(user.uid);
                     initDraggableChat();
                     loadTodayEarnings(user.uid);
+                    loadSettingsFromLocalStorage(); // Load settings
                     
                     // Show icons
                     document.getElementById('globalChatIcon').style.display = 'flex';
@@ -2332,7 +2549,6 @@
             loadSimpleHistory('all');
         };
         
-        // ✅ রিকোয়ারমেন্ট ১: হিস্ট্রি ফিল্টার ফিক্স
         window.filterHistory = (filterType) => {
             currentHistoryFilter = filterType;
             
@@ -2489,7 +2705,7 @@
             }
         }
 
-        // ✅ COMPACT RECEIPT MODAL (রিকোয়ারমেন্ট ৪)
+        // ✅ COMPACT RECEIPT MODAL
         window.showReceipt = (transaction) => {
             const existingModal = document.getElementById('receiptModal');
             if(existingModal) {
@@ -2658,7 +2874,7 @@
             });
         };
 
-        // ✅ QUIZ FUNCTIONS WITH DAILY LIMIT (রিকোয়ারমেন্ট ২)
+        // ✅ QUIZ FUNCTIONS WITH DAILY LIMIT
         window.switchQuizTab = (tab) => {
             document.getElementById('tabQuizTypes').className = tab === 'types' ? 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow' : 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
             document.getElementById('tabQuizQuestions').className = tab === 'questions' ? 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow' : 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
@@ -2668,7 +2884,6 @@
         };
 
         window.showQuizQuestions = async (type) => {
-            // ✅ রিকোয়ারমেন্ট ২: কুইজ লিমিট চেক
             if(currentUserData) {
                 const today = new Date().toDateString();
                 const lastQuizDateField = `lastQuizDate_${type}`;
@@ -2676,7 +2891,7 @@
                     new Date(currentUserData[lastQuizDateField].toDate()).toDateString() : null;
                 
                 if(lastQuizDate === today) {
-                    showNotification(`আপনি আজ ${type} কুইজ ইতিমধ্যে খেলেছেন। আগামীকাল আবার চেষ্টা করুন।`, 'error');
+                    showSmartToast(`আপনি আজ ${type} কুইজ ইতিমধ্যে খেলেছেন। আগামীকাল আবার চেষ্টা করুন।`, 'error');
                     return;
                 }
             }
@@ -2738,7 +2953,7 @@
         function startQuizTimer() {
             if(quizTimer) clearInterval(quizTimer);
             
-            let timeLeft = 180; // 3 minutes
+            let timeLeft = 180;
             const timerElement = document.getElementById('quizTimer');
             
             quizTimer = setInterval(() => {
@@ -2747,7 +2962,7 @@
                 
                 if(timeLeft <= 0) {
                     clearInterval(quizTimer);
-                    showNotification('সময় শেষ! আবার চেষ্টা করুন', 'error');
+                    showSmartToast('সময় শেষ! আবার চেষ্টা করুন', 'error');
                     window.switchQuizTab('types');
                 }
             }, 1000);
@@ -2756,37 +2971,33 @@
         window.submitQuiz = async () => {
             const questionsCount = Object.keys(selectedAnswers).length;
             if(questionsCount === 0) {
-                showNotification('দয়া করে সব প্রশ্নের উত্তর দিন', 'error');
+                showSmartToast('দয়া করে সব প্রশ্নের উত্তর দিন', 'error');
                 return;
             }
             
-            // ✅ FIX 2: REAL QUIZ LOGIC - Calculate actual score
             const questions = demoQuestions[currentQuizType] || demoQuestions.general;
             let correctAnswers = 0;
             const totalQuestions = questions.length;
             
-            // Check each answer
             for(let i = 0; i < totalQuestions; i++) {
                 if(selectedAnswers[i] !== undefined && selectedAnswers[i] === questions[i].answer) {
                     correctAnswers++;
                 }
             }
             
-            // Calculate reward: 0.25 per correct answer
             const reward = correctAnswers * 0.25;
             
             if(reward === 0) {
-                showNotification('দুঃখিত, আপনি কোন প্রশ্নের সঠিক উত্তর দেননি', 'error');
+                showSmartToast('দুঃখিত, আপনি কোন প্রশ্নের সঠিক উত্তর দেননি', 'error');
                 return;
             }
             
             showLoading();
-            showNotification('কুইজ চেক করা হচ্ছে...', 'info');
+            showSmartToast('কুইজ চেক করা হচ্ছে...', 'info');
             
             try {
                 const userRef = db.collection("users").doc(currentUserId);
                 
-                // ✅ রিকোয়ারমেন্ট ২: Update last quiz date
                 const updateData = {
                     mainBalance: firebase.firestore.FieldValue.increment(reward),
                     totalEarnings: firebase.firestore.FieldValue.increment(reward),
@@ -2808,11 +3019,10 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Update today's earnings display
                 todayEarnings += reward;
                 document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
                 
-                showNotification(`কুইজ সফল! ৳${reward.toFixed(2)} পুরস্কার পেয়েছেন`, 'success');
+                showSmartToast(`কুইজ সফল! ৳${reward.toFixed(2)} পুরস্কার পেয়েছেন`, 'success');
                 hideLoading();
                 
                 if(quizTimer) clearInterval(quizTimer);
@@ -2833,7 +3043,7 @@
                 
             } catch (error) {
                 console.error("Quiz submission error:", error);
-                showNotification('কুইজ সাবমিট করতে সমস্যা হয়েছে', 'error');
+                showSmartToast('কুইজ সাবমিট করতে সমস্যা হয়েছে', 'error');
                 hideLoading();
             }
         };
@@ -2851,7 +3061,7 @@
             selectedAvatar = avatarUrl;
             document.getElementById('currentAvatar').src = avatarUrl;
             window.closeAvatarModal();
-            showNotification('এভাটার সিলেক্ট করা হয়েছে', 'success');
+            showSmartToast('এভাটার সিলেক্ট করা হয়েছে', 'success');
         };
         
         window.updateProfile = async () => { 
@@ -2864,13 +3074,12 @@
                     avatar: selectedAvatar
                 }); 
                 
-                // ✅ FIX 5: Update avatar immediately
                 document.getElementById('currentAvatar').src = selectedAvatar;
                 
-                showNotification('প্রোফাইল আপডেট হয়েছে', 'success'); 
+                showSmartToast('প্রোফাইল আপডেট হয়েছে', 'success'); 
                 hideLoading();
             } catch (e) {
-                showNotification('প্রোফাইল আপডেট করতে সমস্যা হয়েছে', 'error');
+                showSmartToast('প্রোফাইল আপডেট করতে সমস্যা হয়েছে', 'error');
                 hideLoading();
             }
         };
@@ -2896,16 +3105,16 @@
                     showLoading();
                     const user = auth.currentUser;
                     await user.updatePassword(newPassword);
-                    showNotification('পাসওয়ার্ড পরিবর্তন সফল', 'success');
+                    showSmartToast('পাসওয়ার্ড পরিবর্তন সফল', 'success');
                     hideLoading();
                 } catch (error) {
-                    showNotification('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে', 'error');
+                    showSmartToast('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে', 'error');
                     hideLoading();
                 }
             }
         };
 
-        // ✅ TASK COMPLETION
+        // ✅ UPDATED TASK COMPLETION - রিকোয়ারমেন্ট ৩
         window.completeTask = async (taskId, reward, taskType, title, description, link) => {
             if(!currentUserData) return;
             
@@ -2926,14 +3135,14 @@
             
             startTaskTimer();
             
-            showNotification('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ১৫ সেকেন্ড পর প্রুফ সাবমিট করুন।', 'info');
+            showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ৫ সেকেন্ড পর প্রুফ সাবমিট করুন।', 'info');
         };
         
         function startTaskTimer() {
             if(taskTimer) clearInterval(taskTimer);
             
-            // ✅ FIX 3: Changed from 60 to 15 seconds
-            let timeLeft = 15; // 15 seconds instead of 60
+            // ✅ CHANGED TO 5 SECONDS - রিকোয়ারমেন্ট ৩
+            let timeLeft = 5;
             const startTime = Date.now();
             
             taskTimer = setInterval(() => {
@@ -2954,45 +3163,40 @@
             }, timeLeft * 1000);
         }
         
+        // ✅ UPDATED PROOF SUBMISSION FORM - রিকোয়ারমেন্ট ৩
         function showProofSubmissionForm() {
             if(!currentTaskInfo) return;
             
             let proofFields = '';
+            let proof1Label = '';
+            let placeholder1 = '';
             
+            // Dynamic label based on task type
             if(currentTaskInfo.taskType === 'telegram') {
-                proofFields = `
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold text-slate-700 mb-2">টেলিগ্রাম ইউজারনেম</label>
-                        <input type="text" id="proofTelegramUsername" placeholder="@username" class="w-full p-3 border rounded-lg">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold text-slate-700 mb-2">স্ক্রিনশট লিংক</label>
-                        <input type="url" id="proofScreenshot" placeholder="https://example.com/screenshot.png" class="w-full p-3 border rounded-lg">
-                    </div>
-                `;
+                proof1Label = 'আপনার টেলিগ্রাম ইউজারনেম দিন';
+                placeholder1 = '@username';
+            } else if(currentTaskInfo.taskType === 'facebook') {
+                proof1Label = 'আপনার ফেসবুক প্রোফাইল লিংক দিন';
+                placeholder1 = 'https://facebook.com/yourprofile';
             } else if(currentTaskInfo.taskType === 'youtube') {
-                proofFields = `
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold text-slate-700 mb-2">ইউটিউব চ্যানেল লিংক</label>
-                        <input type="url" id="proofYoutubeLink" placeholder="https://youtube.com/@channel" class="w-full p-3 border rounded-lg">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold text-slate-700 mb-2">স্ক্রিনশট লিংক</label>
-                        <input type="url" id="proofScreenshot" placeholder="https://example.com/screenshot.png" class="w-full p-3 border rounded-lg">
-                    </div>
-                `;
+                proof1Label = 'আপনার ইউটিউব চ্যানেল লিংক দিন';
+                placeholder1 = 'https://youtube.com/@yourchannel';
             } else {
-                proofFields = `
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold text-slate-700 mb-2">প্রুফ ডিটেইলস</label>
-                        <textarea id="proofDetails" placeholder="আপনার টাস্ক সম্পন্ন করার প্রমুণ দিন..." class="w-full p-3 border rounded-lg" rows="3"></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold text-slate-700 mb-2">প্রুফ লিংক (ঐচ্ছিক)</label>
-                        <input type="url" id="proofLink" placeholder="https://example.com/proof" class="w-full p-3 border rounded-lg">
-                    </div>
-                `;
+                proof1Label = 'কাজের প্রুফ টেক্সট দিন';
+                placeholder1 = 'কাজের বিবরণ লিখুন...';
             }
+            
+            proofFields = `
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">${proof1Label}</label>
+                    <input type="text" id="proof1" placeholder="${placeholder1}" class="w-full p-3 border rounded-lg">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">স্ক্রিনশট লিংক দিন</label>
+                    <p class="text-xs text-red-500 mb-1">* স্ক্রিনশট imgbb.com বা অন্য কোথাও আপলোড করে লিংকটি এখানে দিন।</p>
+                    <input type="url" id="proof2" placeholder="https://imgbb.com/your-screenshot" class="w-full p-3 border rounded-lg">
+                </div>
+            `;
             
             document.getElementById('proofFormContainer').innerHTML = `
                 <h3 class="text-lg font-bold mb-4">${currentTaskInfo.title}</h3>
@@ -3001,27 +3205,58 @@
             `;
             
             document.getElementById('proofModal').classList.remove('hidden');
+            
+            // Start proof timer
+            startProofTimer();
+        }
+        
+        function startProofTimer() {
+            if(proofTimer) clearInterval(proofTimer);
+            
+            let timeLeft = 300; // 5 minutes
+            const timerElement = document.getElementById('proofTimer');
+            
+            proofTimer = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                
+                if(timeLeft <= 0) {
+                    clearInterval(proofTimer);
+                    showSmartToast('প্রুফ সাবমিশনের সময় শেষ!', 'error');
+                    window.closeProofModal();
+                }
+            }, 1000);
         }
         
         window.closeProofModal = () => {
             document.getElementById('proofModal').classList.add('hidden');
             currentTaskInfo = null;
             if(taskTimer) clearInterval(taskTimer);
+            if(proofTimer) clearInterval(proofTimer);
         };
         
         window.submitProof = async () => {
             if(!currentTaskInfo) return;
             
+            const proof1 = document.getElementById('proof1')?.value.trim();
+            const proof2 = document.getElementById('proof2')?.value.trim();
+            
+            if(!proof1 || !proof2) {
+                showSmartToast('দয়া করে সব তথ্য পূরণ করুন', 'error');
+                return;
+            }
+            
             showLoading();
-            showNotification('প্রুফ সাবমিট হচ্ছে...', 'info');
+            showSmartToast('প্রুফ সাবমিট হচ্ছে...', 'info');
             
             try {
                 const proofData = {
-                    telegramUsername: document.getElementById('proofTelegramUsername')?.value || '',
-                    screenshot: document.getElementById('proofScreenshot')?.value || '',
-                    youtubeLink: document.getElementById('proofYoutubeLink')?.value || '',
-                    details: document.getElementById('proofDetails')?.value || '',
-                    link: document.getElementById('proofLink')?.value || ''
+                    taskSpecific: proof1,
+                    screenshot: proof2,
+                    taskType: currentTaskInfo.taskType,
+                    timestamp: new Date().toISOString()
                 };
                 
                 await db.collection("pending_requests").add({ 
@@ -3044,17 +3279,17 @@
                 const telegramMessage = `🔔 *নতুন টাস্ক প্রুফ সাবমিট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n🎯 *টাস্ক:* ${currentTaskInfo.title}\n💰 *পরিমাণ:* ৳${currentTaskInfo.reward}\n📊 *টাইপ:* ${currentTaskInfo.taskType}\n📝 *ডিটেইলস:* ${JSON.stringify(proofData)}`;
                 await sendTelegramNotification(telegramMessage);
                 
-                showNotification('প্রুফ সফলভাবে সাবমিট হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
+                showSmartToast('প্রুফ সফলভাবে সাবমিট হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
                 hideLoading();
                 window.closeProofModal();
                 
             } catch (e) {
-                showNotification('প্রুফ সাবমিট করতে সমস্যা হয়েছে', 'error');
+                showSmartToast('প্রুফ সাবমিট করতে সমস্যা হয়েছে', 'error');
                 hideLoading();
             }
         };
 
-        // ✅ WALLET FUNCTIONS WITH LIMITS (রিকোয়ারমেন্ট ৫)
+        // ✅ WALLET FUNCTIONS WITH LIMITS AND SCHEDULE - রিকোয়ারমেন্ট ৪
         window.calculateDepositVAT = () => {
             const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
             const vatPercentage = systemSettings.vatPercentage || 10;
@@ -3078,36 +3313,37 @@
             document.getElementById('rechargeFee').innerHTML = `সার্ভিস চার্জ: ৳${fee.toFixed(2)} | মোট: ৳${total.toFixed(2)}`;
         };
 
+        // ✅ UPDATED DEPOSIT FUNCTION - রিকোয়ারমেন্ট ৫
         window.submitDeposit = async () => {
             const trxId = document.getElementById('depositTrxId').value.trim();
             const amount = parseFloat(document.getElementById('depositAmount').value);
             const method = document.getElementById('selectedDepositMethod').value;
             
             if(!trxId || !amount || amount <= 0) {
-                showNotification('সঠিক তথ্য দিন', 'error');
+                showSmartToast('সঠিক তথ্য দিন', 'error');
                 return;
             }
             
             if(!method) {
-                showNotification('পেমেন্ট মেথড সিলেক্ট করুন', 'error');
+                showSmartToast('পেমেন্ট মেথড সিলেক্ট করুন', 'error');
                 return;
             }
             
-            // ✅ রিকোয়ারমেন্ট ৫: ডিপোজিট মিনিমাম চেক
             const minDeposit = systemSettings.minDeposit || 50;
             if(amount < minDeposit) {
-                showNotification(`ন্যূনতম ডিপোজিট পরিমাণ ৳${minDeposit}`, 'error');
+                showSmartToast(`ন্যূনতম ডিপোজিট পরিমাণ ৳${minDeposit}`, 'error');
                 return;
             }
             
             showLoading();
-            showNotification('ডিপোজিট রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
+            showSmartToast('ডিপোজিট রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
             
             try {
                 const vatPercentage = systemSettings.vatPercentage || 10;
                 const vat = amount * (vatPercentage / 100);
                 const totalAmount = amount + vat;
                 
+                // Save to pending_requests
                 await db.collection("pending_requests").add({ 
                     userId: currentUserId, 
                     type: "ডিপোজিট", 
@@ -3124,11 +3360,25 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
+                // ✅ ADDED: Save to history as well - রিকোয়ারমেন্ট ৫
+                await db.collection("history").add({
+                    userId: currentUserId,
+                    type: "ডিপোজিট",
+                    amount: amount,
+                    status: "Pending",
+                    details: `${method} - TrxID: ${trxId}`,
+                    trxId: trxId,
+                    method: method,
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
                 // Send Telegram notification
                 const telegramMessage = `💰 *নতুন ডিপোজিট রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n💵 *পরিমাণ:* ৳${amount}\n🧾 *TrxID:* ${trxId}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *মোট:* ৳${totalAmount.toFixed(2)}`;
                 await sendTelegramNotification(telegramMessage);
                 
-                showNotification('ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
+                showSmartToast('ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
                 hideLoading();
                 
                 document.getElementById('depositTrxId').value = '';
@@ -3136,23 +3386,24 @@
                 window.calculateDepositVAT();
                 
             } catch (e) {
-                showNotification('ডিপোজিট রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
+                showSmartToast('ডিপোজিট রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
                 hideLoading();
             }
         };
         
+        // ✅ UPDATED WITHDRAW FUNCTION WITH SCHEDULE - রিকোয়ারমেন্ট ৪
         window.submitWithdraw = async () => {
             const number = document.getElementById('withdrawNumber').value.trim();
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
             const method = document.getElementById('selectedWithdrawMethod').value;
             
             if(!number || !amount || amount <= 0) {
-                showNotification('সঠিক তথ্য দিন', 'error');
+                showSmartToast('সঠিক তথ্য দিন', 'error');
                 return;
             }
             
             if(!method) {
-                showNotification('উত্তোলন মেথড সিলেক্ট করুন', 'error');
+                showSmartToast('উত্তোলন মেথড সিলেক্ট করুন', 'error');
                 return;
             }
             
@@ -3160,44 +3411,41 @@
             const maxWithdraw = systemSettings.maxWithdraw || 5000;
             
             if(amount < minWithdraw) {
-                showNotification(`ন্যূনতম উত্তোলন পরিমাণ ৳${minWithdraw}`, 'error');
+                showSmartToast(`ন্যূনতম উত্তোলন পরিমাণ ৳${minWithdraw}`, 'error');
                 return;
             }
             
             if(amount > maxWithdraw) {
-                showNotification(`সর্বোচ্চ উত্তোলন পরিমাণ ৳${maxWithdraw}`, 'error');
+                showSmartToast(`সর্বোচ্চ উত্তোলন পরিমাণ ৳${maxWithdraw}`, 'error');
                 return;
             }
             
-            // ✅ FIXED: Check if user has enough balance
             if(!currentUserData) {
-                showNotification('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
                 return;
             }
             
             if(currentUserData.mainBalance < amount) {
-                showNotification('পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
+                showSmartToast('পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
                 return;
             }
             
-            // ✅ রিকোয়ারমেন্ট ৫: রেফার শর্ত চেক ফর ফ্রি ইউজার
             const isFreeUser = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
             if(isFreeUser) {
                 const referralCount = currentUserData.totalReferrals || 0;
                 if(referralCount < 3) {
-                    showNotification(`আপনার রেফার ${referralCount}। উইথড্র করতে সর্বনিম্ন ৩টি রেফার প্রয়োজন।`, 'error');
+                    showSmartToast(`আপনার রেফার ${referralCount}। উইথড্র করতে সর্বনিম্ন ৩টি রেফার প্রয়োজন।`, 'error');
                     return;
                 }
             }
             
-            // ✅ রিকোয়ারমেন্ট ৫: দৈনিক উত্তোলন লিমিট
-            let dailyLimit = 1; // Default for free users
+            let dailyLimit = 1;
             if(!isFreeUser) {
-                dailyLimit = 2; // VIP/Paid users get 2 withdrawals per day
+                dailyLimit = 2;
             }
             
             if(userWithdrawCount >= dailyLimit) {
-                showNotification(`আপনি আজ ${userWithdrawCount} বার উত্তোলন করেছেন। দৈনিক সর্বোচ্চ ${dailyLimit} বার উত্তোলন করতে পারবেন।`, 'error');
+                showSmartToast(`আপনি আজ ${userWithdrawCount} বার উত্তোলন করেছেন। দৈনিক সর্বোচ্চ ${dailyLimit} বার উত্তোলন করতে পারবেন।`, 'error');
                 return;
             }
             
@@ -3205,8 +3453,11 @@
             const vat = amount * (vatPercentage / 100);
             const received = amount - vat;
             
+            // ✅ CHECK WITHDRAWAL SCHEDULE - রিকোয়ারমেন্ট ৪
+            const withinSchedule = isWithinWithdrawalSchedule();
+            
             showLoading();
-            showNotification('উত্তোলন রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
+            showSmartToast('উত্তোলন রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
             
             try {
                 const userRef = db.collection("users").doc(currentUserId);
@@ -3244,14 +3495,18 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Update withdrawal count
                 userWithdrawCount++;
                 
                 // Send Telegram notification
-                const telegramMessage = `💸 *নতুন উত্তোলন রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *অ্যাকাউন্ট:* ${number}\n💵 *পরিমাণ:* ৳${amount}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *প্রাপ্ত:* ৳${received.toFixed(2)}`;
+                const telegramMessage = `💸 *নতুন উত্তোলন রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *অ্যাকাউন্ট:* ${number}\n💵 *পরিমাণ:* ৳${amount}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *প্রাপ্ত:* ৳${received.toFixed(2)}\n⏰ *সময়সূচী:* ${withinSchedule ? 'ভিতরে' : 'বাইরে'}`;
                 await sendTelegramNotification(telegramMessage);
                 
-                showNotification('উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
+                let successMessage = 'উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন';
+                if(!withinSchedule) {
+                    successMessage += '\n\nনোটিশ: আপনার উত্তোলন পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।';
+                }
+                
+                showSmartToast(successMessage, 'success');
                 hideLoading();
                 
                 document.getElementById('withdrawNumber').value = '';
@@ -3259,65 +3514,65 @@
                 window.calculateWithdrawVAT();
                 
             } catch (e) {
-                showNotification('উত্তোলন রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
+                showSmartToast('উত্তোলন রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
                 hideLoading();
             }
         };
         
+        // ✅ UPDATED RECHARGE FUNCTION WITH SCHEDULE - রিকোয়ারমেন্ট ৪
         window.submitRecharge = async () => { 
             const phone = document.getElementById('rechPhone').value.trim();
             const amount = parseFloat(document.getElementById('rechAmount').value);
             const operator = document.getElementById('selectedOperator').value;
             
             if(!phone || !amount || amount <= 0) {
-                showNotification('সঠিক তথ্য দিন', 'error');
+                showSmartToast('সঠিক তথ্য দিন', 'error');
                 return;
             }
             
-            // ✅ রিকোয়ারমেন্ট ৫: রিচার্জ মিনিমাম চেক
             const minRecharge = systemSettings.minRecharge || 20;
             if(amount < minRecharge) {
-                showNotification(`ন্যূনতম রিচার্জ পরিমাণ ৳${minRecharge}`, 'error');
+                showSmartToast(`ন্যূনতম রিচার্জ পরিমাণ ৳${minRecharge}`, 'error');
                 return;
             }
             
             const fee = systemSettings.rechargeFee || 5;
             const totalAmount = amount + fee;
             
-            // ✅ FIXED: Check if user has enough recharge balance
             if(!currentUserData) {
-                showNotification('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
                 return;
             }
             
             if(currentUserData.rechargeBalance < totalAmount) {
-                showNotification('পর্যাপ্ত রিচার্জ ব্যালেন্স নেই! আপনার রিচার্জ ব্যালেন্স: ৳' + (currentUserData.rechargeBalance || 0).toFixed(2), 'error');
+                showSmartToast('পর্যাপ্ত রিচার্জ ব্যালেন্স নেই! আপনার রিচার্জ ব্যালেন্স: ৳' + (currentUserData.rechargeBalance || 0).toFixed(2), 'error');
                 return;
             }
             
-            // ✅ রিকোয়ারমেন্ট ৫: রেফার শর্ত চেক ফর ফ্রি ইউজার
             const isFreeUser = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
             if(isFreeUser) {
                 const referralCount = currentUserData.totalReferrals || 0;
                 if(referralCount < 3) {
-                    showNotification(`আপনার রেফার ${referralCount}। রিচার্জ করতে সর্বনিম্ন ৩টি রেফার প্রয়োজন।`, 'error');
+                    showSmartToast(`আপনার রেফার ${referralCount}। রিচার্জ করতে সর্বনিম্ন ৩টি রেফার প্রয়োজন।`, 'error');
                     return;
                 }
             }
             
-            // ✅ রিকোয়ারমেন্ট ৫: দৈনিক রিচার্জ লিমিট
-            let dailyLimit = 2; // Default for free users
+            let dailyLimit = 2;
             if(!isFreeUser) {
-                dailyLimit = 3; // VIP/Paid users get 3 recharges per day
+                dailyLimit = 3;
             }
             
             if(userRechargeCount >= dailyLimit) {
-                showNotification(`আপনি আজ ${userRechargeCount} বার রিচার্জ করেছেন। দৈনিক সর্বোচ্চ ${dailyLimit} বার রিচার্জ করতে পারবেন।`, 'error');
+                showSmartToast(`আপনি আজ ${userRechargeCount} বার রিচার্জ করেছেন। দৈনিক সর্বোচ্চ ${dailyLimit} বার রিচার্জ করতে পারবেন।`, 'error');
                 return;
             }
             
+            // ✅ CHECK RECHARGE SCHEDULE - রিকোয়ারমেন্ট ৪
+            const withinSchedule = isWithinWithdrawalSchedule();
+            
             showLoading();
-            showNotification('রিচার্জ রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
+            showSmartToast('রিচার্জ রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
             
             try {
                 const userRef = db.collection("users").doc(currentUserId);
@@ -3350,14 +3605,18 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Update recharge count
                 userRechargeCount++;
                 
                 // Send Telegram notification
-                const telegramMessage = `📱 *নতুন রিচার্জ রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📞 *রিচার্জ নাম্বার:* ${phone}\n🏢 *অপারেটর:* ${operator}\n💵 *পরিমাণ:* ৳${amount}\n📊 *ফি:* ৳${fee}\n💰 *মোট:* ৳${totalAmount}`;
+                const telegramMessage = `📱 *নতুন রিচার্জ রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📞 *রিচার্জ নাম্বার:* ${phone}\n🏢 *অপারেটর:* ${operator}\n💵 *পরিমাণ:* ৳${amount}\n📊 *ফি:* ৳${fee}\n💰 *মোট:* ৳${totalAmount}\n⏰ *সময়সূচী:* ${withinSchedule ? 'ভিতরে' : 'বাইরে'}`;
                 await sendTelegramNotification(telegramMessage);
                 
-                showNotification('রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে', 'success'); 
+                let successMessage = 'রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে';
+                if(!withinSchedule) {
+                    successMessage += '\n\nনোটিশ: আপনার রিচার্জ পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।';
+                }
+                
+                showSmartToast(successMessage, 'success'); 
                 hideLoading();
                 
                 document.getElementById('rechPhone').value = '';
@@ -3365,7 +3624,7 @@
                 window.calculateRechargeFee();
                 
             } catch (e) {
-                showNotification('রিচার্জ রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
+                showSmartToast('রিচার্জ রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
                 hideLoading();
             }
         };
@@ -3373,23 +3632,22 @@
         window.transferBalance = async () => {
             const am = parseFloat(document.getElementById('transferAmount').value);
             if(!am || am <= 0) {
-                showNotification('ভুল পরিমাণ', 'error');
+                showSmartToast('ভুল পরিমাণ', 'error');
                 return;
             }
             
-            // ✅ FIXED: Check if user has enough balance
             if(!currentUserData) {
-                showNotification('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
                 return;
             }
             
             if(currentUserData.mainBalance < am) {
-                showNotification('পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
+                showSmartToast('পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
                 return;
             }
             
             showLoading();
-            showNotification('ট্রান্সফার হচ্ছে...', 'info');
+            showSmartToast('ট্রান্সফার হচ্ছে...', 'info');
             
             try {
                 const userRef = db.collection("users").doc(currentUserId);
@@ -3410,13 +3668,13 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                showNotification(`৳${am} টাকা সফলভাবে ট্রান্সফার হয়েছে`, 'success');
+                showSmartToast(`৳${am} টাকা সফলভাবে ট্রান্সফার হয়েছে`, 'success');
                 hideLoading();
                 
                 document.getElementById('transferAmount').value = '';
                 
             } catch (e) {
-                showNotification('ট্রান্সফার করতে সমস্যা হয়েছে', 'error');
+                showSmartToast('ট্রান্সফার করতে সমস্যা হয়েছে', 'error');
                 hideLoading();
             }
         };
@@ -3483,7 +3741,7 @@
                     const lastBonus = data.lastDailyBonus ? new Date(data.lastDailyBonus.toDate()).toDateString() : null;
                     
                     if(lastBonus === today) {
-                        showNotification('আপনি আজকে ইতিমধ্যেই ডেইলি বোনাস নিয়েছেন', 'info');
+                        showSmartToast('আপনি আজকে ইতিমধ্যেই ডেইলি বোনাস নিয়েছেন', 'info');
                         return;
                     }
                     
@@ -3511,7 +3769,6 @@
                             todayEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
                         });
                         
-                        // Update today's earnings display
                         todayEarnings += bonusAmount;
                         document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
                         
@@ -3526,14 +3783,14 @@
                             timestamp: firebase.firestore.FieldValue.serverTimestamp()
                         });
                         
-                        showNotification(`৳${bonusAmount} ডেইলি বোনাস সফলভাবে যোগ হয়েছে!`, 'success');
+                        showSmartToast(`৳${bonusAmount} ডেইলি বোনাস সফলভাবে যোগ হয়েছে!`, 'success');
                         checkDailyBonus(currentUserId);
                         hideLoading();
                     }
                 }
             } catch (e) {
                 console.error("Error showing daily bonus:", e);
-                showNotification('ডেইলি বোনাস লোড করতে সমস্যা হয়েছে', 'error');
+                showSmartToast('ডেইলি বোনাস লোড করতে সমস্যা হয়েছে', 'error');
                 hideLoading();
             }
         };
@@ -3542,17 +3799,16 @@
         window.copyReferralLink = () => {
             const link = document.getElementById('referralLink').innerText;
             navigator.clipboard.writeText(link);
-            showNotification('রেফার লিংক কপি হয়েছে!', 'success');
+            showSmartToast('রেফার লিংক কপি হয়েছে!', 'success');
         };
         
         window.openSupport = () => {
             window.open('https://t.me/TAKAR_WALA_ADMIN', '_blank');
         };
         
-        // ✅ FIX 1: AUTOMATIC PACKAGE PURCHASE
         window.buyPackage = async (packageType) => {
             if(!currentUserData) {
-                showNotification('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
                 return;
             }
             
@@ -3571,9 +3827,8 @@
             const price = packagePrices[packageType];
             const name = packageNames[packageType];
             
-            // Check balance
             if(currentUserData.mainBalance < price) {
-                showNotification(`পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳${currentUserData.mainBalance.toFixed(2)}, প্রয়োজন: ৳${price}`, 'error');
+                showSmartToast(`পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳${currentUserData.mainBalance.toFixed(2)}, প্রয়োজন: ৳${price}`, 'error');
                 return;
             }
             
@@ -3592,14 +3847,12 @@
                 try {
                     const userRef = db.collection("users").doc(currentUserId);
                     
-                    // Deduct balance and update plan
                     await userRef.update({
                         mainBalance: firebase.firestore.FieldValue.increment(-price),
                         plan: name,
                         totalDeposit: firebase.firestore.FieldValue.increment(price)
                     });
                     
-                    // Add to history
                     await db.collection("history").add({
                         userId: currentUserId,
                         type: `${name} ক্রয়`,
@@ -3611,29 +3864,27 @@
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    // Send Telegram notification
                     const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় সফল*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${price}\n✅ *স্ট্যাটাস:* Success`;
                     await sendTelegramNotification(telegramMessage);
                     
-                    showNotification(`${name} সফলভাবে ক্রয় করা হয়েছে!`, 'success');
+                    showSmartToast(`${name} সফলভাবে ক্রয় করা হয়েছে!`, 'success');
                     hideLoading();
                     
                 } catch (e) {
                     console.error("Package purchase error:", e);
-                    showNotification('প্যাকেজ ক্রয় করতে সমস্যা হয়েছে', 'error');
+                    showSmartToast('প্যাকেজ ক্রয় করতে সমস্যা হয়েছে', 'error');
                     hideLoading();
                 }
             }
         };
         
-        // ✅ রিকোয়ারমেন্ট ৬: ড্রাইভ অফার পেজ
         window.showDriveOffer = () => {
             window.showPage('driveOfferScreen');
         };
         
         window.logout = () => {
             auth.signOut();
-            showNotification('লগআউট সফল', 'success');
+            showSmartToast('লগআউট সফল', 'success');
             document.getElementById('globalChatIcon').style.display = 'none';
             document.getElementById('twaiChatbotIcon').style.display = 'none';
         };
@@ -3652,13 +3903,14 @@
                         <p><b>৭.</b> উত্তোলন মিনিমাম: ৳50</p>
                         <p><b>৮.</b> রিচার্জ মিনিমাম: ৳20</p>
                         <p><b>৯.</b> ফ্রি ইউজারদের উইথড্র/রিচার্জ করতে কমপক্ষে ৩টি রেফার থাকতে হবে</p>
+                        <p><b>১০.</b> উইথড্র/রিচার্জ সময়: শুক্রবার ৮:০০-৯:৩০, অন্যান্য দিন ৯:০০-১০:০০ ও ১৫:০০-২১:৩০</p>
                     </div>
                 `,
                 confirmButtonText: 'বুঝেছি'
             });
         };
         
-        // ✅ রিকোয়ারমেন্ট ৭: TWAI চ্যাটবট ফাংশনালিটি
+        // ✅ UPDATED TWAI CHATBOT FUNCTIONS - রিকোয়ারমেন্ট ১
         window.openTWAI = () => {
             document.getElementById('twaiModal').classList.remove('hidden');
         };
@@ -3668,7 +3920,7 @@
         };
         
         window.askTWAI = (question) => {
-            const response = twaiResponses[question] || 'দুঃখিত, আমি এই প্রশ্নের উত্তর জানি না। অন্য কিছু জিজ্ঞাসা করুন।';
+            const response = twaiResponses[question] || twaiResponses['default'];
             
             const chatContainer = document.getElementById('chatbotMessages');
             
@@ -3707,63 +3959,59 @@
             
             window.askTWAI(question);
         };
-        
-        // Auto answer based on keywords
-        window.askTWAI = (question) => {
-            let response = '';
-            const q = question.toLowerCase();
+
+        // ✅ SETTINGS FUNCTIONS - রিকোয়ারমেন্ট ৫
+        function loadSettingsFromLocalStorage() {
+            const notificationToggle = document.getElementById('notificationToggle');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const soundToggle = document.getElementById('soundToggle');
+            const vibrationToggle = document.getElementById('vibrationToggle');
             
-            // Keyword matching
-            if(q.includes('টাস্ক') || q.includes('task')) {
-                response = twaiResponses['টাস্ক'];
-            } else if(q.includes('উইথড্র') || q.includes('withdraw') || q.includes('উত্তোলন')) {
-                response = twaiResponses['উইথড্র'];
-            } else if(q.includes('ডিপোজিট') || q.includes('deposit')) {
-                response = twaiResponses['ডিপোজিট'];
-            } else if(q.includes('রিচার্জ') || q.includes('recharge')) {
-                response = twaiResponses['রিচার্জ'];
-            } else if(q.includes('কুইজ') || q.includes('quiz')) {
-                response = twaiResponses['কুইজ'];
-            } else if(q.includes('ব্যান') || q.includes('ban')) {
-                response = twaiResponses['ব্যান'];
-            } else if(q.includes('প্যাকেজ') || q.includes('package') || q.includes('ভিআইপি') || q.includes('vip')) {
-                response = twaiResponses['প্যাকেজ'];
-            } else if(q.includes('সাবস্ক্রিপশন') || q.includes('subscription') || q.includes('স্টার')) {
-                response = twaiResponses['সাবস্ক্রিপশন'];
-            } else if(q.includes('দেরি') || q.includes('late') || q.includes('কতক্ষণ')) {
-                response = twaiResponses['দেরি'];
-            } else {
-                response = 'দুঃখিত, আমি এই প্রশ্নের উত্তর জানি না। নিচের বাটন থেকে একটি প্রশ্ন সিলেক্ট করুন।';
+            if(localStorage.getItem('notificationEnabled') !== null) {
+                notificationToggle.checked = localStorage.getItem('notificationEnabled') === 'true';
             }
             
-            const chatContainer = document.getElementById('chatbotMessages');
+            if(localStorage.getItem('darkModeEnabled') !== null) {
+                darkModeToggle.checked = localStorage.getItem('darkModeEnabled') === 'true';
+                if(darkModeToggle.checked) {
+                    document.body.classList.add('bg-slate-900', 'text-white');
+                }
+            }
             
-            // Add user message
-            const userMessage = document.createElement('div');
-            userMessage.className = 'chat-message user-message';
-            userMessage.innerHTML = `
-                <div class="message-bubble user-bubble">${question}</div>
-                <div class="message-time">এখনই</div>
-            `;
-            chatContainer.appendChild(userMessage);
+            if(localStorage.getItem('soundEnabled') !== null) {
+                soundToggle.checked = localStorage.getItem('soundEnabled') === 'true';
+            }
             
-            // Add bot response after delay
-            setTimeout(() => {
-                const botMessage = document.createElement('div');
-                botMessage.className = 'chat-message bot-message';
-                botMessage.innerHTML = `
-                    <div class="message-bubble bot-bubble">${response}</div>
-                    <div class="message-time">এখনই</div>
-                `;
-                chatContainer.appendChild(botMessage);
-                
-                // Scroll to bottom
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }, 500);
+            if(localStorage.getItem('vibrationEnabled') !== null) {
+                vibrationToggle.checked = localStorage.getItem('vibrationEnabled') === 'true';
+            }
             
-            // Clear input
-            document.getElementById('chatbotInput').value = '';
-        };
+            // Add event listeners
+            notificationToggle.addEventListener('change', function() {
+                localStorage.setItem('notificationEnabled', this.checked);
+                showSmartToast(`নোটিফিকেশন ${this.checked ? 'চালু' : 'বন্ধ'} করা হয়েছে`, 'info');
+            });
+            
+            darkModeToggle.addEventListener('change', function() {
+                localStorage.setItem('darkModeEnabled', this.checked);
+                if(this.checked) {
+                    document.body.classList.add('bg-slate-900', 'text-white');
+                } else {
+                    document.body.classList.remove('bg-slate-900', 'text-white');
+                }
+                showSmartToast(`ডার্ক মোড ${this.checked ? 'চালু' : 'বন্ধ'} করা হয়েছে`, 'info');
+            });
+            
+            soundToggle.addEventListener('change', function() {
+                localStorage.setItem('soundEnabled', this.checked);
+                showSmartToast(`সাউন্ড ${this.checked ? 'চালু' : 'বন্ধ'} করা হয়েছে`, 'info');
+            });
+            
+            vibrationToggle.addEventListener('change', function() {
+                localStorage.setItem('vibrationEnabled', this.checked);
+                showSmartToast(`ভাইব্রেশন ${this.checked ? 'চালু' : 'বন্ধ'} করা হয়েছে`, 'info');
+            });
+        }
 
         // ✅ GLOBAL WINDOW FUNCTIONS
         window.toggleAuthTab = (t) => {
@@ -3792,6 +4040,9 @@
                 }
                 if(id === 'quizScreen') {
                     window.switchQuizTab('types');
+                }
+                if(id === 'settingsScreen') {
+                    loadSettingsFromLocalStorage();
                 }
                 
                 hideLoading();
@@ -3828,9 +4079,8 @@
         };
         
         window.selectWithdrawMethod = (el, method) => { 
-            // Check if method is disabled
             if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
-                showNotification(`${method} লেনদেন বন্ধ`, 'error');
+                showSmartToast(`${method} লেনদেন বন্ধ`, 'error');
                 return;
             }
             
@@ -3840,7 +4090,7 @@
             document.getElementById('selectedWithdrawMethod').value = method;
         };
 
-        // ✅ SUBSCRIPTION FUNCTIONS WITH TELEGRAM REDIRECT (রিকোয়ারমেন্ট ৩)
+        // ✅ SUBSCRIPTION FUNCTIONS
         window.switchSubscriptionTab = (tab) => {
             document.getElementById('tabStars').className = tab === 'stars' ? 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow' : 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
             document.getElementById('tabTelegram').className = tab === 'telegram' ? 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow' : 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
@@ -3881,24 +4131,22 @@
             document.getElementById('selectedPlanPrice').textContent = price;
         };
         
-        // ✅ রিকোয়ারমেন্ট ৩: সাবস্ক্রিপশন ও টেলিগ্রাম রিডাইরেক্ট
         window.buyStars = () => {
             if(selectedStarPackage === 0) {
-                showNotification('দয়া করে স্টার প্যাকেজ সিলেক্ট করুন', 'error');
+                showSmartToast('দয়া করে স্টার প্যাকেজ সিলেক্ট করুন', 'error');
                 return;
             }
             
             const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})। আমি ${selectedStarPackage} স্টার - ৳${document.getElementById('totalStarPrice').textContent} প্যাকেজটি কিনতে চাই।`);
             
-            // Redirect to Telegram
             window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${message}`, '_blank');
             
-            showNotification('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
+            showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
         };
         
         window.buyTelegramPremium = () => {
             if(!selectedTelegramPlan) {
-                showNotification('দয়া করে টেলিগ্রাম প্ল্যান সিলেক্ট করুন', 'error');
+                showSmartToast('দয়া করে টেলিগ্রাম প্ল্যান সিলেক্ট করুন', 'error');
                 return;
             }
             
@@ -3907,15 +4155,13 @@
             
             const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})। আমি ${planText} - ৳${price} প্যাকেজটি কিনতে চাই।`);
             
-            // Redirect to Telegram
             window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${message}`, '_blank');
             
-            showNotification('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
+            showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
         };
 
         // ✅ INITIALIZE EVENT LISTENERS
         document.addEventListener('DOMContentLoaded', function() {
-            // Load system settings on page load
             loadSystemSettings();
             
             const depositAmount = document.getElementById('depositAmount');
@@ -3937,14 +4183,12 @@
             window.calculateWithdrawVAT();
             window.calculateRechargeFee();
             
-            // Initialize star prices
             if(document.getElementById('price100')) {
                 document.getElementById('price100').textContent = (100 * 2.90).toFixed(2);
                 document.getElementById('price250').textContent = (250 * 2.90 * 0.90).toFixed(2);
                 document.getElementById('price500').textContent = (500 * 2.90 * 0.90).toFixed(2);
             }
             
-            // TWAI Chatbot input enter key support
             const chatbotInput = document.getElementById('chatbotInput');
             if(chatbotInput) {
                 chatbotInput.addEventListener('keypress', function(e) {
