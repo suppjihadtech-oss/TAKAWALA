@@ -41,17 +41,19 @@
             border-radius: 10px;
         }
         
-        .interstitial-ad {
+                .interstitial-ad {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7); /* কালো ব্যাকগ্রাউন্ড */
             z-index: 10001;
-            background: white;
-            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            
+            backdrop-filter: blur(5px); /* পেছনের স্ক্রিন ঘোলা হবে */
         }
 
         /* PREMIUM GRADIENT */
@@ -2946,7 +2948,7 @@ function renderTasks() {
         hideLoading();
     });
 
-                   
+         }         
 
         // ✅ ENHANCED HISTORY SYSTEM WITH FILTER
         window.loadHistory = () => {
