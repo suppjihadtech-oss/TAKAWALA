@@ -2017,6 +2017,8 @@
         
         // ✅ GLOBAL VARIABLES
         let currentUserData = null;
+        let onAdCompleted = null; // ✅ নতুন লাইন: অ্যাড দেখার পর কি হবে তা মনে রাখার জন্য
+             
         let currentUserId = null;
         let currentTaskType = 'free';
         let selectedMethod = 'bKash';
@@ -2098,48 +2100,48 @@
 
         // ✅ MONITAG AD FUNCTIONS
         // ✅ UPDATED INTERSTITIAL AD SHOW FUNCTION (New Logic)
+// ✅ UPDATED: AD SYSTEM
 function showInterstitialAd() {
     const interstitial = document.getElementById('monitagInterstitial');
     interstitial.classList.remove('hidden');
     
-    // টাইমার সেট করা (১০ সেকেন্ড)
     let timeLeft = 10; 
     const timerElement = document.getElementById('adTimer');
     
-    // শুরুতেই "বন্ধ করুন" বাটন লুকিয়ে ফেলা
-    const closeBtn = interstitial.querySelector('button.bg-slate-200');
+    const closeBtn = document.getElementById('adCloseBtn') || interstitial.querySelector('button.bg-slate-200');
     if(closeBtn) {
+        if(!closeBtn.id) closeBtn.id = 'adCloseBtn';
+        closeBtn.classList.remove('hidden'); 
         closeBtn.style.display = 'none'; 
+        closeBtn.innerHTML = "বন্ধ করুন";
+        closeBtn.disabled = false;
+        closeBtn.style.opacity = "1";
     }
 
     const adTimer = setInterval(() => {
         timeLeft--;
-        timerElement.textContent = timeLeft;
-        
+        if(timerElement) timerElement.textContent = timeLeft;
         if(timeLeft <= 0) {
             clearInterval(adTimer);
-            timerElement.textContent = "এখন অ্যাডটি ওপেন করুন";
-            
-            // সময় শেষ, কিন্তু অ্যাড অটোমেটিক কাটবে না!
-            // ইউজারকে ক্লিকে বাধ্য করা হবে
+            if(timerElement) timerElement.textContent = "এখন অ্যাডটি ওপেন করুন";
         }
     }, 1000);
-    
     window.adTimer = adTimer;
 }
 
-        
-        function closeInterstitialAd() {
-            const interstitial = document.getElementById('monitagInterstitial');
-            interstitial.classList.add('hidden');
-            
-            if(window.adTimer) {
-                clearInterval(window.adTimer);
-            }
-        }
-        
-        // ✅ ✅ FIXED: UPDATED AD LINK FUNCTION - রিকোয়ারমেন্ট ৫ (Problem 1)
-        // ✅ UPDATED SMART AD LINK FUNCTION (New Logic)
+function closeInterstitialAd() {
+    const interstitial = document.getElementById('monitagInterstitial');
+    interstitial.classList.add('hidden');
+    if(window.adTimer) clearInterval(window.adTimer);
+
+    // 🔥 বোনাস দেওয়া হচ্ছে
+    if (onAdCompleted) {
+        onAdCompleted(); 
+        onAdCompleted = null; 
+    }
+}
+
+        // ✅ ✅ FIXED: UPDATED AD LINK FUNCTION - রিকোয়ারমেন্ট ৫ (Problem 1)       
 window.openAdLink = () => {
     const randomLink = adsterraLinks[Math.floor(Math.random() * adsterraLinks.length)];
     
@@ -3390,89 +3392,52 @@ function renderTasks() {
         }
         
         // ✅ ✅ FIXED: QUIZ SUBMISSION REVENUE TRIGGER - রিকোয়ারমেন্ট ৩
-        window.submitQuiz = async () => {
-            // ✅ FIX 3: Show ad before quiz submission
-            showInterstitialAd();
-            
-            const questionsCount = Object.keys(selectedAnswers).length;
-            if(questionsCount === 0) {
-                showSmartToast('দয়া করে সব প্রশ্নের উত্তর দিন', 'error');
-                return;
-            }
-            
-            const questions = demoQuestions[currentQuizType] || demoQuestions.general;
-            let correctAnswers = 0;
-            const totalQuestions = questions.length;
-            
-            for(let i = 0; i < totalQuestions; i++) {
-                if(selectedAnswers[i] !== undefined && selectedAnswers[i] === questions[i].answer) {
-                    correctAnswers++;
-                }
-            }
-            
-            const reward = correctAnswers * 0.25;
-            
-            if(reward === 0) {
-                showSmartToast('দুঃখিত, আপনি কোন প্রশ্নের সঠিক উত্তর দেননি', 'error');
-                return;
-            }
-            
-            showLoading();
-            showSmartToast('কুইজ চেক করা হচ্ছে...', 'info');
-            
-            try {
-                const userRef = db.collection("users").doc(currentUserId);
-                
-                const updateData = {
-                    mainBalance: firebase.firestore.FieldValue.increment(reward),
-                    totalEarnings: firebase.firestore.FieldValue.increment(reward),
-                    totalTasks: firebase.firestore.FieldValue.increment(1),
-                    todayEarnings: firebase.firestore.FieldValue.increment(reward),
-                    [`lastQuizDate_${currentQuizType}`]: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                await userRef.update(updateData);
-                
-                // ✅ FIXED: Problem 3 - Quiz history type fixed to "কুইজ"
-                await db.collection("history").add({
-                    userId: currentUserId,
-                    type: "কুইজ", // ✅ Static type for filter
-                    amount: reward,
-                    status: "Success",
-                    details: `${currentQuizType} কুইজ - ${correctAnswers}/${totalQuestions} প্রশ্ন সঠিক`,
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                todayEarnings += reward;
-                document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
-                
-                showSmartToast(`কুইজ সফল! ৳${reward.toFixed(2)} পুরস্কার পেয়েছেন`, 'success');
-                hideLoading();
-                
-                if(quizTimer) clearInterval(quizTimer);
-                
-                document.getElementById('quizQuestionsContainer').innerHTML = `
-                    <div class="text-center p-6">
-                        <div class="text-green-500 text-6xl mb-4">✅</div>
-                        <h4 class="text-xl font-bold text-green-700 mb-2">কুইজ সফল!</h4>
-                        <p class="text-slate-600 mb-2">আপনি ${correctAnswers}/${totalQuestions} প্রশ্নের সঠিক উত্তর দিয়েছেন</p>
-                        <p class="text-slate-700 font-bold mb-4">আপনি ৳${reward.toFixed(2)} পুরস্কার পেয়েছেন</p>
-                        <button onclick="window.switchQuizTab('types')" class="mt-4 bg-premium text-white px-6 py-2 rounded-xl font-bold">
-                            নতুন কুইজ শুরু করুন
-                        </button>
-                    </div>
-                `;
-                
-                document.getElementById('submitQuizBtn').classList.add('hidden');
-                
-            } catch (error) {
-                console.error("Quiz submission error:", error);
-                showSmartToast('কুইজ সাবমিট করতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
+        // ✅ UPDATED: QUIZ SUBMIT
+window.submitQuiz = async () => {
+    const questionsCount = Object.keys(selectedAnswers).length;
+    if(questionsCount === 0) { showSmartToast('সব প্রশ্নের উত্তর দিন', 'error'); return; }
+    
+    const questions = demoQuestions[currentQuizType] || demoQuestions.general;
+    let correctAnswers = 0;
+    for(let i = 0; i < questions.length; i++) {
+        if(selectedAnswers[i] === questions[i].answer) correctAnswers++;
+    }
+    const reward = correctAnswers * 0.25;
+    if(reward === 0) { showSmartToast('কোন সঠিক উত্তর দেননি', 'error'); return; }
+
+    onAdCompleted = async () => {
+        showLoading();
+        try {
+            const userRef = db.collection("users").doc(currentUserId);
+            await userRef.update({
+                mainBalance: firebase.firestore.FieldValue.increment(reward),
+                totalEarnings: firebase.firestore.FieldValue.increment(reward),
+                totalTasks: firebase.firestore.FieldValue.increment(1),
+                todayEarnings: firebase.firestore.FieldValue.increment(reward),
+                [`lastQuizDate_${currentQuizType}`]: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            await db.collection("history").add({
+                userId: currentUserId, type: "কুইজ", amount: reward, status: "Success",
+                details: `কুইজ - ${correctAnswers}টি সঠিক`, date: new Date().toLocaleDateString('bn-BD'),
+                time: new Date().toLocaleTimeString('bn-BD'), timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            todayEarnings += reward;
+            document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
+            showSmartToast(`কুইজ সফল! ৳${reward} পেয়েছেন`, 'success');
+            hideLoading();
+            if(quizTimer) clearInterval(quizTimer);
+            document.getElementById('quizQuestionsContainer').innerHTML = `
+                <div class="text-center p-6">
+                    <h4 class="text-xl font-bold text-green-700">কুইজ সফল!</h4>
+                    <p class="font-bold">পুরস্কার: ৳${reward}</p>
+                    <button onclick="window.switchQuizTab('types')" class="mt-4 bg-premium text-white px-6 py-2 rounded-xl">নতুন কুইজ</button>
+                </div>`;
+            document.getElementById('submitQuizBtn').classList.add('hidden');
+        } catch (error) { showSmartToast('সমস্যা হয়েছে', 'error'); hideLoading(); }
+    };
+    showInterstitialAd();
+};
+
 
         // ✅ PROFILE FUNCTIONS
         window.showAvatarSelector = () => {
@@ -4172,73 +4137,50 @@ function renderTasks() {
         }
 
         // ✅ ✅ FIXED: DAILY BONUS REVENUE TRIGGER - রিকোয়ারমেন্ট ৩
-        window.showDailyBonus = async () => {
-            if(!currentUserId) return;
+        // ✅ UPDATED: DAILY BONUS
+window.showDailyBonus = async () => {
+    if(!currentUserId) return;
+    try {
+        const userDoc = await db.collection("users").doc(currentUserId).get();
+        if(userDoc.exists) {
+            const data = userDoc.data();
+            const today = new Date().toDateString();
+            const lastBonus = data.lastDailyBonus ? new Date(data.lastDailyBonus.toDate()).toDateString() : null;
+            if(lastBonus === today) { showSmartToast('আপনি আজকে ইতিমধ্যেই ডেইলি বোনাস নিয়েছেন', 'info'); return; }
             
-            try {
-                const userDoc = await db.collection("users").doc(currentUserId).get();
-                if(userDoc.exists) {
-                    const data = userDoc.data();
-                    const today = new Date().toDateString();
-                    const lastBonus = data.lastDailyBonus ? new Date(data.lastDailyBonus.toDate()).toDateString() : null;
-                    
-                    if(lastBonus === today) {
-                        showSmartToast('আপনি আজকে ইতিমধ্যেই ডেইলি বোনাস নিয়েছেন', 'info');
-                        return;
-                    }
-                    
-                    const bonusAmount = Math.floor(2 + Math.random() * 2);
-                    
-                    const result = await Swal.fire({
-                        title: 'ডেইলি বোনাস',
-                        html: `আজকের ডেইলি বোনাস: <b>৳${bonusAmount}</b><br><br>এই বোনাস নিতে চান?`,
-                        showCancelButton: true,
-                        confirmButtonText: 'হ্যাঁ, নিন',
-                        cancelButtonText: 'না',
-                        confirmButtonColor: '#059669',
-                        icon: 'info'
+            const bonusAmount = Math.floor(2 + Math.random() * 2);
+            const result = await Swal.fire({
+                title: 'ডেইলি বোনাস',
+                html: `আজকের বোনাস: <b>৳${bonusAmount}</b><br>বোনাস পেতে অ্যাড দেখতে হবে।`,
+                showCancelButton: true, confirmButtonText: 'হ্যাঁ, অ্যাড দেখব', confirmButtonColor: '#059669'
+            });
+            
+            if (result.isConfirmed) {
+                onAdCompleted = async () => {
+                    showLoading();
+                    const userRef = db.collection("users").doc(currentUserId);
+                    await userRef.update({
+                        mainBalance: firebase.firestore.FieldValue.increment(bonusAmount),
+                        totalEarnings: firebase.firestore.FieldValue.increment(bonusAmount),
+                        lastDailyBonus: firebase.firestore.FieldValue.serverTimestamp(),
+                        todayEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
                     });
-                    
-                    if (result.isConfirmed) {
-                        // ✅ FIX 2: Show ad before giving bonus
-                        showInterstitialAd();
-                        
-                        showLoading();
-                        
-                        const userRef = db.collection("users").doc(currentUserId);
-                        
-                        await userRef.update({
-                            mainBalance: firebase.firestore.FieldValue.increment(bonusAmount),
-                            totalEarnings: firebase.firestore.FieldValue.increment(bonusAmount),
-                            lastDailyBonus: firebase.firestore.FieldValue.serverTimestamp(),
-                            todayEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
-                        });
-                        
-                        todayEarnings += bonusAmount;
-                        document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
-                        
-                        await db.collection("history").add({
-                            userId: currentUserId,
-                            type: "ডেইলি বোনাস",
-                            amount: bonusAmount,
-                            status: "Success",
-                            details: "নিয়মিত ডেইলি বোনাস",
-                            date: new Date().toLocaleDateString('bn-BD'),
-                            time: new Date().toLocaleTimeString('bn-BD'),
-                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                        
-                        showSmartToast(`৳${bonusAmount} ডেইলি বোনাস সফলভাবে যোগ হয়েছে!`, 'success');
-                        checkDailyBonus(currentUserId);
-                        hideLoading();
-                    }
-                }
-            } catch (e) {
-                console.error("Error showing daily bonus:", e);
-                showSmartToast('ডেইলি বোনাস লোড করতে সমস্যা হয়েছে', 'error');
-                hideLoading();
+                    todayEarnings += bonusAmount;
+                    document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
+                    await db.collection("history").add({
+                        userId: currentUserId, type: "ডেইলি বোনাস", amount: bonusAmount, status: "Success",
+                        details: "নিয়মিত ডেইলি বোনাস", date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'), timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    showSmartToast(`অভিনন্দন! ৳${bonusAmount} বোনাস পেয়েছেন!`, 'success');
+                    checkDailyBonus(currentUserId);
+                    hideLoading();
+                };
+                showInterstitialAd();
             }
-        };
+        }
+    } catch (e) { showSmartToast('সমস্যা হয়েছে', 'error'); }
+};
 
         // ✅ OTHER FUNCTIONS
         window.copyReferralLink = () => {
