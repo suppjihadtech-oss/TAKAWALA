@@ -1059,7 +1059,7 @@
 
     <!-- MONITAG INTERSTITIAL AD (HIDDEN INITIALLY) -->
     <div id="monitagInterstitial" class="interstitial-ad hidden">
-        <div id="interstitialContent" class="text-center bg-white p-4 md:p-6 rounded-2xl w-[90%] max-w-sm relative overflow-hidden max-h-[85vh] overflow-y-auto mx-auto my-auto shadow-2xl">
+        <div id="interstitialContent" class="text-center bg-white p-5 md:p-8 rounded-2xl w-[95%] max-w-md relative overflow-hidden max-h-[85vh] overflow-y-auto mx-auto my-auto shadow-2xl border-4 border-white/50">
     <h3 class="font-bold text-xl mb-2 text-red-600">⚠️ অ্যাকশন প্রয়োজন</h3>
     
     <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200 mb-6">
@@ -2861,30 +2861,89 @@ window.openAdLink = () => {
         }
 
         // ✅ TASK FUNCTIONS
-        function renderTasks() {
-            db.collection("tasks").onSnapshot((snap) => {
-                const list = document.getElementById('taskListContainer'); 
-                if(!list) return; 
+        // ✅ UPDATED TASK RENDER FUNCTION (Silver/Gold Logic Added)
+function renderTasks() {
+    db.collection("tasks").onSnapshot((snap) => {
+        const list = document.getElementById('taskListContainer'); 
+        if(!list) return; 
+        
+        showLoading();
+        list.innerHTML = ''; 
+        
+        // 1. ইউজারের প্ল্যান চেক করা
+        const userPlan = currentUserData ? (currentUserData.plan || "Free Member") : "Free Member";
+        
+        // 2. টাস্কের টার্গেট টাইপ ঠিক করা
+        let targetType = 'free'; // ডিফল্ট
+
+        if(currentTaskType === 'vip') {
+            if(userPlan.includes('Silver') || userPlan.includes('সিলভার')) targetType = 'silver';
+            else if(userPlan.includes('Gold') || userPlan.includes('গোল্ড')) targetType = 'gold';
+            else if(userPlan.includes('Platinum') || userPlan.includes('প্লাটিনাম')) targetType = 'platinum';
+            else targetType = 'no_access'; // ফ্রি ইউজার ভিআইপি ট্যাবে এসেছে
+        }
+
+        let hasTask = false;
+
+        // 3. ডাটাবেস থেকে টাস্ক লোড করা
+        if(!snap.empty) {
+            snap.forEach(doc => {
+                const t = doc.data();
+                let showTask = false;
                 
-                showLoading();
-                list.innerHTML = '';
-                
-                if(snap.empty) { 
-                    list.innerHTML = `
+                // ফ্রি ট্যাবে থাকলে ফ্রি টাস্ক দেখাবে
+                if(currentTaskType === 'free' && (t.type === 'free' || !t.type)) {
+                    showTask = true;
+                } 
+                // ভিআইপি ট্যাবে থাকলে প্ল্যান অনুযায়ী টাস্ক দেখাবে
+                else if(currentTaskType === 'vip' && t.type === targetType) {
+                    showTask = true;
+                }
+
+                if(showTask) {
+                    hasTask = true;
+                    list.innerHTML += `
                     <div class="glass-card p-3 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp">
-                        <div class="flex items-center gap-3"><img src="https://i.postimg.cc/TYLvN32V/telegram.png" class="w-10"><div><h4 class="font-bold text-slate-700">Telegram Channel</h4><p class="text-[10px] text-slate-400">আমাদের চ্যানেল সাবস্ক্রাইব করুন</p></div></div>
-                        <button onclick="window.completeTask('telegram_task', 5, 'telegram', 'Telegram Channel', 'আমাদের টেলিগ্রাম চ্যানেল সাবস্ক্রাইব করুন', 'https://t.me/takawala_channel')" class="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold">+৳5</button>
-                    </div>
-                    <div class="glass-card p-3 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp">
-                        <div class="flex items-center gap-3"><img src="https://i.postimg.cc/C1j6TxLF/youtube.png" class="w-10"><div><h4 class="font-bold text-slate-700">YouTube Subscribe</h4><p class="text-[10px] text-slate-400">আমাদের চ্যানেল সাবস্ক্রাইব করুন</p></div></div>
-                        <button onclick="window.completeTask('youtube_task', 8, 'youtube', 'YouTube Subscribe', 'আমাদের ইউটিউব চ্যানেল সাবস্ক্রাইব করুন', 'https://youtube.com/takawala')" class="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold">+৳8</button>
-                    </div>
-                    <div class="glass-card p-3 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp">
-                        <div class="flex items-center gap-3"><img src="https://i.postimg.cc/pdtvFMHW/facebook.png" class="w-10"><div><h4 class="font-bold text-slate-700">Facebook Page Like</h4><p class="text-[10px] text-slate-400">আমাদের Facebook পেজ লাইক করুন</p></div></div>
-                        <button onclick="window.completeTask('facebook_task', 4, 'facebook', 'Facebook Page Like', 'আমাদের ফেসবুক পেজ লাইক করুন', 'https://facebook.com/takawala')" class="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold">+৳4</button>
+                        <div class="flex items-center gap-3">
+                            <img src="${t.icon || 'https://i.postimg.cc/d1sXyCb6/clipboard.png'}" class="w-10">
+                            <div>
+                                <h4 class="font-bold text-slate-700">${t.title}</h4>
+                                <p class="text-[10px] text-slate-400">${t.desc}</p>
+                            </div>
+                        </div>
+                        <button onclick="window.completeTask('${doc.id}', ${t.reward}, '${t.taskType || 'general'}', '${t.title}', '${t.desc}', '${t.link || '#'}')" class="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold shadow-sm active:scale-95 transition">
+                            +৳${t.reward}
+                        </button>
                     </div>`;
-                    hideLoading();
-                    return; 
+                }
+            });
+        }
+
+        // 4. যদি কোনো টাস্ক না থাকে বা ফ্রি ইউজার ভিআইপি ট্যাবে আসে
+        if(!hasTask) {
+            if(currentTaskType === 'vip' && targetType === 'no_access') {
+                list.innerHTML = `
+                <div class="text-center py-10 animate__animated animate__fadeIn">
+                    <img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-20 mx-auto mb-4 opacity-50 grayscale">
+                    <h3 class="text-lg font-bold text-slate-600">শুধুমাত্র ভিআইপি মেম্বারদের জন্য</h3>
+                    <p class="text-xs text-slate-500 mb-4 px-6">ভিআইপি টাস্ক পেতে আপনাকে প্যাকেজ কিনতে হবে।</p>
+                    <button onclick="window.showPage('vipScreen')" class="bg-premium text-white px-6 py-3 rounded-xl font-bold shadow-lg animate-pulse">
+                        প্যাকেজ কিনুন 👑
+                    </button>
+                </div>`;
+            } else {
+                list.innerHTML = `
+                <div class="text-center py-10 opacity-60">
+                    <img src="https://i.postimg.cc/d1sXyCb6/clipboard.png" class="w-16 mx-auto mb-3">
+                    <p class="font-bold text-slate-500">বর্তমানে কোনো টাস্ক নেই</p>
+                </div>`;
+            }
+        }
+        
+        hideLoading();
+    });
+
+                   return; 
                 }
                 
                 snap.forEach(doc => {
