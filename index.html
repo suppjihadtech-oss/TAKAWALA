@@ -2946,23 +2946,7 @@ function renderTasks() {
         hideLoading();
     });
 
-                   return; 
-                }
-                
-                snap.forEach(doc => {
-                    const t = doc.data();
-                    if(t.type === currentTaskType || (!t.type && currentTaskType === 'free')) {
-                         list.innerHTML += `
-                        <div class="glass-card p-3 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp">
-                            <div class="flex items-center gap-3"><img src="${t.icon || 'https://i.postimg.cc/d1sXyCb6/clipboard.png'}" class="w-10"><div><h4 class="font-bold text-slate-700">${t.title}</h4><p class="text-[10px] text-slate-400">${t.desc}</p></div></div>
-                            <button onclick="window.completeTask('${doc.id}', ${t.reward}, '${t.taskType || 'general'}', '${t.title}', '${t.desc}', '${t.link || '#'}')" class="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold">+৳${t.reward}</button>
-                        </div>`;
-                    }
-                });
-                
-                hideLoading();
-            });
-        }
+                   
 
         // ✅ ENHANCED HISTORY SYSTEM WITH FILTER
         window.loadHistory = () => {
