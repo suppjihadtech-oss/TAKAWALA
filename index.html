@@ -2867,124 +2867,128 @@ window.openAdLink = () => {
             }
         }
 
-                // ✅ UPDATED TASK RENDER FUNCTION (DYNAMIC LOGOS & CATEGORIES)
+                        // ✅ UPDATED USER PANEL TASK RENDER (LOGOS + ONE-TIME LOGIC)
         function renderTasks() {
-            db.collection("tasks").onSnapshot((snap) => {
-                const list = document.getElementById('taskListContainer'); 
-                if(!list) return; 
-                
-                // লোডিং এনিমেশন বাদ দিয়ে ডাইরেক্ট আপডেট হবে যাতে ফ্লিকার না করে
-                list.innerHTML = ''; 
-                
-                // 1. ইউজারের প্ল্যান চেক করা
-                const userPlan = currentUserData ? (currentUserData.plan || "Free Member") : "Free Member";
-                
-                // 2. টাস্কের টার্গেট টাইপ ঠিক করা
-                let targetType = 'free'; // ডিফল্ট
+            // ইউজার লগইন না থাকলে কিছু দেখাবো না
+            if(!currentUserId) return;
 
-                if(currentTaskType === 'vip') {
-                    if(userPlan.includes('Silver') || userPlan.includes('সিলভার')) targetType = 'silver';
-                    else if(userPlan.includes('Gold') || userPlan.includes('গোল্ড')) targetType = 'gold';
-                    else if(userPlan.includes('Platinum') || userPlan.includes('প্লাটিনাম')) targetType = 'platinum';
-                    else targetType = 'no_access'; // ফ্রি ইউজার ভিআইপি ট্যাবে এসেছে
-                }
-
-                let hasTask = false;
-
-                // 3. ডাটাবেস থেকে টাস্ক লোড করা
-                if(!snap.empty) {
-                    snap.forEach(doc => {
-                        const t = doc.data();
-                        let showTask = false;
-                        
-                        // ফ্রি ট্যাবে থাকলে ফ্রি টাস্ক দেখাবে
-                        if(currentTaskType === 'free' && (t.type === 'free' || !t.type)) {
-                            showTask = true;
-                        } 
-                        // ভিআইপি ট্যাবে থাকলে প্ল্যান অনুযায়ী টাস্ক দেখাবে
-                        else if(currentTaskType === 'vip' && t.type === targetType) {
-                            showTask = true;
-                        }
-
-                        if(showTask) {
-                            hasTask = true;
-
-                            // 🔥 ডায়নামিক লোগো এবং কালার লজিক (Start)
-                            let iconClass = 'ri-links-line'; 
-                            let iconColor = 'text-gray-500';
-                            let bgColor = 'bg-gray-100';
-
-                            if (t.category === 'youtube') {
-                                iconClass = 'ri-youtube-fill'; iconColor = 'text-red-600'; bgColor = 'bg-red-50';
-                            } else if (t.category === 'facebook') {
-                                iconClass = 'ri-facebook-circle-fill'; iconColor = 'text-blue-600'; bgColor = 'bg-blue-50';
-                            } else if (t.category === 'telegram') {
-                                iconClass = 'ri-telegram-fill'; iconColor = 'text-blue-500'; bgColor = 'bg-blue-50';
-                            } else if (t.category === 'website') {
-                                iconClass = 'ri-global-line'; iconColor = 'text-green-600'; bgColor = 'bg-green-50';
-                            } else if (t.category === 'instagram') {
-                                iconClass = 'ri-instagram-fill'; iconColor = 'text-pink-500'; bgColor = 'bg-pink-50';
-                            } else if (t.category === 'tiktok') {
-                                iconClass = 'ri-tiktok-fill'; iconColor = 'text-slate-900'; bgColor = 'bg-slate-200';
-                            } else if (t.category === 'twitter') {
-                                iconClass = 'ri-twitter-x-fill'; iconColor = 'text-slate-700'; bgColor = 'bg-slate-100';
-                            } else if (t.category === 'app') {
-                                iconClass = 'ri-google-play-fill'; iconColor = 'text-green-600'; bgColor = 'bg-green-100';
-                            }
-                            // 🔥 ডায়নামিক লোগো লজিক (End)
-
-                            list.innerHTML += `
-                            <div class="glass-card p-4 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp mb-3 border border-slate-100 shadow-sm">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 ${bgColor} rounded-full flex items-center justify-center text-2xl ${iconColor}">
-                                        <i class="${iconClass}"></i>
-                                    </div>
-                                    
-                                    <div>
-                                        <h4 class="font-bold text-slate-800 text-sm">${t.title}</h4>
-                                        <div class="flex items-center gap-2 mt-1">
-                                            <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wide">${t.category || 'General'}</span>
-                                            <p class="text-[10px] text-slate-400 truncate max-w-[120px]">${t.desc}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <button onclick="window.completeTask('${doc.id}', ${t.reward}, '${t.category || 'general'}', '${t.title}', '${t.desc}', '${t.link || '#'}')" class="bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg shadow-slate-200 active:scale-95 transition">
-                                    +৳${t.reward}
-                                </button>
-                            </div>`;
+            // ১. আগে চেক করি ইউজার কোন কোন টাস্ক করেছে (Submission Check)
+            db.collection("task_submissions")
+                .where("userId", "==", currentUserId)
+                .get()
+                .then((submissionSnap) => {
+                    
+                    // করা টাস্কের আইডিগুলোর একটা লিস্ট বানাচ্ছি
+                    const completedTaskIds = new Set();
+                    submissionSnap.forEach(doc => {
+                        const data = doc.data();
+                        // পেন্ডিং বা এপ্রুভড হলে সেটা কমপ্লিট হিসেবে ধরব
+                        if (data.status === 'pending' || data.status === 'approved') {
+                            completedTaskIds.add(data.taskId);
                         }
                     });
-                }
 
-                // 4. যদি কোনো টাস্ক না থাকে বা ফ্রি ইউজার ভিআইপি ট্যাবে আসে
-                if(!hasTask) {
-                    if(currentTaskType === 'vip' && targetType === 'no_access') {
-                        list.innerHTML = `
-                        <div class="text-center py-10 animate__animated animate__fadeIn">
-                            <div class="w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-10 opacity-50 grayscale">
-                            </div>
-                            <h3 class="text-lg font-bold text-slate-600">শুধুমাত্র ভিআইপি মেম্বারদের জন্য</h3>
-                            <p class="text-xs text-slate-500 mb-4 px-6">ভিআইপি টাস্ক পেতে আপনাকে প্যাকেজ কিনতে হবে।</p>
-                            <button onclick="window.showPage('vipScreen')" class="bg-premium text-white px-6 py-3 rounded-xl font-bold shadow-lg animate-pulse">
-                                প্যাকেজ কিনুন 👑
-                            </button>
-                        </div>`;
-                    } else {
-                        list.innerHTML = `
-                        <div class="text-center py-12 opacity-60">
-                            <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <i class="ri-clipboard-line text-3xl text-slate-300"></i>
-                            </div>
-                            <p class="font-bold text-slate-400">বর্তমানে কোনো টাস্ক নেই</p>
-                            <p class="text-xs text-slate-300 mt-1">কিছুক্ষণ পর আবার চেক করুন</p>
-                        </div>`;
-                    }
-                }
-            });
+                    // ২. এবার সব টাস্ক লাইভ লোড করি
+                    db.collection("tasks").orderBy("createdAt", "desc").onSnapshot((snap) => {
+                        const list = document.getElementById('taskListContainer'); 
+                        if(!list) return; 
+                        
+                        list.innerHTML = ''; 
+                        
+                        // ইউজারের প্ল্যান চেক
+                        const userPlan = currentUserData ? (currentUserData.plan || "Free Member") : "Free Member";
+                        
+                        // টার্গেট টাইপ সেট করা (VIP লজিক)
+                        let targetType = 'free';
+                        if(currentTaskType === 'vip') {
+                            if(userPlan.includes('Silver') || userPlan.includes('সিলভার')) targetType = 'silver';
+                            else if(userPlan.includes('Gold') || userPlan.includes('গোল্ড')) targetType = 'gold';
+                            else if(userPlan.includes('Platinum') || userPlan.includes('প্লাটিনাম')) targetType = 'platinum';
+                            else targetType = 'no_access';
+                        }
+
+                        let hasTask = false;
+
+                        if(!snap.empty) {
+                            snap.forEach(doc => {
+                                const t = doc.data();
+                                const taskId = doc.id;
+                                
+                                // 🔥 ONE-TIME CHECK LOGIC (মেইন লজিক)
+                                // যদি টাস্কটি 'once' হয় এবং ইউজার অলরেডি করে থাকে, তবে দেখাবো না
+                                if (t.frequency === 'once' && completedTaskIds.has(taskId)) {
+                                    return; // Skip this task
+                                }
+
+                                let showTask = false;
+                                
+                                // ফ্রি টাস্ক লজিক
+                                if(currentTaskType === 'free' && (t.type === 'free' || !t.type)) {
+                                    showTask = true;
+                                } 
+                                // ভিআইপি টাস্ক লজিক
+                                else if(currentTaskType === 'vip' && t.type === targetType) {
+                                    showTask = true;
+                                }
+
+                                if(showTask) {
+                                    hasTask = true;
+
+                                    // 🔥 ডায়নামিক লোগো এবং কালার লজিক
+                                    let iconClass = 'ri-links-line'; 
+                                    let iconColor = 'text-gray-500';
+                                    let bgColor = 'bg-gray-100';
+
+                                    if (t.category === 'youtube') { iconClass = 'ri-youtube-fill'; iconColor = 'text-red-600'; bgColor = 'bg-red-50'; } 
+                                    else if (t.category === 'facebook') { iconClass = 'ri-facebook-circle-fill'; iconColor = 'text-blue-600'; bgColor = 'bg-blue-50'; }
+                                    else if (t.category === 'telegram') { iconClass = 'ri-telegram-fill'; iconColor = 'text-blue-500'; bgColor = 'bg-blue-50'; }
+                                    else if (t.category === 'website') { iconClass = 'ri-global-line'; iconColor = 'text-green-600'; bgColor = 'bg-green-50'; }
+                                    else if (t.category === 'instagram') { iconClass = 'ri-instagram-fill'; iconColor = 'text-pink-500'; bgColor = 'bg-pink-50'; }
+                                    else if (t.category === 'tiktok') { iconClass = 'ri-tiktok-fill'; iconColor = 'text-slate-900'; bgColor = 'bg-slate-200'; }
+                                    else if (t.category === 'twitter') { iconClass = 'ri-twitter-x-fill'; iconColor = 'text-slate-700'; bgColor = 'bg-slate-100'; }
+                                    else if (t.category === 'app') { iconClass = 'ri-google-play-fill'; iconColor = 'text-green-600'; bgColor = 'bg-green-100'; }
+
+                                    // একবার করা যাবে কিনা তার ব্যাজ
+                                    let frequencyBadge = t.frequency === 'once' 
+                                        ? '<span class="text-[9px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full ml-1 border border-purple-200">১ বার</span>' 
+                                        : '';
+
+                                    // HTML কার্ড তৈরি
+                                    list.innerHTML += `
+                                    <div class="glass-card p-4 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp mb-3 border border-slate-100 shadow-sm">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-12 h-12 ${bgColor} rounded-full flex items-center justify-center text-2xl ${iconColor}">
+                                                <i class="${iconClass}"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-slate-800 text-sm flex items-center">
+                                                    ${t.title} ${frequencyBadge}
+                                                </h4>
+                                                <div class="flex items-center gap-2 mt-1">
+                                                    <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wide">${t.category || 'General'}</span>
+                                                    <p class="text-[10px] text-slate-400 truncate max-w-[120px]">${t.desc}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button onclick="window.completeTask('${taskId}', ${t.reward}, '${t.category || 'general'}', '${t.title}', '${t.desc}', '${t.link || '#'}')" class="bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg shadow-slate-200 active:scale-95 transition">
+                                            +৳${t.reward}
+                                        </button>
+                                    </div>`;
+                                }
+                            });
+                        }
+
+                        // যদি কোনো টাস্ক না থাকে
+                        if(!hasTask) {
+                            if(currentTaskType === 'vip' && targetType === 'no_access') {
+                                list.innerHTML = `<div class="text-center py-10 animate__animated animate__fadeIn"><img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-20 mx-auto mb-4 opacity-50 grayscale"><h3 class="text-lg font-bold text-slate-600">শুধুমাত্র ভিআইপি মেম্বারদের জন্য</h3><p class="text-xs text-slate-500 mb-4 px-6">ভিআইপি টাস্ক পেতে আপনাকে প্যাকেজ কিনতে হবে।</p><button onclick="window.showPage('vipScreen')" class="bg-premium text-white px-6 py-3 rounded-xl font-bold shadow-lg animate-pulse">প্যাকেজ কিনুন 👑</button></div>`;
+                            } else {
+                                list.innerHTML = `<div class="text-center py-12 opacity-60"><div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3"><i class="ri-clipboard-line text-3xl text-slate-300"></i></div><p class="font-bold text-slate-400">বর্তমানে কোনো টাস্ক নেই</p><p class="text-xs text-slate-300 mt-1">কিছুক্ষণ পর আবার চেক করুন</p></div>`;
+                            }
+                        }
+                    });
+                });
         }
-        
 
         // ✅ ENHANCED HISTORY SYSTEM WITH FILTER
         window.loadHistory = () => {
