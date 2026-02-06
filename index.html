@@ -2360,13 +2360,13 @@ window.openAdLink = () => {
                 packageContainer.innerHTML = '';
                 
                 if(packagesSnapshot.empty) {
-                    // Auto seeder: Create default packages if collection is empty
-                    await seedDefaultPackages();
-                    await loadPackages(); // Reload after seeding
-                    return;
-                }
+    packageContainer.innerHTML = `<div class="text-center py-8 text-slate-500">কোনো প্যাকেজ নেই</div>`;
+    hideLoading();
+    return;
+}
+
                 
-                packagesSnapshot.forEach((doc) => {
+               packagesSnapshot.forEach((doc) => {
                     const packageData = doc.data();
                     const packageId = doc.id;
                     
@@ -2771,8 +2771,8 @@ window.openAdLink = () => {
                         document.getElementById('currentAvatar').src = selectedAvatar;
                     }
                     
-                    // ✅ VIP PACKAGE EXPIRY CHECK
-                    if(currentUserData.packageExpiresAt) {
+                                        // ✅ VIP PACKAGE EXPIRY CHECK (SAFE MODE)
+                    if(currentUserData.packageExpiresAt && typeof currentUserData.packageExpiresAt.toDate === 'function') {
                         const expiryDate = currentUserData.packageExpiresAt.toDate();
                         const now = new Date();
                         
@@ -2787,6 +2787,7 @@ window.openAdLink = () => {
                             });
                         }
                     }
+
                     
                     // ✅ FIXED REFERRAL LINK
                     if(document.getElementById('referralLink')) {
@@ -4242,27 +4243,40 @@ window.showDailyBonus = async () => {
             document.getElementById('twaiChatbotIcon').style.display = 'none';
         };
         
-        window.showRules = (t) => {
+                       // ✅ DYNAMIC RULES SHOW FUNCTION (SPECIFIC PER SECTION)
+        window.showRules = (title) => {
+            // ১. ডিফল্ট ভ্যালু সেট করা
+            let ruleKey = 'appRules'; // সাধারণ নিয়ম
+            let headerTitle = title + ' নিয়মাবলী';
+
+            // ২. টাইটেল দেখে বুঝব কোন নিয়ম দেখাতে হবে
+            if (title.includes('রিচার্জ')) {
+                ruleKey = 'rulesRecharge';
+            } else if (title.includes('উত্তোলন') || title.includes('লেনদেন')) {
+                ruleKey = 'rulesWithdraw';
+            } else if (title.includes('টাস্ক')) {
+                ruleKey = 'rulesTask';
+            }
+
+            // ৩. ডাটাবেস থেকে নিয়ম আনা (না থাকলে ডিফল্ট মেসেজ)
+            const rulesContent = systemSettings[ruleKey] 
+                ? `<div class="text-left text-sm space-y-2">${systemSettings[ruleKey]}</div>` 
+                : `<div class="text-center text-slate-400 py-4">বর্তমানে কোনো বিশেষ নিয়ম নেই।<br>সাধারণ নিয়মাবলী মেনে চলুন।</div>`;
+
+            // ৪. পপ-আপ দেখানো
             Swal.fire({
-                title: `${t} নিয়মাবলী`,
-                html: `
-                    <div class="text-left">
-                        <p><b>১.</b> সকল ট্রানজেকশন এডমিন এপ্রুভ করবেন</p>
-                        <p><b>২.</b> ভুয়া তথ্য দিলে একাউন্ট বন্ধ হয়ে যাবে</p>
-                        <p><b>৩.</b> রেফার করলে প্রতি রেফার ৳5 বোনাস</p>
-                        <p><b>৪.</b> উত্তোলনে ১০% ভ্যাট কাটা হবে</p>
-                        <p><b>৫.</b> প্রতিদিন ১টি ডেইলি বোনাস পাওয়া যাবে</p>
-                        <p><b>৬.</b> ডিপোজিট মিনিমাম: ৳50</p>
-                        <p><b>৭.</b> উত্তোলন মিনিমাম: ৳50</p>
-                        <p><b>৮.</b> রিচার্জ মিনিমাম: ৳20</p>
-                        <p><b>৯.</b> ফ্রি ইউজারদের উইথড্র/রিচার্জ করতে কমপক্ষে ৩টি রেফার থাকতে হবে</p>
-                        <p><b>১০.</b> উইথড্র/রিচার্জ সময়: শুক্রবার ৮:০০-৯:৩০, অন্যান্য দিন ৯:০০-১০:০০ ও ১৫:০০-২১:৩০</p>
-                    </div>
-                `,
-                confirmButtonText: 'বুঝেছি'
+                title: headerTitle,
+                html: rulesContent,
+                confirmButtonText: 'বুঝেছি',
+                confirmButtonColor: '#059669',
+                customClass: {
+                    popup: 'rounded-[25px]',
+                    content: 'text-sm text-slate-600'
+                }
             });
         };
-        
+
+
         // ✅ UPDATED TWAI CHATBOT FUNCTIONS - রিকোয়ারমেন্ট ১
         window.openTWAI = () => {
             document.getElementById('twaiModal').classList.remove('hidden');
