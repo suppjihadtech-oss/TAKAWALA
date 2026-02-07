@@ -27,6 +27,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+              
 
     <style>
         
@@ -568,65 +569,71 @@
             max-height: 400px;
         }
         
-        /* ✅ UPDATED QUICK QUESTIONS GRID - 20 QUESTIONS */
+               /* ✅ CHATBOT LAYOUT PERFECT FIX (FINAL) */
+        .chatbot-content {
+            background: #f8fafc;
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-width: 450px;
+            height: 85vh; 
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+            position: absolute;
+            bottom: 0;
+        }
+
+        /* চ্যাট এরিয়া (ফ্লেক্সিবল) */
+        .chatbot-body {
+            flex: 1; 
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 20px; 
+            background: #f8fafc;
+        }
+
+        /* প্রশ্ন বক্স (নিচে ফিক্সড থাকবে) */
         .quick-questions {
+            height: 140px; /* ফিক্সড হাইট */
+            min-height: 140px;
+            overflow-y: auto;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            padding: 10px;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
-            padding: 15px;
-            max-height: 250px;
-            overflow-y: auto;
-            border-top: 1px solid #e2e8f0;
-            background: #f8fafc;
+            z-index: 20;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.03);
+            flex-shrink: 0; 
         }
-        
+
         .quick-question {
-            background: white;
-            border: 1px solid #e2e8f0;
-            padding: 10px 12px;
-            border-radius: 10px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: left;
-            color: #1e293b;
-            font-weight: 500;
-        }
-        
-        .quick-question:hover {
-            background: #f1f5f9;
-            border-color: #cbd5e1;
-            transform: translateY(-2px);
-        }
-        
-        .chatbot-input {
-            display: flex;
-            padding: 15px;
-            border-top: 1px solid #e2e8f0;
-            background: white;
-        }
-        
-        .chatbot-input input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 1px solid #cbd5e1;
-            border-radius: 20px;
-            outline: none;
-            font-size: 14px;
             background: #f8fafc;
-        }
-        
-        .chatbot-input button {
-            background: #8b5cf6;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            margin-left: 10px;
+            border: 1px solid #e2e8f0;
+            padding: 8px 5px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #475569;
             cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            line-height: 1.2;
+            transition: all 0.2s;
         }
+
+        .quick-question:hover {
+            background: #ffffff;
+            border-color: #8b5cf6;
+            color: #7c3aed;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);
+        }
+
 
         /* ✅ HISTORY FILTER STYLES */
         .history-filter {
@@ -838,6 +845,143 @@
             border-top: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
         }
+        
+              /* ✅ ULTRA PREMIUM 3D CHATBOT DESIGN */
+        
+        /* চ্যাটবডির ব্যাকগ্রাউন্ড ক্লিন রাখা */
+        .chatbot-body {
+            background-color: #f8fafc;
+            padding: 20px !important;
+        }
+
+        .chat-message {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px; /* গ্যাপ বাড়ানো হয়েছে */
+            opacity: 0;
+            animation: messagePopUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; /* বাউন্সি এনিমেশন */
+        }
+
+        .user-message {
+            align-items: flex-end;
+        }
+
+        .bot-message {
+            align-items: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 78%;
+            padding: 14px 18px;
+            font-size: 13.5px;
+            line-height: 1.6;
+            font-weight: 500;
+            position: relative;
+            letter-spacing: 0.3px;
+        }
+
+        /* 👤 User Bubble (GORGEOUS PURPLE GRADIENT) */
+        .user-bubble {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); /* ডিপ পার্পল গ্রেডিয়েন্ট */
+            color: white;
+            border-radius: 18px 18px 2px 18px; /* সুন্দর শেপ */
+            box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.4), 
+                        0 8px 10px -6px rgba(124, 58, 237, 0.2); /* গ্লোয়িং শ্যাডো */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 🤖 Bot Bubble (MODERN WHITE CARD) */
+        .bot-bubble {
+            background: #ffffff;
+            color: #334155;
+            border-radius: 18px 18px 18px 2px; /* সুন্দর শেপ */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 
+                        0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            border: 1px solid #f1f5f9;
+        }
+        
+        /* বটের বাবলের পাশে ছোট্ট আইকন বা ডট (অপশনাল ডেকোরেশন) */
+        .bot-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -6px;
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
+            border-bottom-right-radius: 20px;
+            z-index: -1;
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 5px;
+            font-weight: 700;
+            padding: 0 4px;
+            opacity: 0.8;
+        }
+
+        /* ইনপুট বক্সের ডিজাইন ইমপ্রুভমেন্ট */
+        .chatbot-input {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #f1f5f9;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.02);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chatbot-input input {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 14px;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        .chatbot-input input:focus {
+            background: white;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .chatbot-input button {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3);
+            transition: transform 0.2s;
+            margin: 0; /* মার্জিন রিসেট */
+        }
+
+        .chatbot-input button:active {
+            transform: scale(0.95);
+        }
+
+        /* বাউন্সি পপ-আপ এনিমেশন */
+        @keyframes messagePopUp {
+            0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+               /* ✅ MARQUEE FIX */
+        marquee {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+        }
+        
+               
+        
     </style>
 </head>
 <body class="bg-slate-50">
@@ -951,7 +1095,7 @@
             </div>
             
             <!-- ✅ UPDATED: 20 QUESTIONS GRID -->
-            <div class="quick-questions" id="quickQuestionsGrid">
+                        <div class="quick-questions" id="quickQuestionsGrid" style="grid-template-columns: 1fr; gap: 5px;">
                 <button onclick="window.askTWAI('কিভাবে কাজ করব?')" class="quick-question">১. কিভাবে কাজ করব?</button>
                 <button onclick="window.askTWAI('টাকা তুলব কিভাবে?')" class="quick-question">২. টাকা তুলব কিভাবে?</button>
                 <button onclick="window.askTWAI('রেফার বোনাস কত?')" class="quick-question">৩. রেফার বোনাস কত?</button>
@@ -972,15 +1116,26 @@
                 <button onclick="window.askTWAI('বিকাশে সর্বনিম্ন কত টাকা তোলা যায়?')" class="quick-question">১৮. বিকাশে সর্বনিম্ন কত টাকা তোলা যায়?</button>
                 <button onclick="window.askTWAI('নগদে সর্বনিম্ন কত টাকা তোলা যায়?')" class="quick-question">১৯. নগদে সর্বনিম্ন কত টাকা তোলা যায়?</button>
                 <button onclick="window.askTWAI('এডমিন কখন লাইনে থাকে?')" class="quick-question">২০. এডমিন কখন লাইনে থাকে?</button>
+                
+                <button onclick="window.askTWAI('ডেইলি বোনাস কিভাবে নিব?')" class="quick-question">২১. ডেইলি বোনাস কিভাবে নিব?</button>
+                <button onclick="window.askTWAI('স্টার কিনলে কি লাভ?')" class="quick-question">২২. স্টার কিনলে কি লাভ?</button>
+                <button onclick="window.askTWAI('টেলিগ্রাম প্রিমিয়াম কিভাবে কিনব?')" class="quick-question">২৩. টেলিগ্রাম প্রিমিয়াম কিভাবে কিনব?</button>
+                <button onclick="window.askTWAI('আমার একাউন্ট কেন লগআউট হয়ে যায়?')" class="quick-question">২৪. আমার একাউন্ট কেন লগআউট হয়ে যায়?</button>
+                <button onclick="window.askTWAI('রেফার লিংক কোথায় পাব?')" class="quick-question">২৫. রেফার লিংক কোথায় পাব?</button>
+                <button onclick="window.askTWAI('ভুল তথ্য দিয়ে একাউন্ট খুললে কি হবে?')" class="quick-question">২৬. ভুল তথ্য দিয়ে একাউন্ট খুললে কি হবে?</button>
+                <button onclick="window.askTWAI('আমি কি বিদেশে বসে কাজ করতে পারব?')" class="quick-question">২৭. আমি কি বিদেশে বসে কাজ করতে পারব?</button>
+                <button onclick="window.askTWAI('টাস্কের ভিডিও লোড হচ্ছে না কেন?')" class="quick-question">২৮. টাস্কের ভিডিও লোড হচ্ছে না কেন?</button>
+                <button onclick="window.askTWAI('আমার পেমেন্ট রিজেক্ট হয়েছে কেন?')" class="quick-question">২৯. আমার পেমেন্ট রিজেক্ট হয়েছে কেন?</button>
+                      <button onclick="window.askTWAI('নতুন আপডেট কবে আসবে?')" class="quick-question">৩০. নতুন আপডেট কবে আসবে?</button>
             </div>
-            
+
             <div class="chatbot-input">
                 <input type="text" id="chatbotInput" placeholder="আপনার প্রশ্ন লিখুন...">
                 <button onclick="window.sendTWAI()"><i class="ri-send-plane-fill"></i></button>
             </div>
-        </div>
-    </div>
 
+        </div> </div> 
+            
     <!-- AUTH SCREEN -->
     <div id="authScreen" class="min-h-screen flex flex-col items-center justify-center p-6 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
         <div class="glass-card w-full max-w-md p-8 rounded-[35px] text-center animate__animated animate__fadeInUp">
@@ -993,10 +1148,15 @@
                 <button onclick="window.toggleAuthTab('register')" id="btnTabRegister" class="flex-1 py-3 rounded-full text-sm font-bold text-slate-500 transition-all">রেজিস্ট্রেশন</button>
             </div>
 
-            <div id="loginForm" class="space-y-4 text-left">
+                        <div id="loginForm" class="space-y-4 text-left">
                 <input type="email" id="loginEmail" placeholder="ইমেইল এড্রেস" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
                 <input type="password" id="loginPass" placeholder="পাসওয়ার্ড" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
-                <button id="btnLoginAction" class="w-full bg-premium text-white font-bold py-4 rounded-2xl shadow-xl active:scale-95 transition mt-2">লগইন করুন</button>
+                
+                <div class="text-right">
+                    <button onclick="window.resetPassword()" class="text-xs font-bold text-slate-500 hover:text-green-600 transition">পাসওয়ার্ড ভুলে গেছেন?</button>
+                </div>
+
+                <button id="btnLoginAction" class="w-full bg-premium text-white font-bold py-4 rounded-2xl shadow-xl active:scale-95 transition mt-1">লগইন করুন</button>
             </div>
 
             <div id="registerForm" class="hidden space-y-3 text-left">
@@ -1065,26 +1225,62 @@
                 </div>
             </div>
 
-            <div class="mx-5 -mt-6 bg-white p-3 rounded-2xl shadow-lg border border-slate-100 flex items-center gap-3 relative z-20">
+                        <div class="mx-5 -mt-6 bg-white p-3 rounded-2xl shadow-lg border border-slate-100 flex items-center gap-3 relative z-20 overflow-hidden">
                 <div class="w-8 h-8 bg-orange-50 rounded-full flex items-center justify-center shrink-0">
                     <img src="https://i.postimg.cc/6p7RQSVx/megaphone.png" class="w-5 h-5 animate-pulse">
                 </div>
-                <div class="overflow-hidden w-full">
-                     <marquee class="text-sm font-bold text-slate-600 leading-none pt-1" id="noticeText">টাকাওয়ালা অ্যাপে আপনাকে স্বাগতম!</marquee>
+                <div class="w-full overflow-hidden">
+                     <marquee behavior="scroll" direction="left" scrollamount="4" class="text-sm font-bold text-slate-600 leading-none pt-1" id="noticeText">
+                        লোড হচ্ছে...
+                     </marquee>
                 </div>
             </div>
 
-            <div class="p-5 grid grid-cols-4 gap-4 text-center mt-2">
-                <div onclick="window.showPage('taskScreen')" class="glass-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-24 active:scale-95 transition"><img src="https://i.postimg.cc/d1sXyCb6/clipboard.png" class="w-10 mb-2 drop-shadow-md"><span class="text-[11px] font-bold text-slate-700">টাস্ক</span></div>
-                <div onclick="window.showPage('rechargeScreen')" class="glass-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-24 active:scale-95 transition"><img src="https://i.postimg.cc/jjdpNH5b/payment-method.png" class="w-10 mb-2 drop-shadow-md"><span class="text-[11px] font-bold text-slate-700">রিচার্জ</span></div>
-                <div onclick="window.showPage('vipScreen')" class="glass-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-24 active:scale-95 transition relative"><img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-10 mb-2 drop-shadow-md"><span class="text-[11px] font-bold text-slate-700">প্যাকেজ</span></div>
-                <div onclick="window.loadHistory()" class="glass-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-24 active:scale-95 transition"><img src="https://i.postimg.cc/VNTvSLRX/transaction-history.png" class="w-10 mb-2 drop-shadow-md"><span class="text-[11px] font-bold text-slate-700">হিস্ট্রি</span></div>
-                <div onclick="window.showDailyBonus()" class="glass-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-24 active:scale-95 transition"><img src="https://i.postimg.cc/qqLQKVHV/bonus.png" class="w-10 mb-2 drop-shadow-md"><span class="text-[11px] font-bold text-slate-700">ডেইলি বোনাস</span></div>
-                <div onclick="window.showPage('walletScreen')" class="glass-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-24 active:scale-95 transition"><img src="https://i.postimg.cc/wMdF5zV5/withdraw.png" class="w-10 mb-2 drop-shadow-md"><span class="text-[11px] font-bold text-slate-700">উত্তোলন</span></div>
-                <div onclick="window.showDriveOffer()" class="glass-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-24 active:scale-95 transition"><img src="https://i.postimg.cc/qByrJYrn/sim-card.png" class="w-10 mb-2 drop-shadow-md"><span class="text-[11px] font-bold text-slate-700">ড্রাইভ</span></div>
-                <div onclick="window.showPage('moreScreen')" class="glass-card p-3 rounded-2xl flex flex-col items-center justify-center cursor-pointer h-24 active:scale-95 transition"><img src="https://i.postimg.cc/76SnZckK/more.png" class="w-10 mb-2 drop-shadow-md"><span class="text-[11px] font-bold text-slate-700">আরো</span></div>
+
+                       <div class="px-5 grid grid-cols-3 gap-3 text-center mt-4 mb-20">
+                
+                <div onclick="window.showPage('taskScreen')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
+                    <img src="https://i.postimg.cc/d1sXyCb6/clipboard.png" class="w-11 mb-2 drop-shadow-md">
+                    <span class="text-[12px] font-bold text-slate-700">টাস্ক</span>
+                </div>
+
+                <div onclick="window.showPage('rechargeScreen')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
+                    <img src="https://i.postimg.cc/jjdpNH5b/payment-method.png" class="w-11 mb-2 drop-shadow-md">
+                    <span class="text-[12px] font-bold text-slate-700">মোবাইল রিচার্জ</span>
+                </div>
+
+                <div onclick="window.showPage('vipScreen')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md relative">
+                    <div class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full animate-pulse">HOT</div>
+                    <img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-11 mb-2 drop-shadow-md">
+                    <span class="text-[12px] font-bold text-slate-700">প্যাকেজ</span>
+                </div>
+
+                <div onclick="window.loadHistory()" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
+                    <img src="https://i.postimg.cc/VNTvSLRX/transaction-history.png" class="w-11 mb-2 drop-shadow-md">
+                    <span class="text-[12px] font-bold text-slate-700">লেনদেন হিস্ট্রি</span>
+                </div>
+
+                <div onclick="window.showDailyBonus()" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
+                    <img src="https://i.postimg.cc/qqLQKVHV/bonus.png" class="w-11 mb-2 drop-shadow-md">
+                    <span class="text-[12px] font-bold text-slate-700">ডেইলি বোনাস</span>
+                </div>
+
+                <div onclick="window.showPage('walletScreen')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
+                    <img src="https://i.postimg.cc/wMdF5zV5/withdraw.png" class="w-11 mb-2 drop-shadow-md">
+                    <span class="text-[12px] font-bold text-slate-700">উত্তোলন করুন</span>
+                </div>
+
+                <div onclick="window.showDriveOffer()" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
+                    <img src="https://i.postimg.cc/qByrJYrn/sim-card.png" class="w-11 mb-2 drop-shadow-md">
+                    <span class="text-[12px] font-bold text-slate-700">ড্রাইভ অফার</span>
+                </div>
+
+                <div onclick="window.showPage('moreScreen')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
+                    <img src="https://i.postimg.cc/76SnZckK/more.png" class="w-11 mb-2 drop-shadow-md">
+                    <span class="text-[12px] font-bold text-slate-700">আরো দেখুন</span>
+                </div>
+               </div>
             </div>
-        </div>
 
         <!-- TASK SCREEN -->
         <div id="taskScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
@@ -1202,50 +1398,111 @@
         </div>
         
         <!-- ✅ DRIVE OFFER SCREEN -->
-        <div id="driveOfferScreen" class="hidden min-h-screen text-white animate__animated animate__fadeInRight">
+                <div id="driveOfferScreen" class="hidden min-h-screen bg-slate-900 text-white animate__animated animate__fadeInRight pb-20">
             <div class="flex items-center gap-3 p-5 pt-8">
-                <button onclick="window.showPage('homeScreen')" class="bg-white/20 p-2 rounded-full shadow-md">
+                <button onclick="window.showPage('homeScreen')" class="bg-white/10 p-2 rounded-full shadow-md backdrop-blur-md active:scale-95 transition">
                     <i class="ri-arrow-left-line text-xl"></i>
                 </button>
-                <h2 class="text-2xl font-bold">ড্রাইভ অফার</h2>
+                <h2 class="text-2xl font-bold" id="driveHeaderTitle">ড্রাইভ অফার</h2>
             </div>
             
-            <div class="drive-header">
-                <div class="drive-icon">⚙️</div>
-                <h1 class="text-3xl font-bold mb-4">ড্রাইভ অফার</h1>
-                <p class="text-xl text-slate-300 mb-6">বর্তমানে ড্রাইভ অফারের কাজ চলতেছে</p>
-            </div>
-            
-            <div class="p-8 text-center">
-                <div class="bg-white/10 p-8 rounded-3xl backdrop-blur-sm border border-white/20">
-                    <p class="text-lg mb-6">আমরা ড্রাইভ অফার সিস্টেমটি প্রস্তুত করছি। খুব শীঘ্রই এটি চালু হবে এবং আপনি বিশেষ অফার পাবেন।</p>
+            <div id="driveMaintenanceView" class="p-6 text-center mt-10">
+                <div class="relative inline-block mb-6">
+                    <div class="absolute inset-0 bg-blue-500 blur-2xl opacity-20 rounded-full"></div>
+                    <img src="https://i.postimg.cc/qByrJYrn/sim-card.png" class="w-24 relative z-10 animate-bounce">
+                </div>
+                
+                <h1 class="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent" id="driveMainTitle">
+                    কাজ চলছে...
+                </h1>
+                
+                <div class="bg-white/10 p-6 rounded-3xl backdrop-blur-md border border-white/10 shadow-2xl">
+                    <p class="text-lg text-slate-200 mb-6 leading-relaxed" id="driveMainMessage">
+                        আমরা ড্রাইভ অফার সিস্টেমটি প্রস্তুত করছি। খুব শীঘ্রই এটি চালু হবে।
+                    </p>
                     
-                    <div class="mt-10 pt-6 border-t border-white/20">
-                        <p class="text-sm text-slate-300">আনুমানিক আসার সময়:</p>
-                        <p class="text-xl font-bold mt-2">১লা মে ২০২৬</p>
+                    <div class="mt-6 pt-6 border-t border-white/10">
+                        <p class="text-sm text-slate-400 uppercase tracking-widest mb-2">আনুমানিক আসার সময়</p>
+                        <div class="inline-block bg-blue-600/20 px-6 py-2 rounded-full border border-blue-500/30">
+                            <p class="text-xl font-bold text-blue-300" id="driveLaunchDate">১লা মে ২০২৬</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 opacity-60">
+                    <p class="text-xs text-slate-500">এডমিন প্যানেল দ্বারা নিয়ন্ত্রিত</p>
+                </div>
+            </div>
+
+            <div id="driveActiveView" class="hidden p-5">
+                <div class="bg-green-500/20 border border-green-500/30 p-4 rounded-xl text-center mb-6">
+                    <h3 class="font-bold text-green-400">🔥 অফার চালু হয়েছে!</h3>
+                    <p class="text-xs text-green-200">নিচের লিস্ট থেকে অফার পছন্দ করুন</p>
+                </div>
+                
+                <div id="driveOffersList" class="space-y-4">
+                    <div class="text-center py-10 text-slate-500">
+                        <i class="ri-wifi-off-line text-4xl mb-2"></i>
+                        <p>বর্তমানে কোনো অফার নেই</p>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- MORE SCREEN -->
-        <div id="moreScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-             <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">অন্যান্য</h2></div>
+                <div id="moreScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
+             <div class="flex items-center gap-3 mb-6">
+                 <button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md">
+                     <i class="ri-arrow-left-line text-xl"></i>
+                 </button>
+                 <h2 class="text-2xl font-bold text-slate-800">অন্যান্য</h2>
+             </div>
              
             <div class="grid grid-cols-3 gap-4 text-center">
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('profileScreen')"><img src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">প্রোফাইল</p></div>
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('referralScreen')"><img src="https://i.postimg.cc/c4xbp54V/add-friend.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">রেফার</p></div>
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('marketingScreen')"><img src="https://i.postimg.cc/6p7RQSVx/megaphone.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">মার্কেটিং</p></div>
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('quizScreen')"><img src="https://i.postimg.cc/mkNFY0L0/solution.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">কুইজ</p></div>
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('summaryScreen')"><img src="https://img.icons8.com/fluency/96/statistics.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">সারসংক্ষেপ</p></div>
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('settingsScreen')"><img src="https://img.icons8.com/fluency/96/settings.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">সেটিংস</p></div>
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('spinScreen')"><img src="https://i.postimg.cc/02p5C1GN/fortune-wheel.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">স্পিন</p></div>
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('subscriptionScreen')"><img src="https://i.postimg.cc/Z5JxMx1z/subscription-active.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">সাবস্ক্রিপশন</p></div>
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.openSupport()"><img src="https://i.postimg.cc/GhmX78Xw/comment.png" class="w-12 mx-auto mb-2"><p class="text-xs font-bold">সাপোর্ট</p></div>
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('profileScreen')">
+                     <img src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-12 mx-auto mb-2">
+                     <p class="text-xs font-bold">প্রোফাইল</p>
+                 </div>
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('referralScreen')">
+                     <img src="https://i.postimg.cc/c4xbp54V/add-friend.png" class="w-12 mx-auto mb-2">
+                     <p class="text-xs font-bold">রেফার</p>
+                 </div>
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('marketingScreen')">
+                     <img src="https://i.postimg.cc/6p7RQSVx/megaphone.png" class="w-12 mx-auto mb-2">
+                     <p class="text-xs font-bold">মার্কেটিং</p>
+                 </div>
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('quizScreen')">
+                     <img src="https://i.postimg.cc/mkNFY0L0/solution.png" class="w-12 mx-auto mb-2">
+                     <p class="text-xs font-bold">কুইজ</p>
+                 </div>
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('summaryScreen')">
+                     <img src="https://img.icons8.com/fluency/96/statistics.png" class="w-12 mx-auto mb-2">
+                     <p class="text-xs font-bold">সারসংক্ষেপ</p>
+                 </div>
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('settingsScreen')">
+                     <img src="https://img.icons8.com/fluency/96/settings.png" class="w-12 mx-auto mb-2">
+                     <p class="text-xs font-bold">সেটিংস</p>
+                 </div>
+                 
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showSpinGame()">
+                    <img src="https://i.postimg.cc/02p5C1GN/fortune-wheel.png" class="w-12 mx-auto mb-2">
+                    <p class="text-xs font-bold">স্পিন</p>
+                 </div>
+
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('subscriptionScreen')">
+                     <img src="https://i.postimg.cc/Z5JxMx1z/subscription-active.png" class="w-12 mx-auto mb-2">
+                     <p class="text-xs font-bold">সাবস্ক্রিপশন</p>
+                 </div>
+                 
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.openSupport()">
+                     <img src="https://i.postimg.cc/GhmX78Xw/comment.png" class="w-12 mx-auto mb-2">
+                     <p class="text-xs font-bold">সাপোর্ট</p>
+                 </div>
             </div>
              
              <button onclick="window.logout()" class="w-full mt-10 bg-red-100 text-red-600 py-3 rounded-xl font-bold">লগআউট</button>
         </div>
+
 
         <!-- PROFILE SCREEN -->
         <div id="profileScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
@@ -1528,22 +1785,70 @@
         </div>
         
         <!-- SPIN SCREEN -->
-        <div id="spinScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-            <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">স্পিন</h2></div>
-            <div class="glass-card p-6 rounded-[25px] text-center">
-                <img src="https://i.postimg.cc/02p5C1GN/fortune-wheel.png" class="w-32 mx-auto mb-4">
-                <h3 class="text-lg font-bold mb-2">লাকি স্পিন</h3>
-                <p class="text-sm text-slate-600 mb-4">বর্তমানে এটার কাজ চলছে খুব শীগ্রই এটা অ্যাপে দেখতে পাবেন</p>
-                <div class="bg-yellow-50 p-4 rounded-xl mb-4">
-                    <p class="text-sm font-bold text-yellow-700">শীঘ্রই আসছে...</p>
-                    <p class="text-xs text-slate-600 mt-1">আমাদের স্পিন সিস্টেম খুব শীঘ্রই চালু হবে</p>
+                <div id="spinScreen" class="hidden min-h-screen bg-slate-900 text-white animate__animated animate__fadeInRight pb-20">
+            <div class="flex items-center gap-3 p-5 pt-8">
+                <button onclick="window.showPage('moreScreen')" class="bg-white/10 p-2 rounded-full shadow-md backdrop-blur-md active:scale-95 transition">
+                    <i class="ri-arrow-left-line text-xl"></i>
+                </button>
+                <h2 class="text-2xl font-bold">লাকি স্পিন</h2>
+            </div>
+
+            <div id="spinMaintenanceView" class="p-6 text-center mt-10">
+                <div class="relative inline-block mb-8">
+                    <div class="absolute inset-0 bg-purple-500 blur-2xl opacity-20 rounded-full"></div>
+                    <img src="https://i.postimg.cc/02p5C1GN/fortune-wheel.png" class="w-32 relative z-10 animate-spin-slow">
                 </div>
-                <button onclick="window.showPage('homeScreen')" class="w-full bg-slate-100 text-slate-800 py-3 rounded-xl font-bold shadow">ফিরে যান</button>
+                
+                <h1 class="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent" id="spinMainTitle">
+                    শীঘ্রই আসছে...
+                </h1>
+                
+                <div class="bg-white/10 p-6 rounded-3xl backdrop-blur-md border border-white/10 shadow-2xl">
+                    <p class="text-lg text-slate-200 mb-6 leading-relaxed" id="spinMainMessage">
+                        স্পিন ফিচারটির কাজ চলছে। খুব শীঘ্রই আপনি স্পিন করে টাকা আয় করতে পারবেন।
+                    </p>
+                    
+                    <div class="mt-4 pt-4 border-t border-white/10">
+                        <p class="text-sm text-slate-400 uppercase tracking-widest mb-2">লঞ্চ ডেট</p>
+                        <div class="inline-block bg-purple-600/20 px-6 py-2 rounded-full border border-purple-500/30">
+                            <p class="text-xl font-bold text-purple-300" id="spinLaunchDate">১লা জুন ২০২৬</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="spinActiveView" class="hidden p-5 flex flex-col items-center">
+                <div class="bg-purple-600/20 border border-purple-500/30 px-4 py-2 rounded-full mb-8">
+                    <p class="text-sm font-bold text-purple-200">আজকের অবশিষ্ট স্পিন: <span id="spinCount" class="text-white">0</span></p>
+                </div>
+
+                <div class="relative w-72 h-72 mb-10">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 z-20">
+                        <i class="ri-arrow-down-fill text-4xl text-yellow-400 drop-shadow-lg"></i>
+                    </div>
+                    <div id="wheel" class="w-full h-full rounded-full border-4 border-white/20 shadow-2xl relative overflow-hidden transition-transform duration-[4000ms] cubic-bezier(0.2, 0.8, 0.2, 1)">
+                        <div class="w-full h-full" style="background: conic-gradient(
+                            #ef4444 0deg 60deg, 
+                            #3b82f6 60deg 120deg, 
+                            #10b981 120deg 180deg, 
+                            #f59e0b 180deg 240deg, 
+                            #8b5cf6 240deg 300deg, 
+                            #ec4899 300deg 360deg);">
+                        </div>
+                        <div class="absolute inset-0 m-auto w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
+                            <img src="https://i.postimg.cc/GpZMXGKR/1769418328212-removebg-preview.png" class="w-10">
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="window.spinTheWheel()" id="spinBtn" class="w-full max-w-xs bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-2xl font-bold text-xl shadow-lg hover:scale-105 transition active:scale-95">
+                    স্পিন করুন 🔄
+                </button>
             </div>
         </div>
 
         <!-- SUBSCRIPTION SCREEN -->
-        <div id="subscriptionScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
+                 <div id="subscriptionScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
             <div class="flex items-center gap-3 mb-6">
                 <button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md">
                     <i class="ri-arrow-left-line text-xl"></i>
@@ -1551,12 +1856,13 @@
                 <h2 class="text-2xl font-bold text-slate-800">সাবস্ক্রিপশন</h2>
             </div>
             
-            <div class="flex bg-white p-1 rounded-2xl shadow-sm mb-6 border">
-                <button onclick="window.switchSubscriptionTab('stars')" id="tabStars" class="flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow">স্টার কিনুন</button>
-                <button onclick="window.switchSubscriptionTab('telegram')" id="tabTelegram" class="flex-1 py-3 font-bold text-sm rounded-xl text-slate-500">টেলিগ্রাম প্রিমিয়াম</button>
-            </div>
+            <div class="flex overflow-x-auto gap-2 mb-6 pb-2 scrollbar-hide" id="subTabsContainer">
+                <button onclick="window.switchSubscriptionTab('stars')" id="tabStars" class="whitespace-nowrap px-6 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow transition-all">
+                    স্টার কিনুন
+                </button>
+                
+                </div>
             
-            <!-- STARS SECTION -->
             <div id="starsSection">
                 <div class="glass-card p-6 rounded-[25px] text-center space-y-6">
                     <div class="flex items-center justify-center gap-2 mb-4">
@@ -1570,23 +1876,20 @@
                         <div onclick="window.selectStarPackage(100)" class="bg-white p-4 rounded-2xl border cursor-pointer text-center hover:border-yellow-500">
                             <div class="star-count mx-auto mb-2">100 ⭐</div>
                             <p class="text-lg font-bold text-slate-800">৳<span id="price100">290</span></p>
-                            <p class="text-[10px] text-slate-500">কোনো ছাড় নেই</p>
                         </div>
                         <div onclick="window.selectStarPackage(250)" class="bg-white p-4 rounded-2xl border cursor-pointer text-center hover:border-yellow-500 relative">
-                            <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">১০% ছাড়</div>
+                            <div class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] px-2 py-0.5 rounded-full">১০% ছাড়</div>
                             <div class="star-count mx-auto mb-2">250 ⭐</div>
-                            <p class="text-lg font-bold text-slate-800 line-through text-slate-400">৳725</p>
                             <p class="text-lg font-bold text-green-600">৳<span id="price250">652.5</span></p>
                         </div>
                         <div onclick="window.selectStarPackage(500)" class="bg-white p-4 rounded-2xl border cursor-pointer text-center hover:border-yellow-500 relative">
-                            <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">১০% ছাড়</div>
+                            <div class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] px-2 py-0.5 rounded-full">১০% ছাড়</div>
                             <div class="star-count mx-auto mb-2">500 ⭐</div>
-                            <p class="text-lg font-bold text-slate-800 line-through text-slate-400">৳1450</p>
                             <p class="text-lg font-bold text-green-600">৳<span id="price500">1305</span></p>
                         </div>
                     </div>
                     
-                    <div class="bg-yellow-50 p-4 rounded-xl">
+                    <div class="bg-yellow-50 p-4 rounded-xl mt-4">
                         <div class="flex justify-between items-center mb-2">
                             <span class="font-bold text-slate-700">সিলেক্ট করা স্টার:</span>
                             <span class="font-bold text-yellow-700"><span id="selectedStars">0</span> ⭐</span>
@@ -1597,69 +1900,35 @@
                         </div>
                     </div>
                     
-                    <button onclick="window.buyStars()" class="w-full bg-yellow-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-yellow-600">কিনুন</button>
+                    <button onclick="window.buyStars()" class="w-full bg-yellow-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-yellow-600 mt-4">কিনুন</button>
                 </div>
             </div>
             
-            <!-- TELEGRAM PREMIUM SECTION -->
-            <div id="telegramSection" class="hidden">
+            <div id="dynamicServiceSection" class="hidden">
                 <div class="glass-card p-6 rounded-[25px] text-center space-y-6">
                     <div class="flex items-center justify-center gap-2 mb-4">
-                        <img src="https://i.postimg.cc/TYLvN32V/telegram.png" class="w-8">
-                        <h3 class="text-xl font-bold text-blue-700">টেলিগ্রাম প্রিমিয়াম</h3>
+                        <img id="dynamicServiceIcon" src="" class="w-8 rounded-full">
+                        <h3 id="dynamicServiceTitle" class="text-xl font-bold text-blue-700">Service Name</h3>
                     </div>
                     
-                    <div class="space-y-4">
-                        <div onclick="window.selectTelegramPlan('1month')" class="bg-white p-4 rounded-2xl border cursor-pointer text-left hover:border-blue-500">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h4 class="font-bold text-slate-800">১ মাসের প্যাকেজ</h4>
-                                    <p class="text-sm text-slate-600">বেসিক প্রিমিয়াম সুবিধা</p>
-                                </div>
-                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold">৳600</span>
-                            </div>
+                    <div id="dynamicPackagesList" class="space-y-4">
                         </div>
-                        
-                        <div onclick="window.selectTelegramPlan('3month')" class="bg-white p-4 rounded-2xl border cursor-pointer text-left hover:border-blue-500 relative">
-                            <div class="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">সাশ্রয়ী</div>
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h4 class="font-bold text-slate-800">৩ মাসের প্যাকেজ</h4>
-                                    <p class="text-sm text-slate-600">স্পেশাল ডিস্কাউন্ট</p>
-                                </div>
-                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold">৳1550</span>
-                            </div>
-                        </div>
-                        
-                        <div onclick="window.selectTelegramPlan('1year')" class="bg-white p-4 rounded-2xl border cursor-pointer text-left hover:border-blue-500 relative">
-                            <div class="absolute -top-2 -right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full">সেরা অফার</div>
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h4 class="font-bold text-slate-800">১ বছরের প্যাকেজ</h4>
-                                    <p class="text-sm text-slate-600">সবচেয়ে সাশ্রয়ী</p>
-                                </div>
-                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold">৳3900</span>
-                            </div>
-                        </div>
-                    </div>
                     
-                    <div class="bg-blue-50 p-4 rounded-xl">
+                    <div class="bg-blue-50 p-4 rounded-xl mt-4">
                         <div class="flex justify-between items-center mb-2">
-                            <span class="font-bold text-slate-700">সিলেক্ট করা প্ল্যান:</span>
-                            <span class="font-bold text-blue-700" id="selectedPlanText">কোনোটিই না</span>
+                            <span class="font-bold text-slate-700">প্যাকেজ:</span>
+                            <span class="font-bold text-blue-700" id="selectedDynamicPlanName">কোনোটিই না</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-slate-700">মোট মূল্য:</span>
-                            <span class="text-xl font-bold text-green-600">৳<span id="selectedPlanPrice">0</span></span>
+                            <span class="text-xl font-bold text-green-600">৳<span id="selectedDynamicPlanPrice">0</span></span>
                         </div>
                     </div>
                     
-                    <button onclick="window.buyTelegramPremium()" class="w-full bg-blue-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-blue-600">কিনুন</button>
+                    <button onclick="window.buyDynamicSubscription()" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg hover:scale-105 transition">কিনুন</button>
                 </div>
             </div>
         </div>
-
-    </div>
 
     <!-- ✅ MODERN iPHONE DOCK BOTTOM NAV -->
     <div id="bottomNav" class="hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl shadow-[0_-5px_30px_rgba(0,0,0,0.1)] rounded-t-[30px] flex justify-around items-end pb-4 pt-2 z-50 border-t border-white/50">
@@ -1717,6 +1986,18 @@
     </div>
 
     <script>
+        
+                // 🛡️ SECRET PRO TIP: SECURITY SHIELD
+        document.addEventListener('contextmenu', event => event.preventDefault()); // রাইট ক্লিক বন্ধ
+        document.onkeydown = function(e) {
+            // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U বন্ধ
+            if(e.keyCode == 123) return false;
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+        }
+
+        
         // ✅ FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyCXo_oRLBE9Gr7JZ_Fp4rl2OAjCz_AJEBo",
@@ -1747,13 +2028,13 @@
             } catch (error) { console.error("TG Error:", error); }
         }
 
-        // ✅ UPDATED TWAI RESPONSES - 20 QUESTIONS
+                // ✅ UPDATED TWAI RESPONSES - 30 QUESTIONS
         const twaiResponses = {
             'কিভাবে কাজ করব?': 'টাস্ক অপশনে গিয়ে ফ্রি/ভিআইপি টাস্ক সিলেক্ট করুন। টাস্কে ক্লিক করলে অ্যাড দেখাবে, অ্যাড দেখে নির্দিষ্ট সময় পর প্রুফ সাবমিট করুন। এডমিন এপ্রুভ করলে টাকা যোগ হবে।',
             'টাকা তুলব কিভাবে?': 'ওয়ালেট > উত্তোলনে যান। মিনিমাম ৫০ টাকা উত্তোলন করতে পারবেন। বিকাশ/নগদ/রকেট সিলেক্ট করে নাম্বার দিন। উত্তোলনের সময় সকাল ৯-১০টা এবং বিকাল ৩-৯:৩০টা।',
             'রেফার বোনাস কত?': 'প্রতি রেফারে আপনি পাবেন ৳৫ বোনাস। আপনার রেফার যখন প্রথম কাজ করবে তখনই বোনাস পাবেন।',
             'পেমেন্ট পেতে কতক্ষণ লাগে?': 'সাধারণত ৫-৩০ মিনিটের মধ্যে পেমেন্ট হয়ে যায়। তবে ব্যানকিং সমস্যা বা উচ্চ চাপের সময় ১-২ ঘণ্টা লাগতে পারে।',
-            'পাসওয়ার্ড ভুলে গেছি, কি করব?': 'লগইন পেইজে "পাসওয়ার্ড ভুলে গেছি" অপশন নেই। টেলিগ্রাম সাপোর্টে যোগাযোগ করুন অথবা নতুন একাউন্ট খুলুন।',
+            'পাসওয়ার্ড ভুলে গেছি, কি করব?': 'লগইন পেইজে "পাসওয়ার্ড ভুলে গেছেন?" বাটনে ক্লিক করুন এবং আপনার ইমেইল দিন। আমরা আপনাকে পাসওয়ার্ড রিসেট লিংক ইমেইল করব।',
             'একাউন্ট ব্যান হলে কি করব?': 'ভুয়া তথ্য, একাধিক একাউন্ট, বা নিয়ম ভঙ্গ করলে ব্যান হতে পারে। ব্যান হলে টেলিগ্রাম সাপোর্টে যোগাযোগ করুন।',
             'মিনিমাম উইথড্র কত?': 'ন্যূনতম উত্তোলন পরিমাণ ৳৫০। ফ্রি ইউজারদের জন্য দৈনিক ১ বার, ভিআইপিদের জন্য ২ বার উত্তোলন করা যায়।',
             'ভ্যাট বা চার্জ কত কাটে?': 'উত্তোলনে ১০% ভ্যাট কাটা হয়। অর্থাৎ ৳১০০ উত্তোলনে ৳৯০ পাবেন। ডিপোজিটে কোনো চার্জ নেই।',
@@ -1769,6 +2050,19 @@
             'বিকাশে সর্বনিম্ন কত টাকা তোলা যায়?': 'বিকাশে ন্যূনতম উত্তোলন ৳৫০ এবং সর্বোচ্চ ৳৫০০০।',
             'নগদে সর্বনিম্ন কত টাকা তোলা যায়?': 'নগদে ন্যূনতম উত্তোলন ৳৫০ এবং সর্বোচ্চ ৳৫০০০।',
             'এডমিন কখন লাইনে থাকে?': 'এডমিন সাধারণত সকাল ৯টা থেকে রাত ১০টা পর্যন্ত লাইনে থাকে। শুক্রবার সকাল ৮টা থেকে রাত ৯:৩০টা পর্যন্ত।',
+            
+            // 🔥 নতুন ১০টি প্রশ্ন
+            'ডেইলি বোনাস কিভাবে নিব?': 'হোম পেজে "ডেইলি বোনাস" অপশনে যান এবং আজকের বক্সে ক্লিক করুন। একটি ভিডিও অ্যাড দেখার পর বোনাস আপনার ব্যালেন্স যোগ হবে।',
+            'স্টার কিনলে কি লাভ?': 'স্টার কিনে আপনি স্পেশাল ফিচার আনলক করতে পারবেন এবং লিডারবোর্ডে উপরে থাকতে পারবেন।',
+            'টেলিগ্রাম প্রিমিয়াম কিভাবে কিনব?': 'সাবস্ক্রিপশন পেজে যান > টেলিগ্রাম প্রিমিয়াম সিলেক্ট করুন > পছন্দের প্যাকেজ বেছে নিন > এডমিনের সাথে যোগাযোগ করে পেমেন্ট করুন।',
+            'আমার একাউন্ট কেন লগআউট হয়ে যায়?': 'নিরাপত্তার জন্য দীর্ঘ সময় ইনএক্টিভ থাকলে অটোমেটিক লগআউট হতে পারে। পুনরায় লগইন করুন।',
+            'রেফার লিংক কোথায় পাব?': 'হোম পেজ থেকে "মোর" > "রেফার" অপশনে যান। সেখানে আপনার রেফার লিংক কপি করার অপশন পাবেন।',
+            'ভুল তথ্য দিয়ে একাউন্ট খুললে কি হবে?': 'ভুল তথ্য দিলে পেমেন্ট আটকানো হতে পারে এবং একাউন্ট ভেরিফিকেশনে সমস্যা হবে। সঠিক তথ্য ব্যবহার করুন।',
+            'আমি কি বিদেশে বসে কাজ করতে পারব?': 'হ্যাঁ, পারবেন। তবে পেমেন্ট শুধুমাত্র বাংলাদেশী বিকাশ/নগদ/রকেট নাম্বারে দেওয়া হবে।',
+            'টাস্কের ভিডিও লোড হচ্ছে না কেন?': 'ইন্টারনেট কানেকশন চেক করুন। অ্যাড লোড না হলে অ্যাপটি ক্লোজ করে আবার ওপেন করুন বা কিছুক্ষণ পর চেষ্টা করুন।',
+            'আমার পেমেন্ট রিজেক্ট হয়েছে কেন?': 'ভুল নাম্বার, ভুল তথ্য, অথবা নিয়ম ভঙ্গের কারণে পেমেন্ট রিজেক্ট হতে পারে। হিস্ট্রি চেক করুন বা সাপোর্টে যোগাযোগ করুন।',
+            'নতুন আপডেট কবে আসবে?': 'আমরা নিয়মিত অ্যাপ আপডেট করি। নতুন আপডেট আসলে অ্যাপেই নোটিফিকেশন পাবেন অথবা টেলিগ্রাম চ্যানেলে জানানো হবে।',
+            
             'default': 'দুঃখিত, আমি এই প্রশ্নের উত্তর জানি না। অন্য কিছু জিজ্ঞাসা করুন অথবা নিচের প্রশ্নগুলো থেকে সিলেক্ট করুন।'
         };
 
@@ -2594,13 +2888,23 @@
             }
         });
 
-        // ✅ SYNC USER DATA
+                // ✅ SYNC USER DATA (FIXED)
         function syncUserData(uid) {
+            // ১. ইউজারের ডাটা সিঙ্ক
             db.collection("users").doc(uid).onSnapshot((d) => {
                 const safe = (id, txt) => { if(document.getElementById(id)) document.getElementById(id).innerText = txt; }
                 if(d.exists) {
                     currentUserData = d.data();
-                    safe('userNameDisplay', currentUserData.name); 
+                                        // 🌅 SECRET PRO TIP: DYNAMIC GREETING
+                    const hour = new Date().getHours();
+                    let greeting = '';
+                    if (hour >= 5 && hour < 12) greeting = 'শুভ সকাল ☀️';
+                    else if (hour >= 12 && hour < 17) greeting = 'শুভ দুপুর 🌤️';
+                    else if (hour >= 17 && hour < 20) greeting = 'শুভ বিকেল 🌥️';
+                    else greeting = 'শুভ রাত্রি 🌙';
+                    
+                    safe('userNameDisplay', `${greeting}, ${currentUserData.name}`);
+
                     safe('profNameDisplay', currentUserData.name);
                     safe('mainBalanceDisplay', currentUserData.mainBalance.toFixed(2)); 
                     safe('walletMainDisplay', currentUserData.mainBalance.toFixed(2));
@@ -2610,25 +2914,24 @@
                     safe('referralCount', currentUserData.totalReferrals || 0);
                     safe('referralEarnings', currentUserData.referralEarnings || 0);
                     
-                    // Update profile inputs
+                    // প্রোফাইল ইনপুট আপডেট
                     if(document.getElementById('profNameInput')) document.getElementById('profNameInput').value = currentUserData.name;
                     if(document.getElementById('profPhoneInput')) document.getElementById('profPhoneInput').value = currentUserData.phone;
                     if(document.getElementById('profEmailInput')) document.getElementById('profEmailInput').value = currentUserData.email;
                     if(document.getElementById('profAddressInput')) document.getElementById('profAddressInput').value = currentUserData.address || '';
                     
-                    // Update avatar
+                    // এভাটার আপডেট
                     if(currentUserData.avatar) {
                         selectedAvatar = currentUserData.avatar;
                         document.getElementById('currentAvatar').src = selectedAvatar;
                     }
                     
-                    // ✅ VIP PACKAGE EXPIRY CHECK
+                    // প্যাকেজ মেয়াদ চেক
                     if(currentUserData.packageExpiresAt && typeof currentUserData.packageExpiresAt.toDate === 'function') {
                         const expiryDate = currentUserData.packageExpiresAt.toDate();
                         const now = new Date();
                         
                         if(now > expiryDate) {
-                            // Package expired, downgrade to free
                             db.collection("users").doc(uid).update({
                                 plan: "Free Member",
                                 packageExpiresAt: firebase.firestore.FieldValue.delete(),
@@ -2639,7 +2942,7 @@
                         }
                     }
                     
-                    // ✅ FIXED REFERRAL LINK
+                    // রেফার লিংক আপডেট
                     if(document.getElementById('referralLink')) {
                         document.getElementById('referralLink').innerText = `https://t.me/TAKA_WALA_TG_BOT?start=ref_${uid}`;
                     }
@@ -2656,13 +2959,20 @@
                 console.error("Error syncing user data:", err);
             });
             
+            // ২. সিস্টেম সেটিংস ও নোটিশ সিঙ্ক (এখানেই ভুলটা ছিল)
             db.collection("settings").doc("system").onSnapshot((d) => { 
                 if(d.exists) {
                     systemSettings = d.data();
-                    document.getElementById('noticeText').innerText = d.data().noticeText || "স্বাগতম!";
+                    
+                    // ✅ লাইভ নোটিশ আপডেট
+                    const noticeElement = document.getElementById('noticeText');
+                    if (noticeElement) {
+                        noticeElement.innerHTML = systemSettings.noticeText || "টাকাওয়ালা অ্যাপে আপনাকে স্বাগতম! নিয়মিত কাজ করুন এবং পেমেন্ট নিন।";
+                    }
                 }
-            });
+            }); // <--- এই ব্র্যাকেটটা মিসিং ছিল
             
+            // ৩. পেমেন্ট নাম্বার সিঙ্ক
             db.collection("settings").doc("payment_numbers").onSnapshot((d) => {
                 if(d.exists) {
                     paymentNumbers = d.data();
@@ -2670,7 +2980,7 @@
                 }
             });
             
-            // Listen for maintenance mode changes
+            // ৪. মেইনটেনেন্স মোড চেক
             db.collection("settings").doc("maintenance").onSnapshot((d) => {
                 if(d.exists) {
                     const maintenanceData = d.data();
@@ -2722,7 +3032,7 @@
             }
         }
 
-        // ✅ UPDATED RENDER TASKS (VIP FILTER + ONE TIME LOGIC)
+                // ✅ FIXED: RENDER TASKS (ONE-TIME & DAILY LIMIT LOGIC)
         function renderTasks() {
             if(!currentUserId) return;
 
@@ -2736,34 +3046,45 @@
                     <p class="text-xs font-bold text-slate-400">টাস্ক লোড হচ্ছে...</p>
                 </div>`;
 
-            // ১. আগে চেক করি ইউজার কোন কোন টাস্ক করেছে
+            // ১. সাবমিশন চেক করা (Frequency Logic)
             db.collection("task_submissions")
                 .where("userId", "==", currentUserId)
                 .get()
                 .then((submissionSnap) => {
                     
-                    const completedTaskIds = new Set();
+                    const completedAll = new Set();    // সব কমপ্লিট করা টাস্ক (Life time)
+                    const completedToday = new Set();  // শুধু আজকের কমপ্লিট করা টাস্ক
+                    
+                    // আজকের তারিখ (লোকাল ফরম্যাট)
+                    const todayStr = new Date().toLocaleDateString('bn-BD');
+
                     submissionSnap.forEach(doc => {
                         const data = doc.data();
+                        // পেন্ডিং বা এপ্রুভড হলে কাউন্ট হবে
                         if (data.status === 'pending' || data.status === 'approved') {
-                            completedTaskIds.add(data.taskId);
+                            completedAll.add(data.taskId);
+                            
+                            // ডেট চেক (আজকের কিনা)
+                            if(data.date === todayStr) {
+                                completedToday.add(data.taskId);
+                            }
                         }
                     });
 
-                    // ২. এবার সব টাস্ক লোড করি
+                    // ২. টাস্ক লোড করা
                     db.collection("tasks").orderBy("createdAt", "desc").onSnapshot((snap) => {
                         list.innerHTML = ''; 
                         
-                        // ইউজারের প্ল্যান চেক
+                        // ইউজারের প্ল্যান
                         const userPlan = currentUserData ? (currentUserData.plan || "Free Member") : "Free Member";
                         
-                        // 🛑 VIP লজিক: ইউজারের প্ল্যান অনুযায়ী টার্গেট সেট করা
+                        // ভিআইপি লজিক
                         let targetType = 'free';
                         if(currentTaskType === 'vip') {
                             if(userPlan.includes('Silver') || userPlan.includes('সিলভার')) targetType = 'silver';
                             else if(userPlan.includes('Gold') || userPlan.includes('গোল্ড')) targetType = 'gold';
                             else if(userPlan.includes('Platinum') || userPlan.includes('প্লাটিনাম')) targetType = 'platinum';
-                            else targetType = 'no_access'; // কোনো প্যাকেজ নেই
+                            else targetType = 'no_access'; 
                         }
 
                         let hasTask = false;
@@ -2773,18 +3094,24 @@
                                 const t = doc.data();
                                 const taskId = doc.id;
                                 
-                                // ১. One-Time চেক: যদি টাস্ক 'once' হয় এবং করা থাকে, বাদ যাবে
-                                if (t.frequency === 'once' && completedTaskIds.has(taskId)) {
+                                // 🔥 ফ্রিকোয়েন্সি লজিক (আসল ফিক্স) 🔥
+                                
+                                // ১. যদি 'once' হয় এবং আগে কখনো করা থাকে -> দেখাবে না
+                                if (t.frequency === 'once' && completedAll.has(taskId)) {
                                     return; 
+                                }
+                                
+                                // ২. যদি 'daily' হয় (বা কিছু না থাকে) এবং আজ করা থাকে -> দেখাবে না
+                                if ((t.frequency === 'daily' || !t.frequency) && completedToday.has(taskId)) {
+                                    return;
                                 }
 
                                 let showTask = false;
                                 
-                                // ২. ফ্রি ট্যাব লজিক
+                                // ট্যাব লজিক
                                 if(currentTaskType === 'free' && (t.type === 'free' || !t.type)) {
                                     showTask = true;
                                 } 
-                                // ৩. ভিআইপি ট্যাব লজিক (প্ল্যান মিলতে হবে)
                                 else if(currentTaskType === 'vip' && t.type === targetType) {
                                     showTask = true;
                                 }
@@ -2792,7 +3119,7 @@
                                 if(showTask) {
                                     hasTask = true;
 
-                                    // আইকন ও কালার ডিজাইন
+                                    // ডিজাইন (আইকন, কালার)
                                     let iconClass = 'ri-links-line'; 
                                     let iconColor = 'text-gray-500';
                                     let bgColor = 'bg-gray-100';
@@ -2803,11 +3130,14 @@
                                     else if (t.category === 'website') { iconClass = 'ri-global-line'; iconColor = 'text-green-600'; bgColor = 'bg-green-50'; }
                                     else if (t.category === 'app') { iconClass = 'ri-google-play-fill'; iconColor = 'text-green-600'; bgColor = 'bg-green-100'; }
 
-                                    let frequencyBadge = t.frequency === 'once' 
-                                        ? '<span class="text-[9px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full ml-1 border border-purple-200">১ বার</span>' 
-                                        : '';
+                                    // ব্যাজ
+                                    let frequencyBadge = '';
+                                    if(t.frequency === 'once') {
+                                        frequencyBadge = '<span class="text-[9px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full ml-1 border border-purple-200">১ বার</span>';
+                                    } else {
+                                        frequencyBadge = '<span class="text-[9px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full ml-1 border border-blue-200">ডেইলি</span>';
+                                    }
 
-                                    // HTML কার্ড
                                     list.innerHTML += `
                                     <div class="glass-card p-4 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp mb-3 border border-slate-100 shadow-sm group active:scale-[0.98] transition-all">
                                         <div class="flex items-center gap-4">
@@ -2832,10 +3162,8 @@
                             });
                         }
 
-                        // যদি কোনো টাস্ক না থাকে
                         if(!hasTask) {
                             if(currentTaskType === 'vip' && targetType === 'no_access') {
-                                // ভিআইপি ট্যাব কিন্তু ইউজার ফ্রি মেম্বার
                                 list.innerHTML = `
                                     <div class="text-center py-10 animate__animated animate__fadeIn">
                                         <img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-20 mx-auto mb-4 opacity-50 grayscale">
@@ -2846,13 +3174,12 @@
                                         </button>
                                     </div>`;
                             } else {
-                                // টাস্ক নেই
                                 list.innerHTML = `
                                     <div class="text-center py-12 opacity-60">
                                         <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <i class="ri-clipboard-line text-3xl text-slate-300"></i>
+                                            <i class="ri-check-double-line text-3xl text-green-500"></i>
                                         </div>
-                                        <p class="font-bold text-slate-400">বর্তমানে কোনো টাস্ক নেই</p>
+                                        <p class="font-bold text-slate-400">সব টাস্ক শেষ! আগামীকাল আবার আসুন</p>
                                     </div>`;
                             }
                         }
@@ -3526,6 +3853,92 @@
             }, timeLeft * 1000);
         }
         
+                       // ✅ GORGEOUS PROOF SUBMISSION FORM (SMART CATEGORY LOGIC)
+        function showProofSubmissionForm() {
+            const container = document.getElementById('proofFormContainer');
+            if(!container) return;
+
+            // 1. স্মার্ট টাইটেল জেনারেট করা (ক্যাটাগরি অনুযায়ী)
+            let proof1Label = "কাজের প্রমাণ ১ (Username/Email)";
+            let proof1Placeholder = "আপনার ইউজারনেম বা জিমেইল দিন";
+            let icon = "ri-user-line";
+
+            // টাস্ক টাইপ চেক করে লেভেল চেঞ্জ হবে
+            if(currentTaskInfo) {
+                if(currentTaskInfo.taskType === 'youtube' || currentTaskInfo.link.includes('youtube')) {
+                    proof1Label = "আপনার ইউটিউব চ্যানেলের নাম বা জিমেইল";
+                    proof1Placeholder = "উদাহরন: My Channel Name";
+                    icon = "ri-youtube-fill";
+                } else if(currentTaskInfo.taskType === 'telegram' || currentTaskInfo.link.includes('t.me')) {
+                    proof1Label = "আপনার টেলিগ্রাম ইউজারনেম";
+                    proof1Placeholder = "উদাহরন: @username";
+                    icon = "ri-telegram-fill";
+                } else if(currentTaskInfo.taskType === 'facebook' || currentTaskInfo.link.includes('facebook')) {
+                    proof1Label = "আপনার ফেসবুক প্রোফাইল নাম/লিংক";
+                    proof1Placeholder = "উদাহরন: Facebook Profile Link";
+                    icon = "ri-facebook-circle-fill";
+                }
+            }
+
+            // 2. গর্জিয়াস HTML ফর্ম ডিজাইন
+            container.innerHTML = `
+                <div class="space-y-5 animate__animated animate__fadeInUp">
+                    
+                    <div class="relative group">
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 ml-1 flex items-center gap-1">
+                            <i class="${icon} text-blue-500"></i> ${proof1Label} <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="ri-id-card-line text-slate-400"></i>
+                            </div>
+                            <input type="text" id="proof1" placeholder="${proof1Placeholder}" 
+                                class="w-full pl-10 p-3.5 bg-slate-50 rounded-xl border border-slate-200 font-bold text-sm focus:border-blue-500 focus:bg-white outline-none transition-all shadow-sm">
+                        </div>
+                    </div>
+
+                    <div class="relative group">
+                        <label class="block text-xs font-bold text-slate-500 mb-1.5 ml-1 flex items-center gap-1">
+                            <i class="ri-image-line text-purple-500"></i> স্ক্রিনশট লিংক (Screenshot Link) <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="ri-link-m text-slate-400"></i>
+                            </div>
+                            <input type="text" id="proof2" placeholder="https://prnt.sc/..." 
+                                class="w-full pl-10 p-3.5 bg-slate-50 rounded-xl border border-slate-200 font-bold text-sm focus:border-purple-500 focus:bg-white outline-none transition-all shadow-sm">
+                        </div>
+                        <p class="text-[10px] font-bold text-red-500 mt-1.5 flex items-start gap-1 ml-1 animate-pulse">
+                            <i class="ri-information-fill mt-0.5"></i>
+                            <span>স্ক্রিনশট <b>imgbb.com</b> বা <b>prnt.sc</b> তে আপলোড করে লিংক দিন।</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-orange-50 p-3 rounded-xl border border-orange-200 flex items-start gap-2.5">
+                        <div class="bg-orange-100 p-1.5 rounded-full text-orange-600">
+                            <i class="ri-shield-check-line text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-[11px] font-bold text-orange-800 mb-0.5">সতর্কতা</h4>
+                            <p class="text-[10px] font-medium text-orange-700 leading-tight opacity-90">
+                                ভুল তথ্য বা ভুয়া লিংক দিলে পেমেন্ট পাবেন না এবং একাউন্ট ব্যান হতে পারে। সঠিক তথ্য দিন।
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // মোডাল ওপেন করা
+            document.getElementById('proofModal').classList.remove('hidden');
+        }
+
+        // ✅ MISSING FUNCTION: CLOSE MODAL
+        window.closeProofModal = () => {
+            document.getElementById('proofModal').classList.add('hidden');
+        }
+
+
+        
         // ✅ UPDATED SUBMIT PROOF
         window.submitProof = async () => {
             if(!currentTaskInfo) return;
@@ -4031,62 +4444,209 @@
             }
         }
 
-        // ✅ UPDATED: DAILY BONUS
+                                     // ✅ PROFESSIONAL DAILY BONUS (FIXED SIZE & VISIBILITY)
         window.showDailyBonus = async () => {
             if(!currentUserId) return;
+
+            // ১. আজকের বার এবং তারিখ
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const banglaDays = {
+                'Saturday': 'শনি', 'Sunday': 'রবি', 'Monday': 'সোম', 
+                'Tuesday': 'মঙ্গল', 'Wednesday': 'বুধ', 'Thursday': 'বৃহঃ', 'Friday': 'শুক্র'
+            };
+            const today = new Date();
+            const todayName = days[today.getDay()];
+            const todayDateStr = today.toDateString();
+
+            // ২. বোনাস অ্যামাউন্ট
+            let bonusAmounts = {
+                'Saturday': 2, 'Sunday': 2, 'Monday': 3, 
+                'Tuesday': 3, 'Wednesday': 4, 'Thursday': 4, 
+                'Friday': 0 
+            };
+
             try {
-                const userDoc = await db.collection("users").doc(currentUserId).get();
-                if(userDoc.exists) {
-                    const data = userDoc.data();
-                    const today = new Date().toDateString();
-                    const lastBonus = data.lastDailyBonus ? new Date(data.lastDailyBonus.toDate()).toDateString() : null;
-                    if(lastBonus === today) { 
-                        showSmartToast('আপনি আজকে ইতিমধ্যেই ডেইলি বোনাস নিয়েছেন', 'info'); 
-                        return; 
-                    }
-                    
-                    const bonusAmount = Math.floor(2 + Math.random() * 2);
-                    const result = await Swal.fire({
-                        title: 'ডেইলি বোনাস',
-                        html: `আজকের বোনাস: <b>৳${bonusAmount}</b><br>বোনাস পেতে অ্যাড দেখতে হবে।`,
-                        showCancelButton: true, 
-                        confirmButtonText: 'হ্যাঁ, অ্যাড দেখব', 
-                        confirmButtonColor: '#059669'
-                    });
-                    
-                    if (result.isConfirmed) {
-                        onAdCompleted = async () => {
-                            showLoading();
-                            const userRef = db.collection("users").doc(currentUserId);
-                            await userRef.update({
-                                mainBalance: firebase.firestore.FieldValue.increment(bonusAmount),
-                                totalEarnings: firebase.firestore.FieldValue.increment(bonusAmount),
-                                lastDailyBonus: firebase.firestore.FieldValue.serverTimestamp(),
-                                todayEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
-                            });
-                            todayEarnings += bonusAmount;
-                            document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
-                            await db.collection("history").add({
-                                userId: currentUserId, 
-                                type: "ডেইলি বোনাস", 
-                                amount: bonusAmount, 
-                                status: "Success",
-                                details: "নিয়মিত ডেইলি বোনাস", 
-                                date: new Date().toLocaleDateString('bn-BD'),
-                                time: new Date().toLocaleTimeString('bn-BD'), 
-                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                            });
-                            showSmartToast(`অভিনন্দন! ৳${bonusAmount} বোনাস পেয়েছেন!`, 'success');
-                            checkDailyBonus(currentUserId);
-                            hideLoading();
-                        };
-                        showInterstitialAd();
-                    }
+                const settingsDoc = await db.collection("settings").doc("daily_bonus").get();
+                if(settingsDoc.exists) {
+                    bonusAmounts = { ...bonusAmounts, ...settingsDoc.data() };
                 }
-            } catch (e) { 
-                showSmartToast('সমস্যা হয়েছে', 'error'); 
+            } catch(e) { console.log("Default bonus used"); }
+
+            // ৩. ক্লেইম চেক
+            let hasClaimedToday = false;
+            if(currentUserData && currentUserData.lastDailyBonus) {
+                const lastBonusDate = new Date(currentUserData.lastDailyBonus.toDate()).toDateString();
+                if(lastBonusDate === todayDateStr) hasClaimedToday = true;
+            }
+
+            // ৪. HTML জেনারেট
+            let boxesHtml = '';
+            const weekOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+            
+            const giftIconUrl = "https://i.postimg.cc/dtj5JQqK/gift-box.png"; 
+
+            weekOrder.forEach(dayName => {
+                const isToday = (dayName === todayName);
+                const isFriday = (dayName === 'Friday');
+                const amount = bonusAmounts[dayName];
+                
+                // ডিফল্ট স্টাইল
+                let boxClass = "bg-slate-50 border-slate-200 opacity-80"; 
+                // ইমেজ সাইজ পারফেক্ট করা হয়েছে
+                let content = `<img src="${giftIconUrl}" class="w-8 h-8 mb-1 grayscale opacity-60">`; 
+                let textClass = "text-slate-500";
+                let text = `৳${amount}`;
+                
+                if (isToday) {
+                    if (hasClaimedToday) {
+                        boxClass = "bg-green-50 border-green-200";
+                        content = `<i class="ri-checkbox-circle-fill text-3xl mb-1 text-green-500"></i>`;
+                        textClass = "text-green-600";
+                        text = "সম্পন্ন";
+                    } else {
+                        // আজকের বক্স একটু হাইলাইট করা
+                        boxClass = "bg-white border-blue-500 shadow-md ring-2 ring-blue-100 cursor-pointer transform hover:scale-105 transition-all";
+                        content = `<img src="${giftIconUrl}" class="w-10 h-10 mb-1 animate-bounce drop-shadow-md">`; 
+                        textClass = "text-blue-600";
+                        
+                        if(isFriday) {
+                             boxClass = "bg-gradient-to-br from-purple-600 to-indigo-600 border-none shadow-xl ring-4 ring-purple-200 cursor-pointer transform hover:scale-105";
+                             content = `<img src="${giftIconUrl}" class="w-12 h-12 mb-1 animate-tada drop-shadow-lg filter brightness-125">`;
+                             textClass = "text-yellow-300";
+                             text = "মিস্ট্রি";
+                        }
+                    }
+                } else if (isFriday) {
+                    boxClass = "bg-purple-50 border-purple-200";
+                    content = `<img src="${giftIconUrl}" class="w-9 h-9 mb-1">`;
+                    textClass = "text-purple-600";
+                    text = "বিগ অফার";
+                } else {
+                    content = `<img src="${giftIconUrl}" class="w-8 h-8 mb-1">`;
+                    textClass = "text-slate-600";
+                }
+
+                // 🔥 হাইট ফিক্সড করে দিয়েছি (h-24) যাতে সব কন্টেন্ট ধরে
+                boxesHtml += `
+                    <div class="flex flex-col items-center justify-center h-24 p-1 rounded-2xl border ${boxClass} relative overflow-hidden transition-all" 
+                        ${(isToday && !hasClaimedToday) ? `onclick="claimBonus('${dayName}', ${amount})"` : ''}>
+                        
+                        ${isToday && !hasClaimedToday ? '<span class="absolute top-0 right-0 bg-red-500 w-2.5 h-2.5 rounded-full m-1.5 animate-ping"></span>' : ''}
+                        
+                        ${content}
+                        <span class="text-[11px] font-bold ${isFriday && isToday ? 'text-white' : 'text-slate-500'} mb-0.5">${banglaDays[dayName]}</span>
+                        <span class="text-xs font-black ${textClass}">${text}</span>
+                    </div>
+                `;
+            });
+
+            Swal.fire({
+                title: '🎁 ডেইলি বোনাস',
+                html: `
+                    <p class="text-sm text-slate-500 mb-5">প্রতিদিন অ্যাপে ঢুকে বোনাস সংগ্রহ করুন!</p>
+                    <div class="grid grid-cols-4 gap-3 mb-2 px-1">
+                        ${boxesHtml}
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                background: '#f8fafc',
+                customClass: {
+                    popup: 'rounded-[30px] w-full max-w-md border border-slate-200',
+                    title: 'text-slate-800 font-bold text-xl'
+                }
+            });
+        };
+
+        // ৬. বোনাস ক্লেইম ফাংশন (Birthday Confetti 🎉)
+        window.claimBonus = async (dayName, baseAmount) => {
+            Swal.close(); 
+
+            let finalAmount = baseAmount;
+            let message = `আজকের বোনাস ৳${baseAmount}`;
+
+            // শুক্রবার মিস্ট্রি বক্স লজিক
+            if (dayName === 'Friday') {
+                finalAmount = Math.floor(Math.random() * (15 - 5 + 1)) + 5; 
+                message = `🎉 জুম্মা মোবারক! মিস্ট্রি বক্সে পেয়েছেন ৳${finalAmount}`;
+            }
+
+            const result = await Swal.fire({
+                title: '🎁 বোনাস নিন',
+                html: `<div class="text-center">
+                        <img src="https://i.postimg.cc/dtj5JQqK/gift-box.png" class="w-20 mx-auto mb-3 animate-bounce">
+                        <p class="text-slate-600 font-bold">বোনাস পেতে একটি ভিডিও অ্যাড দেখুন</p>
+                       </div>`,
+                showCancelButton: true,
+                confirmButtonText: 'ভিডিও দেখুন',
+                cancelButtonText: 'না, থাক',
+                confirmButtonColor: '#8b5cf6'
+            });
+
+            if (result.isConfirmed) {
+                onAdCompleted = async () => {
+                    showLoading();
+                    try {
+                        const userRef = db.collection("users").doc(currentUserId);
+                        
+                        await userRef.update({
+                            mainBalance: firebase.firestore.FieldValue.increment(finalAmount),
+                            totalEarnings: firebase.firestore.FieldValue.increment(finalAmount),
+                            todayEarnings: firebase.firestore.FieldValue.increment(finalAmount),
+                            lastDailyBonus: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+
+                        await db.collection("history").add({
+                            userId: currentUserId,
+                            type: "ডেইলি বোনাস",
+                            amount: finalAmount,
+                            status: "Success",
+                            details: `${dayName} - চেক ইন বোনাস`,
+                            date: new Date().toLocaleDateString('bn-BD'),
+                            time: new Date().toLocaleTimeString('bn-BD'),
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        
+                        if(typeof todayEarnings !== 'undefined') {
+                            todayEarnings += finalAmount;
+                            document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
+                        }
+
+                        // 🔥 দুই পাশ থেকে বার্থডে স্টাইল কনফেটি
+                        if(typeof confetti === 'function') {
+                            var duration = 3000;
+                            var end = Date.now() + duration;
+
+                            (function frame() {
+                                confetti({
+                                    particleCount: 5, angle: 60, spread: 55, origin: { x: 0 },
+                                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#purple']
+                                });
+                                confetti({
+                                    particleCount: 5, angle: 120, spread: 55, origin: { x: 1 },
+                                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#purple']
+                                });
+
+                                if (Date.now() < end) {
+                                    requestAnimationFrame(frame);
+                                }
+                            }());
+                        }
+
+                        showSmartToast(message, 'success');
+                        hideLoading();
+                        
+                    } catch (e) {
+                        console.error(e);
+                        showSmartToast("সমস্যা হয়েছে", "error");
+                        hideLoading();
+                    }
+                };
+                showInterstitialAd();
             }
         };
+
+
 
         // ✅ OTHER FUNCTIONS
         window.copyReferralLink = () => {
@@ -4099,9 +4659,122 @@
             window.open('https://t.me/TAKAR_WALA_ADMIN', '_blank');
         };
         
-        window.showDriveOffer = () => {
+                // ✅ DYNAMIC DRIVE OFFER FUNCTION
+        window.showDriveOffer = async () => {
             window.showPage('driveOfferScreen');
+            showLoading();
+
+            // ডিফল্ট টেক্সট (যদি ডাটাবেসে কিছু না থাকে)
+            let title = "বর্তমানে ড্রাইভ অফারের কাজ চলছে";
+            let message = "আমরা ড্রাইভ অফার সিস্টেমটি প্রস্তুত করছি। খুব শীঘ্রই এটি চালু হবে এবং আপনি বিশেষ অফার পাবেন।";
+            let date = "১লা মে ২০২৬";
+            let isActive = false;
+
+            try {
+                // ডাটাবেস থেকে সেটিংস আনা
+                const doc = await db.collection("settings").doc("drive_offer").get();
+                
+                if(doc.exists) {
+                    const data = doc.data();
+                    if(data.title) title = data.title;
+                    if(data.message) message = data.message;
+                    if(data.launchDate) date = data.launchDate;
+                    if(data.isActive === true) isActive = true;
+                }
+            } catch(e) {
+                console.log("Drive settings load error:", e);
+            }
+
+            // টেক্সট আপডেট করা
+            document.getElementById('driveMainTitle').innerText = title;
+            document.getElementById('driveMainMessage').innerText = message;
+            document.getElementById('driveLaunchDate').innerText = date;
+
+            // ভিউ কন্ট্রোল (মেইনটেনেন্স vs এক্টিভ)
+            if(isActive) {
+                document.getElementById('driveMaintenanceView').classList.add('hidden');
+                document.getElementById('driveActiveView').classList.remove('hidden');
+            } else {
+                document.getElementById('driveMaintenanceView').classList.remove('hidden');
+                document.getElementById('driveActiveView').classList.add('hidden');
+            }
+            
+            hideLoading();
         };
+
+                // ✅ DYNAMIC SPIN FUNCTION
+        window.showSpinGame = async () => {
+            window.showPage('spinScreen');
+            showLoading();
+
+            let title = "শীঘ্রই আসছে...";
+            let message = "স্পিন ফিচারটির কাজ চলছে। খুব শীঘ্রই আপনি স্পিন করে টাকা আয় করতে পারবেন।";
+            let date = "১লা জুন ২০২৬";
+            let isActive = false;
+
+            try {
+                const doc = await db.collection("settings").doc("spin_game").get();
+                if(doc.exists) {
+                    const data = doc.data();
+                    if(data.title) title = data.title;
+                    if(data.message) message = data.message;
+                    if(data.launchDate) date = data.launchDate;
+                    if(data.isActive === true) isActive = true;
+                }
+            } catch(e) { console.log("Spin settings error", e); }
+
+            document.getElementById('spinMainTitle').innerText = title;
+            document.getElementById('spinMainMessage').innerText = message;
+            document.getElementById('spinLaunchDate').innerText = date;
+
+            if(isActive) {
+                document.getElementById('spinMaintenanceView').classList.add('hidden');
+                document.getElementById('spinActiveView').classList.remove('hidden');
+                // এখানে স্পিন কাউন্ট বা লজিক লোড করতে পারিস
+                document.getElementById('spinCount').innerText = currentUserData.dailySpins || 5; 
+            } else {
+                document.getElementById('spinMaintenanceView').classList.remove('hidden');
+                document.getElementById('spinActiveView').classList.add('hidden');
+            }
+            
+            hideLoading();
+        };
+
+        // 🎰 SPIN LOGIC (Visual Demo)
+        window.spinTheWheel = () => {
+            const wheel = document.getElementById('wheel');
+            const btn = document.getElementById('spinBtn');
+            
+            // বাটন ডিজেবল করা
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            // র‍্যান্ডম রোটেশন (৩০০০ থেকে ৫০০০ ডিগ্রি)
+            const deg = Math.floor(3000 + Math.random() * 2000); 
+            
+            wheel.style.transform = `rotate(${deg}deg)`;
+            
+            // ৪ সেকেন্ড পর রেজাল্ট
+            setTimeout(() => {
+                Swal.fire({
+                    title: 'অভিনন্দন! 🎉',
+                    text: 'আপনি কিছু পয়েন্ট জিতেছেন (ডেমো)',
+                    icon: 'success',
+                    confirmButtonText: 'টাকা নিন',
+                    confirmButtonColor: '#8b5cf6'
+                });
+                
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                // চাকা রিসেট (Visual only logic for now)
+                wheel.style.transition = 'none';
+                wheel.style.transform = `rotate(${deg % 360}deg)`;
+                setTimeout(() => wheel.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.2, 1)', 50);
+                
+            }, 4000);
+        };
+
+        
         
         window.logout = () => {
             auth.signOut();
@@ -4109,6 +4782,51 @@
             document.getElementById('globalChatIcon').style.display = 'none';
             document.getElementById('twaiChatbotIcon').style.display = 'none';
         };
+        
+                // ✅ PASSWORD RESET FUNCTION
+        window.resetPassword = async () => {
+            const { value: email } = await Swal.fire({
+                title: 'পাসওয়ার্ড রিসেট',
+                input: 'email',
+                inputLabel: 'আপনার একাউন্ট ইমেইল দিন',
+                inputPlaceholder: 'example@mail.com',
+                confirmButtonText: 'লিংক পাঠান',
+                confirmButtonColor: '#059669',
+                showCancelButton: true,
+                cancelButtonText: 'বাতিল',
+                customClass: {
+                    popup: 'rounded-[25px]'
+                }
+            });
+
+            if (email) {
+                showLoading();
+                try {
+                    await auth.sendPasswordResetEmail(email);
+                    showSmartToast('আপনার ইমেইলে রিসেট লিংক পাঠানো হয়েছে। স্প্যাম ফোল্ডার চেক করুন।', 'success');
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ইমেইল পাঠানো হয়েছে',
+                        text: 'দয়া করে আপনার ইমেইল চেক করুন এবং লিংকে ক্লিক করে নতুন পাসওয়ার্ড সেট করুন।',
+                        confirmButtonText: 'ঠিক আছে',
+                        confirmButtonColor: '#059669',
+                        customClass: { popup: 'rounded-[25px]' }
+                    });
+                    
+                } catch (error) {
+                    console.error(error);
+                    if(error.code === 'auth/user-not-found') {
+                        showSmartToast('এই ইমেইলে কোনো একাউন্ট নেই', 'error');
+                    } else {
+                        showSmartToast('সমস্যা হয়েছে, ইমেইল সঠিক কিনা দেখুন', 'error');
+                    }
+                }
+                hideLoading();
+            }
+        };
+
+        
         
         // ✅ DYNAMIC RULES SHOW FUNCTION
         window.showRules = (title) => {
@@ -4152,12 +4870,12 @@
             document.getElementById('twaiModal').classList.add('hidden');
         };
         
+                // ✅ UPDATED ASK TWAI (AUTO SCROLL FIX)
         window.askTWAI = (question) => {
             const response = twaiResponses[question] || twaiResponses['default'];
-            
             const chatContainer = document.getElementById('chatbotMessages');
             
-            // Add user message
+            // ১. ইউজারের মেসেজ
             const userMessage = document.createElement('div');
             userMessage.className = 'chat-message user-message';
             userMessage.innerHTML = `
@@ -4166,7 +4884,10 @@
             `;
             chatContainer.appendChild(userMessage);
             
-            // Add bot response after delay
+            // সাথে সাথে নিচে স্ক্রল করবে
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // ২. বটের উত্তর (একটু দেরিতে)
             setTimeout(() => {
                 const botMessage = document.createElement('div');
                 botMessage.className = 'chat-message bot-message';
@@ -4176,13 +4897,15 @@
                 `;
                 chatContainer.appendChild(botMessage);
                 
-                // Scroll to bottom
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }, 500);
-            
-            // Clear input
-            document.getElementById('chatbotInput').value = '';
+                // 🔥 উত্তর আসার পর আবার অটোমেটিক নিচে স্ক্রল হবে
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+                
+            }, 600); // একটু ন্যাচারাল ডিলে
         };
+
         
         window.sendTWAI = () => {
             const input = document.getElementById('chatbotInput');
@@ -4282,8 +5005,11 @@
                 if(id === 'summaryScreen' && currentUserId) {
                     loadSummary(currentUserId);
                 }
-                if(id === 'subscriptionScreen') {
-                    window.switchSubscriptionTab('stars');
+                                if(id === 'subscriptionScreen') {
+                    window.switchSubscriptionTab('stars'); // ডিফল্ট স্টার দেখাবে
+                    loadSubscriptions(); // ফায়ারবেস থেকে বাকিগুলো লোড করবে
+                
+
                 }
                 if(id === 'walletScreen') {
                     updateDepositAddress(selectedMethod || 'bKash');
@@ -4430,8 +5156,153 @@
             
             showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
         };
+        
+                // ✅ GLOBAL VARS FOR SUBSCRIPTION
+        let subscriptionData = [];
+        let selectedService = null;
+        let selectedPlan = null;
 
-        // ✅ INITIALIZE EVENT LISTENERS
+        // 1️⃣ LOAD SUBSCRIPTIONS FROM FIREBASE
+        async function loadSubscriptions() {
+            try {
+                const snapshot = await db.collection("subscriptions").orderBy("order", "asc").get();
+                subscriptionData = [];
+                
+                // Tabs Container Clear (Keep Stars)
+                const tabsContainer = document.getElementById('subTabsContainer');
+                // শুধু প্রথমটা (Stars) রেখে বাকি সব ডিলিট
+                while (tabsContainer.children.length > 1) {
+                    tabsContainer.removeChild(tabsContainer.lastChild);
+                }
+
+                if(!snapshot.empty) {
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        subscriptionData.push({ id: doc.id, ...data });
+                        
+                        // Create Tab Button
+                        const btn = document.createElement('button');
+                        btn.className = 'whitespace-nowrap px-6 py-3 font-bold text-sm rounded-xl text-slate-500 bg-white shadow-sm border border-slate-100 transition-all';
+                        btn.innerText = data.name; // e.g., Telegram, YouTube
+                        btn.id = `tab_${doc.id}`;
+                        btn.onclick = () => window.switchSubscriptionTab(doc.id);
+                        tabsContainer.appendChild(btn);
+                    });
+                }
+            } catch (e) {
+                console.error("Error loading subs:", e);
+            }
+        }
+
+        // 2️⃣ SWITCH TABS FUNCTION
+        window.switchSubscriptionTab = (tabId) => {
+            // Reset UI Colors
+            document.querySelectorAll('#subTabsContainer button').forEach(btn => {
+                btn.className = 'whitespace-nowrap px-6 py-3 font-bold text-sm rounded-xl text-slate-500 bg-white shadow-sm border border-slate-100 transition-all';
+            });
+
+            // Active Tab Style
+            const activeBtn = document.getElementById(tabId === 'stars' ? 'tabStars' : `tab_${tabId}`);
+            if(activeBtn) {
+                activeBtn.className = 'whitespace-nowrap px-6 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow-lg transition-all transform scale-105';
+            }
+
+            // Show/Hide Sections
+            if (tabId === 'stars') {
+                document.getElementById('starsSection').classList.remove('hidden');
+                document.getElementById('dynamicServiceSection').classList.add('hidden');
+            } else {
+                document.getElementById('starsSection').classList.add('hidden');
+                document.getElementById('dynamicServiceSection').classList.remove('hidden');
+                
+                // Render Service Data
+                renderServiceData(tabId);
+            }
+        };
+
+        // 3️⃣ RENDER PACKAGES DYNAMICALLY
+        function renderServiceData(serviceId) {
+            const service = subscriptionData.find(s => s.id === serviceId);
+            if(!service) return;
+
+            selectedService = service;
+            selectedPlan = null; // Reset selection
+            document.getElementById('selectedDynamicPlanName').innerText = "কোনোটিই না";
+            document.getElementById('selectedDynamicPlanPrice').innerText = "0";
+
+            // Update Header
+            document.getElementById('dynamicServiceTitle').innerText = service.title; // e.g. "Telegram Premium"
+            document.getElementById('dynamicServiceIcon').src = service.icon || "https://i.postimg.cc/TwfTZM7Z/award.png";
+
+            // Render Packages
+            const list = document.getElementById('dynamicPackagesList');
+            list.innerHTML = '';
+
+            if(service.plans && service.plans.length > 0) {
+                service.plans.forEach((plan, index) => {
+                    // Badge Logic
+                    let badgeHtml = '';
+                    if(plan.tag) {
+                        badgeHtml = `<div class="absolute -top-2 -right-2 bg-${plan.tagColor || 'purple'}-500 text-white text-[10px] px-2 py-0.5 rounded-full">${plan.tag}</div>`;
+                    }
+
+                    list.innerHTML += `
+                        <div onclick="window.selectDynamicPlan(${index})" id="plan_${index}" class="bg-white p-4 rounded-2xl border cursor-pointer text-left hover:border-blue-500 relative transition-all shadow-sm">
+                            ${badgeHtml}
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h4 class="font-bold text-slate-800">${plan.name}</h4>
+                                    <p class="text-[11px] text-slate-500">${plan.desc || 'Best Value'}</p>
+                                </div>
+                                <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg font-bold">৳${plan.price}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                list.innerHTML = `<p class="text-slate-400">বর্তমানে কোনো প্যাকেজ নেই</p>`;
+            }
+        }
+
+        // 4️⃣ SELECT PLAN FUNCTION
+        window.selectDynamicPlan = (index) => {
+            if(!selectedService || !selectedService.plans[index]) return;
+
+            // Remove active class from all
+            document.querySelectorAll('#dynamicPackagesList > div').forEach(div => {
+                div.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-200');
+                div.classList.add('bg-white', 'border-slate-200');
+            });
+
+            // Add active class
+            const activeDiv = document.getElementById(`plan_${index}`);
+            activeDiv.classList.remove('bg-white', 'border-slate-200');
+            activeDiv.classList.add('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-200');
+
+            selectedPlan = selectedService.plans[index];
+            
+            document.getElementById('selectedDynamicPlanName').innerText = selectedPlan.name;
+            document.getElementById('selectedDynamicPlanPrice').innerText = selectedPlan.price;
+        };
+
+        // 5️⃣ BUY FUNCTION (REDIRECT TO TELEGRAM)
+        window.buyDynamicSubscription = () => {
+            if(!selectedPlan || !selectedService) {
+                showSmartToast('দয়া করে একটি প্যাকেজ সিলেক্ট করুন', 'error');
+                return;
+            }
+
+            const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})।\n\nসার্ভিস: ${selectedService.title}\nপ্যাকেজ: ${selectedPlan.name}\nমূল্য: ৳${selectedPlan.price}\n\nআমি এটি কিনতে চাই।`);
+            
+            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${message}`, '_blank');
+            showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
+        };
+
+        // Call loadSubscriptions when page loads (inside showPage or onload)
+        // তোর existing showPage('subscriptionScreen') এর ভেতরে `loadSubscriptions()` কল করে দিবি।
+
+
+             // ✅ INITIALIZE EVENT LISTENERS
         document.addEventListener('DOMContentLoaded', function() {
             loadSystemSettings();
             
@@ -4453,7 +5324,17 @@
             window.calculateDepositVAT();
             window.calculateWithdrawVAT();
             window.calculateRechargeFee();
-        });
+            
+            // 📳 SECRET PRO TIP: HAPTIC FEEDBACK (ঠিক করা হয়েছে)
+            document.querySelectorAll('button, .glass-card, .cursor-pointer').forEach(element => {
+                element.addEventListener('click', () => {
+                    if (navigator.vibrate) {
+                        navigator.vibrate(40); // হালকা ভাইব্রেশন
+                    }
+                });
+            });
+
+        }); // <--- এই ক্লোজিং ব্র্যাকেটটাই মিসিং ছিল!
     </script>
 </body>
 </html>
