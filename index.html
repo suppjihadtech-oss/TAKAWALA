@@ -1187,7 +1187,13 @@
                             <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
                         </div>
                         <div>
-                            <h3 class="font-bold text-lg leading-tight text-white drop-shadow-sm" id="userNameDisplay">Guest</h3>
+                           <h3 class="font-bold text-lg leading-tight text-white drop-shadow-sm flex items-center gap-1" id="userNameDisplay">
+    Guest
+    <span id="verifiedBadge" class="hidden text-blue-400 text-sm">
+        <i class="ri-checkbox-circle-fill"></i>
+    </span>
+</h3>
+
                             <div class="flex items-center gap-1 opacity-90">
                                 <img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-3">
                                 <span class="text-[11px] font-bold text-yellow-300 tracking-wide" id="userPlanDisplay">Free Member</span>
@@ -1398,56 +1404,50 @@
         </div>
         
         <!-- ✅ DRIVE OFFER SCREEN -->
-                <div id="driveOfferScreen" class="hidden min-h-screen bg-slate-900 text-white animate__animated animate__fadeInRight pb-20">
-            <div class="flex items-center gap-3 p-5 pt-8">
+                        <div id="driveOfferScreen" class="hidden min-h-screen bg-slate-900 text-white animate__animated animate__fadeInRight pb-24">
+            <div class="flex items-center gap-3 p-5 pt-8 bg-slate-800/50 backdrop-blur-md sticky top-0 z-50">
                 <button onclick="window.showPage('homeScreen')" class="bg-white/10 p-2 rounded-full shadow-md backdrop-blur-md active:scale-95 transition">
                     <i class="ri-arrow-left-line text-xl"></i>
                 </button>
-                <h2 class="text-2xl font-bold" id="driveHeaderTitle">ড্রাইভ অফার</h2>
+                <h2 class="text-xl font-bold">ড্রাইভ অফার</h2>
             </div>
             
-            <div id="driveMaintenanceView" class="p-6 text-center mt-10">
+            <div id="driveMaintenanceView" class="p-6 text-center mt-10 hidden">
                 <div class="relative inline-block mb-6">
                     <div class="absolute inset-0 bg-blue-500 blur-2xl opacity-20 rounded-full"></div>
                     <img src="https://i.postimg.cc/qByrJYrn/sim-card.png" class="w-24 relative z-10 animate-bounce">
                 </div>
-                
-                <h1 class="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent" id="driveMainTitle">
-                    কাজ চলছে...
-                </h1>
-                
-                <div class="bg-white/10 p-6 rounded-3xl backdrop-blur-md border border-white/10 shadow-2xl">
-                    <p class="text-lg text-slate-200 mb-6 leading-relaxed" id="driveMainMessage">
-                        আমরা ড্রাইভ অফার সিস্টেমটি প্রস্তুত করছি। খুব শীঘ্রই এটি চালু হবে।
-                    </p>
-                    
-                    <div class="mt-6 pt-6 border-t border-white/10">
-                        <p class="text-sm text-slate-400 uppercase tracking-widest mb-2">আনুমানিক আসার সময়</p>
-                        <div class="inline-block bg-blue-600/20 px-6 py-2 rounded-full border border-blue-500/30">
-                            <p class="text-xl font-bold text-blue-300" id="driveLaunchDate">১লা মে ২০২৬</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8 opacity-60">
-                    <p class="text-xs text-slate-500">এডমিন প্যানেল দ্বারা নিয়ন্ত্রিত</p>
+                <h1 class="text-2xl font-bold mb-3 text-blue-400" id="driveMainTitle">কাজ চলছে...</h1>
+                <p class="text-slate-400 text-sm mb-6" id="driveMainMessage">ড্রাইভ অফার খুব শীঘ্রই চালু হবে।</p>
+                <div class="inline-block bg-slate-800 px-4 py-1.5 rounded-full border border-slate-700">
+                    <p class="text-xs font-bold text-slate-300" id="driveLaunchDate">Coming Soon</p>
                 </div>
             </div>
 
-            <div id="driveActiveView" class="hidden p-5">
-                <div class="bg-green-500/20 border border-green-500/30 p-4 rounded-xl text-center mb-6">
-                    <h3 class="font-bold text-green-400">🔥 অফার চালু হয়েছে!</h3>
-                    <p class="text-xs text-green-200">নিচের লিস্ট থেকে অফার পছন্দ করুন</p>
+            <div id="driveActiveView" class="hidden">
+                <div class="flex overflow-x-auto gap-3 p-4 scrollbar-hide sticky top-[72px] z-40 bg-slate-900/90 backdrop-blur-sm">
+                    <button onclick="window.loadDriveOffers('gp')" id="tab_gp" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> GP
+                    </button>
+                    <button onclick="window.loadDriveOffers('robi')" id="tab_robi" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-red-500"></span> Robi
+                    </button>
+                    <button onclick="window.loadDriveOffers('bl')" id="tab_bl" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-orange-500"></span> BL
+                    </button>
+                    <button onclick="window.loadDriveOffers('airtel')" id="tab_airtel" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-red-600"></span> Airtel
+                    </button>
+                    <button onclick="window.loadDriveOffers('teletalk')" id="tab_teletalk" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span> Teletalk
+                    </button>
                 </div>
-                
-                <div id="driveOffersList" class="space-y-4">
-                    <div class="text-center py-10 text-slate-500">
-                        <i class="ri-wifi-off-line text-4xl mb-2"></i>
-                        <p>বর্তমানে কোনো অফার নেই</p>
+
+                <div id="driveOffersContainer" class="px-4 pb-20 space-y-3">
                     </div>
-                </div>
             </div>
         </div>
+
 
         <!-- MORE SCREEN -->
                 <div id="moreScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
@@ -1734,10 +1734,25 @@
                     <button onclick="window.showPage('profileScreen')" class="w-full bg-slate-100 text-slate-800 py-2.5 rounded-lg font-bold text-sm mb-2">প্রোফাইল এডিট করুন</button>
                     <button onclick="window.showChangePassword()" class="w-full bg-slate-100 text-slate-800 py-2.5 rounded-lg font-bold text-sm mb-2">পাসওয়ার্ড পরিবর্তন</button>
                 </div>
+             
+                         <div class="glass-card p-5 mt-4 border-t-4 border-slate-800">
+                <div class="flex items-center gap-2 mb-4">
+                    <img src="https://img.icons8.com/fluency/48/password-check.png" class="w-6">
+                    <h3 class="font-bold text-slate-800">ট্রানজেকশন পিন সেট করুন</h3>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="password" id="newPin" maxlength="4" placeholder="নতুন পিন (৪ সংখ্যা)" class="w-full p-3 border rounded-xl text-center font-bold">
+                    <input type="password" id="confirmPin" maxlength="4" placeholder="পিন নিশ্চিত করুন" class="w-full p-3 border rounded-xl text-center font-bold">
+                </div>
+                <button onclick="window.setTransactionPin()" class="w-full mt-3 bg-slate-800 text-white py-3 rounded-xl font-bold active:scale-95 transition">পিন সেভ করুন</button>
+                <p class="text-[10px] text-slate-400 mt-2 text-center">*লেনদেন করার সময় এই পিনটি প্রয়োজন হবে।</p>
+            </div>
+
                 
                 <div class="mt-6">
                     <h4 class="font-bold mb-2">সাপোর্ট</h4>
                     <button onclick="window.openSupport()" class="w-full bg-slate-100 text-slate-800 py-2.5 rounded-lg font-bold text-sm mb-2">টেলিগ্রাম সাপোর্ট</button>
+                                      
                     <button onclick="window.open('mailto:support@takawala.com')" class="w-full bg-slate-100 text-slate-800 py-2.5 rounded-lg font-bold text-sm">ইমেইল সাপোর্ট</button>
                 </div>
             </div>
@@ -2895,6 +2910,8 @@
                 const safe = (id, txt) => { if(document.getElementById(id)) document.getElementById(id).innerText = txt; }
                 if(d.exists) {
                     currentUserData = d.data();
+                             
+                
                                         // 🌅 SECRET PRO TIP: DYNAMIC GREETING
                     const hour = new Date().getHours();
                     let greeting = '';
@@ -2903,9 +2920,28 @@
                     else if (hour >= 17 && hour < 20) greeting = 'শুভ বিকেল 🌥️';
                     else greeting = 'শুভ রাত্রি 🌙';
                     
-                    safe('userNameDisplay', `${greeting}, ${currentUserData.name}`);
-
-                    safe('profNameDisplay', currentUserData.name);
+                   
+// ✅ সব ধরণের প্রিমিয়াম প্যাকেজের জন্য নীল টিক দেখানো
+const displayH3 = document.getElementById('userNameDisplay');
+if (displayH3) {
+    const userPlan = currentUserData.Plan || currentUserData.plan || ""; 
+    
+    // এখানে তুই তোর ডাটাবেজে থাকা সব প্যাকেজের নাম যোগ করতে পারিস
+    // বানানগুলো একদম ডাটাবেজের মতো হুবহু দিবি
+    const premiumPlans = ["silver প্যাকেজ", "gold প্যাকেজ", "diamond প্যাকেজ", "VIP প্যাকেজ"];
+    
+    // চেক করা হচ্ছে ইউজারের প্ল্যান এই লিস্টের মধ্যে আছে কিনা
+    const isPremium = premiumPlans.includes(userPlan);
+    const badgeClass = isPremium ? '' : 'hidden';
+    
+    displayH3.innerHTML = `
+        ${greeting}, ${currentUserData.name} 
+        <span id="verifiedBadge" class="${badgeClass} text-blue-400 text-sm ml-1">
+            <i class="ri-checkbox-circle-fill"></i>
+        </span>
+    `;
+}
+                   safe('profNameDisplay', currentUserData.name);
                     safe('mainBalanceDisplay', currentUserData.mainBalance.toFixed(2)); 
                     safe('walletMainDisplay', currentUserData.mainBalance.toFixed(2));
                     safe('rechargePageBalance', (currentUserData.rechargeBalance||0).toFixed(2)); 
@@ -3342,162 +3378,256 @@
             }
         }
 
-        // ✅ OPEN PROFESSIONAL RECEIPT (WIDE & COPYABLE)
-        async function openHistoryReceipt(docId) {
-            showLoading();
-            try {
-                const doc = await db.collection("history").doc(docId).get();
-                if (!doc.exists) {
-                    showSmartToast("তথ্য পাওয়া যায়নি", "error");
-                    hideLoading();
-                    return;
-                }
+                       // ✅ OPEN PROFESSIONAL RECEIPT (SMART ICONS & LOGIC ADDED)
+async function openHistoryReceipt(docId) {
+    showLoading();
+    try {
+        const doc = await db.collection("history").doc(docId).get();
+        if (!doc.exists) {
+            showSmartToast("তথ্য পাওয়া যায়নি", "error");
+            hideLoading();
+            return;
+        }
 
-                const data = doc.data();
-                
-                // আইকন এবং কালার লজিক
-                let statusColor = "text-yellow-600";
-                let statusBg = "bg-yellow-50";
-                let statusIcon = '<i class="ri-loader-4-line animate-spin"></i>';
-                
-                if (data.status === "Success") {
-                    statusColor = "text-green-600";
-                    statusBg = "bg-green-50";
-                    statusIcon = '<i class="ri-checkbox-circle-fill"></i>';
-                } else if (data.status === "Rejected") {
-                    statusColor = "text-red-600";
-                    statusBg = "bg-red-50";
-                    statusIcon = '<i class="ri-close-circle-fill"></i>';
-                }
+        const data = doc.data();
+        
+        // 🎨 ১. কালার লজিক
+        let statusColor = "text-yellow-600";
+        let statusBg = "bg-yellow-50";
+        
+        if (data.status === "Success") {
+            statusColor = "text-green-600";
+            statusBg = "bg-green-50";
+        } else if (data.status === "Rejected") {
+            statusColor = "text-red-600";
+            statusBg = "bg-red-50";
+        }
 
-                // তারিখ ও সময় ফরম্যাট
-                const fullDate = `${data.date} | ${data.time}`;
-                const trxID = doc.id.toUpperCase(); // ডকুমেন্ট আইডি বা ট্রানজেকশন আইডি
-                const method = data.method || data.paymentMethod || "N/A";
-                const sender = data.phone || data.accountNumber || "N/A";
+        // 🖼️ ২. স্মার্ট আইকন সিলেক্টর (Fixed URLs)
+        const getMethodIcon = (methodName, typeName) => {
+            const m = (methodName || "").toLowerCase();
+            const t = (typeName || "").toLowerCase();
 
-                hideLoading();
+            // পেমেন্ট মেথড (Deposit/Withdraw) - FIXED ICONS
+            if (m.includes('bkash') || t.includes('bkash')) return 'https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png';
+            if (m.includes('nagad') || t.includes('nagad')) return 'https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png';
+            if (m.includes('rocket') || t.includes('rocket')) return 'https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png';
+            if (m.includes('usdt') || t.includes('usdt') || t.includes('binance')) return 'https://i.postimg.cc/0QRCvZDV/usdt.png';
+            if (m.includes('upay')) return 'https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png'; // Temporary
 
-                // 🔥 SWEETALERT HTML STRUCTURE
-                Swal.fire({
-                    html: `
-                        <div class="receipt-box mx-auto">
-                            <div class="receipt-header">
-                                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                                    <img src="https://i.postimg.cc/VNTvSLRX/transaction-history.png" class="w-8 h-8">
-                                </div>
-                                <h2 class="text-xl font-bold uppercase tracking-wide">Takawala Official</h2>
-                                <p class="text-xs opacity-90 mt-1"> টাকাওয়ালা লেনদেন রিসিট</p>
-                                
-                                <div class="mt-4 bg-white/20 rounded-xl p-3 backdrop-blur-sm">
-                                    <p class="text-xs text-white/90">পরিমাণ</p>
-                                    <h1 class="text-3xl font-black text-white mt-1">৳${parseFloat(data.amount).toFixed(2)}</h1>
-                                    <div class="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full bg-white text-xs font-bold ${statusColor.replace('text-', 'text-')}">
-                                        ${statusIcon} ${data.status}
-                                    </div>
-                                </div>
-                            </div>
+            // সিম অপারেটর (Recharge/Drive) - FIXED ICONS
+            if (m.includes('gp') || m.includes('grameen') || t.includes('gp')) return 'https://i.postimg.cc/65w1n62J/FB-IMG-1769495932877.jpg';
+            if (m.includes('robi') || t.includes('robi')) return 'https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg';
+            if (m.includes('bl') || m.includes('banglalink') || t.includes('bl')) return 'https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg';
+            if (m.includes('airtel') || t.includes('airtel')) return 'https://i.postimg.cc/Wz0CjhdX/FB-IMG-1769496019329.jpg';
+            if (m.includes('teletalk') || t.includes('teletalk')) return 'https://i.postimg.cc/TYCQbVvT/FB-IMG-1769496047333.jpg';
 
-                            <div class="receipt-body text-left">
-                                
-                                <div class="receipt-row">
-                                    <span class="receipt-label">Trx ID</span>
-                                    <div class="receipt-value">
-                                        <span id="copyTrx">${trxID}</span>
-                                        <button class="copy-btn-small" onclick="copyToClipboard('${trxID}')">
-                                            <i class="ri-file-copy-line"></i>
-                                        </button>
-                                    </div>
-                                </div>
+            // কাজের ধরন (Task/Bonus/Spin/Referral) - FIXED ICONS
+            if (t.includes('task') || m.includes('task')) return 'https://i.postimg.cc/d1sXyCb6/clipboard.png';
+            if (t.includes('spin') || m.includes('spin')) return 'https://i.postimg.cc/02p5C1GN/fortune-wheel.png';
+            if (t.includes('bonus') || t.includes('ডেইলি') || t.includes('daily')) return 'https://i.postimg.cc/qqLQKVHV/bonus.png';
+            if (t.includes('refer') || t.includes('রেফার')) return 'https://i.postimg.cc/c4xbp54V/add-friend.png';
+            if (t.includes('quiz') || t.includes('কুইজ')) return 'https://i.postimg.cc/mkNFY0L0/solution.png';
+            if (t.includes('package') || t.includes('প্যাকেজ') || t.includes('vip')) return 'https://i.postimg.cc/TwfTZM7Z/award.png';
+            if (t.includes('transfer') || t.includes('ট্রান্সফার')) return 'https://i.postimg.cc/7ZGpHH5q/save-money.png';
+            if (t.includes('deposit') || t.includes('ডিপোজিট')) return 'https://i.postimg.cc/7ZGpHH5q/save-money.png';
+            if (t.includes('withdraw') || t.includes('উত্তোলন')) return 'https://i.postimg.cc/wMdF5zV5/withdraw.png';
+            if (t.includes('recharge') || t.includes('রিচার্জ')) return 'https://i.postimg.cc/jjdpNH5b/payment-method.png';
 
-                                <div class="receipt-row">
-                                    <span class="receipt-label">লেনদেনের ধরন</span>
-                                    <span class="receipt-value text-blue-600">${data.type}</span>
-                                </div>
+            // ডিফল্ট লোগো
+            return 'https://i.postimg.cc/GpZMXGKR/1769418328212-removebg-preview.png';
+        };
 
-                                <div class="receipt-row">
-                                    <span class="receipt-label">মেথড / গেটওয়ে</span>
-                                    <span class="receipt-value">${method}</span>
-                                </div>
+        const method = data.method || data.paymentMethod || data.operator || "N/A";
+        const type = data.type || "Transaction";
+        const sender = data.phone || data.accountNumber || data.trxId || "N/A";
+        const fullDate = `${data.date} | ${data.time}`;
+        const trxID = doc.id.substring(0, 12).toUpperCase() + "...";
+        
+        // আইকন সেট করা
+        const headerIcon = getMethodIcon(method, type);
 
-                                <div class="receipt-row">
-                                    <span class="receipt-label">অ্যাকাউন্ট নম্বর</span>
-                                    <div class="receipt-value">
-                                        <span>${sender}</span>
-                                        <button class="copy-btn-small" onclick="copyToClipboard('${sender}')">
-                                            <i class="ri-file-copy-line"></i>
-                                        </button>
-                                    </div>
-                                </div>
+        hideLoading();
 
-                                <div class="receipt-row">
-                                    <span class="receipt-label">সময়</span>
-                                    <span class="receipt-value text-xs">${fullDate}</span>
-                                </div>
-                                
-                                ${data.newBalance ? `
-                                <div class="receipt-row">
-                                    <span class="receipt-label">বর্তমান ব্যালেন্স</span>
-                                    <span class="receipt-value font-black text-slate-600">৳${parseFloat(data.newBalance).toFixed(2)}</span>
-                                </div>` : ''}
+        // 🔥 SWEETALERT HTML STRUCTURE
+        Swal.fire({
+            html: `
+                <style>
+                    div:where(.swal2-container) div:where(.swal2-popup).receipt-popup-wide {
+                        width: 95% !important;
+                        max-width: 450px !important;
+                        padding: 0 !important;
+                        border-radius: 20px !important;
+                        overflow: hidden;
+                    }
+                    .receipt-row { 
+                        padding: 10px 0; 
+                        border-bottom: 1px dashed #e2e8f0; 
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    .receipt-label { 
+                        color: #64748b; 
+                        font-size: 12px; 
+                        font-weight: 700; 
+                        text-transform: uppercase; 
+                        min-width: 120px;
+                    }
+                    .receipt-val { 
+                        color: #1e293b; 
+                        font-size: 13px; 
+                        font-weight: 700; 
+                        text-align: right;
+                        max-width: 200px;
+                        word-break: break-word;
+                    }
+                    .receipt-icon {
+                        width: 20px;
+                        height: 20px;
+                        object-fit: contain;
+                        border-radius: 4px;
+                    }
+                </style>
 
-                            </div>
+                <div class="bg-white overflow-hidden relative">
+                    <!-- Header Zigzag Design -->
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 opacity-30"></div>
 
-                            <div class="receipt-footer">
-                                <img src="https://i.postimg.cc/GpZMXGKR/1769418328212-removebg-preview.png" class="h-6 mx-auto mb-2 opacity-50 grayscale">
-                                <p class="text-[10px] text-slate-400 font-medium mb-1">
-                                    এই রিসিটটি আপনার ডিজিটাল লেনদেনের প্রমাণপত্র। যেকোনো প্রয়োজনে TRXID ব্যবহার করুন।
-                                </p>
-                                <h3 class="text-xs font-bold text-slate-300 tracking-[3px] mt-2">CREATED BY TAKAWALA</h3>
+                    <!-- Header Section -->
+                    <div class="p-6 pb-2 text-center relative mt-2">
+                        <div class="w-16 h-16 mx-auto mb-2 bg-white rounded-full p-2 shadow-lg border-2 border-slate-100 flex items-center justify-center">
+                            <img src="${headerIcon}" 
+                                 class="w-full h-full object-contain p-1" 
+                                 onerror="this.onerror=null; this.src='https://i.postimg.cc/GpZMXGKR/1769418328212-removebg-preview.png'">
+                        </div>
+                        <h2 class="text-2xl font-black text-slate-800 tracking-wider">TAKAWALA</h2>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-[0.3em] mb-4">Official Transaction Receipt</p>
+                        
+                        <!-- Amount Box -->
+                        <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-4 border border-slate-200 mb-2 shadow-sm">
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Total Amount</p>
+                            <h1 class="text-3xl font-black text-slate-800 mt-1">৳${parseFloat(data.amount || 0).toFixed(2)}</h1>
+                            <div class="inline-block mt-2 px-4 py-1 rounded-full text-[10px] font-bold ${statusBg} ${statusColor} border border-opacity-20 uppercase tracking-widest">
+                                ${data.status || "Pending"}
                             </div>
                         </div>
-                    `,
-                    showConfirmButton: true,
-                    confirmButtonText: '<i class="ri-download-2-line mr-1"></i> রিসিট সেভ করুন',
-                    confirmButtonColor: '#059669',
-                    showCloseButton: true,
-                    background: 'transparent', // ব্যাকগ্রাউন্ড ট্র‍্যান্সপারেন্ট যাতে আমাদের কাস্টম বক্স দেখা যায়
-                    customClass: {
-                        popup: 'receipt-popup-container' // সিএসএস দিয়ে উইডথ কন্ট্রোল হবে
-                    },
-                    didOpen: () => {
-                        // সুইটএলার্টের ডিফল্ট প্যাডিং রিমুভ করার জন্য
-                        const popup = Swal.getPopup();
-                        popup.style.padding = '0';
-                        popup.style.overflow = 'visible';
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // এখানে স্ক্রিনশট ফাংশন বা ডাউনলোড ফাংশন কল করতে পারিস
-                        showSmartToast('রিসিট সেভ করা হয়েছে', 'success');
-                    }
-                });
+                    </div>
 
-            } catch (error) {
-                console.error(error);
-                showSmartToast("রিসিট ওপেন করা যাচ্ছে না", "error");
-                hideLoading();
+                    <!-- Details Section -->
+                    <div class="px-6 pb-6 text-left space-y-1">
+                        <!-- Transaction ID -->
+                        <div class="receipt-row">
+                            <span class="receipt-label">Transaction ID</span>
+                            <div class="flex items-center gap-2">
+                                <span class="receipt-val font-mono tracking-wider">${trxID}</span>
+                                <button onclick="copyToClipboard('${doc.id}')" class="text-slate-400 hover:text-blue-600 transition">
+                                    <i class="ri-file-copy-line text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Date & Time -->
+                        <div class="receipt-row">
+                            <span class="receipt-label">Date & Time</span>
+                            <span class="receipt-val">${fullDate}</span>
+                        </div>
+                        
+                        <!-- Type -->
+                        <div class="receipt-row">
+                            <span class="receipt-label">Type</span>
+                            <span class="receipt-val uppercase text-blue-600 font-bold">${type}</span>
+                        </div>
+                        
+                        <!-- Method with Icon -->
+                        <div class="receipt-row">
+                            <span class="receipt-label">Method</span>
+                            <div class="flex items-center gap-2">
+                                <img src="${headerIcon}" 
+                                     class="receipt-icon" 
+                                     onerror="this.onerror=null; this.src='https://i.postimg.cc/GpZMXGKR/1769418328212-removebg-preview.png'">
+                                <span class="receipt-val uppercase font-bold">${method}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Account/Reference -->
+                        <div class="receipt-row border-none">
+                            <span class="receipt-label">Account / Ref</span>
+                            <span class="receipt-val font-mono text-sm">${sender}</span>
+                        </div>
+                        
+                        <!-- Details (if available) -->
+                        ${data.details ? `
+                        <div class="receipt-row border-none mt-2">
+                            <span class="receipt-label">Details</span>
+                            <span class="receipt-val text-sm text-slate-600">${data.details}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Footer Section -->
+                    <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-5 mx-0 mb-0 relative overflow-hidden text-center">
+                        <div class="relative z-10">
+                            <p class="text-[9px] opacity-70 font-mono mb-1 uppercase tracking-wider">SYSTEM GENERATED RECEIPT</p>
+                            <p class="text-xs font-black tracking-[0.15em] uppercase text-yellow-300">TAKAWALA OFFICIAL</p>
+                            
+                            <!-- Security Pattern -->
+                            <div class="h-5 w-24 bg-white/10 mx-auto mt-2 rounded flex items-center justify-center gap-1 opacity-60">
+                                <div class="w-1 h-3 bg-white rounded"></div>
+                                <div class="w-2 h-3 bg-white rounded"></div>
+                                <div class="w-1 h-3 bg-white rounded"></div>
+                                <div class="w-2 h-3 bg-white rounded"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Background Effects -->
+                        <div class="absolute -top-6 -right-6 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl"></div>
+                        <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl"></div>
+                    </div>
+                </div>
+            `,
+            showConfirmButton: true,
+            confirmButtonText: '<i class="ri-download-2-line mr-1"></i> ডাউনলোড',
+            confirmButtonColor: '#1e293b',
+            showCloseButton: true,
+            background: 'transparent',
+            customClass: {
+                popup: 'receipt-popup-wide'
+            },
+            didOpen: () => {
+                const popup = Swal.getPopup();
+                popup.style.padding = '0';
             }
-        }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                showSmartToast('স্ক্রিনশট নিয়ে সেভ করে রাখুন ✅', 'success');
+            }
+        });
 
-        // ✅ HELPER: COPY FUNCTION
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    timerProgressBar: true
-                });
-                Toast.fire({
-                    icon: 'success',
-                    title: 'কপি করা হয়েছে!'
-                });
-            }).catch(err => {
-                console.error('Copy failed', err);
-            });
-        }
+    } catch (error) {
+        console.error(error);
+        showSmartToast("রিসিট ওপেন করা যাচ্ছে না", "error");
+        hideLoading();
+    }
+}
+// ✅ HELPER: COPY FUNCTION
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true
+        });
+        Toast.fire({
+            icon: 'success',
+            title: 'কপি করা হয়েছে!'
+        });
+    }).catch(err => {
+        console.error('Copy failed', err);
+    });
+}
 
         // ✅ LOAD QUIZ FROM FIREBASE (DYNAMIC)
         window.showQuizQuestions = async (type) => {
@@ -4134,6 +4264,33 @@
                 return;
             }
             
+                        // 🔐 পিন ভেরিফিকেশন (উইথড্র)
+            if (!currentUserData.transactionPin) {
+                return Swal.fire({
+                    title: 'পিন সেট করা নেই!',
+                    text: 'নিরাপত্তার জন্য আগে সেটিংস থেকে ৪ ডিজিটের পিন সেট করুন।',
+                    icon: 'info',
+                    confirmButtonText: 'সেটিংসে যান'
+                }).then(() => window.showPage('settingsScreen'));
+            }
+
+            const { value: userPin } = await Swal.fire({
+                title: 'আপনার পিন দিন',
+                input: 'password',
+                inputPlaceholder: '৪ ডিজিটের পিন',
+                inputAttributes: { maxlength: 4, textAlign: 'center' },
+                showCancelButton: true,
+                confirmButtonText: 'নিশ্চিত করুন',
+                cancelButtonText: 'বাতিল'
+            });
+
+            if (!userPin) return; // ইউজার ক্যান্সেল করলে থেমে যাবে
+
+            if (userPin !== currentUserData.transactionPin) {
+                return showSmartToast('ভুল পিন দিয়েছেন!', 'error');
+            }
+
+            
             if(!currentUserData) {
                 showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
                 return;
@@ -4221,7 +4378,8 @@
                 }
                 
                 showSmartToast(successMessage, 'success');
-                hideLoading();
+              
+              window.playSound('snd_success');                hideLoading();
                 
                 document.getElementById('withdrawNumber').value = '';
                 document.getElementById('withdrawAmount').value = '';
@@ -4250,6 +4408,8 @@
                 return;
             }
             
+                                
+                     
             const fee = systemSettings.rechargeFee || 5;
             const totalAmount = amount + fee;
             
@@ -4271,6 +4431,34 @@
                     return;
                 }
             }
+            
+            
+                // 🔐 পিন ভেরিফিকেশন (উইথড্র)
+            if (!currentUserData.transactionPin) {
+                return Swal.fire({
+                    title: 'পিন সেট করা নেই!',
+                    text: 'নিরাপত্তার জন্য আগে সেটিংস থেকে ৪ ডিজিটের পিন সেট করুন।',
+                    icon: 'info',
+                    confirmButtonText: 'সেটিংসে যান'
+                }).then(() => window.showPage('settingsScreen'));
+            }
+
+            const { value: userPin } = await Swal.fire({
+                title: 'আপনার পিন দিন',
+                input: 'password',
+                inputPlaceholder: '৪ ডিজিটের পিন',
+                inputAttributes: { maxlength: 4, textAlign: 'center' },
+                showCancelButton: true,
+                confirmButtonText: 'নিশ্চিত করুন',
+                cancelButtonText: 'বাতিল'
+            });
+
+            if (!userPin) return; // ইউজার ক্যান্সেল করলে থেমে যাবে
+
+            if (userPin !== currentUserData.transactionPin) {
+                return showSmartToast('ভুল পিন দিয়েছেন!', 'error');
+            }
+            
             
             let dailyLimit = 2;
             if(!isFreeUser) {
@@ -4331,6 +4519,9 @@
                 }
                 
                 showSmartToast(successMessage, 'success'); 
+            
+            window.playSound('snd_success');
+            
                 hideLoading();
                 
                 document.getElementById('rechPhone').value = '';
@@ -4634,6 +4825,10 @@
                         }
 
                         showSmartToast(message, 'success');
+        
+                
+          window.playSound('snd_success');
+     
                         hideLoading();
                         
                     } catch (e) {
@@ -4659,48 +4854,124 @@
             window.open('https://t.me/TAKAR_WALA_ADMIN', '_blank');
         };
         
-                // ✅ DYNAMIC DRIVE OFFER FUNCTION
+                       // ✅ DYNAMIC DRIVE OFFER FUNCTION (UPDATED)
         window.showDriveOffer = async () => {
             window.showPage('driveOfferScreen');
             showLoading();
 
-            // ডিফল্ট টেক্সট (যদি ডাটাবেসে কিছু না থাকে)
-            let title = "বর্তমানে ড্রাইভ অফারের কাজ চলছে";
-            let message = "আমরা ড্রাইভ অফার সিস্টেমটি প্রস্তুত করছি। খুব শীঘ্রই এটি চালু হবে এবং আপনি বিশেষ অফার পাবেন।";
-            let date = "১লা মে ২০২৬";
-            let isActive = false;
-
             try {
-                // ডাটাবেস থেকে সেটিংস আনা
                 const doc = await db.collection("settings").doc("drive_offer").get();
+                let isActive = false;
                 
                 if(doc.exists) {
                     const data = doc.data();
-                    if(data.title) title = data.title;
-                    if(data.message) message = data.message;
-                    if(data.launchDate) date = data.launchDate;
                     if(data.isActive === true) isActive = true;
+                    
+                    document.getElementById('driveMainTitle').innerText = data.title || "কাজ চলছে...";
+                    document.getElementById('driveMainMessage').innerText = data.message || "শীঘ্রই আসছে...";
+                    document.getElementById('driveLaunchDate').innerText = data.launchDate || "COMING SOON";
+                }
+
+                if(isActive) {
+                    document.getElementById('driveMaintenanceView').classList.add('hidden');
+                    document.getElementById('driveActiveView').classList.remove('hidden');
+                    window.loadDriveOffers('gp'); // ডিফল্ট হিসেবে GP লোড হবে
+                } else {
+                    document.getElementById('driveMaintenanceView').classList.remove('hidden');
+                    document.getElementById('driveActiveView').classList.add('hidden');
+                    hideLoading();
                 }
             } catch(e) {
-                console.log("Drive settings load error:", e);
+                console.log("Drive settings error:", e);
+                hideLoading();
             }
+        };
 
-            // টেক্সট আপডেট করা
-            document.getElementById('driveMainTitle').innerText = title;
-            document.getElementById('driveMainMessage').innerText = message;
-            document.getElementById('driveLaunchDate').innerText = date;
+        // 🔄 LOAD OFFERS BY OPERATOR
+        window.loadDriveOffers = async (operator) => {
+            // ১. ট্যাব ডিজাইন আপডেট
+            ['gp', 'robi', 'bl', 'airtel', 'teletalk'].forEach(op => {
+                const btn = document.getElementById(`tab_${op}`);
+                if(op === operator) {
+                    btn.className = 'flex-shrink-0 flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-white font-bold text-xs shadow-lg transition-all scale-105';
+                } else {
+                    btn.className = 'flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700';
+                }
+            });
 
-            // ভিউ কন্ট্রোল (মেইনটেনেন্স vs এক্টিভ)
-            if(isActive) {
-                document.getElementById('driveMaintenanceView').classList.add('hidden');
-                document.getElementById('driveActiveView').classList.remove('hidden');
-            } else {
-                document.getElementById('driveMaintenanceView').classList.remove('hidden');
-                document.getElementById('driveActiveView').classList.add('hidden');
+            const container = document.getElementById('driveOffersContainer');
+            container.innerHTML = '<div class="text-center py-10"><div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div></div>';
+
+            try {
+                // ফায়ারবেস থেকে অফার লোড
+                const snapshot = await db.collection("drive_offers")
+                    .where("operator", "==", operator)
+                    .orderBy("price", "asc") // দাম অনুযায়ী সাজানো
+                    .get();
+
+                container.innerHTML = '';
+                
+                if(snapshot.empty) {
+                    container.innerHTML = `
+                        <div class="text-center py-10 opacity-50">
+                            <img src="https://i.postimg.cc/qByrJYrn/sim-card.png" class="w-16 mx-auto mb-3 grayscale opacity-50">
+                            <p class="text-sm">এই সিমে বর্তমানে কোনো অফার নেই</p>
+                        </div>`;
+                    hideLoading();
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    // অপারেটর কালার লজিক
+                    let colorClass = 'border-l-4 border-blue-500'; // GP default
+                    if(operator === 'robi') colorClass = 'border-l-4 border-red-500';
+                    else if(operator === 'bl') colorClass = 'border-l-4 border-orange-500';
+                    else if(operator === 'airtel') colorClass = 'border-l-4 border-red-600';
+                    else if(operator === 'teletalk') colorClass = 'border-l-4 border-green-500';
+
+                    const card = `
+                        <div class="bg-slate-800 p-4 rounded-xl shadow-lg border border-slate-700 relative overflow-hidden ${colorClass}">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h3 class="font-bold text-white text-lg">${data.title}</h3>
+                                    <p class="text-xs text-slate-400 mt-1">${data.description || 'মেয়াদ: ৩০ দিন'}</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-xl font-black text-green-400">৳${data.price}</span>
+                                    ${data.regularPrice ? `<span class="text-[10px] text-slate-500 line-through">৳${data.regularPrice}</span>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-700">
+                                <div class="bg-slate-700/50 px-2 py-1 rounded text-[10px] text-slate-300 font-mono">
+                                    ${data.area || 'সারা বাংলাদেশ'}
+                                </div>
+                                <button onclick="window.buyDriveOffer('${data.title}', '${data.price}', '${operator}')" class="bg-white text-slate-900 px-6 py-2 rounded-lg font-bold text-xs hover:bg-blue-50 transition active:scale-95">
+                                    কিনুন <i class="ri-shopping-cart-2-line ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+
+            } catch(e) {
+                console.error("Error loading offers:", e);
+                container.innerHTML = '<p class="text-center text-red-400 text-xs">ডাটা লোড হতে সমস্যা হয়েছে</p>';
             }
-            
             hideLoading();
         };
+
+        // 🛍️ BUY FUNCTION (TELEGRAM REDIRECT)
+        window.buyDriveOffer = (offerName, price, operator) => {
+            const opName = operator.toUpperCase();
+            const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})।\n\nঅফার: ${offerName}\nঅপারেটর: ${opName}\nমূল্য: ৳${price}\n\nআমি এই অফারটি নিতে চাই।`);
+            
+            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${message}`, '_blank');
+            showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
+        };
+
 
                 // ✅ DYNAMIC SPIN FUNCTION
         window.showSpinGame = async () => {
@@ -5301,6 +5572,34 @@
         // Call loadSubscriptions when page loads (inside showPage or onload)
         // তোর existing showPage('subscriptionScreen') এর ভেতরে `loadSubscriptions()` কল করে দিবি।
 
+        // ✅ SET TRANSACTION PIN FUNCTION
+        window.setTransactionPin = async () => {
+            const pin = document.getElementById('newPin').value;
+            const confirm = document.getElementById('confirmPin').value;
+
+            if(pin.length !== 4 || isNaN(pin)) {
+                return showSmartToast('৪ সংখ্যার পিন দিন', 'error');
+            }
+            if(pin !== confirm) {
+                return showSmartToast('পিন মিলেনি!', 'error');
+            }
+
+            showLoading();
+            try {
+                await db.collection("users").doc(auth.currentUser.uid).update({
+                    transactionPin: pin
+                });
+                showSmartToast('পিন সফলভাবে সেট হয়েছে ✅', 'success');
+                               window.playSound('snd_success');
+                document.getElementById('newPin').value = "";
+                document.getElementById('confirmPin').value = "";
+            } catch(e) {
+                showSmartToast('সমস্যা হয়েছে!', 'error');
+            }
+            hideLoading();
+        };
+
+
 
              // ✅ INITIALIZE EVENT LISTENERS
         document.addEventListener('DOMContentLoaded', function() {
@@ -5335,6 +5634,113 @@
             });
 
         }); // <--- এই ক্লোজিং ব্র্যাকেটটাই মিসিং ছিল!
+        
+                // ✅ INTERNET CONNECTION CHECKER
+        window.addEventListener('offline', () => {
+            Swal.fire({
+                title: 'কানেকশন বিচ্ছিন্ন!',
+                text: ' প্রিয় ইউজার আপনার ইন্টারনেট কানেকশন চলে গেছে। দয়া করে নেট চেক করে আবার চেষ্টা  করুন।',
+                icon: 'warning',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                background: '#fff',
+                color: '#ef4444'
+            });
+        });
+
+        window.addEventListener('online', () => {
+            Swal.close();
+            showSmartToast('ইন্টারনেট ফিরে এসেছে! ✅', 'success');
+        });
+
+        // ✅ SMART SOUND & HAPTICS FUNCTION
+        window.playSound = (id) => {
+            const audio = document.getElementById(id);
+            if(audio) {
+                audio.currentTime = 0; // সাউন্ড প্রথম থেকে শুরু হবে
+                audio.play().catch(e => console.log("Sound error:", e));
+            }
+        };
+
+        // 🔊 বাটনে ক্লিক করলেই অটোমেটিক সাউন্ড + ভাইব্রেশন হবে
+        const attachAppSounds = () => {
+            document.querySelectorAll('button, .glass-card, .cursor-pointer, [onclick]').forEach(element => {
+                element.addEventListener('click', () => {
+                    window.playSound('snd_click'); // ক্লিকের সাউন্ড
+                    if (navigator.vibrate) navigator.vibrate(30); // হালকা ভাইব্রেশন
+                });
+            });
+        };
+
+        // অ্যাপ লোড হওয়ার ১ সেকেন্ড পর সাউন্ড এক্টিভেট হবে
+        setTimeout(attachAppSounds, 1000);
+
+
+
+        // ✅ REAL-TIME LIVE PAYMENT PROOF
+        const startLivePayoutNotifications = () => {
+            // শুধু আজকের সাকসেস হওয়া পেমেন্টগুলো চেক করবে
+            db.collection("history")
+                .where("status", "==", "Success")
+                .orderBy("date", "desc")
+                .limit(1)
+                .onSnapshot(snapshot => {
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === "added") {
+                            const data = change.doc.data();
+                            // যদি ট্রানজেকশনটি ১ মিনিটের মধ্যে হয়ে থাকে তবেই দেখাবে
+                            showLiveToast(data.name || "একজন ইউজার", data.amount, data.type);
+                        }
+                    });
+                });
+        };
+
+        const showLiveToast = (name, amount, type) => {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-24 left-4 right-4 z-[1000] animate__animated animate__fadeInUp';
+            toast.innerHTML = `
+                <div class="bg-slate-900/90 backdrop-blur-md border border-white/10 p-3 rounded-2xl flex items-center gap-3 shadow-2xl">
+                    <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white shrink-0">
+                        <i class="ri-check-double-line text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">পেমেন্ট সাকসেসফুল! 🎉</p>
+                        <p class="text-xs text-white"><b>${name}</b> মাত্র <b>৳${amount}</b> ${type === 'Withdraw' ? 'উইথড্র' : 'পেমেন্ট'} পেয়েছেন।</p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            // ৩ সেকেন্ড পর মুছে যাবে
+            setTimeout(() => {
+                toast.classList.replace('animate__fadeInUp', 'animate__fadeOutDown');
+                setTimeout(() => toast.remove(), 1000);
+            }, 4000);
+        };
+
+        // ফাংশনটি কল করা
+        setTimeout(startLivePayoutNotifications, 5000); // অ্যাপ খোলার ৫ সেকেন্ড পর শুরু হবে       
+   
+   // 🛡️ ANTI-SPAM SYSTEM (বারবার ক্লিক ঠেকানো)
+let clickTracker = 0;
+document.addEventListener('click', () => {
+    clickTracker++;
+    if (clickTracker > 15) { 
+        showSmartToast('মামা, আস্তে ক্লিক কর! অ্যাপ কোথাও পালাচ্ছে না।', 'error');
+        clickTracker = 0;
+    }
+    // প্রতি ৫ সেকেন্ড পর কাউন্ট জিরো হবে
+    setTimeout(() => { clickTracker = 0; }, 5000);
+});
+
+   
+   
     </script>
+    
+        <audio id="snd_click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+    <audio id="snd_success" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
+    <audio id="snd_bonus" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+
+    
 </body>
 </html>
