@@ -2034,7 +2034,7 @@
             <div class="bg-premium p-6 text-white text-center">
                 <h2 class="text-xl font-bold">টাস্ক প্রুফ সাবমিট</h2>
                 <p class="text-sm opacity-90">টাস্ক সম্পন্ন করার প্রমাণ দিন</p>
-                <div class="task-timer" id="proofTimer">৫</div>
+                <div class="task-timer" id="proofTimer">২০</div>
             </div>
             <div class="p-6">
                 <div id="proofFormContainer">
@@ -2499,69 +2499,75 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
         }
 
         // ✅ UPDATED INTERSTITIAL AD SHOW FUNCTION
-        function showInterstitialAd() {
+            function showInterstitialAd() {
             const interstitial = document.getElementById('monitagInterstitial');
             interstitial.classList.remove('hidden');
             
-            let timeLeft = 10; 
+            let timeLeft = Math.floor(Math.random() * (25 - 20 + 1)) + 20; // ২০ থেকে ২৫ এর মধ্যে যেকোনো সংখ্যা নিবে
             const timerElement = document.getElementById('adTimer');
-            
             const closeBtn = document.getElementById('adCloseBtn') || interstitial.querySelector('button.bg-slate-200');
+
             if(closeBtn) {
                 if(!closeBtn.id) closeBtn.id = 'adCloseBtn';
-                closeBtn.classList.remove('hidden'); 
-                closeBtn.style.display = 'none'; 
+                closeBtn.style.display = 'none'; // শুরুতে ক্লোজ বাটন লুকানো থাকবে
                 closeBtn.innerHTML = "বন্ধ করুন";
-                closeBtn.disabled = false;
-                closeBtn.style.opacity = "1";
             }
 
-            const adTimer = setInterval(() => {
-                timeLeft--;
-                if(timerElement) timerElement.textContent = timeLeft;
-                if(timeLeft <= 0) {
-                    clearInterval(adTimer);
-                    if(timerElement) timerElement.textContent = "এখন অ্যাডটি ওপেন করুন";
+            if(window.adInterval) clearInterval(window.adInterval);
+
+            window.adInterval = setInterval(() => {
+                if (!document.hidden) { // ইউজার অ্যাডে থাকলে টাইমার কমবে
+                    timeLeft--;
+                    if(timerElement) timerElement.innerHTML = `অপেক্ষা করুন: <span class="text-red-600 font-bold">${timeLeft}</span> সেকেন্ড`;
+                    
+                    if(timeLeft <= 0) {
+                        clearInterval(window.adInterval);
+                        if(timerElement) timerElement.innerHTML = "✅ এখন আপনি অ্যাডটি বন্ধ করতে পারেন";
+                        if(closeBtn) {
+                            closeBtn.style.display = "block";
+                            closeBtn.classList.remove('hidden');
+                            closeBtn.disabled = false;
+                        }
+                    }
+                } else { 
+                    // ইউজার অন্য ট্যাবে গেলে ওয়ার্নিং দিবে এবং টাইমার থেমে যাবে
+                    if(timerElement) timerElement.innerHTML = `<span class="text-orange-500 animate-pulse">⚠️ টাইমার পজ! অ্যাডে ফিরে আসুন</span>`;
                 }
             }, 1000);
-            window.adTimer = adTimer;
         }
 
         function closeInterstitialAd() {
             const interstitial = document.getElementById('monitagInterstitial');
             interstitial.classList.add('hidden');
-            if(window.adTimer) clearInterval(window.adTimer);
+            
+            // টাইমার পুরোপুরি বন্ধ করা
+            if(window.adInterval) clearInterval(window.adInterval);
 
-            // 🔥 বোনাস দেওয়া হচ্ছে
+            // বোনাস দেওয়ার লজিক
             if (onAdCompleted) {
                 onAdCompleted(); 
                 onAdCompleted = null; 
             }
-        }
-
+        }   
+        
+        
         // ✅ ✅ FIXED: UPDATED AD LINK FUNCTION
         window.openAdLink = () => {
             const randomLink = adsterraLinks[Math.floor(Math.random() * adsterraLinks.length)];
             
-            // ১. লিংক নতুন ট্যাবে ওপেন হবে (যাতে অ্যাপ বন্ধ না হয়)
+            // ১. অ্যাড লিংক নতুন ট্যাবে ওপেন হবে
             window.open(randomLink, '_blank');
             
-            // ২. নোটিফিকেশন
-            showSmartToast('অ্যাড লোড হচ্ছে... ৫ সেকেন্ড অপেক্ষা করুন', 'info');
+            // ২. ইউজারকে ২০ সেকেন্ডের নোটিশ দেওয়া
+            showSmartToast('অ্যাড ওপেন হয়েছে, ২০ সেকেন্ড অপেক্ষা করুন', 'info');
             
-            // ৩. ৫ সেকেন্ড পর "বন্ধ করুন" বাটন চালু হবে
+            // ৩. ২০ সেকেন্ড পূর্ণ না হওয়া পর্যন্ত বাটনটি ডিজেবল রাখা
             const closeBtn = document.querySelector('#monitagInterstitial button.bg-slate-200');
             if(closeBtn) {
                 closeBtn.innerHTML = "অপেক্ষা করুন...";
                 closeBtn.disabled = true;
                 closeBtn.style.opacity = "0.5";
-                closeBtn.style.display = "block"; // বাটন শো করবে
-                
-                setTimeout(() => {
-                    closeBtn.innerHTML = "বন্ধ করুন";
-                    closeBtn.disabled = false;
-                    closeBtn.style.opacity = "1";
-                }, 5000); // ৫ সেকেন্ড পর বাটন কাজ করবে
+                closeBtn.style.display = "block"; // বাটনটি দেখা যাবে কিন্তু ক্লিক করা যাবে না
             }
         };
 
@@ -4044,55 +4050,70 @@ window.closeUserReceiptModal = () => {
             }
         };
 
-        // ✅ UPDATED TASK COMPLETION - 5 SECONDS TIMER
+        // ✅ NEW UPDATED TASK COMPLETION - 20 SECONDS STRICT TIMER
         window.completeTask = async (taskId, reward, taskType, title, description, link) => {
             if(!currentUserData) return;
             
-            currentTaskInfo = {
-                taskId,
-                reward,
-                taskType,
-                title,
-                description,
-                link
-            };
+            currentTaskInfo = { taskId, reward, taskType, title, description, link };
             
+            // ১. শুরুতে ইন্টারস্টিশিয়াল অ্যাড দেখাবে
             showInterstitialAd();
             
+            // ২. ০.৫ সেকেন্ড পর টাস্ক লিংকটি ওপেন হবে
             setTimeout(() => {
                 window.open(link, '_blank');
             }, 500);
             
+            // ৩. টাইমার শুরু করা
             startTaskTimer();
             
-            showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ৫ সেকেন্ড পর প্রুফ সাবমিট করুন।', 'info');
+            showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ২০ সেকেন্ড অ্যাডে থাকতে হবে।', 'info');
         };
         
-        function startTaskTimer() {
+       function startTaskTimer() {
             if(taskTimer) clearInterval(taskTimer);
             
-            // ✅ CHANGED TO 5 SECONDS
-            let timeLeft = 5;
-            const startTime = Date.now();
+            // ১. ২০ থেকে ২৫ সেকেন্ডের মধ্যে একটি রেন্ডম সময় নিবে
+            let timeLeft = Math.floor(Math.random() * (25 - 20 + 1)) + 20; 
+            let cheatCount = 0; // ২. চিট কাউন্টার শুরু (০ থেকে)
             
             taskTimer = setInterval(() => {
-                const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                const remaining = timeLeft - elapsed;
-                
-                if(remaining <= 0) {
-                    clearInterval(taskTimer);
-                    showProofSubmissionForm();
+                // যদি ইউজার স্ক্রিনে থাকে (ট্যাব একটিভ থাকে)
+                if (!document.hidden) {
+                    timeLeft--;
+                    
+                    if(timeLeft <= 0) {
+                        clearInterval(taskTimer);
+                        showProofSubmissionForm(); // প্রুফ সাবমিট ফর্ম আসবে
+                        showSmartToast('অভিনন্দন! এখন কাজের প্রমাণ জমা দিন।', 'success');
+                    }
+                } else {
+                    // ৩. ইউজার অন্য ট্যাব বা অ্যাপে গেলে এখানে আসবে
+                    cheatCount++; 
+                    
+                    if(cheatCount >= 3) {
+                        // যদি ৩ বার ট্যাব ছেড়ে যায়, তবে সব বন্ধ করে হোমে পাঠিয়ে দিবে
+                        clearInterval(taskTimer);
+                        window.showPage('homeScreen'); 
+                        
+                        Swal.fire({
+                            title: 'টাস্ক বাতিল! ❌',
+                            text: 'আপনি ৩ বার ট্যাব ছেড়েছেন, তাই টাস্কটি বাতিল করা হয়েছে। কাজ শেষ না হওয়া পর্যন্ত ট্যাব ছাড়া যাবে না।',
+                            icon: 'error',
+                            confirmButtonText: 'আবার চেষ্টা করুন',
+                            confirmButtonColor: '#ef4444',
+                            customClass: { popup: 'rounded-[25px]' }
+                        });
+                    } else {
+                        // ৩ বার হওয়ার আগ পর্যন্ত ওয়ার্নিং দিবে
+                        showSmartToast(`⚠️ সাবধান! ট্যাব ছাড়বেন না। (ওয়ার্নিং: ${cheatCount}/3)`, 'error');
+                        if (navigator.vibrate) navigator.vibrate(100); 
+                    }
                 }
             }, 1000);
-            
-            setTimeout(() => {
-                if(taskTimer) {
-                    clearInterval(taskTimer);
-                }
-                showProofSubmissionForm();
-            }, timeLeft * 1000);
         }
-        
+       
+       
                        // ✅ GORGEOUS PROOF SUBMISSION FORM (SMART CATEGORY LOGIC)
         function showProofSubmissionForm() {
             const container = document.getElementById('proofFormContainer');
@@ -4183,6 +4204,11 @@ window.closeUserReceiptModal = () => {
             
             const proof1 = document.getElementById('proof1')?.value.trim();
             const proof2 = document.getElementById('proof2')?.value.trim();
+            
+            if(!proof2.startsWith('http')) {
+    showSmartToast('দয়া করে সঠিক স্ক্রিনশট লিংক (URL) দিন', 'error');
+    return;
+}
             
             if(!proof1 || !proof2) {
                 showSmartToast('দয়া করে সব তথ্য পূরণ করুন', 'error');
