@@ -3131,6 +3131,8 @@ async function loadSystemSettings() {
                 time: new Date().toLocaleTimeString('bn-BD'),
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
+            
+            await db.collection("users").doc(uc.user.uid).update({ referredBy: referralCode  });
         }
     } catch (e) { console.error("Referral Error:", e); }
 }
@@ -4915,8 +4917,8 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             showSmartToast('রেফার লিংক কপি হয়েছে!', 'success');
         };
         
-        window.openSupport = () => {
-            window.open('https://t.me/TAKA_WALA_ADMIN', '_blank'); // এখন ঠিক আছে };
+        
+            window.openSupport = () => { window.open('https://t.me/TAKA_WALA_ADMIN', '_blank'); }; // <--- এই ব্র্যাকেটটা কমেন্টের বাইরে থাকতে হবে
         
                        // ✅ DYNAMIC DRIVE OFFER FUNCTION (UPDATED)
         window.showDriveOffer = async () => {
