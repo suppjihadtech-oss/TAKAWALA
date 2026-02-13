@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Takawala - Ultimate Final</title>
@@ -3101,41 +3103,37 @@ async function loadSystemSettings() {
                 await db.collection("users").doc(uc.user.uid).set(userData);
                 
                 if(referralCode) {
-                    try {
-                        const referralQuery = await db.collection("users").where("referralCode", "==", referralCode).get();
-                        
-                        if(!referralQuery.empty) {
-                            const referrerDoc = referralQuery.docs[0];
-                            const referrerId = referrerDoc.id;
-                            
-                            const bonusAmount = systemSettings.referralBonus || 5;
-                            await db.collection("users").doc(referrerId).update({
-                                mainBalance: firebase.firestore.FieldValue.increment(bonusAmount),
-                                totalEarnings: firebase.firestore.FieldValue.increment(bonusAmount),
-                                totalReferrals: firebase.firestore.FieldValue.increment(1),
-                                referralEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
-                            });
-                            
-                            await db.collection("history").add({
-                                userId: referrerId,
-                                type: "রেফার বোনাস",
-                                amount: bonusAmount,
-                                status: "Success",
-                                details: `${name} দ্বারা রেফার করা হয়েছে`,
-                                date: new Date().toLocaleDateString('bn-BD'),
-                                time: new Date().toLocaleTimeString('bn-BD'),
-                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                            });
-                            
-                            await db.collection("users").doc(uc.user.uid).update({
-                                referredBy: referralCode
-                            });
-                        }
-                    } catch (referralError) {
-                        console.error("Referral processing error:", referralError);
-                    }
-                }
-                
+    try {
+        const referralQuery = await db.collection("users").where("referralCode", "==", referralCode).get();
+        if(!referralQuery.empty) {
+            const referrerDoc = referralQuery.docs[0];
+            const referrerId = referrerDoc.id;
+            
+            // বোনাস নিশ্চিত করা
+            let bAmt = parseFloat(systemSettings.referralBonus) || 5;
+            
+            // রেফারারের একাউন্টে টাকা পাঠানো
+            await db.collection("users").doc(referrerId).update({
+                mainBalance: firebase.firestore.FieldValue.increment(bAmt),
+                totalEarnings: firebase.firestore.FieldValue.increment(bAmt),
+                totalReferrals: firebase.firestore.FieldValue.increment(1),
+                referralEarnings: firebase.firestore.FieldValue.increment(bAmt)
+            });
+            
+            // হিস্ট্রি যোগ করা
+            await db.collection("history").add({
+                userId: referrerId,
+                type: "রেফার বোনাস",
+                amount: bAmt,
+                status: "Success",
+                details: `${name} আপনার রেফারে জয়েন করেছে`,
+                date: new Date().toLocaleDateString('bn-BD'),
+                time: new Date().toLocaleTimeString('bn-BD'),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+    } catch (e) { console.error("Referral Error:", e); }
+}
                 showSmartToast('একাউন্ট তৈরি সফল! ডেইলি বোনাস নিন', 'success');
                 hideLoading();
             } catch (e) { 
@@ -3289,10 +3287,12 @@ async function loadSystemSettings() {
 
                     // রেফার লিংক আপডেট
                     if(document.getElementById('referralLink')) {
-                        document.getElementById('referralLink').innerText = `https://t.me/TAKA_WALA_TG_BOT?start=${userData.referralCode}`;
-                    }
-                    
-                    if(userData.createdAt && document.getElementById('joinDate')) {
+    const botUsername = "TAKA_WALA_TG_BOT"; // তোমার বটের ইউজারনেম
+    const appName = "app"; // তোমার টেলিগ্রাম মিনিয়াঅ্যাপ এর শর্ট নেম (যা টেলিগ্রামে দিয়েছ)
+    const tgRefLink = `https://t.me/${botUsername}/${appName}?startapp=${userData.referralCode}`;
+    document.getElementById('referralLink').innerText = tgRefLink;
+}
+                                      if(userData.createdAt && document.getElementById('joinDate')) {
                         const date = userData.createdAt.toDate();
                         document.getElementById('joinDate').innerText = date.toLocaleDateString('bn-BD');
                     }
@@ -4916,7 +4916,7 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         };
         
         window.openSupport = () => {
-            window.open('https://t.me/TAKAR_WALA_ADMIN', '_blank');
+            window.open('https://t.me/TAKR_WALA_ADMIN', '_blank');
         };
         
                        // ✅ DYNAMIC DRIVE OFFER FUNCTION (UPDATED)
@@ -5033,7 +5033,7 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             const opName = operator.toUpperCase();
             const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})।\n\nঅফার: ${offerName}\nঅপারেটর: ${opName}\nমূল্য: ৳${price}\n\nআমি এই অফারটি নিতে চাই।`);
             
-            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${message}`, '_blank');
+            window.open(`https://t.me/TAKA_WALA_ADMIN?text=${message}`, '_blank');
             showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
         };
 
@@ -5435,27 +5435,18 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                 showSmartToast('দয়া করে স্টার প্যাকেজ সিলেক্ট করুন', 'error');
                 return;
             }
-            
             const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})। আমি ${selectedStarPackage} স্টার - ৳${document.getElementById('totalStarPrice').textContent} প্যাকেজটি কিনতে চাই।`);
-            
-            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${message}`, '_blank');
-            
+            window.open(`https://t.me/TAKA_WALA_ADMIN?text=${message}`, '_blank'); 
             showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
         };
         
-        window.buyTelegramPremium = () => {
-            if(!selectedTelegramPlan) {
-                showSmartToast('দয়া করে টেলিগ্রাম প্ল্যান সিলেক্ট করুন', 'error');
+        window.buyDynamicSubscription = () => {
+            if(!selectedPlan || !selectedService) {
+                showSmartToast('দয়া করে একটি প্যাকেজ সিলেক্ট করুন', 'error');
                 return;
             }
-            
-            const planText = document.getElementById('selectedPlanText').textContent;
-            const price = document.getElementById('selectedPlanPrice').textContent;
-            
-            const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})। আমি ${planText} - ৳${price} প্যাকেজটি কিনতে চাই।`);
-            
-            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${message}`, '_blank');
-            
+            const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})।\n\nসার্ভিস: ${selectedService.title}\nপ্যাকেজ: ${selectedPlan.name}\nমূল্য: ৳${selectedPlan.price}\n\nআমি এটি কিনতে চাই।`);
+            window.open(`https://t.me/TAKA_WALA_ADMIN?text=${message}`, '_blank');
             showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
         };
         
@@ -5596,7 +5587,7 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
             const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})।\n\nসার্ভিস: ${selectedService.title}\nপ্যাকেজ: ${selectedPlan.name}\nমূল্য: ৳${selectedPlan.price}\n\nআমি এটি কিনতে চাই।`);
             
-            window.open(`https://t.me/TAKAR_WALA_ADMIN?text=${message}`, '_blank');
+            window.open(`https://t.me/TAKA_WALA_ADMIN?text=${message}`, '_blank');
             showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
         };
 
@@ -5633,7 +5624,34 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
 
              // ✅ INITIALIZE EVENT LISTENERS
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() 
+            {
+            
+            // ✅ টেলিগ্রাম ও ব্রাউজার রেফার কোড ডিটেক্টর
+    let refCode = "";
+    if (window.Telegram && window.Telegram.WebApp) {
+        const tgData = window.Telegram.WebApp.initDataUnsafe;
+        if (tgData && tgData.start_param) {
+            // টেলিগ্রামের বাড়তি 'R' ফিল্টার করা লজিক
+            refCode = tgData.start_param.replace(/^R/, ''); 
+        }
+    }
+    if (!refCode) {
+        const urlParams = new URLSearchParams(window.location.search);
+        let rawRef = urlParams.get('ref') || urlParams.get('startapp') || "";
+        refCode = rawRef.replace(/^R/, '');
+    }
+    if (refCode) {
+        const regRefField = document.getElementById('regReferralCode');
+        if (regRefField) {
+            regRefField.value = refCode;
+            setTimeout(() => {
+                showSmartToast('রেফার কোড সফলভাবে যুক্ত হয়েছে!', 'success');
+                window.toggleAuthTab('register');
+            }, 1200);
+        }
+    }
+            
             loadSystemSettings();
             
             const depositAmount = document.getElementById('depositAmount');
