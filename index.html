@@ -3210,127 +3210,101 @@ async function loadSystemSettings() {
             }
         });
 
-                // ✅ SYNC USER DATA (FIXED)
+               // ✅ SYNC USER DATA (FIXED SYNTAX, PLAN DISPLAY & VERIFIED BADGE)
         function syncUserData(uid) {
-            // ১. ইউজারের ডাটা সিঙ্ক
+            // ১. ইউজারের লাইভ ডাটা সিঙ্ক
             db.collection("users").doc(uid).onSnapshot((d) => {
-                const safe = (id, txt) => { if(document.getElementById(id)) document.getElementById(id).innerText = txt; }
                 if(d.exists) {
                     currentUserData = d.data();
-                             
-                
-                                        // 🌅 SECRET PRO TIP: DYNAMIC GREETING
-                    const hour = new Date().getHours();
-                    let greeting = '';
-                    if (hour >= 5 && hour < 12) greeting = 'শুভ সকাল ☀️';
-                    else if (hour >= 12 && hour < 17) greeting = 'শুভ দুপুর 🌤️';
-                    else if (hour >= 17 && hour < 20) greeting = 'শুভ বিকেল 🌥️';
-                    else greeting = 'শুভ রাত্রি 🌙';
-                    
-                   
-// ✅ সব ধরণের প্রিমিয়াম প্যাকেজের জন্য নীল টিক দেখানো
-const displayH3 = document.getElementById('userNameDisplay');
-if (displayH3) {
-    const userPlan = currentUserData.Plan || currentUserData.plan || ""; 
-    
-    // এখানে তুই তোর ডাটাবেজে থাকা সব প্যাকেজের নাম যোগ করতে পারিস
-    // বানানগুলো একদম ডাটাবেজের মতো হুবহু দিবি
-    const premiumPlans = ["silver প্যাকেজ", "gold প্যাকেজ", "diamond প্যাকেজ", "VIP প্যাকেজ"];
-    
-    // চেক করা হচ্ছে ইউজারের প্ল্যান এই লিস্টের মধ্যে আছে কিনা
-    const isPremium = premiumPlans.includes(userPlan);
-    const badgeClass = isPremium ? '' : 'hidden';
-    
-    displayH3.innerHTML = `
-        ${greeting}, ${currentUserData.name} 
-        <span id="verifiedBadge" class="${badgeClass} text-blue-400 text-sm ml-1">
-            <i class="ri-checkbox-circle-fill"></i>
-        </span>
-    `;
-}
-                   safe('profNameDisplay', currentUserData.name);
+                    const userData = currentUserData;
+                    const safe = (id, txt) => { if(document.getElementById(id)) document.getElementById(id).innerText = txt; }
 
-// 💰 মেইন ব্যালেন্স এনিমেশন
-const newMain = currentUserData.mainBalance || 0;
-animateNumberUpdate('mainBalanceDisplay', lastValues.main, newMain);
-animateNumberUpdate('walletMainDisplay', lastValues.main, newMain);
-// পিল ব্যালেন্স চেক (যদি আইডি থাকে)
-const balAmt = document.getElementById('balanceAmount');
-if(balAmt) animateNumberUpdate('balanceAmount', lastValues.main, newMain);
-lastValues.main = newMain;
+                    // 🏷️ নামের নিচে বর্তমান প্ল্যান আপডেট করা (সিলভার/গোল্ড/ডায়মন্ড)
+                    const planEl = document.getElementById('userPlanDisplay');
+                    if(planEl) planEl.innerText = userData.plan || "Free Member";
 
-// 🔋 রিচার্জ ব্যালেন্স এনিমেশন
-const newRech = currentUserData.rechargeBalance || 0;
-animateNumberUpdate('rechargePageBalance', lastValues.recharge, newRech);
-animateNumberUpdate('walletRechargeDisplay', lastValues.recharge, newRech);
-lastValues.recharge = newRech;
+                    // 🌅 ডাইনামিক গ্রিটিং এবং ভেরিফাইড ব্যাজ (VIP ইউজারদের জন্য)
+                    const displayH3 = document.getElementById('userNameDisplay');
+                    if (displayH3) {
+                        const hour = new Date().getHours();
+                        let greeting = '';
+                        if (hour >= 5 && hour < 12) greeting = 'শুভ সকাল ☀️';
+                        else if (hour >= 12 && hour < 17) greeting = 'শুভ দুপুর 🌤️';
+                        else if (hour >= 17 && hour < 20) greeting = 'শুভ বিকেল 🌥️';
+                        else greeting = 'শুভ রাত্রি 🌙';
 
-// 👥 রেফার আয় এনিমেশন
-const newRef = currentUserData.referralEarnings || 0;
-animateNumberUpdate('referralEarnings', lastValues.ref, newRef);
-lastValues.ref = newRef;
+                        // লজিক: যদি প্ল্যান "Free Member" না হয়, তবেই নীল টিক দেখাবে
+                        const currentPlan = (userData.plan || "").toLowerCase();
+                        const isPremium = currentPlan !== "" && currentPlan !== "free member" && !currentPlan.includes("free");
+
+                        displayH3.innerHTML = `
+                            ${greeting}, ${userData.name} 
+                            ${isPremium ? '<span id="verifiedBadge" class="text-blue-400 text-sm ml-1"><i class="ri-checkbox-circle-fill"></i></span>' : ''}
+                        `;
+                    }
+
+                    safe('profNameDisplay', userData.name);
+
+                    // 💰 মেইন ব্যালেন্স এনিমেশন
+                    const newMain = userData.mainBalance || 0;
+                    animateNumberUpdate('mainBalanceDisplay', lastValues.main, newMain);
+                    animateNumberUpdate('walletMainDisplay', lastValues.main, newMain);
+                    const balAmt = document.getElementById('balanceAmount');
+                    if(balAmt) animateNumberUpdate('balanceAmount', lastValues.main, newMain);
+                    lastValues.main = newMain;
+
+                    // 🔋 রিচার্জ ব্যালেন্স এনিমেশন
+                    const newRech = userData.rechargeBalance || 0;
+                    animateNumberUpdate('rechargePageBalance', lastValues.recharge, newRech);
+                    animateNumberUpdate('walletRechargeDisplay', lastValues.recharge, newRech);
+                    lastValues.recharge = newRech;
+
+                    // 👥 রেফার আয় এনিমেশন
+                    const newRef = userData.referralEarnings || 0;
+                    animateNumberUpdate('referralEarnings', lastValues.ref, newRef);
+                    lastValues.ref = newRef;
                     
                     // প্রোফাইল ইনপুট আপডেট
-                    if(document.getElementById('profNameInput')) document.getElementById('profNameInput').value = currentUserData.name;
-                    if(document.getElementById('profPhoneInput')) document.getElementById('profPhoneInput').value = currentUserData.phone;
-                    if(document.getElementById('profEmailInput')) document.getElementById('profEmailInput').value = currentUserData.email;
-                    if(document.getElementById('profAddressInput')) document.getElementById('profAddressInput').value = currentUserData.address || '';
+                    if(document.getElementById('profNameInput')) document.getElementById('profNameInput').value = userData.name;
+                    if(document.getElementById('profPhoneInput')) document.getElementById('profPhoneInput').value = userData.phone;
+                    if(document.getElementById('profEmailInput')) document.getElementById('profEmailInput').value = userData.email;
+                    if(document.getElementById('profAddressInput')) document.getElementById('profAddressInput').value = userData.address || '';
                     
                     // এভাটার আপডেট
-                    if(currentUserData.avatar) {
-                        selectedAvatar = currentUserData.avatar;
-                        document.getElementById('currentAvatar').src = selectedAvatar;
+                    if(userData.avatar && document.getElementById('currentAvatar')) {
+                        document.getElementById('currentAvatar').src = userData.avatar;
                     }
-                    
+
                     // প্যাকেজ মেয়াদ চেক
-                    if(currentUserData.packageExpiresAt && typeof currentUserData.packageExpiresAt.toDate === 'function') {
-                        const expiryDate = currentUserData.packageExpiresAt.toDate();
+                    if(userData.packageExpiresAt) {
+                        const expiryDate = userData.packageExpiresAt.toDate();
                         const now = new Date();
-                        
                         if(now > expiryDate) {
                             db.collection("users").doc(uid).update({
                                 plan: "Free Member",
-                                packageExpiresAt: firebase.firestore.FieldValue.delete(),
-                                packageId: firebase.firestore.FieldValue.delete()
-                            }).then(() => {
-                                showSmartToast("আপনার প্যাকেজের মেয়াদ শেষ, আপনি এখন ফ্রি মেম্বার।", "info");
+                                packageExpiresAt: firebase.firestore.FieldValue.delete()
                             });
                         }
                     }
-                    
+
                     // রেফার লিংক আপডেট
                     if(document.getElementById('referralLink')) {
-    // এখানে ${uid} এর বদলে ${currentUserData.referralCode} বসিয়ে দিলাম
-    document.getElementById('referralLink').innerText = `https://t.me/TAKAR_WALA_TG_BOT?start=${currentUserData.referralCode}`;
-}
+                        document.getElementById('referralLink').innerText = `https://t.me/TAKAR_WALA_TG_BOT?start=${userData.referralCode}`;
+                    }
                     
-                    if(d.data().createdAt) {
-                        const date = d.data().createdAt.toDate();
+                    if(userData.createdAt && document.getElementById('joinDate')) {
+                        const date = userData.createdAt.toDate();
                         document.getElementById('joinDate').innerText = date.toLocaleDateString('bn-BD');
                     }
-                } else {
-                    safe('userNameDisplay', "Guest"); 
-                    safe('mainBalanceDisplay', "0.00");
                 }
             }, (err) => { 
                 console.error("Error syncing user data:", err);
             });
             
-        // ২. এডমিন প্যানেল (appConfig) থেকে রিয়েল-টাইম কন্ট্রোল
+            // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক
             db.collection("settings").doc("appConfig").onSnapshot((d) => { 
                 if(d.exists) {
                     systemSettings = d.data();
-                    
-                    // রিয়েল-টাইম মেইনটেনেন্স চেক
-                    if(systemSettings.maintenanceMode === true) {
-                        maintenanceMode = true;
-                        showMaintenanceScreen();
-                    } else {
-                        maintenanceMode = false;
-                        document.getElementById('maintenanceScreen').classList.add('hidden');
-                    }
-
-                    // রিয়েল-টাইম পেমেন্ট নাম্বার আপডেট
                     paymentNumbers = {
                         bKash: systemSettings.bkashNumber || "",
                         Nagad: systemSettings.nagadNumber || "",
@@ -3342,17 +3316,14 @@ lastValues.ref = newRef;
                 }
             });
 
-            // ৩. আলাদাভাবে নোটিশ সিঙ্ক
+            // ৩. নোটিশ সিঙ্ক
             db.collection("settings").doc("system").onSnapshot((d) => { 
                 if(d.exists) {
                     const noticeElement = document.getElementById('noticeText');
-                    if (noticeElement) {
-                        noticeElement.innerHTML = d.data().noticeText || "স্বাগতম!";
-                    }
+                    if (noticeElement) noticeElement.innerHTML = d.data().noticeText || "স্বাগতম!";
                 }
             });
         }
-
         // ✅ FIXED: LOAD TODAY'S EARNINGS (SOLVED FIREBASE QUERY ERROR)
         async function loadTodayEarnings(uid) {
             try {
