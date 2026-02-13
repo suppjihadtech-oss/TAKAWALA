@@ -1012,7 +1012,7 @@
                 <p class="text-sm font-bold text-slate-700 mb-2">বোনাস পেতে হলে:</p>
                 <ul class="text-xs text-left text-slate-600 list-disc pl-4 space-y-1">
                     <li>নিচের বাটনে ক্লিক করুন</li>
-                    <li>অ্যাডটি ওপেন করে ৫ সেকেন্ড দেখুন</li>
+                    <li>অ্যাডটি ওপেন করে ২০ সেকেন্ড দেখুন</li>
                     <li>তারপর ফিরে এসে "বন্ধ করুন" চাপুন</li>
                 </ul>
             </div>
@@ -2503,20 +2503,20 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
             const interstitial = document.getElementById('monitagInterstitial');
             interstitial.classList.remove('hidden');
             
-            let timeLeft = Math.floor(Math.random() * (25 - 20 + 1)) + 20; // ২০ থেকে ২৫ এর মধ্যে যেকোনো সংখ্যা নিবে
+            let timeLeft = Math.floor(Math.random() * (25 - 20 + 1)) + 20; 
             const timerElement = document.getElementById('adTimer');
             const closeBtn = document.getElementById('adCloseBtn') || interstitial.querySelector('button.bg-slate-200');
 
             if(closeBtn) {
                 if(!closeBtn.id) closeBtn.id = 'adCloseBtn';
-                closeBtn.style.display = 'none'; // শুরুতে ক্লোজ বাটন লুকানো থাকবে
-                closeBtn.innerHTML = "বন্ধ করুন";
+                closeBtn.style.display = 'none'; // শুরুতে লুকানো
+                closeBtn.disabled = true;
             }
 
             if(window.adInterval) clearInterval(window.adInterval);
 
             window.adInterval = setInterval(() => {
-                if (!document.hidden) { // ইউজার অ্যাডে থাকলে টাইমার কমবে
+                if (!document.hidden) {
                     timeLeft--;
                     if(timerElement) timerElement.innerHTML = `অপেক্ষা করুন: <span class="text-red-600 font-bold">${timeLeft}</span> সেকেন্ড`;
                     
@@ -2524,18 +2524,20 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
                         clearInterval(window.adInterval);
                         if(timerElement) timerElement.innerHTML = "✅ এখন আপনি অ্যাডটি বন্ধ করতে পারেন";
                         if(closeBtn) {
+                            // 🔥 এখানে মেইন ম্যাজিক: বাটন অটোমেটিক ভেসে উঠবে এবং লেখা চেঞ্জ হবে
+                            closeBtn.innerHTML = "বন্ধ করুন"; 
                             closeBtn.style.display = "block";
                             closeBtn.classList.remove('hidden');
                             closeBtn.disabled = false;
+                            closeBtn.style.opacity = "1";
                         }
                     }
                 } else { 
-                    // ইউজার অন্য ট্যাবে গেলে ওয়ার্নিং দিবে এবং টাইমার থেমে যাবে
                     if(timerElement) timerElement.innerHTML = `<span class="text-orange-500 animate-pulse">⚠️ টাইমার পজ! অ্যাডে ফিরে আসুন</span>`;
                 }
             }, 1000);
         }
-
+        
         function closeInterstitialAd() {
             const interstitial = document.getElementById('monitagInterstitial');
             interstitial.classList.add('hidden');
@@ -2554,23 +2556,18 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
         // ✅ ✅ FIXED: UPDATED AD LINK FUNCTION
         window.openAdLink = () => {
             const randomLink = adsterraLinks[Math.floor(Math.random() * adsterraLinks.length)];
-            
-            // ১. অ্যাড লিংক নতুন ট্যাবে ওপেন হবে
             window.open(randomLink, '_blank');
-            
-            // ২. ইউজারকে ২০ সেকেন্ডের নোটিশ দেওয়া
-            showSmartToast('অ্যাড ওপেন হয়েছে, ২০ সেকেন্ড অপেক্ষা করুন', 'info');
-            
-            // ৩. ২০ সেকেন্ড পূর্ণ না হওয়া পর্যন্ত বাটনটি ডিজেবল রাখা
-            const closeBtn = document.querySelector('#monitagInterstitial button.bg-slate-200');
+            showSmartToast('অ্যাড ওপেন হয়েছে, টাইমার শেষ হওয়া পর্যন্ত অপেক্ষা করুন', 'info');
+
+            const closeBtn = document.getElementById('adCloseBtn');
             if(closeBtn) {
-                closeBtn.innerHTML = "অপেক্ষা করুন...";
+                // ইউজার ক্লিক করার পর বাটনটা দেখাবে কিন্তু বলবে অপেক্ষা করতে
+                closeBtn.innerHTML = "অপেক্ষা করুন..."; 
+                closeBtn.style.display = "block";
                 closeBtn.disabled = true;
                 closeBtn.style.opacity = "0.5";
-                closeBtn.style.display = "block"; // বাটনটি দেখা যাবে কিন্তু ক্লিক করা যাবে না
             }
         };
-
         // ✅ COPY TO CLIPBOARD
         window.copyToClipboard = (text) => {
             navigator.clipboard.writeText(text).then(() => {
