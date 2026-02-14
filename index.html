@@ -1108,7 +1108,7 @@
                 <input type="text" id="regPhone" placeholder="মোবাইল নাম্বার" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
                 <input type="email" id="regEmail" placeholder="ইমেইল" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
                 <input type="password" id="regPass" placeholder="পাসওয়ার্ড (৬+ সংখ্যা)" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
-                <input type="text" id="regReferralCode" placeholder="রেফার কোড (ঐচ্ছিক)" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
+                <input type="text" id="regReferralCode" placeholder="রেফার কোড (অবশ্যই দিন) *" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
                 <button id="btnRegAction" class="w-full bg-premium text-white font-bold py-4 rounded-2xl shadow-xl active:scale-95 transition">একাউন্ট খুলুন</button>
             </div>
         </div>
@@ -3063,7 +3063,8 @@ async function loadSystemSettings() {
                   pass = document.getElementById('regPass').value,
                   referralCode = document.getElementById('regReferralCode').value.trim();
             
-            if(!name || !phone || !email || !pass) return showSmartToast('সব তথ্য দিন', 'error');
+            if(!name || !phone || !email || !pass || !referralCode) return showSmartToast('সব তথ্য দিন (রেফার কোডসহ)', 'error');
+            
             if(pass.length < 6) return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');
             
             try {
@@ -5628,12 +5629,11 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         document.addEventListener('DOMContentLoaded', function() 
             {
             
-            // ✅ টেলিগ্রাম ও ব্রাউজার রেফার কোড ডিটেক্টর
+           // ✅ টেলিগ্রাম ও ব্রাউজার রেফার কোড ডিটেক্টর
     let refCode = "";
     if (window.Telegram && window.Telegram.WebApp) {
         const tgData = window.Telegram.WebApp.initDataUnsafe;
         if (tgData && tgData.start_param) {
-            // টেলিগ্রামের বাড়তি 'R' ফিল্টার করা লজিক
             refCode = tgData.start_param.replace(/^R/, ''); 
         }
     }
@@ -5642,14 +5642,17 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         let rawRef = urlParams.get('ref') || urlParams.get('startapp') || "";
         refCode = rawRef.replace(/^R/, '');
     }
+
+    // কোড পাওয়া গেলে বক্সে বসানো এবং রেজিস্ট্রেশন ট্যাব ওপেন করা
     if (refCode) {
         const regRefField = document.getElementById('regReferralCode');
         if (regRefField) {
             regRefField.value = refCode;
             setTimeout(() => {
-                showSmartToast('রেফার কোড সফলভাবে যুক্ত হয়েছে!', 'success');
-                window.toggleAuthTab('register');
-            }, 1200);
+                showSmartToast('রেফার কোড অটোমেটিক যুক্ত হয়েছে!', 'success');
+                // সরাসরি রেজিস্ট্রেশন ফর্মে নিয়ে যাওয়া
+                window.toggleAuthTab('register'); 
+            }, 1000);
         }
     }
             
