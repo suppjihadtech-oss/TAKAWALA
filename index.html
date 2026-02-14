@@ -1475,6 +1475,23 @@
     </div>
 </div>
              
+             <!-- ✅ ৬৪৮ নম্বর লাইনের আশেপাশে বসাও -->
+<div onclick="window.showPage('promoClaimScreen')" class="w-full mt-4 mb-2 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-5 rounded-[30px] shadow-lg relative overflow-hidden group cursor-pointer active:scale-95 transition-all duration-300">
+    <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl transition-all"></div>
+    <div class="flex items-center justify-between relative z-10">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/30">
+                <i class="ri-magic-line text-white text-3xl animate-pulse"></i>
+            </div>
+            <div class="text-left">
+                <h3 class="text-xl font-black text-white leading-none">প্রোমো বোনাস ✨</h3>
+                <p class="text-[11px] text-purple-100 font-bold mt-1 opacity-90 uppercase tracking-widest">Enter Code & Win Cash</p>
+            </div>
+        </div>
+        <i class="ri-arrow-right-s-line text-white text-xl group-hover:translate-x-1 transition-transform"></i>
+    </div>
+</div>
+             
              <button onclick="window.logout()" class="w-full mt-10 bg-red-100 text-red-600 py-3 rounded-xl font-bold">লগআউট</button>
         </div>
 
@@ -1535,28 +1552,63 @@
             </div>
         </div>
 
-        <!-- REFERRAL SCREEN -->
+        <!-- REFERRAL SCREEN (ULTIMATE PREMIUM) -->
         <div id="referralScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-            <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">রেফার</h2></div>
-            <div class="glass-card p-6 rounded-[25px] text-center">
-                <img src="https://i.postimg.cc/c4xbp54V/add-friend.png" class="w-20 mx-auto mb-4">
-                <h3 class="text-lg font-bold mb-2">রেফার করুন, আয় করুন!</h3>
-                <p class="text-sm text-slate-600 mb-4 text-container">
-    আপনার রেফারাল লিংক শেয়ার করে প্রতি রেফার থেকে ৳<span id="refBonusText">5</span> উপার্জন করুন
-</p>
+            <div class="flex items-center gap-3 mb-6">
+                <button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
+                    <i class="ri-arrow-left-line text-xl text-slate-700"></i>
+                </button>
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight">রেফার ও আয়</h2>
+            </div>
+
+            <!-- প্রোমো কার্ড -->
+            <div class="glass-card p-6 rounded-[30px] text-center mb-6 relative overflow-hidden border-2 border-blue-500/20">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500/5 rounded-full -mr-10 -mt-10"></div>
                 
-                <div class="referral-box text-container" id="referralLink">
-                    লোড হচ্ছে...
-                </div>
+                <img src="https://i.postimg.cc/c4xbp54V/add-friend.png" class="w-16 mx-auto mb-3 drop-shadow-lg">
+                <h3 class="text-lg font-bold text-slate-800">বন্ধুদের ইনভাইট করুন</h3>
+                <p class="text-[11px] text-slate-500 mb-5 leading-relaxed">আপনার রেফারাল লিংক শেয়ার করুন। কেউ আপনার লিংকে জয়েন করলেই আপনি পাবেন <span class="text-blue-600 font-bold">নিশ্চিত বোনাস!</span></p>
                 
-                <div class="mb-4">
-                    <p class="text-sm font-bold text-slate-700 text-container">আপনার রেফার সংখ্যা: <span id="referralCount">0</span></p>
-                    <p class="text-sm font-bold text-green-600 text-container">রেফার আয়: ৳<span id="referralEarnings">0</span></p>
+                <!-- লিংক ও শেয়ার বাটন গ্রুপ -->
+                <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 mb-2">
+                    <div class="flex-1 text-left pl-2 overflow-hidden">
+                        <p class="text-[9px] text-slate-400 font-bold uppercase">আপনার লিংক</p>
+                        <p id="referralLink" class="text-xs font-mono font-bold text-blue-600 truncate">লোড হচ্ছে...</p>
+                    </div>
+                    <button onclick="window.copyReferralLink()" class="w-10 h-10 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center text-slate-600 active:scale-90 transition">
+                        <i class="ri-file-copy-line"></i>
+                    </button>
+                    <button onclick="window.shareReferralLink()" class="w-10 h-10 bg-blue-600 rounded-xl shadow-md shadow-blue-200 flex items-center justify-center text-white active:scale-90 transition">
+                        <i class="ri-share-forward-line"></i>
+                    </button>
                 </div>
-                <button onclick="window.copyReferralLink()" class="w-full bg-premium text-white py-3 rounded-xl font-bold shadow-lg">লিংক কপি করুন</button>
+            </div>
+
+            <!-- স্ট্যাটাস গ্রিড -->
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="bg-white p-5 rounded-[25px] border border-slate-100 shadow-sm text-center">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">মোট রেফার</p>
+                    <h3 class="text-2xl font-black text-slate-800" id="referralCount">0</h3>
+                </div>
+                <div class="bg-white p-5 rounded-[25px] border border-slate-100 shadow-sm text-center">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">রেফার আয়</p>
+                    <h3 class="text-2xl font-black text-emerald-600">৳<span id="referralEarnings">0</span></h3>
+                </div>
+            </div>
+
+            <!-- রেফারাল লিস্ট -->
+            <div class="flex items-center justify-between mb-4 px-1">
+                <h4 class="font-bold text-slate-700 text-sm">সফল রেফারালসমূহ</h4>
+                <button onclick="loadReferralList()" class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-600">
+                    <i class="ri-refresh-line"></i>
+                </button>
+            </div>
+
+            <div id="referralListContainer" class="space-y-3 pb-10">
+                <div class="text-center py-10 opacity-50 italic text-xs text-slate-400">লোড হচ্ছে...</div>
             </div>
         </div>
-
+        
         <!-- MARKETING SCREEN -->
         <div id="marketingScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
             <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">মার্কেটিং</h2></div>
@@ -1761,6 +1813,55 @@
         </div>
         
         <!-- VIP SCREEN -->
+        <!-- VIP SCREEN এর ভেতর একদম উপরে এটা বসাও -->
+<div id="vipScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
+     <div class="flex justify-between items-center mb-6">
+         <div class="flex items-center gap-3">
+             <button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md">
+                 <i class="ri-arrow-left-line text-xl"></i>
+             </button>
+             <h2 class="text-2xl font-bold text-slate-800">প্যাকেজ</h2>
+         </div>
+     </div>
+
+     <!-- ✅ রিয়েল-টাইম প্যাকেজ কাউন্টডাউন বক্স -->
+     <div id="activePackageTimer" class="hidden glass-card p-5 rounded-3xl border-2 border-green-500 mb-6 bg-gradient-to-br from-green-50 to-white shadow-lg animate__animated animate__pulse animate__infinite">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                <i class="ri-vip-crown-fill text-xl"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase">আপনার বর্তমান প্যাকেজ</p>
+                <h4 class="font-black text-slate-800" id="activePlanName">গোল্ড</h4>
+            </div>
+        </div>
+        
+        <p class="text-xs font-bold text-slate-500 mb-2">মেয়াদ শেষ হতে বাকি:</p>
+        <div class="grid grid-cols-4 gap-2 text-center">
+            <div class="bg-white p-2 rounded-xl border border-slate-100 shadow-sm">
+                <span id="exp_days" class="block font-black text-green-600 text-lg">00</span>
+                <span class="text-[8px] font-bold text-slate-400">দিন</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl border border-slate-100 shadow-sm">
+                <span id="exp_hours" class="block font-black text-green-600 text-lg">00</span>
+                <span class="text-[8px] font-bold text-slate-400">ঘণ্টা</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl border border-slate-100 shadow-sm">
+                <span id="exp_mins" class="block font-black text-green-600 text-lg">00</span>
+                <span class="text-[8px] font-bold text-slate-400">মিনিট</span>
+            </div>
+            <div class="bg-white p-2 rounded-xl border border-slate-100 shadow-sm">
+                <span id="exp_secs" class="block font-black text-red-500 text-lg animate-pulse">00</span>
+                <span class="text-[8px] font-bold text-slate-400">সেকেন্ড</span>
+            </div>
+        </div>
+     </div>
+
+     <!-- ডাইনামিক প্যাকেজ লিস্ট এখানে লোড হবে -->
+     <div id="packageListContainer" class="space-y-4"></div>
+</div>
+        
+        
         <div id="vipScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
              <div class="flex justify-between items-center mb-6"><div class="flex items-center gap-3"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">প্যাকেজ</h2></div></div>
              
@@ -1911,6 +2012,49 @@
     </div>
 </div>
 
+<!-- ✅ PROMO CLAIM SCREEN (এটি বসবে SUBSCRIPTION SCREEN এর উপরে) -->
+        <div id="promoClaimScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight min-h-screen bg-white">
+            <!-- হেডার -->
+            <div class="flex items-center gap-3 mb-8">
+                <button onclick="window.showPage('moreScreen')" class="bg-white w-10 h-10 rounded-full shadow-md flex items-center justify-center active:scale-90 transition">
+                    <i class="ri-arrow-left-line text-xl text-slate-700"></i>
+                </button>
+                <div>
+                    <h2 class="text-2xl font-black text-slate-800 tracking-tight">প্রোমো বোনাস ✨</h2>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Enter Magic Code & Win</p>
+                </div>
+            </div>
+
+            <!-- মেইন কার্ড -->
+            <div class="glass-card p-8 rounded-[35px] text-center relative overflow-hidden border-2 border-purple-100 shadow-2xl shadow-purple-100/30">
+                <!-- ব্যাকগ্রাউন্ড হালকা ডেকোরেশন -->
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-purple-500/5 rounded-full"></div>
+                
+                <div class="relative z-10">
+                    <div class="w-20 h-20 bg-gradient-to-tr from-purple-100 to-indigo-50 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner border border-white">
+                        <i class="ri-gift-2-fill text-4xl text-purple-600 animate-bounce"></i>
+                    </div>
+                    
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">আপনার কাছে কি কোড আছে?</h3>
+                    <p class="text-xs text-slate-500 mb-8 px-2 leading-relaxed">অফিসিয়াল চ্যানেল থেকে পাওয়া গোপন প্রোমো কোডটি নিচে লিখে বোনাস সংগ্রহ করুন।</p>
+
+                    <!-- ইনপুট বক্স -->
+                    <div class="space-y-4">
+                        <input type="text" id="userPromoInput" placeholder="TKW-XXXXXX" 
+                            class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center font-mono font-black text-2xl text-purple-600 outline-none focus:border-purple-500 transition-all uppercase shadow-inner">
+
+                        <button onclick="window.processMagicPromo()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-2xl font-black text-base shadow-xl shadow-purple-200 active:scale-95 transition-all flex items-center justify-center gap-2">
+                            বোনাস ক্লেইম করুন 🚀
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- হেল্প মেসেজ -->
+            <p class="text-center mt-8 text-[10px] text-slate-400 font-bold px-10">
+                * একটি প্রোমো কোড শুধুমাত্র একবার ব্যবহার করা যাবে। ভুল কোড বারবার দিলে একাউন্ট ব্লক হতে পারে।
+            </p>
+        </div>
 
         <!-- SUBSCRIPTION SCREEN -->
                  <div id="subscriptionScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
@@ -3068,8 +3212,24 @@ async function loadSystemSettings() {
             if(pass.length < 6) return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');
             
             try {
-                showLoading();
-                showSmartToast('একাউন্ট তৈরি হচ্ছে...', 'info');
+    showLoading();
+
+    // ✅ ডিভাইস লক চেক শুরু
+    let deviceToken = localStorage.getItem('takawala_device_id');
+    if (!deviceToken) {
+        deviceToken = 'ID-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+        localStorage.setItem('takawala_device_id', deviceToken);
+    }
+
+    const checkDevice = await db.collection("users").where("deviceToken", "==", deviceToken).get();
+    if (!checkDevice.empty) {
+        hideLoading();
+        Swal.fire({ icon: 'error', title: 'নিষেধাজ্ঞা!', text: 'একটি ডিভাইস থেকে একাধিক একাউন্ট তৈরি করা সম্ভব নয়।' });
+        return;
+    }
+    // ✅ ডিভাইস লক চেক শেষ
+
+    showSmartToast('একাউন্ট তৈরি হচ্ছে...', 'info');
                 const uc = await auth.createUserWithEmailAndPassword(email, pass);
                 
                 const userReferralCode = 'REF' + Math.floor(100000 + Math.random() * 900000);
@@ -3093,6 +3253,8 @@ async function loadSystemSettings() {
                     referralCode: userReferralCode,
                     referredBy: referralCode || null,
                     avatar: selectedAvatar,
+                    
+             deviceToken: deviceToken,       
                     address: '',
                     todayEarnings: 0,
                     lastQuizDate_general: null,
@@ -3299,6 +3461,8 @@ async function loadSystemSettings() {
                         const date = userData.createdAt.toDate();
                         document.getElementById('joinDate').innerText = date.toLocaleDateString('bn-BD');
                     }
+          renderTasks();  
+                   
                 }
             }, (err) => { 
                 console.error("Error syncing user data:", err);
@@ -3366,124 +3530,126 @@ async function loadSystemSettings() {
 
          // ✅ উন্নত টাস্ক রেন্ডারিং লজিক (ট্যাব ফিল্টার ও সব সোশ্যাল মিডিয়া লোগোসহ)
         function renderTasks() {
-            if(!currentUserId) return;
+    // ১. ইউজার ডাটা না আসা পর্যন্ত অপেক্ষা করবে
+    if(!currentUserId || !currentUserData) return;
 
-            const list = document.getElementById('taskListContainer'); 
-            if(!list) return;
+    const list = document.getElementById('taskListContainer'); 
+    if(!list) return;
 
-            list.innerHTML = `
-                <div class="flex flex-col items-center justify-center py-10 opacity-60">
-                    <div class="w-10 h-10 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin mb-3"></div>
-                    <p class="text-xs font-bold text-slate-400">টাস্ক লোড হচ্ছে...</p>
-                </div>`;
+    // লোডিং এনিমেশন
+    list.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-10 opacity-60">
+            <div class="w-10 h-10 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin mb-3"></div>
+            <p class="text-xs font-bold text-slate-400">টাস্ক লোড হচ্ছে...</p>
+        </div>`;
 
-            db.collection("task_submissions")
-                .where("userId", "==", currentUserId)
-                .get()
-                .then((submissionSnap) => {
-                    const completedTasks = new Set();
-                    submissionSnap.forEach(doc => completedTasks.add(doc.data().taskId));
+    const todayStr = new Date().toLocaleDateString('bn-BD'); // আজকের তারিখ বের করা
 
-                    db.collection("tasks")
-                        .where("status", "==", "active") 
-                        .orderBy("createdAt", "desc")
-                        .onSnapshot((snap) => {
-                            list.innerHTML = ''; 
-                            let hasTask = false;
-                            const userPlan = currentUserData ? (currentUserData.plan || "Free Member") : "Free Member";
+db.collection("task_submissions")
+    .where("userId", "==", currentUserId)
+    .where("date", "==", todayStr) // শুধুমাত্র আজকের জমাগুলো চেক করবে
+    .get()
+    .then((submissionSnap) => {
+            const completedTasks = new Set();
+            submissionSnap.forEach(doc => completedTasks.add(doc.data().taskId));
 
-                            snap.forEach(doc => {
-                                const t = doc.data();
-                                const taskId = doc.id;
+            db.collection("tasks")
+                .where("status", "==", "active") 
+                .orderBy("createdAt", "desc")
+                .onSnapshot((snap) => {
+                    list.innerHTML = ''; 
+                    let hasTask = false;
 
-                                // ১. ইউজারের এই প্যাকেজে টাস্কটি পারমিশন আছে কিনা চেক
-                                const isAllowed = t.allowedPlans.includes('all') || t.allowedPlans.includes(userPlan);
-                                
-                                // ২. ট্যাব ফিল্টারিং লজিক
-                                let isTabCorrect = false;
-                                if (currentTaskType === 'free') {
-                                    // ফ্রি ট্যাবে শুধু "all" অথবা "Free Member" টাস্ক দেখাবে
-                                    if (t.allowedPlans.includes('all') || t.allowedPlans.includes('Free Member')) isTabCorrect = true;
-                                } else {
-                                    // ভিআইপি ট্যাবে শুধু প্রিমিয়াম টাস্কগুলো দেখাবে
-                                    if (!t.allowedPlans.includes('Free Member') || t.allowedPlans.includes(userPlan)) isTabCorrect = true;
-                                }
+                    // ইউজারের প্ল্যান নাম প্রসেসিং (silver প্যাকেজ -> silver)
+                    const userPlanRaw = currentUserData.plan || "Free Member";
+                    const userPlan = userPlanRaw.replace(' প্যাকেজ', '').trim().toLowerCase(); 
 
-                                if (!completedTasks.has(taskId) && isAllowed && isTabCorrect) {
-                                    hasTask = true;
+                    snap.forEach(doc => {
+                        const t = doc.data();
+                        const taskId = doc.id;
+                        
+                        // এডমিন থেকে আসা প্ল্যানগুলোকেও ছোট হাতের করে নেওয়া
+                        const taskAllowedPlans = (t.allowedPlans || []).map(p => p.toLowerCase());
 
-                                    // --- 🎨 স্মার্ট আইকন ও সোশ্যাল লোগো লজিক ---
-                                    let icon = 'ri-links-line'; 
-                                    let iconColor = 'text-slate-600';
-                                    let bgColor = 'bg-slate-100';
-
-                                    const titleLower = (t.title || "").toLowerCase();
-                                    const linkLower = (t.link || "").toLowerCase();
-
-                                    // YouTube
-                                    if (titleLower.includes('youtube') || linkLower.includes('youtube.com') || linkLower.includes('youtu.be')) {
-                                        icon = 'ri-youtube-fill'; iconColor = 'text-red-600'; bgColor = 'bg-red-50';
-                                    } 
-                                    // Facebook
-                                    else if (titleLower.includes('facebook') || linkLower.includes('facebook.com') || linkLower.includes('fb.watch')) {
-                                        icon = 'ri-facebook-circle-fill'; iconColor = 'text-blue-600'; bgColor = 'bg-blue-50';
-                                    } 
-                                    // Telegram
-                                    else if (titleLower.includes('telegram') || linkLower.includes('t.me')) {
-                                        icon = 'ri-telegram-fill'; iconColor = 'text-sky-500'; bgColor = 'bg-sky-50';
-                                    }
-                                    // Instagram
-                                    else if (titleLower.includes('instagram') || linkLower.includes('instagram.com')) {
-                                        icon = 'ri-instagram-fill'; iconColor = 'text-pink-600'; bgColor = 'bg-pink-50';
-                                    }
-                                    // TikTok
-                                    else if (titleLower.includes('tiktok') || linkLower.includes('tiktok.com')) {
-                                        icon = 'ri-tiktok-fill'; iconColor = 'text-black'; bgColor = 'bg-slate-200';
-                                    }
-                                    // Twitter / X
-                                    else if (titleLower.includes('twitter') || titleLower.includes(' x ') || linkLower.includes('twitter.com') || linkLower.includes('x.com')) {
-                                        icon = 'ri-twitter-x-fill'; iconColor = 'text-slate-900'; bgColor = 'bg-slate-100';
-                                    }
-                                    // Website / Globe
-                                    else if (titleLower.includes('website') || titleLower.includes('visit') || titleLower.includes('link') || linkLower.includes('http')) {
-                                        icon = 'ri-global-line'; iconColor = 'text-emerald-600'; bgColor = 'bg-emerald-50';
-                                    }
-
-                                    list.innerHTML += `
-                                    <div class="glass-card p-4 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp mb-3 border border-slate-100 shadow-sm">
-                                        <div class="flex items-center gap-4">
-                                            <div class="w-12 h-12 ${bgColor} rounded-full flex items-center justify-center text-2xl ${iconColor}">
-                                                <i class="${icon}"></i>
-                                            </div>
-                                            <div>
-                                                <h4 class="font-bold text-slate-800 text-sm">${t.title}</h4>
-                                                <p class="text-[10px] text-slate-400 font-bold">পুরস্কার: ৳${t.reward}</p>
-                                            </div>
-                                        </div>
-                                        <button onclick="window.completeTask('${taskId}', ${t.reward}, 'general', '${t.title}', '${t.description || ''}', '${t.link || '#'}')" 
-                                            class="bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg active:scale-95 transition-all">
-                                            কাজ করুন
-                                        </button>
-                                    </div>`;
-                                }
-                            });
-
-                            if(!hasTask) {
-                                list.innerHTML = `
-                                    <div class="text-center py-16 animate__animated animate__fadeIn">
-                                        <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-slate-200">
-                                            <i class="ri-clipboard-line text-5xl text-slate-300"></i>
-                                        </div>
-                                        <h3 class="text-lg font-bold text-slate-500">টাস্ক খালি! 🎉</h3>
-                                        <p class="text-xs text-slate-400 mt-1 px-10">আপনার জন্য এই মুহূর্তে কোনো ${currentTaskType === 'free' ? 'ফ্রি' : 'ভিআইপি'} টাস্ক নেই।</p>
-                                        <button onclick="renderTasks()" class="mt-6 text-blue-600 font-bold text-xs flex items-center justify-center gap-1 mx-auto bg-blue-50 px-4 py-2 rounded-full active:scale-95 transition-all">
-                                            <i class="ri-refresh-line"></i> রিফ্রেশ করুন
-                                        </button>
-                                    </div>`;
+                        // ২. প্যাকেজ পারমিশন চেক (all অথবা নির্দিষ্ট plan)
+                        const isAllowedByPlan = taskAllowedPlans.includes('all') || taskAllowedPlans.includes(userPlan);
+                        
+                        // ৩. ট্যাব অনুযায়ী ফিল্টারিং লজিক (Free vs VIP Tab)
+                        let isCorrectTab = false;
+                        if (currentTaskType === 'free') {
+                            // ফ্রি ট্যাবে দেখাবে: যারা 'all' অথবা 'free member'
+                            if (taskAllowedPlans.includes('all') || taskAllowedPlans.includes('free member')) {
+                                isCorrectTab = true;
                             }
-                        });
+                        } else {
+                            // ভিআইপি ট্যাবে দেখাবে: যারা 'free member' নয় এবং ইউজারের প্ল্যানের সাথে মিলে যায়
+                            if (taskAllowedPlans.includes('all') || (taskAllowedPlans.includes(userPlan) && userPlan !== 'free member')) {
+                                isCorrectTab = true;
+                            }
+                        }
+
+                        // ✅ ৪. ফাইনাল চেক: যদি সব কন্ডিশন মিলে তবেই দেখাবে
+                        if (!completedTasks.has(taskId) && isAllowedByPlan && isCorrectTab) {
+                            hasTask = true;
+
+                            // --- 🎨 স্মার্ট আইকন ও সোশ্যাল লোগো লজিক ---
+                            let icon = 'ri-links-line'; 
+                            let iconColor = 'text-slate-600';
+                            let bgColor = 'bg-slate-100';
+
+                            const titleLower = (t.title || "").toLowerCase();
+                            const linkLower = (t.link || "").toLowerCase();
+
+                            if (titleLower.includes('youtube') || linkLower.includes('youtube.com')) {
+                                icon = 'ri-youtube-fill'; iconColor = 'text-red-600'; bgColor = 'bg-red-50';
+                            } else if (titleLower.includes('facebook') || linkLower.includes('facebook.com')) {
+                                icon = 'ri-facebook-circle-fill'; iconColor = 'text-blue-600'; bgColor = 'bg-blue-50';
+                            } else if (titleLower.includes('telegram') || linkLower.includes('t.me')) {
+                                icon = 'ri-telegram-fill'; iconColor = 'text-sky-500'; bgColor = 'bg-sky-50';
+                            } else if (titleLower.includes('instagram')) {
+                                icon = 'ri-instagram-fill'; iconColor = 'text-pink-600'; bgColor = 'bg-pink-50';
+                            } else if (titleLower.includes('tiktok')) {
+                                icon = 'ri-tiktok-fill'; iconColor = 'text-black'; bgColor = 'bg-slate-200';
+                            } else if (titleLower.includes('visit') || linkLower.includes('http')) {
+                                icon = 'ri-global-line'; iconColor = 'text-emerald-600'; bgColor = 'bg-emerald-50';
+                            }
+
+                            list.innerHTML += `
+                            <div class="glass-card p-4 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp mb-3 border border-slate-100 shadow-sm">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 ${bgColor} rounded-full flex items-center justify-center text-2xl ${iconColor}">
+                                        <i class="${icon}"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-800 text-sm">${t.title}</h4>
+                                        <p class="text-[10px] text-slate-400 font-bold">পুরস্কার: ৳${t.reward}</p>
+                                    </div>
+                                </div>
+                                <button onclick="window.completeTask('${taskId}', ${t.reward}, 'general', '${t.title}', '${t.description || ''}', '${t.link || '#'}')" 
+                                    class="bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg active:scale-95 transition-all">
+                                    কাজ করুন
+                                </button>
+                            </div>`;
+                        }
+                    });
+
+                    // যদি কোনো টাস্ক না থাকে
+                    if(!hasTask) {
+                        list.innerHTML = `
+                            <div class="text-center py-16 animate__animated animate__fadeIn">
+                                <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-slate-200">
+                                    <i class="ri-clipboard-line text-4xl text-slate-300"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-500">টাস্ক খালি! 🎉</h3>
+                                <p class="text-xs text-slate-400 mt-1 px-10 mb-6">আপনার জন্য এই মুহূর্তে কোনো ${currentTaskType === 'free' ? 'ফ্রি' : 'ভিআইপি'} টাস্ক নেই।</p>
+                                <button onclick="renderTasks()" class="bg-blue-50 text-blue-600 px-6 py-2 rounded-full font-bold text-xs active:scale-95 transition-all border border-blue-100">
+                                    <i class="ri-refresh-line"></i> রিফ্রেশ করুন
+                                </button>
+                            </div>`;
+                    }
                 });
-        }
+        });
+}
                             
         // ✅ ENHANCED HISTORY SYSTEM WITH FILTER - FIXED LAYOUT
         window.loadHistory = () => {
@@ -5353,7 +5519,11 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                 }
                 if(id === 'vipScreen') {
                     loadPackages();
+ startPackageCountdown();              
+               
                 }
+               if(id === 'referralScreen') { loadReferralList(); } 
+                
                 
                 hideLoading();
             }, 500);
@@ -5653,86 +5823,58 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
 
              // ✅ INITIALIZE EVENT LISTENERS
-        document.addEventListener('DOMContentLoaded', function() 
-            {
-            
-           // ✅ টেলিগ্রাম ও ব্রাউজার রেফার কোড ডিটেক্টর
-    let refCode = "";
-    if (window.Telegram && window.Telegram.WebApp) {
-        const tgData = window.Telegram.WebApp.initDataUnsafe;
-        if (tgData && tgData.start_param) {
-            refCode = tgData.start_param.replace(/^R/, ''); 
-        }
-    }
-    if (!refCode) {
-        const urlParams = new URLSearchParams(window.location.search);
-        let rawRef = urlParams.get('ref') || urlParams.get('startapp') || "";
-        refCode = rawRef.replace(/^R/, '');
-    }
+        document.addEventListener('DOMContentLoaded', function() {
+            // ১. রেফার কোড ডিটেক্টর
+            let refCode = "";
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tgData = window.Telegram.WebApp.initDataUnsafe;
+                if (tgData && tgData.start_param) refCode = tgData.start_param.replace(/^R/, ''); 
+            }
+            if (!refCode) {
+                const urlParams = new URLSearchParams(window.location.search);
+                refCode = (urlParams.get('ref') || urlParams.get('startapp') || "").replace(/^R/, '');
+            }
 
-    // কোড পাওয়া গেলে বক্সে বসানো এবং রেজিস্ট্রেশন ট্যাব ওপেন করা
-    if (refCode) {
-        const regRefField = document.getElementById('regReferralCode');
-        if (regRefField) {
-            regRefField.value = refCode;
-            setTimeout(() => {
-                showSmartToast('রেফার কোড অটোমেটিক যুক্ত হয়েছে!', 'success');
-                // সরাসরি রেজিস্ট্রেশন ফর্মে নিয়ে যাওয়া
-                window.toggleAuthTab('register'); 
-            }, 1000);
-        }
-    }
+            if (refCode) {
+                const regRefField = document.getElementById('regReferralCode');
+                if (regRefField) {
+                    regRefField.value = refCode;
+                    setTimeout(() => {
+                        showSmartToast('রেফার কোড যুক্ত হয়েছে!', 'success');
+                        window.toggleAuthTab('register'); 
+                    }, 1000);
+                }
+            }
             
             loadSystemSettings();
             
-            const depositAmount = document.getElementById('depositAmount');
-            if(depositAmount) {
-                depositAmount.addEventListener('input', window.calculateDepositVAT);
-            }
+            // ২. ইনপুট লিসেনারস
+            const depAmt = document.getElementById('depositAmount');
+            if(depAmt) depAmt.addEventListener('input', window.calculateDepositVAT);
             
-            const withdrawAmount = document.getElementById('withdrawAmount');
-            if(withdrawAmount) {
-                withdrawAmount.addEventListener('input', window.calculateWithdrawVAT);
-            }
+            const withAmt = document.getElementById('withdrawAmount');
+            if(withAmt) withAmt.addEventListener('input', window.calculateWithdrawVAT);
             
-            const rechAmount = document.getElementById('rechAmount');
-            if(rechAmount) {
-                rechAmount.addEventListener('input', window.calculateRechargeFee);
-            }
+            const rechAmt = document.getElementById('rechAmount');
+            if(rechAmt) rechAmt.addEventListener('input', window.calculateRechargeFee);
             
-            window.calculateDepositVAT();
-            window.calculateWithdrawVAT();
-            window.calculateRechargeFee();
-            
-            // 📳 SECRET PRO TIP: HAPTIC FEEDBACK (ঠিক করা হয়েছে)
+            // ৩. হ্যাপটিক ফিডব্যাক ও সাউন্ড বাইন্ডিং
             document.querySelectorAll('button, .glass-card, .cursor-pointer').forEach(element => {
                 element.addEventListener('click', () => {
-                    if (navigator.vibrate) {
-                        navigator.vibrate(40); // হালকা ভাইব্রেশন
-                    }
+                    window.playSound('snd_click');
+                    if (navigator.vibrate) navigator.vibrate(40);
                 });
             });
 
-        }); // <--- এই ক্লোজিং ব্র্যাকেটটাই মিসিং ছিল!
-        
-                // ✅ INTERNET CONNECTION CHECKER
+            setTimeout(attachAppSounds, 1000);
+        }); 
+
+        // ৪. ইন্টারনেট কানেকশন চেক
         window.addEventListener('offline', () => {
-            Swal.fire({
-                title: 'কানেকশন বিচ্ছিন্ন!',
-                text: ' প্রিয় ইউজার আপনার ইন্টারনেট কানেকশন চলে গেছে। দয়া করে নেট চেক করে আবার চেষ্টা  করুন।',
-                icon: 'warning',
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                background: '#fff',
-                color: '#ef4444'
-            });
+            Swal.fire({ title: 'ইন্টারনেট কানেকশন বিচ্ছিন্ন!', text: 'প্রিয় ইউজার আপনার ইন্টারনেট কানেকশন চলে গেছে! দয়া করে চেক করুন।', icon: 'warning', showConfirmButton: false, allowOutsideClick: false });
         });
 
-        window.addEventListener('online', () => {
-            Swal.close();
-            showSmartToast('ইন্টারনেট ফিরে এসেছে! ✅', 'success');
-        });
-
+        window.addEventListener('online', () => { Swal.close(); showSmartToast('ইন্টারনেট ফিরে এসেছে! ', 'success'); });
         // ✅ উন্নত এবং এরর-ফ্রি সাউন্ড ফাংশন (Smart Fix)
         window.playSound = (id) => {
             const audio = document.getElementById(id);
@@ -6204,6 +6346,168 @@ document.addEventListener('visibilitychange', () => {
     }
 });
    
+   let packageCountdownInterval = null;
+
+function startPackageCountdown() {
+    // আগের কোনো ইন্টারভাল থাকলে বন্ধ করা
+    if (packageCountdownInterval) clearInterval(packageCountdownInterval);
+
+    packageCountdownInterval = setInterval(() => {
+        const timerBox = document.getElementById('activePackageTimer');
+        
+        // ১. চেক করা ইউজার প্যাকেজ হোল্ডার কিনা
+        if (!currentUserData || !currentUserData.packageExpiresAt || currentUserData.plan === "Free Member") {
+            if(timerBox) timerBox.classList.add('hidden');
+            return;
+        }
+
+        const expiryDate = currentUserData.packageExpiresAt.toDate(); // Firebase Timestamp to JS Date
+        const now = new Date();
+        const diff = expiryDate - now;
+
+        // ২. যদি মেয়াদ শেষ হয়ে যায়
+        if (diff <= 0) {
+            clearInterval(packageCountdownInterval);
+            if(timerBox) timerBox.classList.add('hidden');
+            // ডাটাবেজে ইউজারকে ফ্রি মেম্বার করে দেওয়া (সার্ভার সাইড সিকিউরিটি হিসেবে এডমিন থেকেও করা যায়)
+            return;
+        }
+
+        // ৩. সময় ক্যালকুলেশন
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        // ৪. UI আপডেট
+        if(timerBox) {
+            timerBox.classList.remove('hidden');
+            document.getElementById('activePlanName').innerText = currentUserData.plan;
+            document.getElementById('exp_days').innerText = days.toString().padStart(2, '0');
+            document.getElementById('exp_hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('exp_mins').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('exp_secs').innerText = seconds.toString().padStart(2, '0');
+        }
+    }, 1000);
+}
+   
+   // ১. রেফারাল লিংক শেয়ারিং ফাংশন (Smart Message সহ)
+window.shareReferralLink = async () => {
+    const link = document.getElementById('referralLink').innerText;
+    if(link === "লোড হচ্ছে...") return;
+
+    const shareData = {
+        title: 'টাকাওয়ালা - ঘরে বসে আয়',
+        text: `আসসালামু আলাইকুম! 👋\n\nঘরে বসে মোবাইল দিয়ে প্রতিদিন ৫০০-১০০০ টাকা আয় করতে চান? আজই জয়েন করুন "টাকাওয়ালা" অ্যাপে।\n\n✅ ১০০% বিশ্বস্ত\n✅ দ্রুত পেমেন্ট\n✅ রেফার বোনাস\n\nনিচের লিংকে ক্লিক করে এখনই জয়েন করুন:\n`,
+        url: link
+    };
+
+    try {
+        if (navigator.share) {
+            await navigator.share(shareData);
+        } else {
+            // যদি ব্রাউজার শেয়ার সাপোর্ট না করে তবে সরাসরি কপি হবে
+            window.copyReferralLink();
+            showSmartToast('লিংক কপি হয়েছে! এখন যে কাউকে পাঠান।', 'success');
+        }
+    } catch (err) { console.log(err); }
+};
+
+// ২. রেফারাল লিস্ট লোড করার উন্নত ফাংশন
+async function loadReferralList() {
+    if(!currentUserData || !currentUserData.referralCode) return;
+    const container = document.getElementById('referralListContainer');
+    const myCode = currentUserData.referralCode.trim();
+
+    container.innerHTML = '<div class="text-center py-10"><div class="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div></div>';
+
+    try {
+        const snapshot = await db.collection("users").where("referredBy", "==", myCode).get();
+
+        if (snapshot.empty) {
+            container.innerHTML = `
+                <div class="bg-slate-50 p-8 rounded-[30px] border border-dashed border-slate-200 text-center">
+                    <p class="text-[11px] font-bold text-slate-400">আপনার রেফারে এখনো কেউ জয়েন করেনি। বন্ধুদের ইনভাইট করুন!</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = '';
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            let date = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString('bn-BD') : '---';
+            
+            container.innerHTML += `
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm animate__animated animate__fadeInUp">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center font-black text-slate-500 border border-white shadow-sm">
+                            ${data.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="text-left">
+                            <p class="text-sm font-bold text-slate-800">${data.name}</p>
+                            <p class="text-[10px] text-slate-400">জয়েনিং: ${date}</p>
+                        </div>
+                    </div>
+                    <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">সফল রেফার</span>
+                </div>`;
+        });
+    } catch (e) { console.log(e); }
+    
+}
+
+// ✅ প্রোমো কোড প্রসেসিং ফাংশন (Script এর শেষে বসাও)
+window.processMagicPromo = async () => {
+    const inputField = document.getElementById('userPromoInput');
+    const promoCode = inputField.value.trim().toUpperCase();
+    if (!promoCode) { showSmartToast('মামা, কোডটি লিখুন!', 'error'); return; }
+
+    showLoading();
+    try {
+        const promoRef = db.collection("promo_codes").doc(promoCode);
+        const doc = await promoRef.get();
+
+        if (!doc.exists) {
+            showSmartToast('ভুল প্রোমো কোড! ❌', 'error');
+        } else {
+            const data = doc.data();
+            const now = new Date();
+            const expiry = data.expiryAt.toDate();
+
+            if (now > expiry) {
+                showSmartToast('কোডটির মেয়াদ শেষ! ⏰', 'error');
+            } else if (data.usedBy && data.usedBy.includes(currentUserId)) {
+                showSmartToast('আপনি অলরেডি একবার নিয়েছেন! ✋', 'warning');
+            } else {
+                const bonusAmount = data.amount || 0;
+                await db.collection("users").doc(currentUserId).update({
+                    mainBalance: firebase.firestore.FieldValue.increment(bonusAmount),
+                    totalEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
+                });
+                await promoRef.update({ usedBy: firebase.firestore.FieldValue.arrayUnion(currentUserId) });
+                await db.collection("history").add({
+                    userId: currentUserId, type: "প্রোমো বোনাস 🎁", amount: bonusAmount, status: "Success",
+                    details: `Code: ${promoCode}`, date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'), timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+                window.playSound('snd_success');
+                inputField.value = '';
+
+                Swal.fire({
+                    title: 'সাকসেস! 🎉',
+                    html: `আপনি পেয়েছেন <b>৳${bonusAmount}</b> বোনাস।`,
+                    icon: 'success',
+                    confirmButtonText: 'ধন্যবাদ মামা!',
+                    confirmButtonColor: '#7c3aed',
+                    customClass: { popup: 'rounded-[30px]' }
+                }).then(() => window.showPage('homeScreen'));
+            }
+        }
+    } catch (e) { showSmartToast('সার্ভার সমস্যা!', 'error'); }
+    hideLoading();
+};
+
    
     </script>
     
