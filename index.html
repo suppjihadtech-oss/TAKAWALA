@@ -2548,7 +2548,7 @@ function animateNumberUpdate(id, start, end, duration = 1000) {
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         const value = progress * (end - start) + start;
         if (id === 'balanceAmount' || id.includes('Display') || id.includes('Balance')) {
-            obj.innerHTML = "৳" + value.toFixed(2);
+            obj.innerHTML = value.toFixed(2);
         } else {
             obj.innerHTML = Math.floor(value);
         }
