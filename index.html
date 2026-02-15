@@ -1860,22 +1860,8 @@
      <!-- ডাইনামিক প্যাকেজ লিস্ট এখানে লোড হবে -->
      <div id="packageListContainer" class="space-y-4"></div>
 </div>
-        
-        
-        <div id="vipScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-             <div class="flex justify-between items-center mb-6"><div class="flex items-center gap-3"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">প্যাকেজ</h2></div></div>
-             
-             <!-- ✅ DYNAMIC VIP PACKAGE CONTAINER -->
-             <div id="packageListContainer" class="space-y-4">
-                 <div class="history-loading">
-                    <div class="animate-pulse">
-                        <div class="h-24 bg-slate-100 rounded-2xl mb-3"></div>
-                        <div class="h-24 bg-slate-100 rounded-2xl mb-3"></div>
-                        <div class="h-24 bg-slate-100 rounded-2xl"></div>
-                    </div>
-                 </div>
-             </div>
-        </div>
+                
+       
         
         <!-- SPIN SCREEN -->
                 <div id="spinScreen" class="hidden min-h-screen bg-slate-900 text-white animate__animated animate__fadeInRight pb-20">
@@ -3528,96 +3514,87 @@ async function loadSystemSettings() {
             }
         }
 
-         // ✅ উন্নত টাস্ক রেন্ডারিং লজিক (ট্যাব ফিল্টার ও সব সোশ্যাল মিডিয়া লোগোসহ)
-        function renderTasks() {
-    // ১. ইউজার ডাটা না আসা পর্যন্ত অপেক্ষা করবে
-    if(!currentUserId || !currentUserData) return;
+         // ✅ শক্তিশালী টাস্ক রেন্ডারিং লজিক (লোগো, কি-ওয়ার্ড ফিল্টার ও রিফ্রেশ বাটনসহ)
+function renderTasks() {
+    if (!currentUserId || !currentUserData) return;
 
-    const list = document.getElementById('taskListContainer'); 
-    if(!list) return;
+    const list = document.getElementById('taskListContainer');
+    if (!list) return;
 
-    // লোডিং এনিমেশন
+    // ১. লোডিং স্টেট
     list.innerHTML = `
-        <div class="flex flex-col items-center justify-center py-10 opacity-60">
-            <div class="w-10 h-10 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin mb-3"></div>
-            <p class="text-xs font-bold text-slate-400">টাস্ক লোড হচ্ছে...</p>
+        <div class="flex flex-col items-center justify-center py-12 opacity-60">
+            <div class="w-10 h-10 border-4 border-slate-200 border-t-blue-500 rounded-full animate-spin mb-3"></div>
+            <p class="text-xs font-bold text-slate-400">টাস্কগুলো চেক করা হচ্ছে...</p>
         </div>`;
 
-    const todayStr = new Date().toLocaleDateString('bn-BD'); // আজকের তারিখ বের করা
+    const todayStr = new Date().toLocaleDateString('bn-BD');
+    
+    // ইউজারের প্ল্যান থেকে কি-ওয়ার্ড বের করা (যেমন: গোল্ড প্যাকেজ থেকে gold)
+    const uPlan = (currentUserData.plan || "free").toLowerCase();
+    let uKey = "free";
+    if (uPlan.includes("silver") || uPlan.includes("সিলভার")) uKey = "silver";
+    else if (uPlan.includes("gold") || uPlan.includes("গোল্ড")) uKey = "gold";
+    else if (uPlan.includes("vip") || uPlan.includes("ভিআইপি")) uKey = "vip";
+    else if (uPlan.includes("platinum") || uPlan.includes("প্লাটিনাম")) uKey = "platinum";
 
-db.collection("task_submissions")
-    .where("userId", "==", currentUserId)
-    .where("date", "==", todayStr) // শুধুমাত্র আজকের জমাগুলো চেক করবে
-    .get()
-    .then((submissionSnap) => {
-            const completedTasks = new Set();
-            submissionSnap.forEach(doc => completedTasks.add(doc.data().taskId));
+    // ২. আজকের সাবমিশন চেক করা
+    db.collection("task_submissions")
+        .where("userId", "==", currentUserId)
+        .where("date", "==", todayStr)
+        .get()
+        .then((submissionSnap) => {
+            const doneTasks = new Set();
+            submissionSnap.forEach(doc => doneTasks.add(doc.data().taskId));
 
+            // ৩. টাস্ক ডাটাবেস থেকে আনা
             db.collection("tasks")
-                .where("status", "==", "active") 
+                .where("status", "==", "active")
                 .orderBy("createdAt", "desc")
                 .onSnapshot((snap) => {
-                    list.innerHTML = ''; 
+                    list.innerHTML = '';
                     let hasTask = false;
-
-                    // ইউজারের প্ল্যান নাম প্রসেসিং (silver প্যাকেজ -> silver)
-                    const userPlanRaw = currentUserData.plan || "Free Member";
-                    const userPlan = userPlanRaw.replace(' প্যাকেজ', '').trim().toLowerCase(); 
 
                     snap.forEach(doc => {
                         const t = doc.data();
                         const taskId = doc.id;
-                        
-                        // এডমিন থেকে আসা প্ল্যানগুলোকেও ছোট হাতের করে নেওয়া
-                        const taskAllowedPlans = (t.allowedPlans || []).map(p => p.toLowerCase());
+                        const tPlans = (t.allowedPlans || []).map(p => p.toLowerCase());
 
-                        // ২. প্যাকেজ পারমিশন চেক (all অথবা নির্দিষ্ট plan)
-                        const isAllowedByPlan = taskAllowedPlans.includes('all') || taskAllowedPlans.includes(userPlan);
+                        // শক্তিশালী প্ল্যান ম্যাচিং লজিক
+                        const isAllowed = tPlans.includes('all') || tPlans.some(p => p.includes(uKey));
                         
-                        // ৩. ট্যাব অনুযায়ী ফিল্টারিং লজিক (Free vs VIP Tab)
-                        let isCorrectTab = false;
+                        let shouldShow = false;
                         if (currentTaskType === 'free') {
-                            // ফ্রি ট্যাবে দেখাবে: যারা 'all' অথবা 'free member'
-                            if (taskAllowedPlans.includes('all') || taskAllowedPlans.includes('free member')) {
-                                isCorrectTab = true;
-                            }
+                            if (tPlans.includes('all') || tPlans.some(p => p.includes('free'))) shouldShow = true;
                         } else {
-                            // ভিআইপি ট্যাবে দেখাবে: যারা 'free member' নয় এবং ইউজারের প্ল্যানের সাথে মিলে যায়
-                            if (taskAllowedPlans.includes('all') || (taskAllowedPlans.includes(userPlan) && userPlan !== 'free member')) {
-                                isCorrectTab = true;
-                            }
+                            if (isAllowed && uKey !== 'free') shouldShow = true;
                         }
 
-                        // ✅ ৪. ফাইনাল চেক: যদি সব কন্ডিশন মিলে তবেই দেখাবে
-                        if (!completedTasks.has(taskId) && isAllowedByPlan && isCorrectTab) {
+                        // ৪. রেন্ডারিং (যদি ইউজার আগে না করে থাকে)
+                        if (shouldShow && !doneTasks.has(taskId)) {
                             hasTask = true;
 
-                            // --- 🎨 স্মার্ট আইকন ও সোশ্যাল লোগো লজিক ---
-                            let icon = 'ri-links-line'; 
-                            let iconColor = 'text-slate-600';
-                            let bgColor = 'bg-slate-100';
+                            // স্মার্ট লোগো সিলেকশন
+                            let icon = 'ri-links-line', color = 'text-slate-500', bg = 'bg-slate-100';
+                            const title = (t.title || "").toLowerCase();
+                            const link = (t.link || "").toLowerCase();
 
-                            const titleLower = (t.title || "").toLowerCase();
-                            const linkLower = (t.link || "").toLowerCase();
-
-                            if (titleLower.includes('youtube') || linkLower.includes('youtube.com')) {
-                                icon = 'ri-youtube-fill'; iconColor = 'text-red-600'; bgColor = 'bg-red-50';
-                            } else if (titleLower.includes('facebook') || linkLower.includes('facebook.com')) {
-                                icon = 'ri-facebook-circle-fill'; iconColor = 'text-blue-600'; bgColor = 'bg-blue-50';
-                            } else if (titleLower.includes('telegram') || linkLower.includes('t.me')) {
-                                icon = 'ri-telegram-fill'; iconColor = 'text-sky-500'; bgColor = 'bg-sky-50';
-                            } else if (titleLower.includes('instagram')) {
-                                icon = 'ri-instagram-fill'; iconColor = 'text-pink-600'; bgColor = 'bg-pink-50';
-                            } else if (titleLower.includes('tiktok')) {
-                                icon = 'ri-tiktok-fill'; iconColor = 'text-black'; bgColor = 'bg-slate-200';
-                            } else if (titleLower.includes('visit') || linkLower.includes('http')) {
-                                icon = 'ri-global-line'; iconColor = 'text-emerald-600'; bgColor = 'bg-emerald-50';
+                            if (title.includes('youtube') || link.includes('youtube.com')) {
+                                icon = 'ri-youtube-fill'; color = 'text-red-600'; bg = 'bg-red-50';
+                            } else if (title.includes('facebook') || link.includes('facebook.com')) {
+                                icon = 'ri-facebook-circle-fill'; color = 'text-blue-600'; bg = 'bg-blue-50';
+                            } else if (title.includes('telegram') || link.includes('t.me')) {
+                                icon = 'ri-telegram-fill'; color = 'text-sky-500'; bg = 'bg-sky-50';
+                            } else if (title.includes('tiktok')) {
+                                icon = 'ri-tiktok-fill'; color = 'text-black'; bg = 'bg-slate-200';
+                            } else if (title.includes('visit') || link.startsWith('http')) {
+                                icon = 'ri-global-line'; color = 'text-emerald-600'; bg = 'bg-emerald-50';
                             }
 
                             list.innerHTML += `
-                            <div class="glass-card p-4 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp mb-3 border border-slate-100 shadow-sm">
+                            <div class="glass-card p-4 rounded-2xl flex justify-between items-center animate__animated animate__fadeInUp mb-3 border border-slate-50">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 ${bgColor} rounded-full flex items-center justify-center text-2xl ${iconColor}">
+                                    <div class="w-12 h-12 ${bg} rounded-full flex items-center justify-center text-2xl ${color} shadow-sm">
                                         <i class="${icon}"></i>
                                     </div>
                                     <div>
@@ -3626,30 +3603,31 @@ db.collection("task_submissions")
                                     </div>
                                 </div>
                                 <button onclick="window.completeTask('${taskId}', ${t.reward}, 'general', '${t.title}', '${t.description || ''}', '${t.link || '#'}')" 
-                                    class="bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg active:scale-95 transition-all">
+                                    class="bg-slate-800 text-white px-5 py-2 rounded-xl text-xs font-bold shadow-md active:scale-90 transition-all">
                                     কাজ করুন
                                 </button>
                             </div>`;
                         }
                     });
 
-                    // যদি কোনো টাস্ক না থাকে
-                    if(!hasTask) {
+                    // ৫. টাস্ক না থাকলে রিফ্রেশ বাটনসহ মেসেজ
+                    if (!hasTask) {
                         list.innerHTML = `
                             <div class="text-center py-16 animate__animated animate__fadeIn">
                                 <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-slate-200">
                                     <i class="ri-clipboard-line text-4xl text-slate-300"></i>
                                 </div>
-                                <h3 class="text-lg font-bold text-slate-500">টাস্ক খালি! 🎉</h3>
-                                <p class="text-xs text-slate-400 mt-1 px-10 mb-6">আপনার জন্য এই মুহূর্তে কোনো ${currentTaskType === 'free' ? 'ফ্রি' : 'ভিআইপি'} টাস্ক নেই।</p>
-                                <button onclick="renderTasks()" class="bg-blue-50 text-blue-600 px-6 py-2 rounded-full font-bold text-xs active:scale-95 transition-all border border-blue-100">
-                                    <i class="ri-refresh-line"></i> রিফ্রেশ করুন
+                                <h3 class="text-lg font-bold text-slate-500">বর্তমানে কোনো টাস্ক নেই!</h3>
+                                <p class="text-xs text-slate-400 mt-1 mb-6">আপনার জন্য এই ক্যাটাগরিতে সব টাস্ক সম্পন্ন হয়েছে।</p>
+                                <button onclick="renderTasks()" class="bg-blue-50 text-blue-600 px-8 py-2.5 rounded-full font-bold text-xs active:scale-95 border border-blue-100">
+                                    <i class="ri-refresh-line mr-1"></i> রিফ্রেশ করুন
                                 </button>
                             </div>`;
                     }
                 });
         });
 }
+      
                             
         // ✅ ENHANCED HISTORY SYSTEM WITH FILTER - FIXED LAYOUT
         window.loadHistory = () => {
@@ -5544,30 +5522,52 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             }
         };
         
-        window.switchTaskTab = (type) => {
-            // ফ্রি ইউজার চেক
-            if (type === 'vip') {
-                if (!currentUserData || currentUserData.plan === 'Free Member' || currentUserData.plan.includes('Free')) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'অ্যাক্সেস ডিনাইড!',
-                        text: 'ভিআইপি টাস্ক করতে হলে আপনাকে ভিআইপি প্যাকেজ কিনতে হবে।',
-                        confirmButtonText: 'প্যাকেজ কিনুন',
-                        confirmButtonColor: '#059669'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.showPage('vipScreen');
-                        }
-                    });
-                    return;
-                }
-            }
+        // ✅ টাস্ক ট্যাব সুইচ করার উন্নত ফাংশন (লকিং ও অটো-রেন্ডারসহ)
+window.switchTaskTab = (type) => {
+    // ইউজারের বর্তমান প্যাকেজ কি সেটা চেক করা
+    const userPlan = (currentUserData.plan || "").toLowerCase();
+    
+    // যদি ভিআইপি ট্যাবে ক্লিক করে কিন্তু ইউজার ফ্রি হয়
+    if (type === 'vip') {
+        if (!userPlan || userPlan.includes('free')) {
+            Swal.fire({
+                title: 'অ্যাক্সেস লক! 🔐',
+                text: 'ভিআইপি টাস্কগুলো শুধুমাত্র প্রিমিয়াম মেম্বারদের জন্য। আপনি কি প্যাকেজ কিনতে চান?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'প্যাকেজ কিনুন',
+                cancelButtonText: 'না, থাক',
+                confirmButtonColor: '#059669',
+                customClass: { popup: 'rounded-[25px]' }
+            }).then((res) => {
+                if (res.isConfirmed) window.showPage('vipScreen');
+            });
+            return; // ফাংশন এখানেই থামিয়ে দিবে
+        }
+    }
 
-            currentTaskType = type;
-            document.getElementById('tabFreeTask').className = type==='free'?'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow':'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
-            document.getElementById('tabVipTask').className = type==='vip'?'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow':'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
-            renderTasks();
-        };
+    // ট্যাব টাইপ আপডেট
+    currentTaskType = type;
+    
+    // ১. বাটনের কালার ও ডিজাইন আপডেট
+    const btnFree = document.getElementById('tabFreeTask');
+    const btnVip = document.getElementById('tabVipTask');
+    
+    if (type === 'free') {
+        btnFree.classList.add('bg-green-500', 'text-white', 'shadow');
+        btnFree.classList.remove('text-slate-500');
+        btnVip.classList.remove('bg-green-500', 'text-white', 'shadow');
+        btnVip.classList.add('text-slate-500');
+    } else {
+        btnVip.classList.add('bg-green-500', 'text-white', 'shadow');
+        btnVip.classList.remove('text-slate-500');
+        btnFree.classList.remove('bg-green-500', 'text-white', 'shadow');
+        btnFree.classList.add('text-slate-500');
+    }
+    
+    // ২. নতুন ট্যাবের টাস্ক রেন্ডার করা
+    renderTasks();
+};
  
         window.selectOperator = (el, operator) => { 
             document.querySelectorAll('#rechargeScreen .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
@@ -6472,12 +6472,21 @@ window.processMagicPromo = async () => {
             const data = doc.data();
             const now = new Date();
             const expiry = data.expiryAt.toDate();
+            
+            // নতুন লিমিট চেক লজিক
+            const usedByCount = data.usedBy ? data.usedBy.length : 0;
+            const promoLimit = data.limit || 0;
 
             if (now > expiry) {
                 showSmartToast('কোডটির মেয়াদ শেষ! ⏰', 'error');
-            } else if (data.usedBy && data.usedBy.includes(currentUserId)) {
+            } 
+            else if (promoLimit > 0 && usedByCount >= promoLimit) { 
+                showSmartToast('দুঃখিত, এই কোডের লিমিট শেষ হয়ে গেছে! 🚫', 'error');
+            }
+            else if (data.usedBy && data.usedBy.includes(currentUserId)) {
                 showSmartToast('আপনি অলরেডি একবার নিয়েছেন! ✋', 'warning');
-            } else {
+            } 
+            else {
                 const bonusAmount = data.amount || 0;
                 await db.collection("users").doc(currentUserId).update({
                     mainBalance: firebase.firestore.FieldValue.increment(bonusAmount),
@@ -6490,24 +6499,16 @@ window.processMagicPromo = async () => {
                     time: new Date().toLocaleTimeString('bn-BD'), timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+                if(typeof confetti === 'function') confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
                 window.playSound('snd_success');
                 inputField.value = '';
-
-                Swal.fire({
-                    title: 'সাকসেস! 🎉',
-                    html: `আপনি পেয়েছেন <b>৳${bonusAmount}</b> বোনাস।`,
-                    icon: 'success',
-                    confirmButtonText: 'ধন্যবাদ মামা!',
-                    confirmButtonColor: '#7c3aed',
-                    customClass: { popup: 'rounded-[30px]' }
-                }).then(() => window.showPage('homeScreen'));
+                showSmartToast(`অভিনন্দন! ৳${bonusAmount} বোনাস পেয়েছেন।`, 'success');
+                window.showPage('homeScreen');
             }
         }
     } catch (e) { showSmartToast('সার্ভার সমস্যা!', 'error'); }
     hideLoading();
 };
-
    
     </script>
     
