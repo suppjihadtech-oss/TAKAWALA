@@ -1485,7 +1485,7 @@
             </div>
             <div class="text-left">
                 <h3 class="text-xl font-black text-white leading-none">প্রোমো বোনাস ✨</h3>
-                <p class="text-[11px] text-purple-100 font-bold mt-1 opacity-90 uppercase tracking-widest">Enter Code & Win Cash</p>
+                <p class="text-[11px] text-purple-100 font-bold mt-1 opacity-90 uppercase tracking-widest">আপনার প্রোমো কোড দিন এবং আকর্ষণীয় পুরস্কার জিতুন!</p>
             </div>
         </div>
         <i class="ri-arrow-right-s-line text-white text-xl group-hover:translate-x-1 transition-transform"></i>
@@ -2670,21 +2670,18 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
             }, 1000);
         }
         
-        function closeInterstitialAd() {
+ function closeInterstitialAd() {
     const interstitial = document.getElementById('monitagInterstitial');
-    // সরাসরি হাইড না করে হালকা ফেইড আউট ইফেক্ট দাও
-    interstitial.style.opacity = '0';
-    setTimeout(() => {
-        interstitial.classList.add('hidden');
-        interstitial.style.opacity = '1';
-        // টাইমার ক্লিয়ার
-        if(window.adInterval) clearInterval(window.adInterval);
-        // বোনাস লজিক কল
-        if (onAdCompleted) {
-            onAdCompleted(); 
-            onAdCompleted = null; 
-        }
-    }, 300);
+    if(window.adInterval) clearInterval(window.adInterval);
+    
+    interstitial.classList.add('hidden'); // সরাসরি হাইড করো
+    
+    // বোনাস লজিক কল
+    if (onAdCompleted) {
+        const callback = onAdCompleted;
+        onAdCompleted = null; // লুপ ঠেকানোর জন্য আগেই নাল করো
+        callback(); 
+    }
 }
         // ✅ ✅ FIXED: UPDATED AD LINK FUNCTION
         window.openAdLink = () => {
@@ -3448,7 +3445,7 @@ async function loadSystemSettings() {
                         const date = userData.createdAt.toDate();
                         document.getElementById('joinDate').innerText = date.toLocaleDateString('bn-BD');
                     }
-          renderTasks();  
+            
                    
                 }
             }, (err) => { 
@@ -3522,24 +3519,26 @@ function renderTasks() {
     const list = document.getElementById('taskListContainer');
     if (!list) return;
 
-    // ১. লোডিং স্টেট
+    // ১. মডার্ন নিওন স্টাইল লোডিং
     list.innerHTML = `
-        <div class="flex flex-col items-center justify-center py-12 opacity-60">
-            <div class="w-10 h-10 border-4 border-slate-200 border-t-blue-500 rounded-full animate-spin mb-3"></div>
-            <p class="text-xs font-bold text-slate-400">টাস্কগুলো চেক করা হচ্ছে...</p>
+        <div class="flex flex-col items-center justify-center py-20 animate-pulse">
+            <div class="relative">
+                <div class="w-14 h-14 border-4 border-blue-500/20 border-t-blue-600 rounded-full animate-spin"></div>
+                <div class="absolute inset-0 w-14 h-14 border-4 border-transparent border-b-purple-500 rounded-full animate-reverse-spin"></div>
+            </div>
+            <p class="text-[11px] font-black text-slate-400 mt-4 uppercase tracking-[3px]">Checking Database...</p>
         </div>`;
 
     const todayStr = new Date().toLocaleDateString('bn-BD');
-    
-    // ইউজারের প্ল্যান কি-ওয়ার্ড বের করা
     const uPlan = (currentUserData.plan || "free").toLowerCase();
+    
+    // শক্তিশালী কি-ওয়ার্ড ম্যাপিং
     let uKey = "free";
     if (uPlan.includes("silver") || uPlan.includes("সিলভার")) uKey = "silver";
     else if (uPlan.includes("gold") || uPlan.includes("গোল্ড")) uKey = "gold";
     else if (uPlan.includes("vip") || uPlan.includes("ভিআইপি")) uKey = "vip";
     else if (uPlan.includes("platinum") || uPlan.includes("প্লাটিনাম")) uKey = "platinum";
 
-    // ২. আজকের সাবমিশন চেক করা
     db.collection("task_submissions")
         .where("userId", "==", currentUserId)
         .where("date", "==", todayStr)
@@ -3548,7 +3547,6 @@ function renderTasks() {
             const doneTasks = new Set();
             submissionSnap.forEach(doc => doneTasks.add(doc.data().taskId));
 
-            // ৩. টাস্ক ডাটাবেস থেকে আনা
             db.collection("tasks")
                 .where("status", "==", "active")
                 .orderBy("createdAt", "desc")
@@ -3561,7 +3559,6 @@ function renderTasks() {
                         const taskId = doc.id;
                         const tPlans = (t.allowedPlans || []).map(p => p.toLowerCase());
 
-                        // শক্তিশালী প্ল্যান ম্যাচিং লজিক
                         const isAllowed = tPlans.includes('all') || tPlans.some(p => p.includes(uKey));
                         
                         let shouldShow = false;
@@ -3571,91 +3568,107 @@ function renderTasks() {
                             if (isAllowed && uKey !== 'free') shouldShow = true;
                         }
 
-                        // ৪. রেন্ডারিং
                         if (shouldShow && !doneTasks.has(taskId)) {
                             hasTask = true;
 
-                            // --- নতুন ব্যাজ লজিক ---
-                            // ১. ফ্রিকোয়েন্সি (প্রতিদিন/একবার)
+                            // মডার্ন ফ্রিকোয়েন্সি ইন্ডিকেটর
                             const isDaily = t.frequency === 'daily';
-                            const freqText = isDaily ? 'প্রতিদিন' : 'একবার';
-                            const freqClass = isDaily ? 'bg-blue-100 text-blue-600' : 'bg-orange-100 text-orange-600';
+                            const freqText = isDaily ? 'প্রতিদিন আসবে' : 'একবারই সুযোগ';
+                            const freqIcon = isDaily ? 'ri-refresh-line' : 'ri-flashlight-line';
+                            const freqClass = isDaily ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-amber-50 text-amber-600 border-amber-100';
 
-                            // ২. প্যাকেজ ব্যাজ জেনারেশন
+                            // প্রিমিয়াম প্যাকেজ ব্যাজ
                             let planBadges = '';
                             t.allowedPlans.forEach(p => {
                                 let pName = p.toUpperCase();
-                                let pColor = 'bg-slate-100 text-slate-600';
+                                let pStyle = 'bg-slate-50 text-slate-500 border-slate-200';
                                 
-                                if(pName === 'FREE' || pName === 'ফ্রি') { pName = 'ফ্রি'; pColor = 'bg-gray-100 text-gray-500'; }
-                                else if(pName === 'SILVER' || pName === 'সিলভার') { pName = 'সিলভার'; pColor = 'bg-blue-50 text-blue-500'; }
-                                else if(pName === 'GOLD' || pName === 'গোল্ড') { pName = 'গোল্ড'; pColor = 'bg-yellow-50 text-yellow-600'; }
-                                else if(pName === 'PLATINUM' || pName === 'প্লাটিনাম') { pName = 'প্লাটিনাম'; pColor = 'bg-purple-50 text-purple-600'; }
-                                else if(pName === 'ALL' || pName === 'সবাই') { pName = 'সবাই'; pColor = 'bg-green-50 text-green-600'; }
+                                if(pName.includes('FREE')) { pName = 'FREE'; pStyle = 'bg-slate-100 text-slate-500 border-slate-200'; }
+                                else if(pName.includes('SILVER')) { pName = 'SILVER'; pStyle = 'bg-gradient-to-r from-slate-400 to-slate-500 text-white border-transparent'; }
+                                else if(pName.includes('GOLD')) { pName = 'GOLD'; pStyle = 'bg-gradient-to-r from-amber-400 to-amber-600 text-white border-transparent shadow-sm'; }
+                                else if(pName.includes('PLATINUM')) { pName = 'PLATINUM'; pStyle = 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-transparent shadow-md'; }
+                                else if(pName.includes('ALL')) { pName = 'Everyone'; pStyle = 'bg-emerald-50 text-emerald-600 border-emerald-200'; }
 
-                                planBadges += `<span class="${pColor} text-[9px] font-bold px-1.5 py-0.5 rounded-md border border-black/5">${pName}</span>`;
+                                planBadges += `<span class="${pStyle} text-[8px] font-black px-2 py-0.5 rounded-md border tracking-tighter uppercase">${pName}</span>`;
                             });
 
-                            // স্মার্ট লোগো সিলেকশন
-                            let icon = 'ri-links-line', color = 'text-slate-500', bg = 'bg-slate-100';
+                            // আল্ট্রা মডার্ন আইকন সেটআপ
+                            let icon = 'ri-links-line', iconColor = 'from-slate-400 to-slate-600', glow = 'shadow-slate-200';
                             const title = (t.title || "").toLowerCase();
                             const link = (t.link || "").toLowerCase();
 
-                            if (title.includes('youtube') || link.includes('youtube.com')) {
-                                icon = 'ri-youtube-fill'; color = 'text-red-600'; bg = 'bg-red-50';
-                            } else if (title.includes('facebook') || link.includes('facebook.com')) {
-                                icon = 'ri-facebook-circle-fill'; color = 'text-blue-600'; bg = 'bg-blue-50';
-                            } else if (title.includes('telegram') || link.includes('t.me')) {
-                                icon = 'ri-telegram-fill'; color = 'text-sky-500'; bg = 'bg-sky-50';
+                            if (link.includes('youtube')) {
+                                icon = 'ri-youtube-fill'; iconColor = 'from-red-500 to-rose-700'; glow = 'shadow-red-200';
+                            } else if (link.includes('facebook')) {
+                                icon = 'ri-facebook-circle-fill'; iconColor = 'from-blue-500 to-indigo-700'; glow = 'shadow-blue-200';
+                            } else if (link.includes('t.me') || title.includes('telegram')) {
+                                icon = 'ri-telegram-fill'; iconColor = 'from-sky-400 to-blue-600'; glow = 'shadow-sky-200';
                             } else if (title.includes('tiktok')) {
-                                icon = 'ri-tiktok-fill'; color = 'text-black'; bg = 'bg-slate-200';
+                                icon = 'ri-tiktok-fill'; iconColor = 'from-slate-800 to-black'; glow = 'shadow-slate-300';
                             }
 
+                            // টাস্ক কার্ড এইচটিএমএল (Unique Layout)
                             list.innerHTML += `
-                            <div class="glass-card p-4 rounded-2xl animate__animated animate__fadeInUp mb-4 border border-slate-50 relative overflow-hidden">
-                                <div class="flex justify-between items-start mb-3">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-12 h-12 ${bg} rounded-full flex items-center justify-center text-2xl ${color} shadow-sm">
+                            <div class="group relative bg-white rounded-[28px] p-5 mb-5 border border-slate-100 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all duration-300 animate__animated animate__fadeInUp">
+                                
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-14 h-14 bg-gradient-to-br ${iconColor} rounded-2xl flex items-center justify-center text-3xl text-white shadow-lg ${glow} transform group-hover:rotate-6 transition-transform">
                                             <i class="${icon}"></i>
                                         </div>
                                         <div>
-                                            <h4 class="font-bold text-slate-800 text-sm leading-tight">${t.title}</h4>
-                                            <div class="flex flex-wrap gap-1 mt-1.5">
-                                                <span class="${freqClass} text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter">${freqText}</span>
-                                                ${planBadges}
+                                            <h4 class="font-black text-slate-800 text-[15px] leading-tight group-hover:text-blue-600 transition-colors">${t.title}</h4>
+                                            <div class="flex items-center gap-1.5 mt-1.5">
+                                                <div class="flex items-center gap-1 px-2 py-0.5 rounded-full border ${freqClass} text-[9px] font-bold">
+                                                    <i class="${freqIcon}"></i> ${freqText}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="text-right">
-                                        <span class="block text-sm font-black text-green-600">৳${t.reward}</span>
+                                    <div class="bg-emerald-50 px-3 py-1.5 rounded-2xl border border-emerald-100 text-center">
+                                        <p class="text-[9px] font-black text-emerald-500 uppercase leading-none mb-0.5">Reward</p>
+                                        <span class="text-base font-black text-emerald-600">৳${t.reward}</span>
                                     </div>
                                 </div>
+
+                                <div class="flex flex-wrap gap-1.5 mb-5">
+                                    ${planBadges}
+                                </div>
+
                                 <button onclick="window.completeTask('${taskId}', ${t.reward}, 'general', '${t.title}', '${t.description || ''}', '${t.link || '#'}')" 
-                                    class="w-full bg-slate-900 text-white py-2.5 rounded-xl text-xs font-bold shadow-md active:scale-95 transition-all flex items-center justify-center gap-2">
-                                    কাজ শুরু করুন <i class="ri-arrow-right-s-line"></i>
+                                    class="w-full h-12 bg-slate-900 text-white rounded-2xl text-xs font-black shadow-lg shadow-slate-200 flex items-center justify-center gap-3 overflow-hidden relative group/btn active:scale-95 transition-all">
+                                    <span class="relative z-10 flex items-center gap-2">
+                                        কাজ শুরু করুন <i class="ri-arrow-right-circle-fill text-lg"></i>
+                                    </span>
+                                    <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
                                 </button>
+                                
+                                <!-- Decorative background element -->
+                                <div class="absolute -bottom-2 -right-2 w-16 h-16 bg-slate-50 rounded-full -z-10 group-hover:bg-blue-50 transition-colors"></div>
                             </div>`;
                         }
                     });
 
-                    // ৫. টাস্ক না থাকলে মেসেজ
+                    // ৫. ইউনিক এম্পটি স্টেট
                     if (!hasTask) {
                         list.innerHTML = `
-                            <div class="text-center py-16 animate__animated animate__fadeIn">
-                                <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-slate-200">
-                                    <i class="ri-clipboard-line text-4xl text-slate-300"></i>
+                            <div class="flex flex-col items-center justify-center py-20 text-center animate__animated animate__fadeIn">
+                                <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6 relative">
+                                    <i class="ri-shake-hands-line text-5xl text-slate-200"></i>
+                                    <div class="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full border-4 border-white"></div>
                                 </div>
-                                <h3 class="text-lg font-bold text-slate-500">বর্তমানে কোনো টাস্ক নেই!</h3>
-                                <p class="text-xs text-slate-400 mt-1 mb-6">আপনার জন্য এই ক্যাটাগরিতে সব টাস্ক সম্পন্ন হয়েছে।</p>
-                                <button onclick="renderTasks()" class="bg-blue-50 text-blue-600 px-8 py-2.5 rounded-full font-bold text-xs active:scale-95 border border-blue-100">
-                                    <i class="ri-refresh-line mr-1"></i> রিফ্রেশ করুন
+                                <h3 class="text-xl font-black text-slate-800">সব কাজ শেষ!</h3>
+                                <p class="text-xs text-slate-400 mt-2 px-10 leading-relaxed">অসাধারণ! আপনি আজকের ক্যাটাগরির সব কাজ সফলভাবে শেষ করেছেন। নতুন কাজের জন্য কিছুক্ষণ পর আবার চেক করুন।</p>
+                                <button onclick="renderTasks()" class="mt-8 px-8 py-3 bg-white border border-slate-200 rounded-full text-xs font-black text-slate-600 shadow-sm active:scale-95 transition-all flex items-center gap-2">
+                                    <i class="ri-refresh-line"></i> রিফ্রেশ করুন
                                 </button>
                             </div>`;
                     }
                 });
         });
 }
-      
+
+
                             
         // ✅ ENHANCED HISTORY SYSTEM WITH FILTER - FIXED LAYOUT
         window.loadHistory = () => {
@@ -4411,10 +4424,10 @@ window.closeUserReceiptModal = () => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        // ১. সাবমিশন কালেকশনে অ্যাড (এডমিনের জন্য)
+        // ১. সাবমিশন অ্যাড করা
         await db.collection("task_submissions").add(submissionData);
         
-        // ২. হিস্ট্রি কালেকশনে অ্যাড (ইউজারের জন্য) - এই অংশটি তোমার ছিল না
+        // ২. ইউজারের হিস্ট্রিতে অ্যাড করা
         await db.collection("history").add({
             userId: currentUserId,
             type: "টাস্ক সাবমিট",
@@ -4425,18 +4438,21 @@ window.closeUserReceiptModal = () => {
             time: new Date().toLocaleTimeString('bn-BD'),
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
+
+        // ✅ ৩. টেলিগ্রাম নোটিফিকেশন (যা তোমার ছিল না)
+        const telegramMessage = `📝 *নতুন টাস্ক সাবমিট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📋 *টাস্ক:* ${currentTaskInfo.title}\n💰 *রিওয়ার্ড:* ৳${currentTaskInfo.reward}\n🔗 *প্রুফ লিংক:* ${proof2}\n💬 *ইউজার নোট:* ${proof1}`;
+        await sendTelegramNotification(telegramMessage);
         
         showSmartToast('টাস্ক জমা হয়েছে!', 'success');
         window.playSound('snd_success');
         hideLoading();
         window.closeProofModal();
-        renderTasks();
+        renderTasks(); // এখানে একবার কল করাই যথেষ্ট
     } catch (e) {
         showSmartToast('জমা দিতে সমস্যা হয়েছে', 'error');
         hideLoading();
     }
 };
-
         // ✅ এডমিন প্যানেল থেকে ভ্যাট ও ফি ডাইনামিক ক্যালকুলেশন (রিপ্লেসড)
         window.calculateDepositVAT = () => {
             const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
@@ -4816,55 +4832,68 @@ window.closeUserReceiptModal = () => {
         };
         
         window.transferBalance = async () => {
-            const am = parseFloat(document.getElementById('transferAmount').value);
-            if(!am || am <= 0) {
-                showSmartToast('ভুল পরিমাণ', 'error');
-                return;
-            }
-            
-            if(!currentUserData) {
-                showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
-                return;
-            }
-            
-            if(currentUserData.mainBalance < am) {
-                showSmartToast('পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
-                return;
-            }
-            
-            showLoading();
-            showSmartToast('ট্রান্সফার হচ্ছে...', 'info');
-            
-            try {
-                const userRef = db.collection("users").doc(currentUserId);
-                
-                await userRef.update({
-                    mainBalance: firebase.firestore.FieldValue.increment(-am),
-                    rechargeBalance: firebase.firestore.FieldValue.increment(am)
-                });
-                
-                await db.collection("history").add({
-                    userId: currentUserId,
-                    type: "ব্যালেন্স ট্রান্সফার",
-                    amount: am,
-                    status: "Success",
-                    details: "মেইন ব্যালেন্স থেকে রিচার্জ ব্যালেন্স",
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                showSmartToast(`৳${am} টাকা সফলভাবে ট্রান্সফার হয়েছে`, 'success');
-                hideLoading();
-                
-                document.getElementById('transferAmount').value = '';
-                
-            } catch (e) {
-                showSmartToast('ট্রান্সফার করতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
+    const am = parseFloat(document.getElementById('transferAmount').value);
+    
+    // ১. ভ্যালিডেশন চেক
+    if(!am || am <= 0) {
+        showSmartToast('ভুল পরিমাণ! সঠিক অংক লিখুন', 'error');
+        return;
+    }
+    
+    if(!currentUserData) {
+        showSmartToast('ইউজার ডেটা লোড হচ্ছে, অপেক্ষা করুন...', 'error');
+        return;
+    }
+    
+    if(currentUserData.mainBalance < am) {
+        showSmartToast('পর্যাপ্ত ব্যালেন্স নেই! বর্তমান ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
+        return;
+    }
+    
+    showLoading();
+    
+    try {
+        const userRef = db.collection("users").doc(currentUserId);
+        
+        // ২. ডাটাবেজে ব্যালেন্স আপডেট (মেইন থেকে মাইনাস, রিচার্জে প্লাস)
+        await userRef.update({
+            mainBalance: firebase.firestore.FieldValue.increment(-am),
+            rechargeBalance: firebase.firestore.FieldValue.increment(am)
+        });
+        
+        // ৩. ইউজারের হিস্ট্রিতে রেকর্ড যোগ করা
+        await db.collection("history").add({
+            userId: currentUserId,
+            type: "ব্যালেন্স ট্রান্সফার",
+            amount: am,
+            status: "Success",
+            details: "মেইন ব্যালেন্স থেকে রিচার্জ ব্যালেন্স",
+            date: new Date().toLocaleDateString('bn-BD'),
+            time: new Date().toLocaleTimeString('bn-BD'),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
 
+        // ✅ ৪. টেলিগ্রাম নোটিফিকেশন (এডমিনের জন্য)
+        const tgMsg = `🔄 *ব্যালেন্স ট্রান্সফার*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💰 *পরিমাণ:* ৳${am}\nℹ️ মেইন ব্যালেন্স থেকে রিচার্জ ব্যালেন্সে ট্রান্সফার করা হয়েছে।`;
+        await sendTelegramNotification(tgMsg);
+        
+        // ৫. সফলতার মেসেজ ও সাউন্ড
+        showSmartToast(`৳${am} টাকা সফলভাবে ট্রান্সফার হয়েছে`, 'success');
+        if(typeof window.playSound === 'function') window.playSound('snd_success');
+        
+        hideLoading();
+        
+        // ইনপুট বক্স খালি করা
+        document.getElementById('transferAmount').value = '';
+        
+    } catch (e) {
+        console.error("Transfer Error:", e);
+        showSmartToast('ট্রান্সফার করতে সমস্যা হয়েছে, আবার চেষ্টা করুন', 'error');
+        hideLoading();
+    }
+};
+        
+        
         // ✅ SUMMARY FUNCTIONS
         async function loadSummary(uid) {
             try {
@@ -6503,7 +6532,7 @@ async function loadReferralList() {
 window.processMagicPromo = async () => {
     const inputField = document.getElementById('userPromoInput');
     const promoCode = inputField.value.trim().toUpperCase();
-    if (!promoCode) { showSmartToast('মামা, কোডটি লিখুন!', 'error'); return; }
+    if (!promoCode) { showSmartToast('কোডটি লিখুন!', 'error'); return; }
 
     showLoading();
     try {
@@ -6516,8 +6545,6 @@ window.processMagicPromo = async () => {
             const data = doc.data();
             const now = new Date();
             const expiry = data.expiryAt.toDate();
-            
-            // নতুন লিমিট চেক লজিক
             const usedByCount = data.usedBy ? data.usedBy.length : 0;
             const promoLimit = data.limit || 0;
 
@@ -6525,10 +6552,10 @@ window.processMagicPromo = async () => {
                 showSmartToast('কোডটির মেয়াদ শেষ! ⏰', 'error');
             } 
             else if (promoLimit > 0 && usedByCount >= promoLimit) { 
-                showSmartToast('দুঃখিত, এই কোডের লিমিট শেষ হয়ে গেছে! 🚫', 'error');
+                showSmartToast('দুঃখিত, লিমিট শেষ! 🚫', 'error');
             }
             else if (data.usedBy && data.usedBy.includes(currentUserId)) {
-                showSmartToast('আপনি অলরেডি একবার নিয়েছেন! ✋', 'warning');
+                showSmartToast('আপনি অলরেডি ব্যবহার করেছেন! ✋', 'warning');
             } 
             else {
                 const bonusAmount = data.amount || 0;
@@ -6537,16 +6564,22 @@ window.processMagicPromo = async () => {
                     totalEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
                 });
                 await promoRef.update({ usedBy: firebase.firestore.FieldValue.arrayUnion(currentUserId) });
+                
+                // ১. হিস্ট্রি
                 await db.collection("history").add({
                     userId: currentUserId, type: "প্রোমো বোনাস 🎁", amount: bonusAmount, status: "Success",
                     details: `Code: ${promoCode}`, date: new Date().toLocaleDateString('bn-BD'),
                     time: new Date().toLocaleTimeString('bn-BD'), timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
+                // ✅ ২. টেলিগ্রাম নোটিফিকেশন (নতুন যুক্ত করা হয়েছে)
+                const tgMsg = `🎁 *প্রোমো কোড ক্লেইম*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n🎫 *কোড:* ${promoCode}\n💰 *বোনাস:* ৳${bonusAmount}`;
+                await sendTelegramNotification(tgMsg);
+
                 if(typeof confetti === 'function') confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
                 window.playSound('snd_success');
                 inputField.value = '';
-                showSmartToast(`অভিনন্দন! ৳${bonusAmount} বোনাস পেয়েছেন।`, 'success');
+                showSmartToast(`৳${bonusAmount} বোনাস পেয়েছেন।`, 'success');
                 window.showPage('homeScreen');
             }
         }
