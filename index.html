@@ -2618,10 +2618,7 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
             }, 5000);
         }
 
-        // ✅ OLD NOTIFICATION FUNCTION (KEPT FOR BACKWARD COMPATIBILITY)
-        function showNotification(message, type = 'info') {
-            showSmartToast(message, type);
-        }
+        
 
         // ✅ LOADING ANIMATION
         function showLoading() {
@@ -2674,15 +2671,29 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
         
  function closeInterstitialAd() {
     const interstitial = document.getElementById('monitagInterstitial');
+    
+    // টাইমার বন্ধ করা
     if(window.adInterval) clearInterval(window.adInterval);
     
-    interstitial.classList.add('hidden'); // সরাসরি হাইড করো
+    // অ্যাড হাইড করা
+    interstitial.classList.add('hidden'); 
     
-    // বোনাস লজিক কল
+    // বোনাস লজিক কল (স্মুথ ফিক্স)
     if (onAdCompleted) {
         const callback = onAdCompleted;
         onAdCompleted = null; // লুপ ঠেকানোর জন্য আগেই নাল করো
-        callback(); 
+        
+        // 🔥 ফিক্স: অ্যাড বন্ধ হওয়ার পর একটু সময় নিয়ে লোডিং শুরু হবে
+        // এতে সাদা ঝিলিক বা ল্যাগ মনে হবে না
+        setTimeout(() => {
+            try {
+                callback(); 
+            } catch (e) {
+                console.error("Reward Error:", e);
+                // যদি কোনো এরর হয়, তবুও যেন লোডিং বন্ধ হয়ে যায়
+                if(typeof hideLoading === 'function') hideLoading();
+            }
+        }, 200); // ২০০ মিলি সেকেন্ড ডিলে (চোখের আরামের জন্য)
     }
 }
         // ✅ ✅ FIXED: UPDATED AD LINK FUNCTION
@@ -2700,6 +2711,8 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
                 closeBtn.style.opacity = "0.5";
             }
         };
+        
+        
         // ✅ COPY TO CLIPBOARD
         window.copyToClipboard = (text) => {
             navigator.clipboard.writeText(text).then(() => {
@@ -2894,83 +2907,98 @@ async function loadSystemSettings() {
             document.getElementById('loginNoticeModal').classList.add('hidden');
         }
 
-        // ✅ এডমিন প্যানেলের vip_packages থেকে প্যাকেজ লোড করার নতুন ফাংশন
-        async function loadPackages() {
-            try {
-                // ১. এডমিন প্যানেলের কালেকশন নাম vip_packages ব্যবহার করছি
-                const packagesSnapshot = await db.collection("vip_packages").get();
-                
-                const packageContainer = document.getElementById('packageListContainer');
-                if(!packageContainer) return;
-                
-                packageContainer.innerHTML = '';
-                
-                if(packagesSnapshot.empty) {
-                    packageContainer.innerHTML = `<div class="text-center py-8 text-slate-500">বর্তমানে কোনো প্যাকেজ নেই</div>`;
-                    hideLoading();
-                    return;
-                }
-                
-                packagesSnapshot.forEach((doc) => {
-                    const packageData = doc.data();
-                    const packageId = doc.id;
-                    
-                    // ২. এডমিন প্যানেল থেকে আসা স্ট্যাটাস চেক (inactive হলে দেখাবে না)
-                    if(packageData.status === 'inactive') return;
-
-                    const pName = packageData.name || "VIP Package";
-                    const pPrice = packageData.price || 0;
-                    const pDays = packageData.days || 30;
-                    const pDesc = packageData.description || "প্রিমিয়াম সুবিধা";
-
-                    // ৩. প্যাকেজের নাম অনুযায়ী সুন্দর কালার সেট করা
-                    let borderColor = 'border-purple-500';
-                    let bgColor = 'bg-purple-600';
-                    let textColor = 'text-purple-700';
-                    let badgeBg = 'bg-purple-100';
-                    
-                    if(pName.includes('সিলভার') || pName.includes('Silver')) {
-                        borderColor = 'border-slate-400'; bgColor = 'bg-slate-500'; textColor = 'text-slate-700'; badgeBg = 'bg-slate-100';
-                    } else if(pName.includes('গোল্ড') || pName.includes('Gold')) {
-                        borderColor = 'border-yellow-500'; bgColor = 'bg-yellow-500'; textColor = 'text-yellow-700'; badgeBg = 'bg-yellow-100';
-                    } else if(pName.includes('প্লাটিনাম') || pName.includes('Platinum')) {
-                        borderColor = 'border-cyan-500'; bgColor = 'bg-cyan-600'; textColor = 'text-cyan-700'; badgeBg = 'bg-cyan-100';
-                    }
-
-                    // ৪. ইউজার ইন্টারফেস (UI) ডিজাইন
-                    const packageHTML = `
-                        <div class="glass-card p-5 rounded-3xl border-2 ${borderColor} mb-4 animate__animated animate__fadeInUp relative overflow-hidden">
-                            <div class="flex justify-between items-center relative z-10">
-                                <div>
-                                    <h3 class="font-bold text-xl ${textColor}">${pName}</h3>
-                                    <p class="text-xs text-slate-500 font-medium mt-1">${pDesc}</p>
-                                    <div class="flex items-center gap-2 mt-2">
-                                        <span class="bg-white/60 px-2 py-0.5 rounded-lg text-[10px] font-bold text-slate-600 border border-slate-100">
-                                            <i class="ri-calendar-check-line"></i> ${pDays} দিন
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="${badgeBg} ${textColor} px-4 py-1 rounded-2xl font-black text-lg shadow-sm">
-                                        ৳${pPrice}
-                                    </div>
-                                </div>
-                            </div>
-                            <button onclick="window.buyPackage('${packageId}', ${pPrice}, '${pName}', ${pDays})" 
-                                class="w-full mt-4 ${bgColor} text-white py-3 rounded-2xl font-bold shadow-lg hover:opacity-90 active:scale-95 transition-all">
-                                প্যাকেজটি একটিভ করুন
-                            </button>
-                        </div>
-                    `;
-                    
-                    packageContainer.innerHTML += packageHTML;
-                });
-                
-            } catch (error) {
-                console.error("Error loading packages:", error);
-                document.getElementById('packageListContainer').innerHTML = `<p class="text-center text-red-500 font-bold">প্যাকেজ লোড করতে সমস্যা হয়েছে।</p>`;
-            }
+        // ✅ আপডেটেড প্যাকেজ লোড ফাংশন (ফিক্সড)
+async function loadPackages() {
+    try {
+        const packagesSnapshot = await db.collection("vip_packages").get();
+        
+        const packageContainer = document.getElementById('packageListContainer');
+        if(!packageContainer) return;
+        
+        packageContainer.innerHTML = '';
+        
+        if(packagesSnapshot.empty) {
+            packageContainer.innerHTML = `<div class="text-center py-8 text-slate-500">বর্তমানে কোনো প্যাকেজ নেই</div>`;
+            hideLoading();
+            return;
         }
+        
+        packagesSnapshot.forEach((doc) => {
+            const packageData = doc.data();
+            const packageId = doc.id;
+            
+            if(packageData.status === 'inactive') return;
+
+            const pName = packageData.name || "VIP Package";
+            const pPrice = packageData.price || 0;
+            const pDays = packageData.days || 30;
+            const pDesc = packageData.description || "প্রিমিয়াম সুবিধা";
+            
+            // 🔥 সেফটি ফিক্স: নামের ভেতরে (') থাকলে সেটা হ্যান্ডেল করা
+            const safeName = pName.replace(/'/g, "\\'"); 
+            
+            // ডিসকাউন্ট ডাটা
+            const pDiscount = packageData.discountPrice || 0;
+            let discountBadge = '';
+            
+            if(pDiscount > 0) {
+                discountBadge = `
+                <div class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-2xl shadow-sm z-20 animate-pulse">
+                    ৳${pDiscount} ছাড়
+                </div>`;
+            }
+
+            // কালার লজিক
+            let borderColor = 'border-purple-500';
+            let bgColor = 'bg-purple-600';
+            let textColor = 'text-purple-700';
+            let badgeBg = 'bg-purple-100';
+            
+            if(pName.includes('সিলভার') || pName.includes('Silver')) {
+                borderColor = 'border-slate-400'; bgColor = 'bg-slate-500'; textColor = 'text-slate-700'; badgeBg = 'bg-slate-100';
+            } else if(pName.includes('গোল্ড') || pName.includes('Gold')) {
+                borderColor = 'border-yellow-500'; bgColor = 'bg-yellow-500'; textColor = 'text-yellow-700'; badgeBg = 'bg-yellow-100';
+            } else if(pName.includes('প্লাটিনাম') || pName.includes('Platinum')) {
+                borderColor = 'border-cyan-500'; bgColor = 'bg-cyan-600'; textColor = 'text-cyan-700'; badgeBg = 'bg-cyan-100';
+            }
+
+            const packageHTML = `
+                <div class="glass-card p-5 rounded-3xl border-2 ${borderColor} mb-4 animate__animated animate__fadeInUp relative overflow-hidden">
+                    ${discountBadge}
+                    
+                    <div class="flex justify-between items-center relative z-10">
+                        <div>
+                            <h3 class="font-bold text-xl ${textColor}">${pName}</h3>
+                            <p class="text-xs text-slate-500 font-medium mt-1">${pDesc}</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="bg-white/60 px-2 py-0.5 rounded-lg text-[10px] font-bold text-slate-600 border border-slate-100">
+                                    <i class="ri-calendar-check-line"></i> ${pDays} দিন
+                                </span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="${badgeBg} ${textColor} px-4 py-1 rounded-2xl font-black text-lg shadow-sm">
+                                ৳${pPrice}
+                            </div>
+                            ${pDiscount > 0 ? `<p class="text-[10px] text-slate-400 line-through mt-0.5">৳${pPrice + pDiscount}</p>` : ''}
+                        </div>
+                    </div>
+                    <!-- 🔥 এখানে safeName ব্যবহার করা হয়েছে -->
+                    <button onclick="window.buyPackage('${packageId}', ${pPrice}, '${safeName}', ${pDays})" 
+                        class="w-full mt-4 ${bgColor} text-white py-3 rounded-2xl font-bold shadow-lg hover:opacity-90 active:scale-95 transition-all">
+                        প্যাকেজটি একটিভ করুন
+                    </button>
+                </div>
+            `;
+            
+            packageContainer.innerHTML += packageHTML;
+        });
+        
+    } catch (error) {
+        console.error("Error loading packages:", error);
+        document.getElementById('packageListContainer').innerHTML = `<p class="text-center text-red-500 font-bold">প্যাকেজ লোড করতে সমস্যা হয়েছে।</p>`;
+    }
+}
       // ✅ ডাইনামিক বাই প্যাকেজ ফাংশন (এডমিন প্যানেলের সাথে সিঙ্ক করা)
         window.buyPackage = async (packageId, price, name, days) => {
             if(!currentUserData) {
@@ -3200,20 +3228,36 @@ async function loadSystemSettings() {
             try {
     showLoading();
 
-    // ✅ ডিভাইস লক চেক শুরু
-    let deviceToken = localStorage.getItem('takawala_device_id');
-    if (!deviceToken) {
-        deviceToken = 'ID-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
-        localStorage.setItem('takawala_device_id', deviceToken);
-    }
+   // ✅ ডিভাইস লক চেক শুরু (আপডেটেড বাংলা)
+            let deviceToken = localStorage.getItem('takawala_device_id');
+            if (!deviceToken) {
+                deviceToken = 'ID-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+                localStorage.setItem('takawala_device_id', deviceToken);
+            }
 
-    const checkDevice = await db.collection("users").where("deviceToken", "==", deviceToken).get();
-    if (!checkDevice.empty) {
-        hideLoading();
-        Swal.fire({ icon: 'error', title: 'নিষেধাজ্ঞা!', text: 'একটি ডিভাইস থেকে একাধিক একাউন্ট তৈরি করা সম্ভব নয়।' });
-        return;
-    }
-    // ✅ ডিভাইস লক চেক শেষ
+            const checkDevice = await db.collection("users").where("deviceToken", "==", deviceToken).get();
+            if (!checkDevice.empty) {
+                hideLoading();
+                // 🔥 সুন্দর বাংলা ওয়ার্নিং
+                Swal.fire({
+                    title: 'দুঃখিত! 🚫',
+                    html: `
+                        <div style="text-align: center;">
+                            <p style="color: #334155; font-size: 14px; line-height: 1.6;">
+                                আমাদের নিয়ম অনুযায়ী <b>একটি মোবাইল দিয়ে মাত্র ১টি একাউন্ট</b> খোলা যাবে। 
+                                <br><br>
+                                আপনি ইতিমধ্যে এই ডিভাইস ব্যবহার করে রেজিস্ট্রেশন করেছেন। দয়া করে আগের একাউন্টটি লগইন করুন।
+                            </p>
+                        </div>
+                    `,
+                    icon: 'warning',
+                    confirmButtonText: 'ঠিক আছে, বুঝেছি',
+                    confirmButtonColor: '#ef4444',
+                    customClass: { popup: 'rounded-[25px]' }
+                });
+                return;
+            }
+            // ✅ ডিভাইস লক চেক শেষ
 
     showSmartToast('একাউন্ট তৈরি হচ্ছে...', 'info');
                 const uc = await auth.createUserWithEmailAndPassword(email, pass);
@@ -3287,9 +3331,60 @@ async function loadSystemSettings() {
 }
                 showSmartToast('একাউন্ট তৈরি সফল! ডেইলি বোনাস নিন', 'success');
                 hideLoading();
-            } catch (e) { 
-                showSmartToast(e.message, 'error');
+           } catch (e) {
                 hideLoading();
+                console.error("Reg Error:", e);
+
+                let banglaError = "রেজিস্ট্রেশন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+
+                // 🔥 ১. ডিভাইস লক বা পারমিশন এরর (সবচেয়ে গুরুত্বপূর্ণ ফিক্স)
+                if (e.code === 'permission-denied' || e.message.includes("Missing or insufficient permissions")) {
+                    
+                    // ✅ ফিক্স: পারমিশন না পেলে সাথে সাথে লগআউট করে দেওয়া হবে
+                    // যাতে স্ন্যাপশট লিসেনার এরর না দেয়
+                    if(auth.currentUser) { auth.signOut(); }
+
+                    banglaError = "🚫 দুঃখিত! এই ডিভাইসে ইতিমধ্যে একটি একাউন্ট খোলা হয়েছে। আমাদের নিয়ম অনুযায়ী এক ডিভাইসে একাধিক একাউন্ট খোলা নিষেধ।";
+                    
+                    if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100]); 
+                }
+
+                // ২. ইমেইল আগে থেকেই থাকলে
+                else if (e.code === 'auth/email-already-in-use') {
+                    banglaError = "এই ইমেইল দিয়ে ইতিমধ্যে একটি একাউন্ট খোলা আছে। দয়া করে লগইন করুন।";
+                }
+
+                // ৩. ইমেইল সঠিক না হলে
+                else if (e.code === 'auth/invalid-email') {
+                    banglaError = "আপনার ইমেইল এড্রেসটি সঠিক নয়। ঠিকভাবে লিখুন।";
+                }
+
+                // ৪. পাসওয়ার্ড দুর্বল হলে
+                else if (e.code === 'auth/weak-password') {
+                    banglaError = "পাসওয়ার্ড খুব দুর্বল। কমপক্ষে ৬ সংখ্যার কঠিন পাসওয়ার্ড দিন।";
+                }
+
+                // ৫. ইন্টারনেট না থাকলে
+                else if (e.code === 'auth/network-request-failed') {
+                    banglaError = "ইন্টারনেট কানেকশন নেই। দয়া করে আপনার নেট চেক করুন।";
+                }
+
+                // ৬. অতিরিক্ত চেষ্টার কারণে ব্লক হলে
+                else if (e.code === 'auth/too-many-requests') {
+                    banglaError = "আপনি অনেকবার ভুল চেষ্টা করেছেন। কিছুক্ষণ পর আবার চেষ্টা করুন।";
+                }
+
+                // ৭. একাউন্ট ডিজেবল হলে
+                else if (e.code === 'auth/user-disabled') {
+                    banglaError = "আপনার একাউন্টটি ব্যান করা হয়েছে।";
+                }
+
+                // অন্য কোনো এরর
+                else {
+                    banglaError = "সমস্যা হয়েছে: " + e.message;
+                }
+
+                showSmartToast(banglaError, 'error');
             }
         });
 
@@ -3450,8 +3545,33 @@ async function loadSystemSettings() {
             
                    
                 }
-            }, (err) => { 
-                console.error("Error syncing user data:", err);
+            }, (error) => { 
+                // ১. লোডিং বন্ধ করা (সাদা স্ক্রিন ফিক্স)
+                hideLoading();
+
+                // ২. যদি পারমিশন এরর আসে (ডুপ্লিকেট একাউন্ট বা ব্যান)
+                if (error.code === 'permission-denied') {
+                    console.warn("Security Alert: Permission Denied");
+                    
+                    // সাথে সাথে লগআউট করে দেওয়া
+                    auth.signOut(); 
+
+                    // হোম স্ক্রিন লুকিয়ে লগইন স্ক্রিন দেখানো
+                    document.getElementById('mainApp').classList.add('hidden');
+                    document.getElementById('authScreen').classList.remove('hidden');
+
+                    // সুন্দর ওয়ার্নিং মেসেজ
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'অ্যাক্সেস নেই! 🚫',
+                        html: 'আপনার ডিভাইসে সমস্যা পাওয়া গেছে অথবা আপনি <b>একাধিক একাউন্ট</b> খোলার চেষ্টা করেছেন।',
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'ঠিক আছে',
+                        customClass: { popup: 'rounded-[25px]' }
+                    });
+                } else {
+                    console.error("Sync Error:", error);
+                }
             });
             
             // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক
@@ -3514,14 +3634,15 @@ async function loadSystemSettings() {
             }
         }
 
-         // ✅ আপডেটেড টাস্ক রেন্ডারিং লজিক (ফ্রিকোয়েন্সি এবং প্যাকেজ ব্যাজসহ)
+         // ✅ আপডেটেড রেন্ডার টাস্ক ফাংশন (One Time & Daily Fix + Syntax Error Fix)
+// ✅ আপডেটেড রেন্ডার টাস্ক ফাংশন (মোবাইল রেসপন্সিভ ফিক্সড)
 function renderTasks() {
     if (!currentUserId || !currentUserData) return;
 
     const list = document.getElementById('taskListContainer');
     if (!list) return;
 
-    // ১. স্মার্ট লোডিং
+    // ১. লোডিং এনিমেশন
     list.innerHTML = `
         <div class="flex flex-col items-center justify-center py-20 animate-pulse">
             <div class="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
@@ -3537,14 +3658,16 @@ function renderTasks() {
     else if (uPlan.includes("vip") || uPlan.includes("ভিআইপি")) uKey = "vip";
     else if (uPlan.includes("platinum") || uPlan.includes("প্লাটিনাম")) uKey = "platinum";
 
+    // ২. আজকের করা টাস্কগুলো আনা
     db.collection("task_submissions")
         .where("userId", "==", currentUserId)
         .where("date", "==", todayStr)
         .get()
         .then((submissionSnap) => {
-            const doneTasks = new Set();
-            submissionSnap.forEach(doc => doneTasks.add(doc.data().taskId));
+            const doneToday = new Set();
+            submissionSnap.forEach(doc => doneToday.add(doc.data().taskId));
 
+            // ৩. সব অ্যাক্টিভ টাস্ক লোড করা
             return db.collection("tasks")
                 .where("status", "==", "active")
                 .orderBy("createdAt", "desc")
@@ -3556,9 +3679,12 @@ function renderTasks() {
                     snap.forEach(doc => {
                         const t = doc.data();
                         const taskId = doc.id;
+                        
+                        // প্ল্যান চেকিং
                         const tPlans = (t.allowedPlans || []).map(p => p.toLowerCase());
                         const isAllowed = tPlans.includes('all') || tPlans.some(p => p.includes(uKey));
                         
+                        // কোন ট্যাবে দেখাবে
                         let shouldShow = false;
                         if (currentTaskType === 'free') {
                             if (tPlans.includes('all') || tPlans.some(p => p.includes('free'))) shouldShow = true;
@@ -3566,79 +3692,89 @@ function renderTasks() {
                             if (isAllowed && uKey !== 'free') shouldShow = true;
                         }
 
-                        if (shouldShow && !doneTasks.has(taskId)) {
-                            hasTask = true;
+                        if (shouldShow) {
+                            // লজিক: টাস্ক টাইপ অনুযায়ী চেক করা
+                            let isCompleted = false;
 
-                            // ২. সোশ্যাল মিডিয়া লজিক
-                            let icon = 'ri-links-line', iconColor = 'from-slate-400 to-slate-600';
-                            const link = (t.link || "").toLowerCase();
-                            if (link.includes('youtube.com') || link.includes('youtu.be')) {
-                                icon = 'ri-youtube-fill'; iconColor = 'from-red-500 to-rose-600';
-                            } else if (link.includes('facebook.com')) {
-                                icon = 'ri-facebook-circle-fill'; iconColor = 'from-blue-600 to-indigo-700';
-                            } else if (link.includes('t.me')) {
-                                icon = 'ri-telegram-fill'; iconColor = 'from-sky-400 to-blue-500';
-                            } else if (link.includes('tiktok.com')) {
-                                icon = 'ri-tiktok-fill'; iconColor = 'from-slate-800 to-black';
-                            } else if (link.includes('instagram.com')) {
-                                icon = 'ri-instagram-line'; iconColor = 'from-purple-500 to-pink-500';
-                            } else if (link.includes('x.com') || link.includes('twitter.com')) {
-                                icon = 'ri-twitter-x-fill'; iconColor = 'from-slate-700 to-slate-900';
+                            if (t.taskType === 'one_time') {
+                                // ওয়ান টাইম হলে পার্মানেন্ট চেক
+                                if (t.completedBy && t.completedBy.includes(currentUserId)) {
+                                    isCompleted = true;
+                                }
+                            } else {
+                                // ডেইলি হলে আজকের চেক
+                                if (doneToday.has(taskId)) {
+                                    isCompleted = true;
+                                }
                             }
 
-                            // ৩. পরিষ্কার ব্যাজ লজিক (সুযোগ এবং যোগ্যতা)
-                            const freqText = t.frequency === 'daily' ? 'সুযোগ: রোজ ১বার' : 'সুযোগ: মাত্র ১বার';
-                            const freqClass = t.frequency === 'daily' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-amber-50 text-amber-600 border-amber-100';
-                            
-                            let planBadges = '';
-                            t.allowedPlans.forEach(p => {
-                                let pName = p.toUpperCase();
-                                let pStyle = 'bg-slate-100 text-slate-600 border-slate-200';
-                                if(pName.includes('GOLD')) { pStyle = 'bg-yellow-100 text-yellow-700 border-yellow-200'; }
-                                else if(pName.includes('SILVER')) { pStyle = 'bg-slate-200 text-slate-700 border-slate-300'; }
-                                else if(pName.includes('PLATINUM')) { pStyle = 'bg-purple-100 text-purple-700 border-purple-200'; }
-                                else if(pName.includes('FREE')) { pStyle = 'bg-slate-50 text-slate-500 border-slate-200'; }
-                                else if(pName.includes('ALL')) { pName = 'সবাই'; pStyle = 'bg-emerald-50 text-emerald-600 border-emerald-100'; }
-                                planBadges += `<span class="${pStyle} text-[8px] font-bold px-1.5 py-0.5 rounded border uppercase mr-1">${pName}</span>`;
-                            });
+                            // যদি কমপ্লিট না হয়ে থাকে তবেই দেখাবো
+                            if (!isCompleted) {
+                                hasTask = true;
 
-                            // ৪. কার্ড ডিজাইন
-                            list.innerHTML += `
-                            <div class="bg-white rounded-2xl p-4 mb-4 border border-slate-100 shadow-sm animate__animated animate__fadeInUp">
-                                <div class="flex items-start justify-between mb-3">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 bg-gradient-to-br ${iconColor} rounded-xl flex items-center justify-center text-xl text-white shadow-md">
-                                            <i class="${icon}"></i>
-                                        </div>
-                                        <div class="overflow-hidden">
-                                            <h4 class="font-bold text-slate-800 text-[14px] leading-tight truncate">${t.title}</h4>
+                                let icon = 'ri-links-line', iconColor = 'from-slate-400 to-slate-600';
+                                const link = (t.link || "").toLowerCase();
+                                if (link.includes('youtube.com') || link.includes('youtu.be')) { icon = 'ri-youtube-fill'; iconColor = 'from-red-500 to-rose-600'; } 
+                                else if (link.includes('facebook.com')) { icon = 'ri-facebook-circle-fill'; iconColor = 'from-blue-600 to-indigo-700'; } 
+                                else if (link.includes('t.me')) { icon = 'ri-telegram-fill'; iconColor = 'from-sky-400 to-blue-500'; }
+                                else if (link.includes('tiktok.com')) { icon = 'ri-tiktok-fill'; iconColor = 'from-slate-800 to-black'; }
+
+                                const freqClass = t.taskType === 'daily' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-red-50 text-red-600 border-red-100';
+                                const freqText = t.taskType === 'daily' ? 'রোজ ১বার' : 'মাত্র ১বার';
+                                
+                                const safeTitle = (t.title || '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                                const safeDesc = (t.description || '').replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, " ");
+                                const safeLink = (t.link || '#').replace(/'/g, "\\'");
+
+                                let planBadges = '';
+                                t.allowedPlans.forEach(p => {
+                                    let pName = p.toUpperCase();
+                                    let pStyle = 'bg-slate-100 text-slate-600 border-slate-200';
+                                    if(pName.includes('GOLD')) pStyle = 'bg-yellow-100 text-yellow-700 border-yellow-200';
+                                    else if(pName.includes('VIP')) pStyle = 'bg-purple-100 text-purple-700 border-purple-200';
+                                    else if(pName.includes('ALL')) { pName = 'সবাই'; pStyle = 'bg-emerald-50 text-emerald-600 border-emerald-100'; }
+                                    // 🔥 Fix: mr-1 সরিয়ে gap-1 ব্যবহার করা হয়েছে HTML এ
+                                    planBadges += `<span class="${pStyle} text-[8px] font-bold px-1.5 py-0.5 rounded border uppercase">${pName}</span>`;
+                                });
+
+                                list.innerHTML += `
+                                <div class="bg-white rounded-2xl p-4 mb-4 border border-slate-100 shadow-sm animate__animated animate__fadeInUp">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center gap-3 w-full"> <!-- w-full যোগ করা হয়েছে -->
+                                            <div class="w-10 h-10 bg-gradient-to-br ${iconColor} rounded-xl flex items-center justify-center text-xl text-white shadow-md shrink-0">
+                                                <i class="${icon}"></i>
+                                            </div>
+                                            <div class="overflow-hidden flex-1"> <!-- flex-1 দেওয়া হয়েছে -->
+                                                <h4 class="font-bold text-slate-800 text-[14px] leading-tight truncate">${t.title}</h4>
+                                                <div class="space-y-1.5 mt-1.5">
+                                                    <div class="flex items-center gap-1">
+                                                        <span class="text-[9px] text-slate-400 font-bold shrink-0">সুযোগ:</span>
+                                                        <span class="${freqClass} text-[8px] font-black px-1.5 py-0.5 rounded border uppercase">${freqText}</span>
+                                                    </div>
+                                                    
+                                                    <!-- 🔥 ফিক্সড: flex-wrap এবং gap যোগ করা হয়েছে -->
+                                                    <div class="flex flex-wrap items-start gap-1">
+                                                        <span class="text-[9px] text-slate-400 font-bold shrink-0 mt-0.5">যোগ্যতা:</span>
+                                                        <div class="flex flex-wrap gap-1">${planBadges}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             
-                                            <!-- সুযোগ এবং যোগ্যতা লেবেল -->
-                                            <div class="space-y-1 mt-1.5">
-                                                <div class="flex items-center gap-1">
-                                                    <span class="text-[9px] text-slate-400 font-bold">সুযোগ:</span>
-                                                    <span class="${freqClass} text-[8px] font-black px-1.5 py-0.5 rounded border uppercase">${t.frequency === 'daily' ? 'রোজ ১বার' : 'মাত্র ১বার'}</span>
-                                                </div>
-                                                <div class="flex items-center gap-1">
-                                                    <span class="text-[9px] text-slate-400 font-bold">যোগ্যতা:</span>
-                                                    <div class="flex flex-wrap">${planBadges}</div>
-                                                </div>
+                                            <!-- রিওয়ার্ড বক্স ডান পাশে ফিক্সড -->
+                                            <div class="bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100 text-center shrink-0 ml-1">
+                                                <span class="text-[12px] font-black text-emerald-600">৳${t.reward}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100 text-center shrink-0">
-                                        <span class="text-[12px] font-black text-emerald-600">৳${t.reward}</span>
-                                    </div>
-                                </div>
-                                <button onclick="window.completeTask('${taskId}', ${t.reward}, 'general', '${t.title}', '${t.description || ''}', '${t.link || '#'}')" 
-                                    class="w-full h-10 bg-slate-900 text-white rounded-xl text-[11px] font-bold active:scale-95 transition-all shadow-md">
-                                    কাজ শুরু করুন
-                                </button>
-                            </div>`;
+                                    <button onclick="window.completeTask('${taskId}', ${t.reward}, 'general', '${safeTitle}', '${safeDesc}', '${safeLink}')" 
+                                        class="w-full h-10 bg-slate-900 text-white rounded-xl text-[11px] font-bold active:scale-95 transition-all shadow-md">
+                                        কাজ শুরু করুন
+                                    </button>
+                                </div>`;
+                            }
                         }
                     });
 
-                    // ৫. খালি অবস্থায় লোগো (অফিশিয়াল লোগো এবং চেক আইকন)
                     if (!hasTask) {
                         list.innerHTML = `
                             <div class="flex flex-col items-center justify-center py-24 text-center animate__animated animate__fadeIn">
@@ -3650,7 +3786,7 @@ function renderTasks() {
                                     </div>
                                 </div>
                                 <h3 class="text-xl font-black text-slate-800">সব কাজ শেষ!</h3>
-                                <p class="text-xs text-slate-400 mt-2 px-10">অসাধারণ! আপনি আজকের সব টাস্ক সফলভাবে শেষ করেছেন। নতুন কাজের জন্য কিছুক্ষণ পর আবার চেক করুন।</p>
+                                <p class="text-xs text-slate-400 mt-2 px-10">অসাধারণ! আপনি বর্তমানের সব টাস্ক সফলভাবে শেষ করেছেন।</p>
                                 <button onclick="renderTasks()" class="mt-8 px-10 py-3 bg-emerald-600 text-white rounded-full text-xs font-black shadow-lg active:scale-95 transition-all">
                                     রিফ্রেশ করুন
                                 </button>
@@ -5157,7 +5293,9 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         };
         
         
-            window.openSupport = () => { window.open('https://t.me/TAKA_WALA_ADMIN', '_blank'); }; // <--- এই ব্র্যাকেটটা কমেন্টের বাইরে থাকতে হবে
+            window.openSupport = () => { 
+    window.open('https://t.me/TAKA_WALA_ADMIN', '_blank'); 
+};
         
                        // ✅ DYNAMIC DRIVE OFFER FUNCTION (UPDATED)
         window.showDriveOffer = async () => {
@@ -5533,21 +5671,22 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             document.getElementById('btnTabRegister').className = t==='register'?'flex-1 py-3 rounded-full text-sm font-bold bg-premium text-white shadow-lg':'flex-1 py-3 rounded-full text-sm font-bold text-slate-500';
         };
         
-        // ১. সুপার ফাস্ট পেজ নেভিগেশন (ঝিলিক মুক্ত)
+        // ১. সুপার ফাস্ট পেজ নেভিগেশন (ঝিলিক মুক্ত - ফিক্সড ভার্সন)
 window.showPage = (id) => { 
-    // লাকি ড্র টাইমার ক্লিয়ার করা
+    // লাকি ড্র টাইমার ক্লিয়ার করা (যদি থাকে)
     if (typeof luckyDrawInterval !== 'undefined' && luckyDrawInterval) {
         clearInterval(luckyDrawInterval);
     }
 
-    // লোডিং দেখানো (খুবই অল্প সময়ের জন্য)
-    showLoading();
+    // ❌ আগে এখানে showLoading() ছিল, সেটা বাদ দিয়েছি। এটাই ঝিলিক মারার মূল কারণ।
 
     // সব পেজ হাইড করা
-    document.querySelectorAll('#mainApp > div').forEach(div => { 
+    const allPages = document.querySelectorAll('#mainApp > div');
+    allPages.forEach(div => { 
         if(div.id !== 'bottomNav') {
             div.classList.add('hidden');
-            div.classList.remove('animate__fadeIn'); // পুরাতন এনিমেশন ক্লিয়ার
+            // এনিমেশন ক্লাস রিমুভ করছি যাতে পরের বার আবার এনিমেশন হয়
+            div.classList.remove('animate__animated', 'animate__fadeIn'); 
         }
     }); 
 
@@ -5555,10 +5694,14 @@ window.showPage = (id) => {
     const targetPage = document.getElementById(id);
     if(targetPage) {
         targetPage.classList.remove('hidden');
-        targetPage.classList.add('animate__animated', 'animate__fadeIn'); // স্মুথ ট্রানজিশন
+        // হালকা ফেড ইন এনিমেশন দেওয়া হলো
+        targetPage.classList.add('animate__animated', 'animate__fadeIn'); 
     }
 
-    // পেজ অনুযায়ী নির্দিষ্ট ডেটা লোড করার লজিক (একবারই থাকবে সব)
+    // ✅ পেজ চেঞ্জ হলে স্ক্রল অটোমেটিক উপরে উঠে যাবে
+    window.scrollTo(0, 0);
+
+    // পেজ অনুযায়ী নির্দিষ্ট ডেটা লোড করার লজিক
     if(id === 'taskScreen') {
         renderTasks(); 
     } 
@@ -5571,7 +5714,7 @@ window.showPage = (id) => {
     } 
     else if(id === 'walletScreen') {
         updateDepositAddress(selectedMethod || 'bKash');
-        window.toggleWalletTab('deposit'); // ওয়ালেটে গেলে অটো ডিপোজিট ট্যাব খুলবে
+        window.toggleWalletTab('deposit'); 
     }
     else if(id === 'quizScreen') {
         window.switchQuizTab('types');
@@ -5580,18 +5723,19 @@ window.showPage = (id) => {
         loadSettingsFromLocalStorage();
     }
     else if(id === 'summaryScreen') {
-        if(currentUserId) loadSummary(currentUserId);
+        if(typeof currentUserId !== 'undefined' && currentUserId) {
+            loadSummary(currentUserId);
+        }
     }
     else if(id === 'subscriptionScreen') {
         window.switchSubscriptionTab('stars');
         loadSubscriptions();
     }
 
-    // কাজ শেষ হলে সাথে সাথে লোডিং হাইড করা (ডিলে ছাড়া)
-    hideLoading();
+    // ❌ hideLoading() ও বাদ দিয়েছি, কারণ লোডিং শুরুই করিনি।
 };
 
-// ২. ওয়ালেট ট্যাব সুইচিং লজিক (নিখুঁত ব্র্যাকেটসহ)
+// ২. ওয়ালেট ট্যাব সুইচিং লজিক (ফিক্সড)
 window.toggleWalletTab = (t) => {
     // সব সেকশন হাইড করা
     ['deposit','withdraw','transfer'].forEach(id => {
@@ -5606,22 +5750,25 @@ window.toggleWalletTab = (t) => {
     // ট্যাব বাটনের ডিজাইন আপডেট
     ['tabDeposit','tabWithdraw','tabTransfer'].forEach(id => {
         const btn = document.getElementById(id);
-        if(btn) btn.className = 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
+        if(btn) btn.className = 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500 transition-all';
     });
 
     const activeTabId = 'tab' + t.charAt(0).toUpperCase() + t.slice(1);
     const activeBtn = document.getElementById(activeTabId);
     if(activeBtn) {
-        activeBtn.className = 'flex-1 py-3 font-bold text-sm rounded-xl bg-slate-800 text-white shadow';
+        // একটিভ বাটনের কালার চেঞ্জ
+        activeBtn.className = 'flex-1 py-3 font-bold text-sm rounded-xl bg-slate-800 text-white shadow transition-all';
     }
     
     // নির্দিষ্ট ক্যালকুলেশন কল
     if(t === 'deposit') {
         const depAmtInput = document.getElementById('depositAmount');
         if(depAmtInput) {
+            // পুরনো ইভেন্ট লিসেনার রিমুভ করে নতুন যোগ করা (ডুপ্লিকেট এড়াতে)
             depAmtInput.removeEventListener('input', window.calculateDepositVAT);
             depAmtInput.addEventListener('input', window.calculateDepositVAT);
-            window.calculateDepositVAT();
+            // একবার ম্যানুয়ালি কল করা যাতে আগের ভ্যালু থাকলে আপডেট হয়
+            if(window.calculateDepositVAT) window.calculateDepositVAT();
         }
     } 
     else if(t === 'withdraw') {
@@ -5629,7 +5776,7 @@ window.toggleWalletTab = (t) => {
         if(withAmtInput) {
             withAmtInput.removeEventListener('input', window.calculateWithdrawVAT);
             withAmtInput.addEventListener('input', window.calculateWithdrawVAT);
-            window.calculateWithdrawVAT();
+            if(window.calculateWithdrawVAT) window.calculateWithdrawVAT();
         }
     }
 };
@@ -5958,7 +6105,7 @@ window.switchTaskTab = (type) => {
                 }
             }
             
-            loadSystemSettings();
+            
             
             // ২. ইনপুট লিসেনারস
             const depAmt = document.getElementById('depositAmount');
@@ -5987,20 +6134,20 @@ window.switchTaskTab = (type) => {
         });
 
         window.addEventListener('online', () => { Swal.close(); showSmartToast('ইন্টারনেট ফিরে এসেছে! ', 'success'); });
-        // ✅ উন্নত এবং এরর-ফ্রি সাউন্ড ফাংশন (Smart Fix)
-        window.playSound = (id) => {
-            const audio = document.getElementById(id);
-            if (audio) {
-                audio.currentTime = 0; 
-                const playPromise = audio.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        // ব্রাউজার সাউন্ড ব্লক করলে এরর না দেখিয়ে সাইলেন্ট থাকবে
-                        console.warn("ব্রাউজার অটো-প্লে ব্লক করেছে। ইউজার ক্লিক করলে ঠিক হয়ে যাবে।");
-                    });
-                }
-            }
-        };
+        // ✅ উন্নত এবং এরর-ফ্রি সাউন্ড ফাংশন (কনসোল ওয়ার্নিং বন্ধ করা হয়েছে)
+window.playSound = (id) => {
+    const audio = document.getElementById(id);
+    if (audio) {
+        audio.currentTime = 0; 
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                // ব্রাউজার সাউন্ড ব্লক করলে এখন আর কোনো এরর বা ওয়ার্নিং দেখাবে না
+                // চুপচাপ ইগনোর করবে
+            });
+        }
+    }
+};
 
         // 🔊 অডিও আনলকার: ইউজার প্রথমবার কোথাও টাচ করলেই সাউন্ড সিস্টেম চালু হবে
         const unlockAudio = () => {
@@ -6028,11 +6175,7 @@ window.switchTaskTab = (type) => {
             });
         };
 
-        // অ্যাপ লোড হওয়ার ১ সেকেন্ড পর সাউন্ড এক্টিভেট হবে
-        setTimeout(attachAppSounds, 1000);
-
-
-
+      
         // ✅ REAL-TIME LIVE PAYMENT PROOF
         const startLivePayoutNotifications = () => {
             // শুধু আজকের সাকসেস হওয়া পেমেন্টগুলো চেক করবে
@@ -6286,7 +6429,7 @@ window.buyLuckyTicket = async () => {
     }
 };
    
-   // ✅ অটোমেটিক রেন্ডম উইনার ও রেন্ডম প্রাইজ লজিক
+   // ✅ অটোমেটিক রেন্ডম উইনার + কনফেটি + টেলিগ্রাম নোটিফিকেশন (সম্পূর্ণ আপডেট)
 async function runAutoLuckyDraw() {
     try {
         const todayStr = new Date().toLocaleDateString('bn-BD'); // আজকের তারিখ
@@ -6315,10 +6458,17 @@ async function runAutoLuckyDraw() {
         const winnerDoc = allDocs[randomIndex];
         const winnerData = winnerDoc.data();
 
-        // ৪. ১৫ থেকে ৫০ টাকার মধ্যে রেন্ডম পুরস্কার নির্ধারণ
-        const randomPrize = Math.floor(Math.random() * (50 - 15 + 1)) + 15;
+        // ৪. ১১ থেকে ৩০ টাকার মধ্যে রেন্ডম পুরস্কার নির্ধারণ (সিক্রেট লজিক 🤫)
+        const randomPrize = Math.floor(Math.random() * (30 - 11 + 1)) + 11;
 
-        // ৫. বিজয়ীর একাউন্টে টাকা পাঠানো ও টিকেটের স্ট্যাটাস আপডেট
+        // ৫. বিজয়ীর ফোন নাম্বার বের করা (টেলিগ্রামের জন্য)
+        let winnerPhone = "N/A";
+        try {
+            const uDoc = await db.collection("users").doc(winnerData.userId).get();
+            if(uDoc.exists) winnerPhone = uDoc.data().phone;
+        } catch(e) { console.log("Phone fetch error"); }
+
+        // ৬. ডাটাবেস আপডেট (Batch Update for consistency)
         const batch = db.batch();
         
         // টিকেট স্ট্যাটাস উইনার করা
@@ -6330,12 +6480,12 @@ async function runAutoLuckyDraw() {
             totalEarnings: firebase.firestore.FieldValue.increment(randomPrize)
         });
 
-        // ড্র মেটা আপডেট (যাতে আজ আর না হয়)
+        // ড্র মেটা আপডেট
         batch.set(metaRef, { lastDrawDate: todayStr, lastWinner: winnerData.userName, prize: randomPrize });
 
         await batch.commit();
 
-        // ৬. হিস্ট্রিতে রেকর্ড যোগ করা
+        // ৭. হিস্ট্রিতে রেকর্ড যোগ করা
         await db.collection("history").add({
             userId: winnerData.userId,
             type: "লাকি ড্র জয়ী 🏆",
@@ -6347,14 +6497,39 @@ async function runAutoLuckyDraw() {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
 
+        // 🚀 ৮. টেলিগ্রাম নোটিফিকেশন পাঠানো (এডমিনের কাছে)
+        const tgMsg = `🎰 *লাকি ড্র রেজাল্ট* 🎰\n\n👤 বিজয়ী: *${winnerData.userName}*\n📱 ফোন: \`${winnerPhone}\`\n🎟 টিকেট: \`#${winnerData.ticketNumber}\`\n💰 পুরস্কার: *৳${randomPrize}*\n📅 তারিখ: ${todayStr}\n\nটাকা অটোমেটিক ব্যালেন্সে যোগ হয়েছে! ✅`;
+        await sendTelegramNotification(tgMsg);
+
+        // 🎉 ৯. ধুমধাম কনফেটি এনিমেশন (৩ সেকেন্ড ধরে চলবে)
+        if(typeof confetti === 'function') {
+            var duration = 3000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5, angle: 60, spread: 55, origin: { x: 0 },
+                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#purple']
+                });
+                confetti({
+                    particleCount: 5, angle: 120, spread: 55, origin: { x: 1 },
+                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#purple']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+        
+        // ১০. টোস্ট দেখানো
         showSmartToast(`🎉 গত ড্র এর বিজয়ী: ${winnerData.userName} (পুরস্কার: ৳${randomPrize})`, 'success');
-        if(typeof confetti === 'function') confetti({ particleCount: 150, spread: 70 });
+        window.playSound('snd_bonus'); // বোনাস সাউন্ড
 
     } catch (e) {
         console.error("Auto Draw Error:", e);
     }
 }
-   
    
 // ✅ GLOBAL TIMER VARIABLE
 let luckyDrawInterval = null;
