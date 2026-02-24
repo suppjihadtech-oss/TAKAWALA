@@ -120,7 +120,7 @@
             background: #f2f2f7;
         }
         
-        .hidden { display: none !important; }
+        
 
         
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
@@ -936,9 +936,10 @@
             display: block;
         }
         
-               
-        
+                       
     </style>
+    <!-- Monetag Ad Script -->
+    <script src='//libtl.com/sdk.js' data-zone='10531082' data-sdk='show_10531082'></script>
 </head>
 <body class="bg-slate-50">
 
@@ -2721,6 +2722,24 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
                 showSmartToast('কপি করতে সমস্যা হয়েছে', 'error');
             });
         };
+        
+        // ✅ NEW MONETAG AD WRAPPER (For specific buttons)
+        window.showMonetagAd = async (callback) => {
+            showLoading(); // অ্যাড আসার আগে হালকা লোডিং
+            try {
+                // Monetag-এর অ্যাড কল করা হচ্ছে
+                if (typeof window['show_10531082'] === 'function') {
+                    await window['show_10531082'](); 
+                } else {
+                    console.log("Adblocker detected or ad not ready.");
+                }
+            } catch (error) {
+                console.error("Monetag Ad Error:", error);
+            } finally {
+                hideLoading();
+                if(callback) callback(); // অ্যাড দেখা শেষ হলে বা অ্যাড না আসলেও আসল কাজটা করে দেবে
+            }
+        };
 
         // ✅ LOAD SYSTEM SETTINGS (এডমিন প্যানেলের appConfig এর সাথে সিঙ্ক)
 async function loadSystemSettings() {
@@ -3843,41 +3862,15 @@ async function loadSimpleHistory(filterType = 'all') {
     }
 
     try {
+        // ফায়ারবেস থেকে কোনো ফিল্টার ছাড়াই সব আনবো (যাতে ডাবল এন্ট্রি বা নাম পরিবর্তন হলেও ধরতে পারে)
         let query = db.collection("history")
             .where("userId", "==", currentUserId)
             .orderBy("timestamp", "desc")
             .limit(50);
-        
-        // ফিল্টার লজিক
-        if(filterType !== 'all') {
-            let typeArray = [];
-            switch(filterType) {
-                case 'deposit': typeArray = ['ডিপোজিট', 'Deposit']; break;
-                case 'withdraw': typeArray = ['উত্তোলন', 'Withdraw']; break;
-                case 'recharge': typeArray = ['রিচার্জ', 'Recharge']; break;
-                case 'task': typeArray = ['টাস্ক', 'Task', 'টাস্ক সম্পন্ন', 'টাস্ক সাবমিট']; break;
-                case 'bonus': typeArray = ['বোনাস', 'Bonus', 'ডেইলি বোনাস', 'রেফার বোনাস']; break;
-                case 'quiz': typeArray = ['কুইজ', 'Quiz']; break;
-            }
-            if(typeArray.length > 0) query = query.where("type", "in", typeArray);
-        }
 
         // ২. রিয়েল-টাইম লিসেনার চালু করা (.onSnapshot)
         historyUnsubscribe = query.onSnapshot((querySnapshot) => {
             list.innerHTML = ''; // প্রতিবার আপডেট হলে লিস্ট ক্লিয়ার হবে
-            
-            // EMPTY STATE
-            if(querySnapshot.empty) { 
-                list.innerHTML = `
-                <div class="flex flex-col items-center justify-center w-full py-16 text-center animate__animated animate__fadeIn">
-                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 shadow-sm border border-slate-100">
-                        <img src="https://i.postimg.cc/VNTvSLRX/transaction-history.png" class="w-10 h-10 opacity-30 grayscale">
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-500">কোনো লেনদেন নেই</h3>
-                </div>`; 
-                hideLoading();
-                return; 
-            }
             
             const seenTrx = new Set();
             const allDocs = [];
@@ -3885,22 +3878,50 @@ async function loadSimpleHistory(filterType = 'all') {
             // ডবল হিস্ট্রি রিমুভার লজিক
             querySnapshot.forEach(doc => {
                 const h = doc.data();
-                const key = `${Math.abs(h.amount)}_${h.date}_${h.type.substring(0,3).toLowerCase()}`;
+                const key = `${Math.abs(h.amount)}_${h.date}_${(h.type || "").substring(0,3).toLowerCase()}`;
                 if (h.status !== "Pending") seenTrx.add(key);
                 allDocs.push({id: doc.id, key: key, ...h});
             });
 
+            let hasVisibleItems = false; // ফিল্টারের পর কিছু দেখানোর আছে কি না ট্র্যাক করার জন্য
+
             allDocs.forEach(h => {
+                // পেন্ডিং ডুপ্লিকেট স্কিপ
                 if (h.status === "Pending" && seenTrx.has(h.key)) return;
+
+                // ৩. জাভাস্ক্রিপ্ট দিয়ে স্মার্ট ফিল্টারিং (খুঁজে বের করা)
+                let shouldShow = false;
+                const t = (h.type || "").toLowerCase();
+
+                if (filterType === 'all') {
+                    shouldShow = true;
+                } else if (filterType === 'deposit' && (t.includes('deposit') || t.includes('ডিপোজিট'))) {
+                    shouldShow = true;
+                } else if (filterType === 'withdraw' && (t.includes('withdraw') || t.includes('উত্তোলন'))) {
+                    shouldShow = true;
+                } else if (filterType === 'recharge' && (t.includes('recharge') || t.includes('রিচার্জ'))) {
+                    shouldShow = true;
+                } else if (filterType === 'task' && (t.includes('task') || t.includes('টাস্ক'))) {
+                    shouldShow = true;
+                } else if (filterType === 'bonus' && (t.includes('bonus') || t.includes('বোনাস'))) {
+                    shouldShow = true;
+                } else if (filterType === 'quiz' && (t.includes('quiz') || t.includes('কুইজ'))) {
+                    shouldShow = true;
+                }
+
+                // যদি ফিল্টারের সাথে না মিলে তবে এই আইটেমটা দেখাবে না
+                if (!shouldShow) return;
+
+                hasVisibleItems = true; // আইটেম পাওয়া গেছে
 
                 const date = h.date || '---';
                 const time = h.time || '---';
                 
                 let icon = 'https://i.postimg.cc/VNTvSLRX/transaction-history.png';
                 let bgColor = 'bg-slate-100';
-                if(h.type.includes('Recharge') || h.type.includes('রিচার্জ')) { icon = 'https://i.postimg.cc/jjdpNH5b/payment-method.png'; bgColor = 'bg-blue-50'; } 
-                else if(h.type.includes('Withdraw') || h.type.includes('উত্তোলন')) { icon = 'https://i.postimg.cc/wMdF5zV5/withdraw.png'; bgColor = 'bg-red-50'; } 
-                else if(h.type.includes('Deposit') || h.type.includes('ডিপোজিট')) { icon = 'https://i.postimg.cc/7ZGpHH5q/save-money.png'; bgColor = 'bg-green-50'; } 
+                if(t.includes('recharge') || t.includes('রিচার্জ')) { icon = 'https://i.postimg.cc/jjdpNH5b/payment-method.png'; bgColor = 'bg-blue-50'; } 
+                else if(t.includes('withdraw') || t.includes('উত্তোলন')) { icon = 'https://i.postimg.cc/wMdF5zV5/withdraw.png'; bgColor = 'bg-red-50'; } 
+                else if(t.includes('deposit') || t.includes('ডিপোজিট')) { icon = 'https://i.postimg.cc/7ZGpHH5q/save-money.png'; bgColor = 'bg-green-50'; } 
 
                 const amount = parseFloat(h.amount) || 0;
                 const amountColor = amount > 0 ? 'text-green-600' : 'text-red-500';
@@ -3930,6 +3951,18 @@ async function loadSimpleHistory(filterType = 'all') {
                     </div>
                 </div>`;
             });
+
+            // EMPTY STATE (যদি কোনো ডাটা না থাকে বা ফিল্টার করার পর কিছু না মেলে)
+            if(!hasVisibleItems) { 
+                list.innerHTML = `
+                <div class="flex flex-col items-center justify-center w-full py-16 text-center animate__animated animate__fadeIn">
+                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 shadow-sm border border-slate-100">
+                        <img src="https://i.postimg.cc/VNTvSLRX/transaction-history.png" class="w-10 h-10 opacity-30 grayscale">
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-500">কোনো লেনদেন নেই</h3>
+                </div>`; 
+            }
+
             hideLoading();
         }, (error) => {
             console.error("Snapshot error:", error);
@@ -3941,7 +3974,6 @@ async function loadSimpleHistory(filterType = 'all') {
         hideLoading();
     }
 }
-
 
 // ✅ NEW DETAILED HISTORY RECEIPT FUNCTION (FULL INFO)
 window.openHistoryReceipt = async (docId) => {
@@ -4773,72 +4805,78 @@ window.closeUserReceiptModal = () => {
             const vat = amount * (vatPercentage / 100);
             const received = amount - vat;
             
+            
             // ✅ CHECK WITHDRAWAL SCHEDULE
             const withinSchedule = isWithinWithdrawalSchedule();
             
-            showLoading();
-            showSmartToast('উত্তোলন রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
-            
-            try {
-                const userRef = db.collection("users").doc(currentUserId);
-                await userRef.update({
-                    mainBalance: firebase.firestore.FieldValue.increment(-amount),
-                    totalWithdraw: firebase.firestore.FieldValue.increment(amount)
-                });
+            // 💰 উইথড্র রিকোয়েস্ট পাঠানোর আগে Monetag অ্যাড আসবে
+            window.showMonetagAd(async () => {
+                showLoading();
+                showSmartToast('উত্তোলন রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
                 
-                await db.collection("pending_requests").add({ 
-                    userId: currentUserId, 
-                    type: "Withdraw", 
-                    amount: amount, 
-                    vat: vat,
-                    receivedAmount: received,
-          number: number,
-                    method: method,
-                    userName: currentUserData.name,
-                    userPhone: currentUserData.phone,
-                    status: "Pending",
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                await db.collection("history").add({
-                    userId: currentUserId,
-                    type: "উত্তোলন",
-                    amount: -amount,
-                    status: "Pending",
-                    details: `${method} - ${number}`,
-                    vat: vat,
-                    receivedAmount: received,
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                userWithdrawCount++;
-                
-                // Send Telegram notification
-                const telegramMessage = `💸 *নতুন উত্তোলন রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *অ্যাকাউন্ট:* ${number}\n💵 *পরিমাণ:* ৳${amount}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *প্রাপ্ত:* ৳${received.toFixed(2)}\n⏰ *সময়সূচী:* ${withinSchedule ? 'ভিতরে' : 'বাইরে'}`;
-                await sendTelegramNotification(telegramMessage);
-                
-                let successMessage = 'উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন';
-                if(!withinSchedule) {
-                    successMessage += '\n\nনোটিশ: আপনার উত্তোলন পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।';
+                try {
+                    const userRef = db.collection("users").doc(currentUserId);
+                    await userRef.update({
+                        mainBalance: firebase.firestore.FieldValue.increment(-amount),
+                        totalWithdraw: firebase.firestore.FieldValue.increment(amount)
+                    });
+                    
+                    await db.collection("pending_requests").add({ 
+                        userId: currentUserId, 
+                        type: "Withdraw", 
+                        amount: amount, 
+                        vat: vat,
+                        receivedAmount: received,
+                        number: number,
+                        method: method,
+                        userName: currentUserData.name,
+                        userPhone: currentUserData.phone,
+                        status: "Pending",
+                        date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    await db.collection("history").add({
+                        userId: currentUserId,
+                        type: "উত্তোলন",
+                        amount: -amount,
+                        status: "Pending",
+                        details: `${method} - ${number}`,
+                        vat: vat,
+                        receivedAmount: received,
+                        date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    userWithdrawCount++;
+                    
+                    // Send Telegram notification
+                    const telegramMessage = `💸 *নতুন উত্তোলন রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *অ্যাকাউন্ট:* ${number}\n💵 *পরিমাণ:* ৳${amount}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *প্রাপ্ত:* ৳${received.toFixed(2)}\n⏰ *সময়সূচী:* ${withinSchedule ? 'ভিতরে' : 'বাইরে'}`;
+                    await sendTelegramNotification(telegramMessage);
+                    
+                    let successMessage = 'উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন';
+                    if(!withinSchedule) {
+                        successMessage += '\n\nনোটিশ: আপনার উত্তোলন পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।';
+                    }
+                    
+                    showSmartToast(successMessage, 'success');
+                  
+                    window.playSound('snd_success');                
+                    hideLoading();
+                    
+                    document.getElementById('withdrawNumber').value = '';
+                    document.getElementById('withdrawAmount').value = '';
+                    window.calculateWithdrawVAT();
+                    
+                } catch (e) {
+                    showSmartToast('উত্তোলন রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
+                    hideLoading();
                 }
-                
-                showSmartToast(successMessage, 'success');
-              
-              window.playSound('snd_success');                hideLoading();
-                
-                document.getElementById('withdrawNumber').value = '';
-                document.getElementById('withdrawAmount').value = '';
-                window.calculateWithdrawVAT();
-                
-            } catch (e) {
-                showSmartToast('উত্তোলন রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
+            }); // <-- Monetag অ্যাড ফাংশন শেষ
         };
+            
         
        // ✅ এডমিন প্যানেলের সাথে সিঙ্ক করা রিচার্জ ফাংশন (Corrected)
         window.submitRecharge = async () => { 
@@ -4897,68 +4935,72 @@ window.closeUserReceiptModal = () => {
             }
             
             const withinSchedule = isWithinWithdrawalSchedule();
-            showLoading();
             
-            // 🔥 এই 'try' ব্লকটি মিসিং ছিল তোমার কোডে
-            try {
-                // ১. ইউজার রিচার্জ ব্যালেন্স থেকে টাকা কাটা
-                await db.collection("users").doc(currentUserId).update({
-                    rechargeBalance: firebase.firestore.FieldValue.increment(-totalAmount)
-                });
+            // 💰 রিচার্জ রিকোয়েস্ট পাঠানোর আগে Monetag অ্যাড আসবে
+            window.showMonetagAd(async () => {
+                showLoading();
                 
-                // ২. এডমিন প্যানেলের জন্য pending_requests এ পাঠানো
-                await db.collection("pending_requests").add({
-                    userId: currentUserId, 
-                    type: "Recharge",
-                    number: phone, 
-                    amount: amount, 
-                    fee: fee,
-                    totalAmount: totalAmount,
-                    operator: operator,
-                    userName: currentUserData.name,
-                    userPhone: currentUserData.phone,
-                    status: 'Pending', 
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                }); 
-                
-                // ৩. ইউজারের নিজস্ব হিস্ট্রিতে সেভ
-                await db.collection("history").add({
-                    userId: currentUserId,
-                    type: "Recharge",
-                    amount: -totalAmount,
-                    status: "Pending",
-                    details: `${operator} - ${phone}`,
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                userRechargeCount++;
-                
-                // ৪. টেলিগ্রাম নোটিফিকেশন
-                const telegramMessage = `📱 *নতুন রিচার্জ রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📞 *নাম্বার:* ${phone}\n🏢 *অপারেটর:* ${operator}\n💵 *পরিমাণ:* ৳${amount}\n💰 *মোট:* ৳${totalAmount}`;
-                await sendTelegramNotification(telegramMessage);
-                
-                let successMessage = 'রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে';
-                if(!withinSchedule) {
-                    successMessage += '\n\nনোটিশ: রিচার্জ পরবর্তী কার্যদিবসে সম্পন্ন করা হবে।';
+                // 🔥 এই 'try' ব্লকটি মিসিং ছিল তোমার কোডে
+                try {
+                    // ১. ইউজার রিচার্জ ব্যালেন্স থেকে টাকা কাটা
+                    await db.collection("users").doc(currentUserId).update({
+                        rechargeBalance: firebase.firestore.FieldValue.increment(-totalAmount)
+                    });
+                    
+                    // ২. এডমিন প্যানেলের জন্য pending_requests এ পাঠানো
+                    await db.collection("pending_requests").add({
+                        userId: currentUserId, 
+                        type: "Recharge",
+                        number: phone, 
+                        amount: amount, 
+                        fee: fee,
+                        totalAmount: totalAmount,
+                        operator: operator,
+                        userName: currentUserData.name,
+                        userPhone: currentUserData.phone,
+                        status: 'Pending', 
+                        date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    }); 
+                    
+                    // ৩. ইউজারের নিজস্ব হিস্ট্রিতে সেভ
+                    await db.collection("history").add({
+                        userId: currentUserId,
+                        type: "Recharge",
+                        amount: -totalAmount,
+                        status: "Pending",
+                        details: `${operator} - ${phone}`,
+                        date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    userRechargeCount++;
+                    
+                    // ৪. টেলিগ্রাম নোটিফিকেশন
+                    const telegramMessage = `📱 *নতুন রিচার্জ রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📞 *নাম্বার:* ${phone}\n🏢 *অপারেটর:* ${operator}\n💵 *পরিমাণ:* ৳${amount}\n💰 *মোট:* ৳${totalAmount}`;
+                    await sendTelegramNotification(telegramMessage);
+                    
+                    let successMessage = 'রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে';
+                    if(!withinSchedule) {
+                        successMessage += '\n\nনোটিশ: রিচার্জ পরবর্তী কার্যদিবসে সম্পন্ন করা হবে।';
+                    }
+                    
+                    showSmartToast(successMessage, 'success'); 
+                    window.playSound('snd_success');
+                    hideLoading();
+                    
+                    document.getElementById('rechPhone').value = '';
+                    document.getElementById('rechAmount').value = '';
+                    window.calculateRechargeFee();
+                    
+                } catch (e) {
+                    console.error("Recharge Error:", e);
+                    showSmartToast('রিচার্জ রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
+                    hideLoading();
                 }
-                
-                showSmartToast(successMessage, 'success'); 
-                window.playSound('snd_success');
-                hideLoading();
-                
-                document.getElementById('rechPhone').value = '';
-                document.getElementById('rechAmount').value = '';
-                window.calculateRechargeFee();
-                
-            } catch (e) {
-                console.error("Recharge Error:", e);
-                showSmartToast('রিচার্জ রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
+            });
         };
         
         window.transferBalance = async () => {
@@ -5297,37 +5339,40 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
     window.open('https://t.me/TAKA_WALA_ADMIN', '_blank'); 
 };
         
-                       // ✅ DYNAMIC DRIVE OFFER FUNCTION (UPDATED)
+                       // ✅ DYNAMIC DRIVE OFFER FUNCTION (UPDATED WITH AD)
         window.showDriveOffer = async () => {
-            window.showPage('driveOfferScreen');
-            showLoading();
+            // অ্যাড শো করার ফাংশন দিয়ে র‍্যাপ করা হলো
+            window.showMonetagAd(async () => {
+                window.showPage('driveOfferScreen');
+                showLoading();
 
-            try {
-                const doc = await db.collection("settings").doc("drive_offer").get();
-                let isActive = false;
-                
-                if(doc.exists) {
-                    const data = doc.data();
-                    if(data.isActive === true) isActive = true;
+                try {
+                    const doc = await db.collection("settings").doc("drive_offer").get();
+                    let isActive = false;
                     
-                    document.getElementById('driveMainTitle').innerText = data.title || "কাজ চলছে...";
-                    document.getElementById('driveMainMessage').innerText = data.message || "শীঘ্রই আসছে...";
-                    document.getElementById('driveLaunchDate').innerText = data.launchDate || "COMING SOON";
-                }
+                    if(doc.exists) {
+                        const data = doc.data();
+                        if(data.isActive === true) isActive = true;
+                        
+                        document.getElementById('driveMainTitle').innerText = data.title || "কাজ চলছে...";
+                        document.getElementById('driveMainMessage').innerText = data.message || "শীঘ্রই আসছে...";
+                        document.getElementById('driveLaunchDate').innerText = data.launchDate || "COMING SOON";
+                    }
 
-                if(isActive) {
-                    document.getElementById('driveMaintenanceView').classList.add('hidden');
-                    document.getElementById('driveActiveView').classList.remove('hidden');
-                    window.loadDriveOffers('gp'); // ডিফল্ট হিসেবে GP লোড হবে
-                } else {
-                    document.getElementById('driveMaintenanceView').classList.remove('hidden');
-                    document.getElementById('driveActiveView').classList.add('hidden');
+                    if(isActive) {
+                        document.getElementById('driveMaintenanceView').classList.add('hidden');
+                        document.getElementById('driveActiveView').classList.remove('hidden');
+                        window.loadDriveOffers('gp'); // ডিফল্ট হিসেবে GP লোড হবে
+                    } else {
+                        document.getElementById('driveMaintenanceView').classList.remove('hidden');
+                        document.getElementById('driveActiveView').classList.add('hidden');
+                        hideLoading();
+                    }
+                } catch(e) {
+                    console.log("Drive settings error:", e);
                     hideLoading();
                 }
-            } catch(e) {
-                console.log("Drive settings error:", e);
-                hideLoading();
-            }
+            }); // অ্যাড ফাংশন শেষ
         };
 
         // 🔄 LOAD OFFERS BY OPERATOR
@@ -5416,42 +5461,45 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         };
 
 
-                // ✅ DYNAMIC SPIN FUNCTION
+               // ✅ DYNAMIC SPIN FUNCTION (UPDATED WITH AD)
         window.showSpinGame = async () => {
-            window.showPage('spinScreen');
-            showLoading();
+            // অ্যাড শো করার ফাংশন দিয়ে র‍্যাপ করা হলো
+            window.showMonetagAd(async () => {
+                window.showPage('spinScreen');
+                showLoading();
 
-            let title = "শীঘ্রই আসছে...";
-            let message = "স্পিন ফিচারটির কাজ চলছে। খুব শীঘ্রই আপনি স্পিন করে টাকা আয় করতে পারবেন।";
-            let date = "১লা জুন ২০২৬";
-            let isActive = false;
+                let title = "শীঘ্রই আসছে...";
+                let message = "স্পিন ফিচারটির কাজ চলছে। খুব শীঘ্রই আপনি স্পিন করে টাকা আয় করতে পারবেন।";
+                let date = "১লা জুন ২০২৬";
+                let isActive = false;
 
-            try {
-                const doc = await db.collection("settings").doc("spin_game").get();
-                if(doc.exists) {
-                    const data = doc.data();
-                    if(data.title) title = data.title;
-                    if(data.message) message = data.message;
-                    if(data.launchDate) date = data.launchDate;
-                    if(data.isActive === true) isActive = true;
+                try {
+                    const doc = await db.collection("settings").doc("spin_game").get();
+                    if(doc.exists) {
+                        const data = doc.data();
+                        if(data.title) title = data.title;
+                        if(data.message) message = data.message;
+                        if(data.launchDate) date = data.launchDate;
+                        if(data.isActive === true) isActive = true;
+                    }
+                } catch(e) { console.log("Spin settings error", e); }
+
+                document.getElementById('spinMainTitle').innerText = title;
+                document.getElementById('spinMainMessage').innerText = message;
+                document.getElementById('spinLaunchDate').innerText = date;
+
+                if(isActive) {
+                    document.getElementById('spinMaintenanceView').classList.add('hidden');
+                    document.getElementById('spinActiveView').classList.remove('hidden');
+                    // এখানে স্পিন কাউন্ট বা লজিক লোড করতে পারিস
+                    document.getElementById('spinCount').innerText = currentUserData.dailySpins || 5; 
+                } else {
+                    document.getElementById('spinMaintenanceView').classList.remove('hidden');
+                    document.getElementById('spinActiveView').classList.add('hidden');
                 }
-            } catch(e) { console.log("Spin settings error", e); }
-
-            document.getElementById('spinMainTitle').innerText = title;
-            document.getElementById('spinMainMessage').innerText = message;
-            document.getElementById('spinLaunchDate').innerText = date;
-
-            if(isActive) {
-                document.getElementById('spinMaintenanceView').classList.add('hidden');
-                document.getElementById('spinActiveView').classList.remove('hidden');
-                // এখানে স্পিন কাউন্ট বা লজিক লোড করতে পারিস
-                document.getElementById('spinCount').innerText = currentUserData.dailySpins || 5; 
-            } else {
-                document.getElementById('spinMaintenanceView').classList.remove('hidden');
-                document.getElementById('spinActiveView').classList.add('hidden');
-            }
-            
-            hideLoading();
+                
+                hideLoading();
+            }); // অ্যাড ফাংশন শেষ
         };
 
         // 🎰 SPIN LOGIC (Visual Demo)
@@ -5847,15 +5895,8 @@ window.switchTaskTab = (type) => {
             document.getElementById('selectedWithdrawMethod').value = method;
         };
 
-        // ✅ SUBSCRIPTION FUNCTIONS
-        window.switchSubscriptionTab = (tab) => {
-            document.getElementById('tabStars').className = tab === 'stars' ? 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow' : 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
-            document.getElementById('tabTelegram').className = tab === 'telegram' ? 'flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow' : 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500';
-            
-            document.getElementById('starsSection').classList.toggle('hidden', tab !== 'stars');
-            document.getElementById('telegramSection').classList.toggle('hidden', tab !== 'telegram');
-        };
-        
+        // ✅ SUBSCRIPTION FUNCTIONS        
+     
         window.selectStarPackage = (stars) => {
             selectedStarPackage = stars;
             document.getElementById('selectedStars').textContent = stars;
@@ -5867,26 +5908,7 @@ window.switchTaskTab = (type) => {
             
             document.getElementById('totalStarPrice').textContent = price;
         };
-        
-        window.selectTelegramPlan = (plan) => {
-            selectedTelegramPlan = plan;
-            let planText = '';
-            let price = 0;
-            
-            if(plan === '1month') {
-                planText = '১ মাসের প্যাকেজ';
-                price = 600;
-            } else if(plan === '3month') {
-                planText = '৩ মাসের প্যাকেজ';
-                price = 1550;
-            } else if(plan === '1year') {
-                planText = '১ বছরের প্যাকেজ';
-                price = 3900;
-            }
-            
-            document.getElementById('selectedPlanText').textContent = planText;
-            document.getElementById('selectedPlanPrice').textContent = price;
-        };
+                
         
         window.buyStars = () => {
             if(selectedStarPackage === 0) {
@@ -5898,15 +5920,6 @@ window.switchTaskTab = (type) => {
             showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
         };
         
-        window.buyDynamicSubscription = () => {
-            if(!selectedPlan || !selectedService) {
-                showSmartToast('দয়া করে একটি প্যাকেজ সিলেক্ট করুন', 'error');
-                return;
-            }
-            const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})।\n\nসার্ভিস: ${selectedService.title}\nপ্যাকেজ: ${selectedPlan.name}\nমূল্য: ৳${selectedPlan.price}\n\nআমি এটি কিনতে চাই।`);
-            window.open(`https://t.me/TAKA_WALA_ADMIN?text=${message}`, '_blank');
-            showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
-        };
         
                 // ✅ GLOBAL VARS FOR SUBSCRIPTION
         let subscriptionData = [];
@@ -6222,16 +6235,20 @@ window.playSound = (id) => {
    
    // 🛡️ ANTI-SPAM SYSTEM (বারবার ক্লিক ঠেকানো)
 let clickTracker = 0;
+let clickTimer = null;
 document.addEventListener('click', () => {
     clickTracker++;
     if (clickTracker > 15) { 
-        showSmartToast('দয়া করে একবার ক্লিক করুন না হলে  আপনি ব্যান্ড খেতে পারেন।', 'error');
+        showSmartToast('দয়া করে একবার ক্লিক করুন, না হলে আপনি ব্যান খেতে পারেন।', 'error');
         clickTracker = 0;
     }
-    // প্রতি ৫ সেকেন্ড পর কাউন্ট জিরো হবে
-    setTimeout(() => { clickTracker = 0; }, 5000);
+    if (!clickTimer) {
+        clickTimer = setTimeout(() => { 
+            clickTracker = 0; 
+            clickTimer = null;
+        }, 5000);
+    }
 });
-
 
 // 📢 DYNAMIC ANNOUNCEMENT POPUP (CONNECTED TO ADMIN)
 async function showAnnouncement() {
@@ -6380,52 +6397,54 @@ window.buyLuckyTicket = async () => {
     });
 
     if (result.isConfirmed) {
-        showLoading();
-        try {
-            const today = new Date().toLocaleDateString('bn-BD');
-            const ticketNum = Math.floor(100000 + Math.random() * 900000); // ৬ সংখ্যার র‍্যান্ডম টিকেট
+        // 💰 টিকেট কেনার আগে Monetag অ্যাড আসবে
+        window.showMonetagAd(async () => {
+            showLoading();
+            try {
+                const today = new Date().toLocaleDateString('bn-BD');
+                const ticketNum = Math.floor(100000 + Math.random() * 900000); // ৬ সংখ্যার র‍্যান্ডম টিকেট
 
-            // টাকা কাটা
-            await db.collection("users").doc(currentUserId).update({
-                mainBalance: firebase.firestore.FieldValue.increment(-ticketPrice)
-            });
+                // টাকা কাটা
+                await db.collection("users").doc(currentUserId).update({
+                    mainBalance: firebase.firestore.FieldValue.increment(-ticketPrice)
+                });
 
-            // টিকেট জমা রাখা
-            await db.collection("lucky_tickets").add({
-                userId: currentUserId,
-                userName: currentUserData.name,
-                ticketNumber: ticketNum,
-                price: ticketPrice,
-                date: today,
-                status: 'pending',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
+                // টিকেট জমা রাখা
+                await db.collection("lucky_tickets").add({
+                    userId: currentUserId,
+                    userName: currentUserData.name,
+                    ticketNumber: ticketNum,
+                    price: ticketPrice,
+                    date: today,
+                    status: 'pending',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
 
-            // হিস্ট্রি আপডেট
-            await db.collection("history").add({
-                userId: currentUserId,
-                type: "লাকি ড্র টিকেট",
-                amount: -ticketPrice,
-                status: "Success",
-                details: `Ticket #${ticketNum}`,
-                date: today,
-                time: new Date().toLocaleTimeString('bn-BD'),
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
+                // হিস্ট্রি আপডেট
+                await db.collection("history").add({
+                    userId: currentUserId,
+                    type: "লাকি ড্র টিকেট",
+                    amount: -ticketPrice,
+                    status: "Success",
+                    details: `Ticket #${ticketNum}`,
+                    date: today,
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
 
-            showSmartToast('টিকেট কেনা সফল হয়েছে! 🎉', 'success');
-            window.playSound('snd_success');
-            
-            // UI আপডেট
-            loadMyTickets(); 
-            // ব্যালেন্স আপডেট ম্যানুয়ালি (রিয়েলটাইম না হলে)
-            document.getElementById('luckyDrawBalance').innerText = (currentUserData.mainBalance - ticketPrice).toFixed(2);
+                showSmartToast('টিকেট কেনা সফল হয়েছে! 🎉', 'success');
+                window.playSound('snd_success');
+                
+                // UI আপডেট
+                loadMyTickets(); 
+                document.getElementById('luckyDrawBalance').innerText = (currentUserData.mainBalance - ticketPrice).toFixed(2);
 
-        } catch (e) {
-            console.error(e);
-            showSmartToast('সমস্যা হয়েছে, আবার চেষ্টা করুন', 'error');
-        }
-        hideLoading();
+            } catch (e) {
+                console.error(e);
+                showSmartToast('সমস্যা হয়েছে, আবার চেষ্টা করুন', 'error');
+            }
+            hideLoading();
+        });
     }
 };
    
@@ -6742,65 +6761,60 @@ async function loadReferralList() {
     
 }
 
-// ✅ প্রোমো কোড প্রসেসিং ফাংশন (Script এর শেষে বসাও)
+// ✅ প্রোমো কোড প্রসেসিং ফাংশন (With Monetag Ad)
 window.processMagicPromo = async () => {
     const inputField = document.getElementById('userPromoInput');
     const promoCode = inputField.value.trim().toUpperCase();
     if (!promoCode) { showSmartToast('কোডটি লিখুন!', 'error'); return; }
 
-    showLoading();
-    try {
-        const promoRef = db.collection("promo_codes").doc(promoCode);
-        const doc = await promoRef.get();
+    // অ্যাড দেখার পর প্রোমো কোড প্রসেস হবে
+    window.showMonetagAd(async () => {
+        showLoading();
+        try {
+            const promoRef = db.collection("promo_codes").doc(promoCode);
+            const doc = await promoRef.get();
 
-        if (!doc.exists) {
-            showSmartToast('ভুল প্রোমো কোড! ❌', 'error');
-        } else {
-            const data = doc.data();
-            const now = new Date();
-            const expiry = data.expiryAt.toDate();
-            const usedByCount = data.usedBy ? data.usedBy.length : 0;
-            const promoLimit = data.limit || 0;
+            if (!doc.exists) {
+                showSmartToast('ভুল প্রোমো কোড! ❌', 'error');
+            } else {
+                const data = doc.data();
+                const now = new Date();
+                const expiry = data.expiryAt.toDate();
+                const usedByCount = data.usedBy ? data.usedBy.length : 0;
+                const promoLimit = data.limit || 0;
 
-            if (now > expiry) {
-                showSmartToast('কোডটির মেয়াদ শেষ! ⏰', 'error');
-            } 
-            else if (promoLimit > 0 && usedByCount >= promoLimit) { 
-                showSmartToast('দুঃখিত, লিমিট শেষ! 🚫', 'error');
+                if (now > expiry) { showSmartToast('কোডটির মেয়াদ শেষ! ⏰', 'error'); } 
+                else if (promoLimit > 0 && usedByCount >= promoLimit) { showSmartToast('দুঃখিত, লিমিট শেষ! 🚫', 'error'); }
+                else if (data.usedBy && data.usedBy.includes(currentUserId)) { showSmartToast('আপনি অলরেডি ব্যবহার করেছেন! ✋', 'warning'); } 
+                else {
+                    const bonusAmount = data.amount || 0;
+                    await db.collection("users").doc(currentUserId).update({
+                        mainBalance: firebase.firestore.FieldValue.increment(bonusAmount),
+                        totalEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
+                    });
+                    await promoRef.update({ usedBy: firebase.firestore.FieldValue.arrayUnion(currentUserId) });
+                    
+                    await db.collection("history").add({
+                        userId: currentUserId, type: "প্রোমো বোনাস 🎁", amount: bonusAmount, status: "Success",
+                        details: `Code: ${promoCode}`, date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'), timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    const tgMsg = `🎁 *প্রোমো কোড ক্লেইম*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n🎫 *কোড:* ${promoCode}\n💰 *বোনাস:* ৳${bonusAmount}`;
+                    await sendTelegramNotification(tgMsg);
+
+                    if(typeof confetti === 'function') confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+                    window.playSound('snd_success');
+                    inputField.value = '';
+                    showSmartToast(`৳${bonusAmount} বোনাস পেয়েছেন।`, 'success');
+                    window.showPage('homeScreen');
+                }
             }
-            else if (data.usedBy && data.usedBy.includes(currentUserId)) {
-                showSmartToast('আপনি অলরেডি ব্যবহার করেছেন! ✋', 'warning');
-            } 
-            else {
-                const bonusAmount = data.amount || 0;
-                await db.collection("users").doc(currentUserId).update({
-                    mainBalance: firebase.firestore.FieldValue.increment(bonusAmount),
-                    totalEarnings: firebase.firestore.FieldValue.increment(bonusAmount)
-                });
-                await promoRef.update({ usedBy: firebase.firestore.FieldValue.arrayUnion(currentUserId) });
-                
-                // ১. হিস্ট্রি
-                await db.collection("history").add({
-                    userId: currentUserId, type: "প্রোমো বোনাস 🎁", amount: bonusAmount, status: "Success",
-                    details: `Code: ${promoCode}`, date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'), timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                // ✅ ২. টেলিগ্রাম নোটিফিকেশন (নতুন যুক্ত করা হয়েছে)
-                const tgMsg = `🎁 *প্রোমো কোড ক্লেইম*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n🎫 *কোড:* ${promoCode}\n💰 *বোনাস:* ৳${bonusAmount}`;
-                await sendTelegramNotification(tgMsg);
-
-                if(typeof confetti === 'function') confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-                window.playSound('snd_success');
-                inputField.value = '';
-                showSmartToast(`৳${bonusAmount} বোনাস পেয়েছেন।`, 'success');
-                window.showPage('homeScreen');
-            }
-        }
-    } catch (e) { showSmartToast('সার্ভার সমস্যা!', 'error'); }
-    hideLoading();
+        } catch (e) { showSmartToast('সার্ভার সমস্যা!', 'error'); }
+        hideLoading();
+    });
 };
-   
+                   
     </script>
     
         <audio id="snd_click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
