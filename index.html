@@ -3247,32 +3247,57 @@ async function loadPackages() {
             try {
     showLoading();
 
-   // ✅ ডিভাইস লক চেক শুরু (আপডেটেড বাংলা)
+   // ✅ আল্ট্রা স্মার্ট ডিভাইস লক চেক শুরু (With Custom Device Limit)
             let deviceToken = localStorage.getItem('takawala_device_id');
             if (!deviceToken) {
                 deviceToken = 'ID-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
                 localStorage.setItem('takawala_device_id', deviceToken);
             }
 
+            // ১. ডিফল্ট গ্লোবাল লিমিট আনা
+            let allowedAccounts = 1;
+            try {
+                const configDoc = await db.collection("settings").doc("appConfig").get();
+                if (configDoc.exists && configDoc.data().maxAccountsPerDevice) {
+                    allowedAccounts = configDoc.data().maxAccountsPerDevice;
+                }
+            } catch(e) { console.log("Global Limit Error"); }
+
+            // ২. কাস্টম লিমিট চেক করা (ম্যাজিক লজিক ✨)
+            try {
+                const customLimitDoc = await db.collection("device_limits").doc(deviceToken).get();
+                if (customLimitDoc.exists) {
+                    // যদি এই ডিভাইসের জন্য এডমিন আলাদা লিমিট দিয়ে থাকে, তবে সেটাই ফাইনাল
+                    allowedAccounts = customLimitDoc.data().limit;
+                }
+            } catch(e) { console.log("Custom Limit Error"); }
+
+            // ৩. ডিভাইস টোকেন দিয়ে গোনা
             const checkDevice = await db.collection("users").where("deviceToken", "==", deviceToken).get();
-            if (!checkDevice.empty) {
+            
+            if (checkDevice.size >= allowedAccounts) {
                 hideLoading();
-                // 🔥 সুন্দর বাংলা ওয়ার্নিং
+                
                 Swal.fire({
-                    title: 'দুঃখিত! 🚫',
+                    title: '<span style="color:#ef4444; font-weight:900;">অ্যাক্সেস লিমিট! 🚫</span>',
                     html: `
-                        <div style="text-align: center;">
-                            <p style="color: #334155; font-size: 14px; line-height: 1.6;">
-                                আমাদের নিয়ম অনুযায়ী <b>একটি মোবাইল দিয়ে মাত্র ১টি একাউন্ট</b> খোলা যাবে। 
-                                <br><br>
-                                আপনি ইতিমধ্যে এই ডিভাইস ব্যবহার করে রেজিস্ট্রেশন করেছেন। দয়া করে আগের একাউন্টটি লগইন করুন।
+                        <div style="background: #fef2f2; border: 1px dashed #fca5a5; padding: 15px; border-radius: 15px; margin-top: 10px;">
+                            <div style="font-size: 40px; margin-bottom: 10px;">📱</div>
+                            <p style="color: #991b1b; font-size: 14px; font-weight: 700; line-height: 1.6;">
+                                এই ডিভাইসটির জন্য সর্বোচ্চ <span style="background:#ef4444; color:white; padding:2px 8px; border-radius:5px;">${allowedAccounts} টি</span> একাউন্ট খোলার অনুমতি রয়েছে।
+                            </p>
+                            <p style="color: #7f1d1d; font-size: 12px; font-weight: 500; margin-top: 10px;">
+                                আপনি ইতিমধ্যে আপনার লিমিট পার করে ফেলেছেন। দয়া করে আপনার আগের একাউন্টটি লগইন করুন অথবা এডমিনের সাথে যোগাযোগ করুন।
                             </p>
                         </div>
                     `,
-                    icon: 'warning',
-                    confirmButtonText: 'ঠিক আছে, বুঝেছি',
+                    showConfirmButton: true,
+                    confirmButtonText: '<i class="ri-login-circle-line"></i> লগইন পেজে যান',
                     confirmButtonColor: '#ef4444',
-                    customClass: { popup: 'rounded-[25px]' }
+                    background: '#ffffff',
+                    customClass: { popup: 'rounded-[30px] border-2 border-red-100 shadow-2xl' }
+                }).then(() => {
+                    window.toggleAuthTab('login');
                 });
                 return;
             }
@@ -3430,6 +3455,19 @@ async function loadPackages() {
             if (user) {
                 currentUserId = user.uid;
                 showLoading();
+                
+                // ✅ OLD USER AUTO DEVICE TOKEN UPDATE (ম্যাজিক ট্রিক)
+                let dToken = localStorage.getItem('takawala_device_id');
+                if (!dToken) {
+                    dToken = 'ID-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+                    localStorage.setItem('takawala_device_id', dToken);
+                }
+                db.collection("users").doc(user.uid).get().then(doc => {
+                    if(doc.exists && !doc.data().deviceToken) {
+                        db.collection("users").doc(user.uid).update({ deviceToken: dToken });
+                    }
+                });
+                
                 setTimeout(async () => {
                     await loadSystemSettings();
                     
@@ -4283,7 +4321,7 @@ window.closeUserReceiptModal = () => {
                         hideLoading(); 
                     }
                 };
-                showInterstitialAd();
+                window.showMonetagAd(onAdCompleted);
             } else {
                 window.switchQuizTab('types');
             }
@@ -4558,8 +4596,8 @@ window.closeUserReceiptModal = () => {
             document.getElementById('proofModal').classList.add('hidden');
         }
 
-// ✅ এডমিন প্যানেলের জন্য টাস্ক প্রুফ সাবমিট (রিপ্লেসড)
-        window.submitProof = async () => {
+// ✅ টাস্ক সাবমিটের ফিক্সড কোড
+window.submitProof = async () => {
     if(!currentTaskInfo) return;
     const proof1 = document.getElementById('proof1')?.value.trim();
     const proof2 = document.getElementById('proof2')?.value.trim();
@@ -4571,6 +4609,10 @@ window.closeUserReceiptModal = () => {
     
     showLoading();
     try {
+        // ১. নতুন একটি আইডি তৈরি করা হলো (যাতে দুই জায়গায় সেম থাকে)
+        const newReqRef = db.collection("task_submissions").doc();
+        const newReqId = newReqRef.id;
+
         const submissionData = {
             userId: currentUserId,
             taskId: currentTaskInfo.taskId,
@@ -4586,11 +4628,11 @@ window.closeUserReceiptModal = () => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        // ১. সাবমিশন অ্যাড করা
-        await db.collection("task_submissions").add(submissionData);
+        // ২. সাবমিশনে সেভ করা
+        await newReqRef.set(submissionData);
         
-        // ২. ইউজারের হিস্ট্রিতে অ্যাড করা
-        await db.collection("history").add({
+        // ৩. একই আইডি দিয়ে ইউজারের হিস্ট্রিতে সেভ করা
+        await db.collection("history").doc(newReqId).set({
             userId: currentUserId,
             type: "টাস্ক সাবমিট",
             amount: currentTaskInfo.reward,
@@ -4601,7 +4643,7 @@ window.closeUserReceiptModal = () => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        // ✅ ৩. টেলিগ্রাম নোটিফিকেশন (যা তোমার ছিল না)
+        // ৪. টেলিগ্রাম নোটিফিকেশন
         const telegramMessage = `📝 *নতুন টাস্ক সাবমিট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📋 *টাস্ক:* ${currentTaskInfo.title}\n💰 *রিওয়ার্ড:* ৳${currentTaskInfo.reward}\n🔗 *প্রুফ লিংক:* ${proof2}\n💬 *ইউজার নোট:* ${proof1}`;
         await sendTelegramNotification(telegramMessage);
         
@@ -4609,7 +4651,7 @@ window.closeUserReceiptModal = () => {
         window.playSound('snd_success');
         hideLoading();
         window.closeProofModal();
-        renderTasks(); // এখানে একবার কল করাই যথেষ্ট
+        renderTasks(); 
     } catch (e) {
         showSmartToast('জমা দিতে সমস্যা হয়েছে', 'error');
         hideLoading();
@@ -4664,40 +4706,42 @@ window.closeUserReceiptModal = () => {
             showSmartToast('ডিপোজিট রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
             
             try {
-                const vatPercentage = systemSettings.vatPercentage || 10;
+                const vatPercentage = systemSettings.vatPercentage || 0;
                 const vat = amount * (vatPercentage / 100);
                 const totalAmount = amount + vat;
                 
-                // Save to pending_requests
-                await db.collection("pending_requests").add({ 
-                    userId: currentUserId, 
-                    type: "Deposit",
-                    amount: amount, 
-                    vat: vat,
-                    totalAmount: totalAmount,
-                    trxId: trxId,
-                    method: method,
-                    userName: currentUserData.name,
-                    userPhone: currentUserData.phone,
-                    status: "Pending",
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // ✅ ADDED: Save to history as well
-                await db.collection("history").add({
-                    userId: currentUserId,
-                    type: "ডিপোজিট",
-                    amount: amount,
-                    status: "Pending",
-                    details: `${method} - TrxID: ${trxId}`,
-                    trxId: trxId,
-                    method: method,
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                // নতুন আইডি তৈরি করা হলো
+const newReqRef = db.collection("pending_requests").doc();
+const newReqId = newReqRef.id;
+
+await newReqRef.set({ 
+    userId: currentUserId, 
+    type: "Deposit",
+    amount: amount, 
+    vat: vat,
+    totalAmount: totalAmount,
+    trxId: trxId,
+    method: method,
+    userName: currentUserData.name,
+    userPhone: currentUserData.phone,
+    status: "Pending",
+    date: new Date().toLocaleDateString('bn-BD'),
+    time: new Date().toLocaleTimeString('bn-BD'),
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+});
+
+await db.collection("history").doc(newReqId).set({
+    userId: currentUserId,
+    type: "ডিপোজিট",
+    amount: amount,
+    status: "Pending",
+    details: `${method} - TrxID: ${trxId}`,
+    trxId: trxId,
+    method: method,
+    date: new Date().toLocaleDateString('bn-BD'),
+    time: new Date().toLocaleTimeString('bn-BD'),
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+});
                 
                 // Send Telegram notification
                 const telegramMessage = `💰 *নতুন ডিপোজিট রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n💵 *পরিমাণ:* ৳${amount}\n🧾 *TrxID:* ${trxId}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *মোট:* ৳${totalAmount.toFixed(2)}`;
@@ -4801,7 +4845,7 @@ window.closeUserReceiptModal = () => {
                 return;
             }
             
-            const vatPercentage = systemSettings.vatPercentage || 10;
+            const vatPercentage = systemSettings.vatPercentage || 0;
             const vat = amount * (vatPercentage / 100);
             const received = amount - vat;
             
@@ -4821,7 +4865,11 @@ window.closeUserReceiptModal = () => {
                         totalWithdraw: firebase.firestore.FieldValue.increment(amount)
                     });
                     
-                    await db.collection("pending_requests").add({ 
+                    // নতুন আইডি জেনারেট করে দুই জায়গায় সেভ করা (Withdraw)
+                    const newReqRef = db.collection("pending_requests").doc();
+                    const newReqId = newReqRef.id;
+
+                    await newReqRef.set({ 
                         userId: currentUserId, 
                         type: "Withdraw", 
                         amount: amount, 
@@ -4837,7 +4885,7 @@ window.closeUserReceiptModal = () => {
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     
-                    await db.collection("history").add({
+                    await db.collection("history").doc(newReqId).set({
                         userId: currentUserId,
                         type: "উত্তোলন",
                         amount: -amount,
@@ -4947,8 +4995,11 @@ window.closeUserReceiptModal = () => {
                         rechargeBalance: firebase.firestore.FieldValue.increment(-totalAmount)
                     });
                     
-                    // ২. এডমিন প্যানেলের জন্য pending_requests এ পাঠানো
-                    await db.collection("pending_requests").add({
+                    // ২ ও ৩. নতুন আইডি দিয়ে রিচার্জ রিকোয়েস্ট ও হিস্ট্রি সেভ করা
+                    const newReqRef = db.collection("pending_requests").doc();
+                    const newReqId = newReqRef.id;
+
+                    await newReqRef.set({
                         userId: currentUserId, 
                         type: "Recharge",
                         number: phone, 
@@ -4964,8 +5015,7 @@ window.closeUserReceiptModal = () => {
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     }); 
                     
-                    // ৩. ইউজারের নিজস্ব হিস্ট্রিতে সেভ
-                    await db.collection("history").add({
+                    await db.collection("history").doc(newReqId).set({
                         userId: currentUserId,
                         type: "Recharge",
                         amount: -totalAmount,
@@ -5321,7 +5371,7 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
                         hideLoading();
                     }
                 };
-                showInterstitialAd();
+                window.showMonetagAd(onAdCompleted);
             }
         };
 
