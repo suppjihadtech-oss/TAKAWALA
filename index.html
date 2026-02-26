@@ -483,24 +483,36 @@
             color: white;
         }
         
-        /* MAINTENANCE MODE */
+        /* =========================================
+           ULTRA MODERN MAINTENANCE SCREEN
+           ========================================= */
         .maintenance-screen {
-            position:fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            z-index: 999999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            padding: 20px;
+            background: #0f172a; /* Deep premium slate background */
+        }
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob { 
+            animation: blob 7s infinite; 
+        }
+        .animation-delay-2000 { 
+            animation-delay: 2s; 
+        }
+        .animation-delay-4000 { 
+            animation-delay: 4s; 
+        }
+        @keyframes stripes {
+            from { background-position: 1rem 0; }
+            to { background-position: 0 0; }
+        }
+        .animate-spin-slow { 
+            animation: spin 4s linear infinite; 
         }
         
-      /* =========================================
-   ✅ TWAI CHATBOT ICON (FIXED POSITION)
+  /*✅ TWAI CHATBOT ICON (FIXED POSITION)
    ========================================= */
 #twaiChatbotIcon {
     position: fixed;
@@ -944,15 +956,45 @@
 <body class="bg-slate-50">
 
     <!-- MAINTENANCE SCREEN (HIDDEN BY DEFAULT) -->
-    <div id="maintenanceScreen" class="maintenance-screen hidden">
-        <div class="maintenance-content">
-            <img src="https://i.postimg.cc/GpZMXGKR/1769418328212-removebg-preview.png" alt="Logo">
-            <h1 class="text-4xl font-bold mb-4">🔧 কাজ চলছে</h1>
-            <p class="text-xl mb-6">আমরা সাইটটিকে আরো উন্নত করার জন্য কাজ করছি</p>
-            <p class="text-lg text-slate-300 mb-8">অল্প সময়ের মধ্যে আমরা আবার চালু হবো। আপনার ধৈর্য্যের জন্য ধন্যবাদ।</p>
-            <div class="bg-white/10 p-6 rounded-2xl">
-                <p class="text-sm">📞 যোগাযোগ: support@takawala.com</p>
-                <p class="text-sm mt-2">📱 টেলিগ্রাম: @TAKA_WALA_ADMIN</p>
+    <div id="maintenanceScreen" class="maintenance-screen hidden fixed inset-0 z-[9999999] flex items-center justify-center p-5 overflow-hidden">
+        
+        <!-- Animated Background Glows -->
+        <div class="absolute top-[-10%] left-[-10%] w-72 h-72 bg-blue-600 rounded-full mix-blend-screen filter blur-[80px] opacity-50 animate-blob"></div>
+        <div class="absolute top-[-10%] right-[-10%] w-72 h-72 bg-purple-600 rounded-full mix-blend-screen filter blur-[80px] opacity-50 animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-72 h-72 bg-emerald-600 rounded-full mix-blend-screen filter blur-[80px] opacity-50 animate-blob animation-delay-4000"></div>
+
+        <!-- Main Glass Card -->
+        <div class="relative w-full max-w-md bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[35px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-8 text-center animate__animated animate__zoomIn">
+            
+            <!-- Animated Settings Gear Icon -->
+            <div class="relative w-24 h-24 mx-auto mb-6">
+                <div class="absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full animate-spin-slow blur-md opacity-80"></div>
+                <div class="relative w-full h-full bg-slate-900 rounded-full flex items-center justify-center border-2 border-white/20">
+                    <i class="ri-settings-4-fill text-5xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 animate-spin"></i>
+                </div>
+            </div>
+
+            <h1 class="text-3xl font-black text-white mb-2 tracking-wide drop-shadow-lg">সিস্টেম আপগ্রেড 🚀</h1>
+            <p class="text-sm font-medium text-slate-300 mb-6 leading-relaxed">
+                আপনাদের আরো ভালো এক্সপেরিয়েন্স দেওয়ার জন্য আমাদের সার্ভারে স্পেশাল কাজ চলছে। দয়া করে কিছুক্ষণ পর আবার ভিজিট করুন।
+            </p>
+
+            <!-- Animated Fake Progress Bar -->
+            <div class="w-full bg-slate-800/80 rounded-full h-3 mb-2 overflow-hidden border border-white/10 shadow-inner">
+                <div class="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 h-full rounded-full relative w-[75%]">
+                    <div class="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.2)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.2)_50%,rgba(255,255,255,0.2)_75%,transparent_75%,transparent)] bg-[length:1rem_1rem] animate-[stripes_1s_linear_infinite]"></div>
+                </div>
+            </div>
+            <div class="text-[10px] text-slate-400 font-bold tracking-widest uppercase mb-8 flex justify-between px-1">
+                <span class="animate-pulse">কাজ চলছে...</span>
+                <span class="text-blue-400">৭৫% সম্পূর্ণ</span>
+            </div>
+
+            <!-- Contact Buttons -->
+            <div class="flex flex-col gap-3">
+                <button onclick="window.open('https://t.me/TAKA_WALA_ADMIN', '_blank')" class="w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold py-3.5 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 shadow-sm">
+                    <i class="ri-telegram-fill text-blue-400 text-xl"></i> টেলিগ্রাম সাপোর্ট
+                </button>
             </div>
         </div>
     </div>
@@ -1187,6 +1229,23 @@
                 </div>
             </div>
 
+<!-- ⚡ FLASH SALE BANNER (Trick #1 - Specific Time) -->
+<div id="flashSaleBanner" onclick="window.showPage('vipScreen')" class="hidden mx-5 mt-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 p-4 rounded-2xl shadow-lg shadow-purple-200 relative overflow-hidden transform transition duration-300 active:scale-95 z-20 cursor-pointer border border-purple-400">
+    <div class="absolute -right-6 -top-6 bg-white/20 w-24 h-24 rounded-full blur-xl animate-pulse"></div>
+    <div class="flex justify-between items-center relative z-10 w-full">
+        <div>
+            <div class="flex items-center gap-1.5 mb-1">
+                <i class="ri-flashlight-fill text-yellow-300 text-lg animate-bounce"></i>
+                <h3 class="text-sm font-black tracking-wide uppercase drop-shadow-md text-white">হ্যাপি আওয়ার!</h3>
+            </div>
+            <p class="text-[10px] text-purple-100 font-medium">প্যাকেজ কিনলে ১০% ক্যাশব্যাক</p>
+        </div>
+        <div class="text-center bg-black/30 px-3 py-1.5 rounded-xl border border-white/20 backdrop-blur-sm">
+            <p class="text-[8px] uppercase tracking-widest text-purple-200 mb-0.5">অফার শেষ হবে</p>
+            <div class="text-sm font-mono font-black tracking-widest text-yellow-300 drop-shadow-lg" id="flashCountdown">--:--:--</div>
+        </div>
+    </div>
+</div>
 <!-- 🎬 WATCH & EARN BANNER (HOME SCREEN) -->
             <div onclick="window.showPage('watchEarnScreen'); window.loadWatchEarnStats();" class="mx-5 mt-4 bg-gradient-to-r from-rose-500 to-pink-600 p-3.5 rounded-2xl shadow-lg shadow-pink-200 relative overflow-hidden group cursor-pointer flex items-center justify-between transform transition duration-300 active:scale-95 z-20 border border-pink-400">
                 <!-- Background Effects -->
@@ -3957,18 +4016,27 @@ function renderTasks() {
                                     if(pName.includes('GOLD')) pStyle = 'bg-yellow-100 text-yellow-700 border-yellow-200';
                                     else if(pName.includes('VIP')) pStyle = 'bg-purple-100 text-purple-700 border-purple-200';
                                     else if(pName.includes('ALL')) { pName = 'সবাই'; pStyle = 'bg-emerald-50 text-emerald-600 border-emerald-100'; }
-                                    // 🔥 Fix: mr-1 সরিয়ে gap-1 ব্যবহার করা হয়েছে HTML এ
                                     planBadges += `<span class="${pStyle} text-[8px] font-bold px-1.5 py-0.5 rounded border uppercase">${pName}</span>`;
                                 });
 
+                                // 🔥 Fake Review / Social Proof Logic (র‍্যান্ডম রিভিউ জেনারেটর)
+                                const socialProofs =[
+                                    "<i class='ri-fire-fill text-orange-500 text-[11px]'></i> ৯৮% ইউজার এটি ২ মিনিটে সম্পন্ন করেছে",
+                                    "<i class='ri-flashlight-fill text-yellow-500 text-[11px]'></i> আজ ১২০০+ জন এই টাস্কটি করেছে",
+                                    "<i class='ri-money-dollar-circle-fill text-green-500 text-[11px]'></i> খুব সহজ টাস্ক! মিস করবেন না",
+                                    "<i class='ri-rocket-2-fill text-blue-500 text-[11px]'></i> ৫ হাজার মানুষ পেমেন্ট পেয়েছে",
+                                    "<i class='ri-star-smile-fill text-purple-500 text-[11px]'></i> ইউজারদের সবচেয়ে পছন্দের টাস্ক"
+                                ];
+                                const randomProof = socialProofs[Math.floor(Math.random() * socialProofs.length)];
+
                                 list.innerHTML += `
-                                <div class="bg-white rounded-2xl p-4 mb-4 border border-slate-100 shadow-sm animate__animated animate__fadeInUp">
+                                <div class="bg-white rounded-2xl p-4 mb-4 border border-slate-100 shadow-sm hover:shadow-md transition-all animate__animated animate__fadeInUp relative overflow-hidden">
                                     <div class="flex items-start justify-between mb-3">
-                                        <div class="flex items-center gap-3 w-full"> <!-- w-full যোগ করা হয়েছে -->
+                                        <div class="flex items-center gap-3 w-full">
                                             <div class="w-10 h-10 bg-gradient-to-br ${iconColor} rounded-xl flex items-center justify-center text-xl text-white shadow-md shrink-0">
                                                 <i class="${icon}"></i>
                                             </div>
-                                            <div class="overflow-hidden flex-1"> <!-- flex-1 দেওয়া হয়েছে -->
+                                            <div class="overflow-hidden flex-1">
                                                 <h4 class="font-bold text-slate-800 text-[14px] leading-tight truncate">${t.title}</h4>
                                                 <div class="space-y-1.5 mt-1.5">
                                                     <div class="flex items-center gap-1">
@@ -3976,7 +4044,6 @@ function renderTasks() {
                                                         <span class="${freqClass} text-[8px] font-black px-1.5 py-0.5 rounded border uppercase">${freqText}</span>
                                                     </div>
                                                     
-                                                    <!-- 🔥 ফিক্সড: flex-wrap এবং gap যোগ করা হয়েছে -->
                                                     <div class="flex flex-wrap items-start gap-1">
                                                         <span class="text-[9px] text-slate-400 font-bold shrink-0 mt-0.5">যোগ্যতা:</span>
                                                         <div class="flex flex-wrap gap-1">${planBadges}</div>
@@ -3984,15 +4051,20 @@ function renderTasks() {
                                                 </div>
                                             </div>
                                             
-                                            <!-- রিওয়ার্ড বক্স ডান পাশে ফিক্সড -->
                                             <div class="bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100 text-center shrink-0 ml-1">
                                                 <span class="text-[12px] font-black text-emerald-600">৳${t.reward}</span>
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <!-- 🔥 Social Proof Box (নতুন যুক্ত হলো) -->
+                                    <div class="bg-slate-50 px-2 py-1.5 rounded-lg mb-3 border border-slate-100 flex items-center justify-center">
+                                        <p class="text-[10px] font-bold text-slate-500 flex items-center gap-1">${randomProof}</p>
+                                    </div>
+
                                     <button onclick="window.completeTask('${taskId}', ${t.reward}, 'general', '${safeTitle}', '${safeDesc}', '${safeLink}')" 
-                                        class="w-full h-10 bg-slate-900 text-white rounded-xl text-[11px] font-bold active:scale-95 transition-all shadow-md">
-                                        কাজ শুরু করুন
+                                        class="w-full h-10 bg-slate-900 text-white rounded-xl text-[11px] font-bold active:scale-95 transition-all shadow-md flex justify-center items-center gap-1">
+                                        কাজ শুরু করুন <i class="ri-arrow-right-line"></i>
                                     </button>
                                 </div>`;
                             }
@@ -6406,16 +6478,22 @@ window.playSound = (id) => {
         };
         document.addEventListener('click', unlockAudio);
         document.addEventListener('touchstart', unlockAudio);
-        // 🔊 বাটনে ক্লিক করলেই অটোমেটিক সাউন্ড + ভাইব্রেশন হবে
+        
+        
+      // 🔊 বাটনে ক্লিক করলেই অটোমেটিক সাউন্ড + নেটিভ ভাইব্রেশন হবে
         const attachAppSounds = () => {
             document.querySelectorAll('button, .glass-card, .cursor-pointer, [onclick]').forEach(element => {
                 element.addEventListener('click', () => {
                     window.playSound('snd_click'); // ক্লিকের সাউন্ড
-                    if (navigator.vibrate) navigator.vibrate(30); // হালকা ভাইব্রেশন
+                    // 🔥 Telegram Native Haptic Feedback
+                    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
+                        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+                    } else if (navigator.vibrate) {
+                        navigator.vibrate(30); // ব্রাউজারের জন্য ফলব্যাক
+                    }
                 });
             });
         };
-
       
         // ✅ REAL-TIME LIVE PAYMENT PROOF
         const startLivePayoutNotifications = () => {
@@ -7311,7 +7389,7 @@ function checkWatchStatus(count, lastTimeMillis) {
 // 🚀 TELEGRAM FORCE JOIN CHECKER (SMART API)
 // ==========================================
 let hasClickedJoin = false;
-const TARGET_CHANNEL = "https://t.me/TAKAR_GACH_V27"; // আপনার চ্যানেলের ইউজারনেম
+const TARGET_CHANNEL = "https://t.me/TAKA_WALA"; // আপনার চ্যানেলের ইউজারনেম
 
 window.openTelegramChannel = () => {
     hasClickedJoin = true; // ইউজার ক্লিক করেছে সেটা মনে রাখলাম
@@ -7384,6 +7462,54 @@ window.verifyTelegramJoin = async () => {
         document.getElementById('forceJoinModal').classList.add('hidden');
     }
 };
+             
+        // 🔥 Smart Flash Sale Logic (Specific Time Windows)
+setInterval(() => {
+    const banner = document.getElementById('flashSaleBanner');
+    const timerEl = document.getElementById('flashCountdown');
+    if (!banner || !timerEl) return;
+
+    const now = new Date();
+    // 👈 ১. এখানে মিনিটের হিসাব যোগ করা হয়েছে
+    const currentHour = now.getHours() + (now.getMinutes() / 60); 
+    
+    // তোমার দেওয়া নির্দিষ্ট সময়গুলো
+    const timeWindows =[
+        { start: 8, end: 10 },   // সকাল ৮টা থেকে ১০টা
+        { start: 12, end: 14 },  // দুপুর ১২টা থেকে ২টা
+        { start: 16, end: 18 },  // বিকেল ৪টা থেকে ৬টা
+        { start: 20, end: 21.5 } // 👈 ২. রাত ৯:৩০ (২১.৫) করা হয়েছে
+    ];
+
+    let activeWindow = null;
+    
+    for (let w of timeWindows) {
+        if (currentHour >= w.start && currentHour < w.end) {
+            activeWindow = w;
+            break;
+        }
+    }
+
+    if (activeWindow) {
+        banner.classList.remove('hidden');
+
+        // 👈 ৩. আধা ঘণ্টার টাইমার ঠিক রাখতে এই ২ লাইন আপডেট করা হয়েছে
+        const endTime = new Date();
+        const endH = Math.floor(activeWindow.end); 
+        const endM = (activeWindow.end % 1) * 60;  
+        endTime.setHours(endH, endM, 0, 0);
+
+        const diff = Math.max(0, endTime - now);
+        
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24).toString().padStart(2, '0');
+        const m = Math.floor((diff / (1000 * 60)) % 60).toString().padStart(2, '0');
+        const s = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
+        
+        timerEl.innerText = `${h}:${m}:${s}`;
+    } else {
+        banner.classList.add('hidden');
+    }
+}, 1000);    
                    
     </script>
     
