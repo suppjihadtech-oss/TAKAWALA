@@ -4913,23 +4913,31 @@ window.closeUserReceiptModal = () => {
         };
 
         // ✅ NEW UPDATED TASK COMPLETION - 20 SECONDS STRICT TIMER
+        window.isTaskRunning = false; // গ্লোবাল ভেরিয়েবল (স্প্যামিং ঠেকানোর জন্য)
+
         window.completeTask = async (taskId, reward, taskType, title, description, link) => {
             if(!currentUserData) return;
             
+            if (window.isTaskRunning) {
+                showSmartToast('ইতিমধ্যে একটি টাস্ক চলছে! দয়া করে অপেক্ষা করুন।', 'warning');
+                return;
+            }
+            window.isTaskRunning = true; // টাস্ক লক করা হলো
+            
             currentTaskInfo = { taskId, reward, taskType, title, description, link };
             
-            // ১. শুরুতে ইন্টারস্টিশিয়াল অ্যাড দেখাবে
+            // অ্যাড পুরোপুরি শেষ করে "বন্ধ করুন" চাপলে এই অংশটুকু রান হবে
+            onAdCompleted = () => {
+                setTimeout(() => {
+                    window.open(link, '_blank');
+                }, 500);
+                
+                startTaskTimer(); // অ্যাড দেখার পর অরিজিনাল ২০ সেকেন্ডের টাইমার শুরু হবে
+                showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ২০ সেকেন্ড স্ক্রিনে থাকতে হবে।', 'info');
+            };
+
+            // শুরুতে অ্যাড দেখাবে
             showInterstitialAd();
-            
-            // ২. ০.৫ সেকেন্ড পর টাস্ক লিংকটি ওপেন হবে
-            setTimeout(() => {
-                window.open(link, '_blank');
-            }, 500);
-            
-            // ৩. টাইমার শুরু করা
-            startTaskTimer();
-            
-            showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ২০ সেকেন্ড অ্যাডে থাকতে হবে।', 'info');
         };
         
        function startTaskTimer() {
@@ -4967,6 +4975,7 @@ window.closeUserReceiptModal = () => {
                     if(cheatCount >= 3) {
                         // যদি ৩ বার ট্যাব ছেড়ে যায়, তবে সব বন্ধ করে হোমে পাঠিয়ে দিবে
                         clearInterval(taskTimer);
+                        window.isTaskRunning = false; // ✅ লক খোলা হলো
                         window.showPage('homeScreen'); 
                         
                         Swal.fire({
@@ -5127,11 +5136,11 @@ window.closeUserReceiptModal = () => {
             }, 1000); // প্রতি ১ সেকেন্ড (১০০০ মিলিসেকেন্ড) পরপর কমবে
         }
 
-        // ✅ MODAL CLOSE AND TIMER CANCEL FUNCTION
+       // ✅ MODAL CLOSE AND TIMER CANCEL FUNCTION
         window.closeProofModal = () => {
             document.getElementById('proofModal').classList.add('hidden');
-            // মোডাল বন্ধ হলে টাইমার অটোমেটিক অফ করে দিতে হবে যাতে পেছনে না চলতে থাকে
             if(window.proofCountdownInterval) clearInterval(window.proofCountdownInterval);
+            window.isTaskRunning = false; // ✅ লক খোলা হলো
         };
 
 // ✅ ওয়েবসাইট টাস্কের জন্য অটো পেমেন্ট ফাংশন (কোনো প্রুফ ছাড়া)
@@ -5176,6 +5185,14 @@ window.submitWebsiteProofDirectly = async () => {
             time: new Date().toLocaleTimeString('bn-BD'),
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
+
+// ✅ ফিক্স: টাস্কটি One-Time হলে ডাটাবেসে ইউজারের আইডি সেভ করা
+        if (currentTaskInfo.taskType === 'one_time') {
+            await db.collection("tasks").doc(currentTaskInfo.taskId).update({
+                completedBy: firebase.firestore.FieldValue.arrayUnion(currentUserId)
+            }).catch(e => console.log("Task Update Error", e));
+        }
+        window.isTaskRunning = false; // ✅ লক রিলিজ
 
         if(typeof todayEarnings !== 'undefined') {
             todayEarnings += currentTaskInfo.reward;
