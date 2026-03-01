@@ -3917,6 +3917,12 @@ async function loadPackages() {
                     document.getElementById('bottomNav').classList.remove('hidden');
     
         window.showPage('homeScreen');            
+
+        // 🔊 আপনার ওয়েলকাম ভয়েস প্লে করার ম্যাজিক কোড
+        setTimeout(() => {
+            if(typeof window.playSound === 'function') window.playSound('snd_welcome');
+        }, 800);
+        
                     syncUserData(user.uid); 
                     renderTasks();
                     loadSummary(user.uid);
@@ -6945,8 +6951,7 @@ window.playSound = (id) => {
 };
 
         // 🔊 অডিও আনলকার: ইউজার প্রথমবার কোথাও টাচ করলেই সাউন্ড সিস্টেম চালু হবে
-        const unlockAudio = () => {
-            ['snd_click', 'snd_success', 'snd_bonus'].forEach(id => {
+        const unlockAudio = () => {['snd_click', 'snd_success', 'snd_bonus', 'snd_welcome'].forEach(id => {
                 const audio = document.getElementById(id);
                 if(audio) {
                     audio.play().then(() => {
@@ -8279,6 +8284,8 @@ window.shareToTelegramStory = async () => {
         <audio id="snd_click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
 <audio id="snd_success" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
 <audio id="snd_bonus" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3" preload="auto"></audio>
+    
+    <audio id="snd_welcome" src="https://files.catbox.moe/65um87.wav" preload="auto"></audio>
     
 </body>
 </html>
