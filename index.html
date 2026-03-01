@@ -4139,14 +4139,13 @@ async function loadPackages() {
         }
 
          
-// ✅ আপডেটেড রেন্ডার টাস্ক ফাংশন (মোবাইল রেসপন্সিভ ফিক্সড)
+// ✅ আপডেটেড রেন্ডার টাস্ক ফাংশন (ফিক্সড: কাজ শেষে অটো হাইড)
 function renderTasks() {
     if (!currentUserId || !currentUserData) return;
 
     const list = document.getElementById('taskListContainer');
     if (!list) return;
 
-    // ১. লোডিং এনিমেশন
     list.innerHTML = `
         <div class="flex flex-col items-center justify-center py-20 animate-pulse">
             <div class="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
@@ -4162,7 +4161,6 @@ function renderTasks() {
     else if (uPlan.includes("vip") || uPlan.includes("ভিআইপি")) uKey = "vip";
     else if (uPlan.includes("platinum") || uPlan.includes("প্লাটিনাম")) uKey = "platinum";
 
-    // ২. আজকের করা টাস্কগুলো আনা
     db.collection("task_submissions")
         .where("userId", "==", currentUserId)
         .where("date", "==", todayStr)
@@ -4171,7 +4169,6 @@ function renderTasks() {
             const doneToday = new Set();
             submissionSnap.forEach(doc => doneToday.add(doc.data().taskId));
 
-            // ৩. সব অ্যাক্টিভ টাস্ক লোড করা
             return db.collection("tasks")
                 .where("status", "==", "active")
                 .orderBy("createdAt", "desc")
@@ -4184,11 +4181,9 @@ function renderTasks() {
                         const t = doc.data();
                         const taskId = doc.id;
                         
-                        // প্ল্যান চেকিং
-                        const tPlans = (t.allowedPlans || []).map(p => p.toLowerCase());
+                        const tPlans = (t.allowedPlans ||[]).map(p => p.toLowerCase());
                         const isAllowed = tPlans.includes('all') || tPlans.some(p => p.includes(uKey));
                         
-                        // কোন ট্যাবে দেখাবে
                         let shouldShow = false;
                         if (currentTaskType === 'free') {
                             if (tPlans.includes('all') || tPlans.some(p => p.includes('free'))) shouldShow = true;
@@ -4197,17 +4192,17 @@ function renderTasks() {
                         }
 
                         if (shouldShow) {
-                            // লজিক: টাস্ক টাইপ অনুযায়ী চেক করা
                             let isCompleted = false;
+                            const taskTypeLower = (t.taskType || "daily").toLowerCase();
 
-                            if (t.taskType === 'one_time') {
-                                // ওয়ান টাইম হলে পার্মানেন্ট চেক
-                                if (t.completedBy && t.completedBy.includes(currentUserId)) {
-                                    isCompleted = true;
-                                }
-                            } else {
-                                // ডেইলি হলে আজকের চেক
-                                if (doneToday.has(taskId)) {
+                            // ১. আজকে এই টাস্কটি করা হয়েছে কি না (যেকোনো টাইপের টাস্ক হোক না কেন, আজকে করলে হাইড হবে)
+                            if (doneToday.has(taskId)) {
+                                isCompleted = true;
+                            }
+
+                            // ২. ওয়ান-টাইম (জীবনে একবার) হলে completedBy চেক করবে
+                            if (taskTypeLower.includes('one') || taskTypeLower.includes('একবার') || taskTypeLower.includes('lifetime')) {
+                                if (t.completedBy && Array.isArray(t.completedBy) && t.completedBy.includes(currentUserId)) {
                                     isCompleted = true;
                                 }
                             }
@@ -4216,29 +4211,31 @@ function renderTasks() {
                             if (!isCompleted) {
                                 hasTask = true;
 
-                                let icon = 'ri-global-line', iconColor = 'from-slate-500 to-slate-700'; // ডিফল্ট ওয়েবসাইট লোগো
-const link = (t.link || "").toLowerCase();
-if (link.includes('youtube') || link.includes('youtu.be')) { icon = 'ri-youtube-fill'; iconColor = 'from-red-500 to-rose-600'; } 
-else if (link.includes('facebook') || link.includes('fb.watch') || link.includes('fb.me')) { icon = 'ri-facebook-circle-fill'; iconColor = 'from-blue-600 to-indigo-700'; } 
-else if (link.includes('t.me') || link.includes('telegram')) { icon = 'ri-telegram-fill'; iconColor = 'from-sky-400 to-blue-500'; }
-else if (link.includes('tiktok')) { icon = 'ri-tiktok-fill'; iconColor = 'from-slate-800 to-black'; }
-else if (link.includes('instagram')) { icon = 'ri-instagram-fill'; iconColor = 'from-pink-500 to-rose-500'; }
-else if (link.includes('twitter') || link.includes('x.com')) { icon = 'ri-twitter-x-fill'; iconColor = 'from-gray-800 to-black'; }
-else if (link.includes('play.google')) { icon = 'ri-google-play-fill'; iconColor = 'from-green-500 to-emerald-600'; }
-else if (link.includes('linkedin')) { icon = 'ri-linkedin-fill'; iconColor = 'from-blue-500 to-blue-700'; }
-else if (link.includes('pinterest')) { icon = 'ri-pinterest-fill'; iconColor = 'from-red-600 to-red-700'; }
-else if (link.includes('reddit')) { icon = 'ri-reddit-fill'; iconColor = 'from-orange-500 to-orange-600'; }
-else if (link.includes('whatsapp') || link.includes('wa.me')) { icon = 'ri-whatsapp-fill'; iconColor = 'from-green-500 to-green-600'; }
-else if (link.includes('discord')) { icon = 'ri-discord-fill'; iconColor = 'from-indigo-500 to-indigo-600'; }
-else if (link.includes('github')) { icon = 'ri-github-fill'; iconColor = 'from-gray-700 to-gray-900'; }
-else if (link.includes('spotify')) { icon = 'ri-spotify-fill'; iconColor = 'from-green-500 to-green-600'; }
+                                let icon = 'ri-global-line', iconColor = 'from-slate-500 to-slate-700'; 
+                                const link = (t.link || "").toLowerCase();
+                                if (link.includes('youtube') || link.includes('youtu.be')) { icon = 'ri-youtube-fill'; iconColor = 'from-red-500 to-rose-600'; } 
+                                else if (link.includes('facebook') || link.includes('fb.watch') || link.includes('fb.me')) { icon = 'ri-facebook-circle-fill'; iconColor = 'from-blue-600 to-indigo-700'; } 
+                                else if (link.includes('t.me') || link.includes('telegram')) { icon = 'ri-telegram-fill'; iconColor = 'from-sky-400 to-blue-500'; }
+                                else if (link.includes('tiktok')) { icon = 'ri-tiktok-fill'; iconColor = 'from-slate-800 to-black'; }
+                                else if (link.includes('instagram')) { icon = 'ri-instagram-fill'; iconColor = 'from-pink-500 to-rose-500'; }
+                                else if (link.includes('twitter') || link.includes('x.com')) { icon = 'ri-twitter-x-fill'; iconColor = 'from-gray-800 to-black'; }
+                                else if (link.includes('play.google')) { icon = 'ri-google-play-fill'; iconColor = 'from-green-500 to-emerald-600'; }
+                                else if (link.includes('linkedin')) { icon = 'ri-linkedin-fill'; iconColor = 'from-blue-500 to-blue-700'; }
+                                else if (link.includes('pinterest')) { icon = 'ri-pinterest-fill'; iconColor = 'from-red-600 to-red-700'; }
+                                else if (link.includes('reddit')) { icon = 'ri-reddit-fill'; iconColor = 'from-orange-500 to-orange-600'; }
+                                else if (link.includes('whatsapp') || link.includes('wa.me')) { icon = 'ri-whatsapp-fill'; iconColor = 'from-green-500 to-green-600'; }
+                                else if (link.includes('discord')) { icon = 'ri-discord-fill'; iconColor = 'from-indigo-500 to-indigo-600'; }
+                                else if (link.includes('github')) { icon = 'ri-github-fill'; iconColor = 'from-gray-700 to-gray-900'; }
+                                else if (link.includes('spotify')) { icon = 'ri-spotify-fill'; iconColor = 'from-green-500 to-green-600'; }
 
-                                const freqClass = t.taskType === 'daily' ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-red-50 text-red-600 border-red-100';
-                                const freqText = t.taskType === 'daily' ? 'রোজ ১বার' : 'মাত্র ১বার';
+                                const isDaily = !taskTypeLower.includes('one') && !taskTypeLower.includes('একবার');
+                                const freqClass = isDaily ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-red-50 text-red-600 border-red-100';
+                                const freqText = isDaily ? 'রোজ ১বার' : 'মাত্র ১বার';
                                 
                                 const safeTitle = (t.title || '').replace(/'/g, "\\'").replace(/"/g, "&quot;");
                                 const safeDesc = (t.description || '').replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, " ");
                                 const safeLink = (t.link || '#').replace(/'/g, "\\'");
+                                const safeTaskType = (t.taskType || 'daily').replace(/'/g, "\\'");
 
                                 let planBadges = '';
                                 t.allowedPlans.forEach(p => {
@@ -4250,7 +4247,6 @@ else if (link.includes('spotify')) { icon = 'ri-spotify-fill'; iconColor = 'from
                                     planBadges += `<span class="${pStyle} text-[8px] font-bold px-1.5 py-0.5 rounded border uppercase">${pName}</span>`;
                                 });
 
-                                // 🔥 Fake Review / Social Proof Logic (র‍্যান্ডম রিভিউ জেনারেটর)
                                 const socialProofs =[
                                     "<i class='ri-fire-fill text-orange-500 text-[11px]'></i> ৯৮% ইউজার এটি ২ মিনিটে সম্পন্ন করেছে",
                                     "<i class='ri-flashlight-fill text-yellow-500 text-[11px]'></i> আজ ১২০০+ জন এই টাস্কটি করেছে",
@@ -4288,12 +4284,11 @@ else if (link.includes('spotify')) { icon = 'ri-spotify-fill'; iconColor = 'from
                                         </div>
                                     </div>
                                     
-                                    <!-- 🔥 Social Proof Box (নতুন যুক্ত হলো) -->
                                     <div class="bg-slate-50 px-2 py-1.5 rounded-lg mb-3 border border-slate-100 flex items-center justify-center">
                                         <p class="text-[10px] font-bold text-slate-500 flex items-center gap-1">${randomProof}</p>
                                     </div>
 
-                                    <button onclick="window.completeTask('${taskId}', ${t.reward}, 'general', '${safeTitle}', '${safeDesc}', '${safeLink}')" 
+                                    <button onclick="window.completeTask('${taskId}', ${t.reward}, '${safeTaskType}', '${safeTitle}', '${safeDesc}', '${safeLink}')" 
                                         class="w-full h-10 bg-slate-900 text-white rounded-xl text-[11px] font-bold active:scale-95 transition-all shadow-md flex justify-center items-center gap-1">
                                         কাজ শুরু করুন <i class="ri-arrow-right-line"></i>
                                     </button>
