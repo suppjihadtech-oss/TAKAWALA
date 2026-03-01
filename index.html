@@ -2201,7 +2201,7 @@
             </div>
         </div>
         
-        <!-- VIP SCREEN -->
+       
         <!-- VIP SCREEN এর ভেতর একদম উপরে এটা বসাও -->
 <div id="vipScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
      <div class="flex justify-between items-center mb-6">
@@ -4132,7 +4132,7 @@ async function loadPackages() {
             }
         }
 
-         // ✅ আপডেটেড রেন্ডার টাস্ক ফাংশন (One Time & Daily Fix + Syntax Error Fix)
+         
 // ✅ আপডেটেড রেন্ডার টাস্ক ফাংশন (মোবাইল রেসপন্সিভ ফিক্সড)
 function renderTasks() {
     if (!currentUserId || !currentUserData) return;
@@ -4912,36 +4912,31 @@ window.closeUserReceiptModal = () => {
             }
         };
 
-        // ✅ NEW UPDATED TASK COMPLETION - 20 SECONDS STRICT TIMER
-        window.isTaskRunning = false; // গ্লোবাল ভেরিয়েবল (স্প্যামিং ঠেকানোর জন্য)
+       // ✅ NEW UPDATED TASK COMPLETION (অ্যাড সরানো হয়েছে, সরাসরি লিংক ওপেন হবে)
+window.isTaskRunning = false;
 
-        window.completeTask = async (taskId, reward, taskType, title, description, link) => {
-            if(!currentUserData) return;
-            
-            if (window.isTaskRunning) {
-                showSmartToast('ইতিমধ্যে একটি টাস্ক চলছে! দয়া করে অপেক্ষা করুন।', 'warning');
-                return;
-            }
-            window.isTaskRunning = true; // টাস্ক লক করা হলো
-            
-            currentTaskInfo = { taskId, reward, taskType, title, description, link };
-            
-            // অ্যাড পুরোপুরি শেষ করে "বন্ধ করুন" চাপলে এই অংশটুকু রান হবে
-            onAdCompleted = () => {
-                setTimeout(() => {
-                    window.open(link, '_blank');
-                }, 500);
-                
-                startTaskTimer(); // অ্যাড দেখার পর অরিজিনাল ২০ সেকেন্ডের টাইমার শুরু হবে
-                showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ২০ সেকেন্ড স্ক্রিনে থাকতে হবে।', 'info');
-            };
-
-            // শুরুতে অ্যাড দেখাবে
-            showInterstitialAd();
-        };
-        
-       function startTaskTimer() {
-            if(taskTimer) clearInterval(taskTimer);
+window.completeTask = async (taskId, reward, taskType, title, description, link) => {
+    if(!currentUserData) return;
+    
+    if (window.isTaskRunning) {
+        showSmartToast('ইতিমধ্যে একটি টাস্ক চলছে! দয়া করে অপেক্ষা করুন।', 'warning');
+        return;
+    }
+    window.isTaskRunning = true; // টাস্ক লক করা হলো
+    
+    currentTaskInfo = { taskId, reward, taskType, title, description, link };
+    
+    // অ্যাড ছাড়াই সরাসরি টাস্ক লিংকে নিয়ে যাওয়া হবে
+    setTimeout(() => {
+        window.open(link, '_blank');
+    }, 500);
+    
+    startTaskTimer(); // অরিজিনাল ২০ সেকেন্ডের টাইমার শুরু হবে
+    showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ২০ সেকেন্ড স্ক্রিনে থাকতে হবে।', 'info');
+};
+     
+function startTaskTimer() {
+    if(taskTimer) clearInterval(taskTimer);
             
             // ১. ২০ থেকে ২৫ সেকেন্ডের মধ্যে একটি রেন্ডম সময় নিবে
             let timeLeft = Math.floor(Math.random() * (25 - 20 + 1)) + 20; 
@@ -4953,21 +4948,27 @@ window.closeUserReceiptModal = () => {
                     timeLeft--;
                     
                     if(timeLeft <= 0) {
-    clearInterval(taskTimer);
-    
-    // লিংক দিয়ে চেক করা হচ্ছে এটা ওয়েবসাইট নাকি সোশ্যাল মিডিয়া
-    const linkStr = (currentTaskInfo.link || "").toLowerCase();
-    const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
+                        clearInterval(taskTimer);
+                        
+                        // লিংক দিয়ে চেক করা হচ্ছে এটা ওয়েবসাইট নাকি সোশ্যাল মিডিয়া
+                        const linkStr = (currentTaskInfo.link || "").toLowerCase();
+                        const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
 
-    if(!isSocialMedia) {
-        // এটি ওয়েবসাইট টাস্ক, তাই কোনো প্রুফ ছড়াই ডাইরেক্ট টাকা দিয়ে দিবে!
-        window.submitWebsiteProofDirectly();
-    } else {
-        // এটি সোশ্যাল টাস্ক, তাই প্রমাণ (প্রুফ ফর্ম) চাইবে!
-        showProofSubmissionForm();
-        showSmartToast('অভিনন্দন! এখন কাজের প্রমাণ জমা দিন।', 'success');
-    }
-}
+                        // 🔥 ম্যাজিক: টাইমার শেষ হলে আগে অ্যাড আসবে, তারপর রেওয়ার্ড/প্রুফ ফর্ম
+                        onAdCompleted = () => {
+                            if(!isSocialMedia) {
+                                // এটি ওয়েবসাইট টাস্ক, তাই কোনো প্রুফ ছড়াই ডাইরেক্ট টাকা দিয়ে দিবে!
+                                window.submitWebsiteProofDirectly();
+                            } else {
+                                // এটি সোশ্যাল টাস্ক, তাই প্রমাণ (প্রুফ ফর্ম) চাইবে!
+                                showProofSubmissionForm();
+                                showSmartToast('অভিনন্দন! এখন কাজের প্রমাণ জমা দিন।', 'success');
+                            }
+                        };
+
+                        // এখন অ্যাড কল করা হলো
+                        showInterstitialAd();
+                    }
                 } else {
                     // ৩. ইউজার অন্য ট্যাব বা অ্যাপে গেলে এখানে আসবে
                     cheatCount++; 
@@ -4994,7 +4995,6 @@ window.closeUserReceiptModal = () => {
                 }
             }, 1000);
         }
-       
        
                      // ✅ GORGEOUS PROOF SUBMISSION FORM (WITH 5 MIN TIMER & UPLOAD HELPER)
         function showProofSubmissionForm() {
@@ -5216,11 +5216,11 @@ window.submitWebsiteProofDirectly = async () => {
 };
 
 
-// ✅ টাস্ক সাবমিটের ফিক্সড কোড
+// ✅ টাস্ক সাবমিটের ফিক্সড কোড (সোশ্যাল মিডিয়া/স্ক্রিনশট টাস্কের জন্য সিকিউরিটি সহ)
 window.submitProof = async () => {
     if(!currentTaskInfo) return;
     const proof1 = document.getElementById('proof1')?.value?.trim() || '';
-const proof2 = document.getElementById('proof2')?.value?.trim() || '';
+    const proof2 = document.getElementById('proof2')?.value?.trim() || '';
     
     if(!proof1 || !proof2) {
         showSmartToast('দয়া করে সব তথ্য পূরণ করুন', 'error');
@@ -5229,6 +5229,36 @@ const proof2 = document.getElementById('proof2')?.value?.trim() || '';
     
     showLoading();
     try {
+        // 🛡️ স্প্যামিং ঠেকানোর জন্য ব্যাকএন্ড সিকিউরিটি চেক (সোশ্যাল টাস্কের জন্য)
+        if (currentTaskInfo.taskType === 'daily') {
+            const todayStr = new Date().toLocaleDateString('bn-BD');
+            const checkQuery = await db.collection("task_submissions")
+                .where("userId", "==", currentUserId)
+                .where("taskId", "==", currentTaskInfo.taskId)
+                .where("date", "==", todayStr)
+                .get();
+            
+            if (!checkQuery.empty) {
+                showSmartToast('আপনি ইতিমধ্যে আজকের জন্য এই টাস্কটি সম্পন্ন করেছেন!', 'error');
+                window.isTaskRunning = false;
+                hideLoading();
+                window.closeProofModal(); // ফর্ম বন্ধ করে দেবে
+                renderTasks(); // লিস্ট রিফ্রেশ করে দেবে
+                return; // এখানেই আটকে দেবে, ডাটাবেসে সেভ হবে না
+            }
+        } else {
+            // One-Time টাস্কের ক্ষেত্রে চেক
+            const taskDoc = await db.collection("tasks").doc(currentTaskInfo.taskId).get();
+            if (taskDoc.exists && taskDoc.data().completedBy && taskDoc.data().completedBy.includes(currentUserId)) {
+                showSmartToast('আপনি ইতিমধ্যে এই টাস্কটি জীবনে একবার করে ফেলেছেন!', 'error');
+                window.isTaskRunning = false;
+                hideLoading();
+                window.closeProofModal();
+                renderTasks();
+                return;
+            }
+        }
+
         // ১. নতুন একটি আইডি তৈরি করা হলো (যাতে দুই জায়গায় সেম থাকে)
         const newReqRef = db.collection("task_submissions").doc();
         const newReqId = newReqRef.id;
@@ -5262,6 +5292,13 @@ const proof2 = document.getElementById('proof2')?.value?.trim() || '';
             time: new Date().toLocaleTimeString('bn-BD'),
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
+
+        // ✅ ফিক্স: টাস্কটি One-Time হলে ডাটাবেসে ইউজারের আইডি সেভ করা
+        if (currentTaskInfo.taskType === 'one_time') {
+            await db.collection("tasks").doc(currentTaskInfo.taskId).update({
+                completedBy: firebase.firestore.FieldValue.arrayUnion(currentUserId)
+            }).catch(e => console.log("Task Update Error", e));
+        }
 
         // ৪. টেলিগ্রাম নোটিফিকেশন
         const telegramMessage = `📝 *নতুন টাস্ক সাবমিট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📋 *টাস্ক:* ${currentTaskInfo.title}\n💰 *রিওয়ার্ড:* ৳${currentTaskInfo.reward}\n🔗 *প্রুফ লিংক:* ${proof2}\n💬 *ইউজার নোট:* ${proof1}`;
