@@ -948,6 +948,35 @@
             display: block;
         }
         
+        /* ✅ সাদা ঝিলিক বন্ধ করার কোড */
+#mainApp, #authScreen {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translate3d(0,0,0);
+}
+#loadingOverlay.hidden {
+    display: none !important;
+}
+    
+    /* ✨ গোল্ডেন শাইন এনিমেশন (মামা পিন কোড) */
+@keyframes shineEffect {
+    0% { left: -100%; }
+    20% { left: 100%; }
+    100% { left: 100%; }
+}
+.vip-shine {
+    position: relative !important;
+    overflow: hidden !important;
+}
+.vip-shine::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform: skewX(-25deg);
+    animation: shineEffect 4s infinite;
+}
                        
     </style>
     <!-- Monetag Ad Script -->
@@ -1199,11 +1228,12 @@
                         </div>
                     </div>
                     
-                    <div id="notificationIcon" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 relative cursor-pointer hover:bg-white/30 transition shadow-sm">
-                        <img src="https://i.postimg.cc/c1nSnFz4/notofication.png" class="w-5 h-5 invert opacity-90">
-                        <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-                        <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-                    </div>
+                    <!-- 🔔 জীবন্ত নোটিফিকেশন আইকন -->
+<div id="notificationIcon" onclick="window.openNotifications()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 relative cursor-pointer hover:bg-white/30 transition shadow-sm active:scale-90">
+    <img src="https://i.postimg.cc/c1nSnFz4/notofication.png" class="w-5 h-5 invert opacity-90">
+    <!-- unreadBadge: এটি নতুন মেসেজ থাকলে জ্বলবে -->
+    <span id="unreadBadge" class="hidden absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
+</div>
                 </div>
 
                 <div class="bg-white/10 backdrop-blur-md rounded-full p-1.5 border border-white/20 shadow-lg relative mx-1 mb-2">
@@ -1311,7 +1341,7 @@
                 <div class="bg-gradient-to-r from-emerald-500 to-teal-600 w-full h-32 flex items-center justify-between p-5 relative overflow-hidden rounded-[20px]">
                     <div class="absolute -left-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
                     <div class="text-white text-left relative z-10">
-                        <h3 class="text-[17px] font-black leading-tight mb-1.5 drop-shadow-md">প্রতি রেফারে<br><span class="text-yellow-300">নিশ্চিত ৫ টাকা!</span></h3>
+                        <h3 class="text-[17px] font-black leading-tight mb-1.5 drop-shadow-md">প্রতি রেফারে<br><span class="text-yellow-300">নিশ্চিত ১০ টাকা!</span></h3>
                         <p class="text-[10px] bg-white/20 inline-block px-2.5 py-0.5 rounded-full backdrop-blur-sm border border-white/20 font-bold">আনলিমিটেড ইনকাম</p>
                     </div>
                     <img src="https://i.postimg.cc/c4xbp54V/add-friend.png" class="w-16 h-16 drop-shadow-xl relative z-10">
@@ -1380,7 +1410,7 @@
         <span class="text-[12px] font-bold text-slate-700">রিচার্জ</span>
     </div>
 
-    <div onclick="window.showPage('vipScreen')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md relative">
+   <div onclick="window.showPage('vipScreen')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md relative vip-shine">
         <div class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full animate-pulse">HOT</div>
         <img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-11 mb-2 drop-shadow-md">
         <span class="text-[12px] font-bold text-slate-700">প্যাকেজ</span>
@@ -1490,43 +1520,40 @@
             </div>
 
             <div id="withdrawSection" class="hidden">
-                 <div class="grid grid-cols-4 gap-3 mb-6">
-                    <div onclick="window.selectWithdrawMethod(this, 'bKash')" id="withdraw_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'Nagad')" id="withdraw_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'Rocket')" id="withdraw_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'USDT')" id="withdraw_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
-                </div>
-                 <div class="glass-card p-5 rounded-[25px] space-y-4">
-                    <!-- 💳 SAVED ACCOUNT CARD (bKash Style) -->
-<div id="savedAccountsContainer" class="mb-4 hidden animate__animated animate__fadeIn">
-    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1 flex items-center gap-1">
-        <i class="ri-bookmark-fill text-blue-500"></i> সেইভ করা নাম্বার
-    </p>
-    <div onclick="window.useSavedNumber()" class="bg-gradient-to-r from-slate-800 to-slate-900 p-3 rounded-[18px] flex items-center justify-between border border-slate-700 shadow-xl shadow-slate-900/20 cursor-pointer active:scale-95 hover:border-blue-500 transition-all group">
-        <div class="flex items-center gap-3">
-            <div class="bg-white p-2 rounded-xl shadow-inner group-hover:scale-110 transition-transform">
-                <img id="savedMethodImg" src="" class="w-6 h-6 object-contain">
-            </div>
+    <!-- মেথড সিলেকশন গ্রিড ঠিক থাকবে -->
+    <div class="grid grid-cols-4 gap-3 mb-6">
+        <div onclick="window.selectWithdrawMethod(this, 'bKash')" id="withdraw_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
+        <div onclick="window.selectWithdrawMethod(this, 'Nagad')" id="withdraw_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
+        <div onclick="window.selectWithdrawMethod(this, 'Rocket')" id="withdraw_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain"></div>
+        <div onclick="window.selectWithdrawMethod(this, 'USDT')" id="withdraw_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
+    </div>
+
+    <!-- ✅ ফাঁকা ফাঁকা গর্জিয়াস ইনপুট বক্স -->
+    <div class="glass-card p-6 rounded-[30px] space-y-5 shadow-sm border border-slate-50">
+        
+        <!-- ৫টি নাম্বার সেভ করা সেকশন -->
+        <div id="multiSavedSection" class="hidden animate__animated animate__fadeIn">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">আমার সেভ করা অ্যাকাউন্টসমূহ</p>
+            <div id="savedAccountsList" class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide"></div>
+        </div>
+
+        <div class="space-y-4">
             <div>
-                <p class="text-[10px] text-slate-400 font-medium mb-0.5">আমার <span id="savedMethodName" class="text-blue-400 font-bold"></span></p>
-                <h4 id="savedNumberText" class="text-base font-mono font-black text-white tracking-widest leading-none">017XXXXXX</h4>
+                <label class="text-[10px] font-bold text-slate-400 uppercase ml-2 mb-1 block">অ্যাকাউন্ট নাম্বার</label>
+                <input type="number" id="withdrawNumber" placeholder="যেমন: ০১৭XXXXXXXX" class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 font-bold outline-none focus:border-blue-500 focus:bg-white transition-all">
+            </div>
+
+            <div>
+                <label class="text-[10px] font-bold text-slate-400 uppercase ml-2 mb-1 block">উত্তোলনের পরিমাণ</label>
+                <input type="number" id="withdrawAmount" placeholder="পরিমাণ লিখুন" class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 font-bold outline-none focus:border-blue-500 focus:bg-white transition-all">
+                <div class="text-[10px] text-red-500 font-bold mt-2 ml-2" id="withdrawVat">চার্জ (০%): ৳0.00 | প্রাপ্ত: ৳0.00</div>
             </div>
         </div>
-        <div class="bg-slate-700/50 w-8 h-8 rounded-full flex items-center justify-center text-slate-400 border border-slate-600 group-hover:bg-blue-500 group-hover:text-white group-hover:border-blue-400 transition-colors">
-            <i class="ri-arrow-right-line"></i>
-        </div>
+
+        <input type="hidden" id="selectedWithdrawMethod" value="">
+        <button onclick="window.submitWithdraw()" class="w-full bg-gradient-to-r from-rose-500 to-red-600 text-white font-black py-4 rounded-2xl shadow-lg shadow-red-100 active:scale-95 transition-all uppercase tracking-widest">টাকা উত্তোলন করুন</button>
     </div>
 </div>
-
-<input type="number" id="withdrawNumber" placeholder="অ্যাকাউন্ট নাম্বার" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
-
-
-                    <input type="number" id="withdrawAmount" placeholder="পরিমাণ" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
-                    <div class="text-xs text-red-500 font-bold" id="withdrawVat">ভ্যাট (১০%): ৳0.00 | প্রাপ্ত: ৳0.00</div>
-                    <input type="hidden" id="selectedWithdrawMethod" value="">
-                    <button onclick="window.submitWithdraw()" class="w-full bg-red-500 text-white font-bold py-3.5 rounded-xl shadow-lg">উত্তোলন করুন</button>
-                </div>
-            </div>
 
             <div id="transferSection" class="hidden">
                 <div class="glass-card p-6 rounded-[25px] text-center space-y-4">
@@ -1880,12 +1907,19 @@
 
         <!-- REFERRAL SCREEN (ULTIMATE PREMIUM) -->
         <div id="referralScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-            <div class="flex items-center gap-3 mb-6">
-                <button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
-                    <i class="ri-arrow-left-line text-xl text-slate-700"></i>
-                </button>
-                <h2 class="text-2xl font-black text-slate-800 tracking-tight">রেফার ও আয়</h2>
-            </div>
+    <!-- ✅ রেফার হেডার উইথ রুলস বাটন -->
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+            <button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
+                <i class="ri-arrow-left-line text-xl text-slate-700"></i>
+            </button>
+            <h2 class="text-2xl font-black text-slate-800 tracking-tight">রেফার ও আয়</h2>
+        </div>
+        <!-- রুলস বাটন -->
+        <div onclick="window.showRules('রেফার')" class="cursor-pointer active:scale-90 transition">
+            <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" class="w-8">
+        </div>
+    </div>
 
             <!-- প্রোমো কার্ড -->
             <div class="glass-card p-6 rounded-[30px] text-center mb-6 relative overflow-hidden border-2 border-blue-500/20">
@@ -3088,8 +3122,17 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
         }
         
         function hideLoading() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
-        }
+    const loader = document.getElementById('loadingOverlay');
+    if (loader) {
+        loader.classList.add('hidden');
+        
+        // মামা, এই ম্যাজিক অংশটুকু সাদা ঝিলিক বন্ধ করবে
+        document.body.style.display = 'none';
+        document.body.offsetHeight; // ফোর্স রি-রেন্ডার
+        document.body.style.display = 'block';
+        window.dispatchEvent(new Event('resize'));
+    }
+}
 
         // ✅ UPDATED INTERSTITIAL AD SHOW FUNCTION
             function showInterstitialAd() {
@@ -3185,33 +3228,32 @@ let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যা�
         };
         
        // ✅ ULTRA REVENUE: DOUBLE MONETAG AD SYSTEM
+// ✅ ডাবল ইনকাম + ঝিলিক মুক্ত অ্যাড সিস্টেম
 window.showMonetagAd = async (callback) => {
     showLoading(); 
     try {
-        // ১. প্রথম অ্যাড দেখানো
+        // ১ম অ্যাড
         if (typeof window['show_10531082'] === 'function') {
-            showSmartToast('১ম অ্যাড লোড হচ্ছে, এরপর আরও একটি অ্যাড আসবে...', 'info');
             await window['show_10531082'](); 
         }
-
-        // ২. একটু বিরতি (২ সেকেন্ড) যাতে ইউজার বুঝতে পারে ২য় অ্যাড আসছে
+        
+        // ২ সেকেন্ড গ্যাপ দিয়ে ২য় অ্যাড (ইনকাম ডাবল করার জন্য)
         await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // ৩. দ্বিতীয় অ্যাড দেখানো (ডাবল ইনকাম)
+        
+        // ২য় অ্যাড
         if (typeof window['show_10531082'] === 'function') {
-            showSmartToast('২য় অ্যাড শুরু হচ্ছে, বোনাস পেতে অপেক্ষা করুন!', 'warning');
             await window['show_10531082'](); 
         }
-
     } catch (error) {
-        console.log("Ad skipped or blocked.");
+        console.log("Ad Error");
     } finally {
-        hideLoading();
-        // দুইটা অ্যাড শেষ হওয়ার পর রিওয়ার্ড ফাংশন কাজ করবে
-        if(callback) callback(); 
+        // মামা, এখানে ডিলে দেওয়া হয়েছে যাতে সাদা পর্দা না আসে
+        setTimeout(() => {
+            hideLoading();
+            if(callback) callback(); 
+        }, 300);
     }
 };
-
         // ✅ LOAD SYSTEM SETTINGS (এডমিন প্যানেলের appConfig এর সাথে সিঙ্ক)
 async function loadSystemSettings() {
     try {
@@ -3462,7 +3504,7 @@ async function loadPackages() {
             }
 
             const packageHTML = `
-                <div class="glass-card p-5 rounded-3xl border-2 ${borderColor} mb-4 animate__animated animate__fadeInUp relative overflow-hidden">
+                <div class="glass-card p-5 rounded-3xl border-2 ${borderColor} mb-4 animate__animated animate__fadeInUp relative overflow-hidden vip-shine">
                     ${discountBadge}
                     
                     <div class="flex justify-between items-center relative z-10">
@@ -3822,40 +3864,58 @@ async function loadPackages() {
                 
                 await db.collection("users").doc(uc.user.uid).set(userData);
                 
+               // ✅ রেফার বোনাস ও রেফারারকে ইনস্ট্যান্ট মেসেজ পাঠানো (মামা পিন কোড)
                 if(referralCode) {
-    try {
-        const referralQuery = await db.collection("users").where("referralCode", "==", referralCode).get();
-        if(!referralQuery.empty) {
-            const referrerDoc = referralQuery.docs[0];
-            const referrerId = referrerDoc.id;
-            
-            // বোনাস নিশ্চিত করা
-            let bAmt = parseFloat(systemSettings.referralBonus) || 5;
-            
-            // রেফারারের একাউন্টে টাকা পাঠানো
-            await db.collection("users").doc(referrerId).update({
-                mainBalance: firebase.firestore.FieldValue.increment(bAmt),
-                totalEarnings: firebase.firestore.FieldValue.increment(bAmt),
-                totalReferrals: firebase.firestore.FieldValue.increment(1),
-                referralEarnings: firebase.firestore.FieldValue.increment(bAmt)
-            });
-            
-            // হিস্ট্রি যোগ করা
-            await db.collection("history").add({
-                userId: referrerId,
-                type: "রেফার বোনাস",
-                amount: bAmt,
-                status: "Success",
-                details: `${name} আপনার রেফারে জয়েন করেছে`,
-                date: new Date().toLocaleDateString('bn-BD'),
-                time: new Date().toLocaleTimeString('bn-BD'),
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            await db.collection("users").doc(uc.user.uid).update({ referredBy: referralCode  });
-        }
-    } catch (e) { console.error("Referral Error:", e); }
-}
+                    try {
+                        const referralQuery = await db.collection("users").where("referralCode", "==", referralCode).get();
+                        if(!referralQuery.empty) {
+                            const referrerDoc = referralQuery.docs[0];
+                            const referrerId = referrerDoc.id;
+                            const referrerData = referrerDoc.data(); // রেফারারের ডাটা নেওয়া হলো
+                            
+                            // বোনাস অ্যামাউন্ট
+                            let bAmt = parseFloat(systemSettings.referralBonus) || 5;
+                            
+                            // ১. রেফারারের একাউন্টে টাকা যোগ করা
+                            await db.collection("users").doc(referrerId).update({
+                                mainBalance: firebase.firestore.FieldValue.increment(bAmt),
+                                totalEarnings: firebase.firestore.FieldValue.increment(bAmt),
+                                totalReferrals: firebase.firestore.FieldValue.increment(1),
+                                referralEarnings: firebase.firestore.FieldValue.increment(bAmt)
+                            });
+                            
+                            // ২. রেফারারের হিস্ট্রি যোগ করা
+                            await db.collection("history").add({
+                                userId: referrerId,
+                                type: "রেফার বোনাস",
+                                amount: bAmt,
+                                status: "Success",
+                                details: `${name} জয়েন করেছে`,
+                                date: new Date().toLocaleDateString('bn-BD'),
+                                time: new Date().toLocaleTimeString('bn-BD'),
+                                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+
+                            // ৩. 🚀 রেফারারকে টেলিগ্রামে অটো মেসেজ পাঠানো
+                            if(referrerData.tgId) {
+                                const botToken = "8583588570:AAEKfRe3y_egMXA6n8WxiZA-z-sU4FEgE1M";
+                                const rewardMsg = `🎊 *অভিনন্দন মামা!* 🎊\n\n👤 *${name}* আপনার রেফারে জয়েন করেছে।\n💰 বোনাস পেয়েছেন: *৳${bAmt}*\n\nএভাবেই রেফার করতে থাকুন আর আয় বাড়ান! 🚀`;
+                                
+                                fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        chat_id: referrerData.tgId,
+                                        text: rewardMsg,
+                                        parse_mode: 'Markdown'
+                                    })
+                                }).catch(e => console.log("Notification Error"));
+                            }
+                            
+                            await db.collection("users").doc(uc.user.uid).update({ referredBy: referralCode });
+                        }
+                    } catch (e) { console.error("Referral Logic Error:", e); }
+                }
                 showSmartToast('একাউন্ট তৈরি সফল! ডেইলি বোনাস নিন', 'success');
                 hideLoading();
            } catch (e) {
@@ -4040,6 +4100,7 @@ async function loadPackages() {
                     }
 
                     safe('profNameDisplay', userData.name);
+window.checkUnreadNotifs(); // 👈 এই লাইনটি এখানে পেস্ট করো
                     
               // 🚀 ৪. Force Join Hard Check (মামা স্পেশাল)
                     if(userData.isTelegramJoined !== true) {
@@ -5635,32 +5696,31 @@ await db.collection("history").doc(newReqId).set({
                     window.playSound('snd_success');                
                     hideLoading();
                     
-             // 💾 Auto Save Number Prompt (bKash Style)
-                    if (!currentUserData.savedNumber || currentUserData.savedNumber !== number) {
-                        setTimeout(() => {
-                            Swal.fire({
-                                title: 'নাম্বারটি সেইভ করবেন?',
-                                html: `পরবর্তীতে এক ক্লিকে উইথড্র করতে <b>${number}</b> (${method}) নাম্বারটি প্রোফাইলে সেইভ করে রাখুন।`,
-                                icon: 'question',
-                                showCancelButton: true,
-                                confirmButtonText: '<i class="ri-bookmark-fill"></i> হ্যাঁ, সেইভ করুন',
-                                cancelButtonText: 'না, থাক',
-                                confirmButtonColor: '#3b82f6',
-                                customClass: { popup: 'rounded-[25px]' }
-                            }).then((res) => {
-                                if(res.isConfirmed) {
-                                    db.collection("users").doc(currentUserId).update({
-                                        savedNumber: number,
-                                        savedMethod: method
-                                    });
-                                    currentUserData.savedNumber = number;
-                                    currentUserData.savedMethod = method;
-                                    window.renderSavedAccount(); // কার্ডটি সাথে সাথে শো করবে
-                                    showSmartToast('নাম্বার সফলভাবে সেইভ হয়েছে! ✅', 'success');
-                                }
-                            });
-                        }, 1000);
-                    }      
+            // 💾 SMART MULTI-SAVE PROMPT (মামা পিন কোড)
+const currentAccounts = currentUserData.savedAccounts || [];
+const alreadySaved = currentAccounts.some(a => a.number === number);
+
+if (!alreadySaved && currentAccounts.length < 5) {
+    setTimeout(() => {
+        Swal.fire({
+            title: 'নাম্বারটি সেভ করবেন?',
+            text: 'পরবর্তীতে সহজে উইথড্র করতে এটি আপনার লিস্টে জমা রাখুন।',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'হ্যাঁ, সেভ করুন',
+            cancelButtonColor: '#64748b',
+            confirmButtonColor: '#3b82f6',
+            customClass: { popup: 'rounded-[25px]' }
+        }).then((res) => {
+            if(res.isConfirmed) {
+                currentAccounts.push({ number: number, method: method });
+                db.collection("users").doc(currentUserId).update({ savedAccounts: currentAccounts });
+                window.renderSavedAccounts();
+                showSmartToast('সফলভাবে সেভ হয়েছে! ✅', 'success');
+            }
+        });
+    }, 1500);
+}
                     document.getElementById('withdrawNumber').value = '';
                     document.getElementById('withdrawAmount').value = '';
                     window.calculateWithdrawVAT();
@@ -5801,7 +5861,14 @@ await db.collection("history").doc(newReqId).set({
         };
         
         window.transferBalance = async () => {
-    const am = parseFloat(document.getElementById('transferAmount').value);
+        if (!currentUserData.transactionPin) {
+        return Swal.fire({ title: 'পিন সেট করা নেই!', icon: 'info' }).then(() => window.showPage('settingsScreen'));
+    }
+    const { value: userPin } = await Swal.fire({ title: 'আপনার পিন দিন', input: 'password', inputAttributes: { maxlength: 4 } });
+    if (userPin !== currentUserData.transactionPin) return showSmartToast('ভুল পিন!', 'error');
+
+        
+    const am =         parseFloat(document.getElementById('transferAmount').value);
     
     // ১. ভ্যালিডেশন চেক
     if(!am || am <= 0) {
@@ -6668,7 +6735,7 @@ window.toggleWalletTab = (t) => {
             if(window.calculateWithdrawVAT) window.calculateWithdrawVAT();
         }
         
-       if(t === 'withdraw' && typeof window.renderSavedAccount === 'function') window.renderSavedAccount();
+       if(t === 'withdraw') window.renderSavedAccounts();
         
     }
 };
@@ -6986,11 +7053,9 @@ window.switchTaskTab = (type) => {
         }); 
 
         // ৪. ইন্টারনেট কানেকশন চেক
-        window.addEventListener('offline', () => {
-            Swal.fire({ title: 'ইন্টারনেট কানেকশন বিচ্ছিন্ন!', text: 'প্রিয় ইউজার আপনার ইন্টারনেট কানেকশন চলে গেছে! দয়া করে চেক করুন।', icon: 'warning', showConfirmButton: false, allowOutsideClick: false });
-        });
-
-        window.addEventListener('online', () => { Swal.close(); showSmartToast('ইন্টারনেট ফিরে এসেছে! ', 'success'); });
+        // ✅ নেট কানেকশন ইভেন্ট লিসেনার
+window.addEventListener('offline', () => window.updateConnectionStatus('offline'));
+window.addEventListener('online', () => window.updateConnectionStatus('online'));
         // ✅ উন্নত এবং এরর-ফ্রি সাউন্ড ফাংশন (কনসোল ওয়ার্নিং বন্ধ করা হয়েছে)
 window.playSound = (id) => {
     // সেটিংস থেকে সাউন্ড অফ থাকলে বাজবে না
@@ -8286,43 +8351,55 @@ window.shareToTelegramStory = async () => {
         // 💳 SAVED ACCOUNT LOGIC (bKash Style)
         // ==========================================
         
-        // ১. সেইভ করা নাম্বার শো করানো
-        window.renderSavedAccount = () => {
-            if(currentUserData && currentUserData.savedNumber) {
-                document.getElementById('savedAccountsContainer').classList.remove('hidden');
-                document.getElementById('savedNumberText').innerText = currentUserData.savedNumber;
-                document.getElementById('savedMethodName').innerText = currentUserData.savedMethod || "অ্যাকাউন্ট";
-                
-                let iconUrl = "https://i.postimg.cc/wMdF5zV5/withdraw.png";
-                const method = (currentUserData.savedMethod || "").toUpperCase();
-                
-                if(method.includes('BKASH')) iconUrl = "https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png";
-                else if(method.includes('NAGAD')) iconUrl = "https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png";
-                else if(method.includes('ROCKET')) iconUrl = "https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png";
-                
-                document.getElementById('savedMethodImg').src = iconUrl;
-            } else {
-                document.getElementById('savedAccountsContainer').classList.add('hidden');
-            }
-        };
+       // ✅ MULTI-ACCOUNT RENDERER (মামা পিন কোড)
+window.renderSavedAccounts = () => {
+    const container = document.getElementById('multiSavedSection');
+    const list = document.getElementById('savedAccountsList');
+    
+    // ডাটাবেস থেকে savedAccounts array আনা (যদি না থাকে তবে খালি array)
+    const accounts = currentUserData.savedAccounts || [];
+    
+    if(accounts.length > 0) {
+        container.classList.remove('hidden');
+        list.innerHTML = "";
+        
+        accounts.forEach((acc, index) => {
+            let iconUrl = "https://i.postimg.cc/wMdF5zV5/withdraw.png";
+            if(acc.method === 'bKash') iconUrl = "https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png";
+            else if(acc.method === 'Nagad') iconUrl = "https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png";
+            else if(acc.method === 'Rocket') iconUrl = "https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png";
 
-        // ২. কার্ডে ক্লিক করলে নাম্বার ইনপুটে বসে যাবে
-        window.useSavedNumber = () => {
-            if(!currentUserData || !currentUserData.savedNumber) return;
-            
-            const numInput = document.getElementById('withdrawNumber');
-            numInput.value = currentUserData.savedNumber;
-            
-            // অটোমেটিক মেথড সিলেক্ট করে দেওয়া
-            const methodEl = document.getElementById('withdraw_' + currentUserData.savedMethod);
-            if(methodEl) window.selectWithdrawMethod(methodEl, currentUserData.savedMethod);
-            
-            showSmartToast('সেইভ করা নাম্বার বসানো হয়েছে!', 'success');
-            if(typeof window.playSound === 'function') window.playSound('snd_click');
-            
-            numInput.classList.add('ring-2', 'ring-blue-400', 'bg-blue-50');
-            setTimeout(() => numInput.classList.remove('ring-2', 'ring-blue-400', 'bg-blue-50'), 1000);
-        };
+            list.innerHTML += `
+                <div class="flex-shrink-0 w-40 bg-slate-900 p-3 rounded-2xl border border-slate-700 shadow-lg relative group active:scale-95 transition-all" onclick="window.useSavedAccount(${index})">
+                    <div class="flex items-center gap-2 mb-2">
+                        <img src="${iconUrl}" class="w-5 h-5 object-contain bg-white rounded-full p-0.5">
+                        <span class="text-[9px] text-blue-400 font-bold uppercase">${acc.method}</span>
+                    </div>
+                    <h4 class="text-white text-xs font-mono font-bold tracking-wider">${acc.number}</h4>
+                    <button onclick="event.stopPropagation(); window.deleteSavedAccount(${index})" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>`;
+        });
+    } else {
+        container.classList.add('hidden');
+    }
+};
+
+window.useSavedAccount = (index) => {
+    const acc = currentUserData.savedAccounts[index];
+    document.getElementById('withdrawNumber').value = acc.number;
+    const methodEl = document.getElementById('withdraw_' + acc.method);
+    if(methodEl) window.selectWithdrawMethod(methodEl, acc.method);
+    showSmartToast('অ্যাকাউন্ট সিলেক্ট করা হয়েছে! ✅', 'success');
+};
+
+window.deleteSavedAccount = async (index) => {
+    const accounts = currentUserData.savedAccounts || [];
+    accounts.splice(index, 1); // ওই ইনডেক্সের নাম্বারটি ডিলিট করা
+    await db.collection("users").doc(currentUserId).update({ savedAccounts: accounts });
+    showSmartToast('অ্যাকাউন্ট মুছে ফেলা হয়েছে', 'info');
+};
 
 // ✅ মেম্বারশিপ পুনরায় চেক করার হার্ডকোর ফাংশন (মামা পিন কোড)
 window.reVerifyMembership = async () => {
@@ -8352,6 +8429,94 @@ window.reVerifyMembership = async () => {
     }
 };
 
+// ✅ NOTIFICATION CENTER LOGIC (মামা পিন কোড)
+// ✅ NOTIFICATION CENTER LOGIC (সব বাগ ফিক্স করা হয়েছে)
+window.openNotifications = async () => {
+    document.getElementById('notificationPanel').classList.remove('hidden');
+    window.playSound('snd_click');
+    window.loadNotifications();
+
+    // ১. ডাটাবেসে সব মেসেজকে 'Read' করা যাতে লাল ডট আর ফিরে না আসে
+    if(currentUserId) {
+        try {
+            const batch = db.batch();
+            const unreadSnap = await db.collection("notifications")
+                .where("userId", "==", currentUserId)
+                .where("read", "==", false)
+                .get();
+                
+            unreadSnap.forEach(doc => {
+                batch.update(doc.ref, { read: true });
+            });
+            await batch.commit();
+        } catch(e) { console.log("Batch error", e); }
+    }
+    // আইকন থেকে লাল ডট সরিয়ে ফেলা
+    document.getElementById('unreadBadge').classList.add('hidden');
+};
+
+window.closeNotifications = () => {
+    document.getElementById('notificationPanel').classList.add('hidden');
+};
+
+window.loadNotifications = async () => {
+    const list = document.getElementById('notificationList');
+    if(!currentUserId) return;
+
+    list.innerHTML = `<div class="text-center py-10"><i class="ri-loader-4-line animate-spin text-4xl text-blue-500"></i></div>`;
+
+    try {
+        // ২. ফিক্স: আপাতত orderBy সরিয়ে দিয়েছি যাতে ইনডেক্স এরর না দেয় এবং সাদা পর্দা না আসে
+        const snapshot = await db.collection("notifications")
+            .where("userId", "==", currentUserId)
+            .limit(15)
+            .get();
+
+        if(snapshot.empty) {
+            list.innerHTML = `<div class="text-center py-20 opacity-30"><i class="ri-mail-open-line text-6xl"></i><p class="font-bold mt-2">ইনবক্স খালি!</p></div>`;
+            return;
+        }
+
+        let notifHtml = "";
+        snapshot.forEach(doc => {
+            const n = doc.data();
+            let icon = "ri-notification-3-fill", color = "blue", bgColor = "bg-blue-100", textColor = "text-blue-600";
+            
+            if(n.type === 'deposit') { icon = "ri-wallet-3-fill"; color = "emerald"; bgColor = "bg-emerald-100"; textColor = "text-emerald-600"; }
+            else if(n.type === 'withdraw') { icon = "ri-bank-card-fill"; color = "rose"; bgColor = "bg-rose-100"; textColor = "text-rose-600"; }
+            else if(n.type === 'success') { icon = "ri-checkbox-circle-fill"; color = "green"; bgColor = "bg-green-100"; textColor = "text-green-600"; }
+
+            notifHtml += `
+                <div class="flex gap-4 p-4 rounded-[25px] bg-slate-50 border border-slate-100 mb-3 animate__animated animate__fadeInUp">
+                    <div class="w-12 h-12 ${bgColor} rounded-2xl flex items-center justify-center ${textColor} shrink-0">
+                        <i class="${icon} text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-slate-800 text-sm">${n.title}</h4>
+                        <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">${n.message}</p>
+                        <p class="text-[9px] text-slate-400 font-bold mt-2 uppercase tracking-tighter">${n.time || ''}</p>
+                    </div>
+                </div>`;
+        });
+        list.innerHTML = notifHtml;
+    } catch(e) { 
+        console.error(e);
+        list.innerHTML = `<p class="text-center text-red-500 py-10">ডাটা লোড করতে সমস্যা হয়েছে।</p>`;
+    }
+};
+
+// নোটিফিকেশন চেক ফাংশন
+window.checkUnreadNotifs = async () => {
+    if(!currentUserId) return;
+    try {
+        const snap = await db.collection("notifications")
+            .where("userId", "==", currentUserId)
+            .where("read", "==", false)
+            .get();
+        if(!snap.empty) document.getElementById('unreadBadge').classList.remove('hidden');
+        else document.getElementById('unreadBadge').classList.add('hidden');
+    } catch(e) { console.log(e); }
+};
         
         // ✅ SMART TASK NUDGE FUNCTION (মামা পিন কোড)
 window.showTaskNudge = async () => {
@@ -8403,6 +8568,44 @@ window.showTaskNudge = async () => {
         }
     } catch (e) { console.log("Nudge Error:", e); }
 };
+
+// ✅ MODERN CONNECTION HANDLER (মামা পিন কোড)
+window.updateConnectionStatus = (status) => {
+    const box = document.getElementById('connStatusBox');
+    const bg = document.getElementById('connStatusBg');
+    const iconBg = document.getElementById('connIconBg');
+    const icon = document.getElementById('connIcon');
+    const title = document.getElementById('connTitle');
+    const desc = document.getElementById('connDesc');
+
+    if (status === 'offline') {
+        // 🔴 অফলাইন ডিজাইন
+        bg.className = "bg-slate-900/90 backdrop-blur-xl border border-white/10 p-3.5 rounded-[22px] flex items-center gap-3 shadow-2xl";
+        iconBg.className = "w-9 h-9 bg-red-500 rounded-full flex items-center justify-center text-white shrink-0 animate-pulse";
+        icon.className = "ri-wifi-off-line";
+        title.innerText = "ইন্টারনেট নেই! 🔌";
+        desc.innerText = "দয়া করে কানেকশন চেক করুন।";
+        
+        box.classList.remove('hidden', 'animate__fadeOutUp');
+        box.classList.add('animate__fadeInDown');
+        if (navigator.vibrate) navigator.vibrate(100);
+    } else {
+        // 🟢 অনলাইন ডিজাইন
+        bg.className = "bg-emerald-600/90 backdrop-blur-xl border border-white/10 p-3.5 rounded-[22px] flex items-center gap-3 shadow-2xl";
+        iconBg.className = "w-9 h-9 bg-white/20 rounded-full flex items-center justify-center text-white shrink-0";
+        icon.className = "ri-wifi-line";
+        title.innerText = "ইন্টারনেট ফিরেছে! 🚀";
+        desc.innerText = "সবকিছু আবার ঠিকঠাক কাজ করছে।";
+        
+        box.classList.replace('animate__fadeInDown', 'animate__fadeInDown'); // রিফ্রেশ এনিমেশন
+        
+        // ২ সেকেন্ড পর নোটিফিকেশন উপরে উঠে যাবে
+        setTimeout(() => {
+            box.classList.add('animate__fadeOutUp');
+            setTimeout(() => box.classList.add('hidden'), 500);
+        }, 2000);
+    }
+};
                    
     </script>
     
@@ -8428,6 +8631,36 @@ window.showTaskNudge = async () => {
         </div>
     </div>
 </div> 
+
+<!-- 🔔 MODERN NOTIFICATION CENTER (ইনবক্স প্যানেল) -->
+<div id="notificationPanel" class="hidden fixed inset-0 z-[100000] flex items-end justify-center">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="window.closeNotifications()"></div>
+    <div class="bg-white w-full max-w-md h-[80vh] rounded-t-[40px] shadow-2xl relative z-10 flex flex-col animate__animated animate__slideInUp">
+        <div class="p-6 pb-4 flex items-center justify-between border-b border-slate-50">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                    <i class="ri-notification-3-fill text-xl"></i>
+                </div>
+                <div><h3 class="font-black text-slate-800 text-lg">ইনবক্স</h3><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">আপনার সকল আপডেট এখানে</p></div>
+            </div>
+            <button onclick="window.closeNotifications()" class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition"><i class="ri-close-line text-xl"></i></button>
+        </div>
+        <div id="notificationList" class="flex-1 overflow-y-auto p-5 pb-10"><!-- লিস্ট এখানে লোড হবে --></div>
+    </div>
+</div>
+    
+  <!-- 📡 MODERN CONNECTION STATUS (মামা পিন কোড) -->
+<div id="connStatusBox" class="hidden fixed top-6 left-4 right-4 z-[1000000] animate__animated">
+    <div id="connStatusBg" class="backdrop-blur-xl border p-3.5 rounded-[22px] flex items-center gap-3 shadow-[0_15px_40px_rgba(0,0,0,0.2)]">
+        <div id="connIconBg" class="w-9 h-9 rounded-full flex items-center justify-center text-white shrink-0">
+            <i id="connIcon" class="ri-wifi-off-line"></i>
+        </div>
+        <div class="flex-1">
+            <h4 id="connTitle" class="text-xs font-black leading-tight text-white">সংযোগ বিচ্ছিন্ন!</h4>
+            <p id="connDesc" class="text-[10px] font-bold text-white/80 mt-0.5">আপনার ইন্টারনেট চেক করুন মামা।</p>
+        </div>
+    </div>
+</div>
     
 </body>
 </html>
