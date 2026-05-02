@@ -454,32 +454,33 @@
             font-weight: bold;
         }
 
-        /* ✅ GLOBAL CHAT ICON */
+       /* ✅ গ্লোবাল চ্যাট আইকন (মডার্ন ও ছোট করা) */
         #globalChatIcon {
             position: fixed;
-            bottom: 100px;
-            right: 20px;
+            bottom: 85px; /* নিচের ন্যাভ বারের ঠিক উপরে */
+            right: 15px; /* একদম কিনারে */
             z-index: 9999;
-            width: 60px;
-            height: 60px;
+            width: 48px; /* সাইজ ছোট করা হয়েছে */
+            height: 48px;
             border-radius: 50%;
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
             cursor: pointer;
-            border: 3px solid white;
+            border: 2px solid white;
             transition: all 0.3s ease;
+            opacity: 0.7; /* হালকা স্বচ্ছ যাতে পেছনের লেখা দেখা যায় */
         }
         
-        #globalChatIcon:hover {
+        #globalChatIcon:active {
             transform: scale(1.1);
-            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.6);
+            opacity: 1; /* ক্লিক করলে উজ্জ্বল হবে */
         }
         
         #globalChatIcon i {
-            font-size: 28px;
+            font-size: 22px;
             color: white;
         }
         
@@ -487,7 +488,7 @@
            ULTRA MODERN MAINTENANCE SCREEN
            ========================================= */
         .maintenance-screen {
-            background: #0f172a; /* Deep premium slate background */
+            background: #0f172a; 
         }
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
@@ -495,44 +496,44 @@
             66% { transform: translate(-20px, 20px) scale(0.9); }
             100% { transform: translate(0px, 0px) scale(1); }
         }
-        .animate-blob { 
-            animation: blob 7s infinite; 
-        }
-        .animation-delay-2000 { 
-            animation-delay: 2s; 
-        }
-        .animation-delay-4000 { 
-            animation-delay: 4s; 
-        }
+        .animate-blob { animation: blob 7s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
         @keyframes stripes {
             from { background-position: 1rem 0; }
             to { background-position: 0 0; }
         }
-        .animate-spin-slow { 
-            animation: spin 4s linear infinite; 
-        }
+        .animate-spin-slow { animation: spin 4s linear infinite; }
         
-  /*✅ TWAI CHATBOT ICON (FIXED POSITION)
-   ========================================= */
-#twaiChatbotIcon {
-    position: fixed;
-    bottom: 170px; /* ⬅️ আপনার চাওয়া অনুযায়ী আগের পজিশন */
-    right: 20px;
-    z-index: 9999; /* Z-index বাড়িয়ে দিলাম */
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
-    cursor: pointer;
-    border: 3px solid white;
-    transition: all 0.3s ease;
-}
-#twaiChatbotIcon:hover { transform: scale(1.1); }
-#twaiChatbotIcon i { font-size: 28px; color: white; }
+        /* ✅ TWAI চ্যাটবট আইকন (সঠিক পজিশন ফিক্স) */
+        #twaiChatbotIcon {
+            position: fixed;
+            bottom: 145px; /* সাপোর্ট আইকনের ঠিক উপরে */
+            right: 15px;
+            z-index: 9999;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            cursor: pointer;
+            border: 2px solid white;
+            transition: all 0.3s ease;
+            opacity: 0.7; /* হালকা স্বচ্ছ */
+        }
+
+        #twaiChatbotIcon:active {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        #twaiChatbotIcon i {
+            font-size: 22px;
+            color: white;
+        }
 
 /* =========================================
    ✅ CHATBOT MODAL (FORCE DISPLAY FIX)
@@ -1262,13 +1263,14 @@
     <!-- MAIN APP -->
     <div id="mainApp" class="hidden pb-24 max-w-md mx-auto min-h-screen relative bg-white">
         
-        <!-- HOME SCREEN -->
+       <!-- HOME SCREEN -->
         <div id="homeScreen" class="animate__animated animate__fadeIn relative">
             
-            <div class="bg-premium pb-8 pt-8 px-5 rounded-b-[40px] text-white shadow-xl relative z-10">
-                
+            <!-- ১. মেইন হেডার (সবুজ অংশ) -->
+            <div class="bg-premium pb-10 pt-8 px-5 rounded-b-[40px] text-white shadow-xl relative z-10">
                 <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
                 
+                <!-- প্রোফাইল সেকশন -->
                 <div class="relative flex justify-between items-center mb-6">
                     <div class="flex items-center gap-3" onclick="window.showPage('profileScreen')">
                         <div class="relative">
@@ -1276,13 +1278,7 @@
                             <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
                         </div>
                         <div>
-                           <h3 class="font-bold text-lg leading-tight text-white drop-shadow-sm flex items-center gap-1" id="userNameDisplay">
-    Guest
-    <span id="verifiedBadge" class="hidden text-blue-400 text-sm">
-        <i class="ri-checkbox-circle-fill"></i>
-    </span>
-</h3>
-
+                           <h3 class="font-bold text-lg leading-tight text-white drop-shadow-sm flex items-center gap-1" id="userNameDisplay">Guest</h3>
                             <div class="flex items-center gap-1 opacity-90">
                                 <img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-3">
                                 <span class="text-[11px] font-bold text-yellow-300 tracking-wide" id="userPlanDisplay">Free Member</span>
@@ -1290,8 +1286,7 @@
                         </div>
                     </div>
                     
-                    <!-- ✅ Live Notification Icon -->
-                    <div id="notificationIcon" onclick="openInbox()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 relative cursor-pointer hover:bg-white/30 transition shadow-sm active:scale-90">
+                    <div id="notificationIcon" onclick="openInbox()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 relative cursor-pointer active:scale-90 shadow-sm">
                         <img src="https://i.postimg.cc/c1nSnFz4/notofication.png" class="w-5 h-5 invert opacity-90">
                         <div id="notifDot" class="hidden">
                             <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
@@ -1300,30 +1295,36 @@
                     </div>
                 </div>
 
-                <div class="bg-white/10 backdrop-blur-md rounded-full p-1.5 border border-white/20 shadow-lg relative mx-1 mb-2">
+                <!-- ব্যালেন্স এবং অ্যাড মানি বার -->
+                <div class="bg-white/10 backdrop-blur-md rounded-full p-1.5 border border-white/20 shadow-lg relative">
                     <div class="flex items-center justify-between">
-                        
-                        <div class="relative z-10 pl-1 cursor-pointer" onclick="toggleBalance()">
+                        <!-- ব্যালেন্স দেখার বাটন -->
+                        <div class="relative z-10 cursor-pointer" onclick="toggleBalance()">
                             <div id="balancePill" class="balance-pill bg-white/95 rounded-full pl-1 pr-5 py-1 flex items-center gap-2 shadow-sm transition-all active:scale-95 h-10">
                                 <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white shadow-md">
                                     <i class="ri-wallet-3-fill text-sm"></i>
                                 </div>
                                 <div class="flex flex-col justify-center min-w-[80px]">
                                     <span id="balanceText" class="text-[11px] font-bold text-slate-600 leading-none">ব্যালেন্স দেখুন</span>
-                                    <span id="balanceAmount" class="text-[13px] font-black text-rose-600 leading-none hidden">৳0.00</span>
+                                    <div id="balanceAmountContainer" class="hidden flex flex-col leading-none">
+                                        <span id="balanceAmount" class="text-[13px] font-black text-rose-600">৳0.00</span>
+                                        <span id="balanceAmountUSDT" class="text-[9px] font-bold text-slate-400">$0.00 USDT</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> 
 
-                        <button onclick="window.showPage('walletScreen')" class="bg-white text-emerald-700 px-5 py-2 rounded-full text-[11px] font-bold shadow-md flex items-center gap-2 active:scale-95 transition-transform z-10 mr-1 hover:bg-emerald-50 h-9">
+                        <!-- অ্যাড মানি বাটন -->
+                        <button onclick="window.showPage('walletScreen')" class="bg-white text-emerald-700 px-5 py-2 rounded-full text-[11px] font-bold shadow-md flex items-center gap-2 active:scale-95 transition-transform mr-1 h-9">
                             <img src="https://i.postimg.cc/7ZGpHH5q/save-money.png" class="w-4 h-4">
                             অ্যাড মানি
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> <!-- ✅ এইখানে bg-premium ডিভটি ক্লোজ করা হয়েছে (Critical Fix) -->
 
-                        <div class="mx-5 -mt-6 bg-white p-3 rounded-2xl shadow-lg border border-slate-100 flex items-center gap-3 relative z-20 overflow-hidden">
+            <!-- ২. স্ক্রলিং নোটিশ (হেডারের নিচে বসবে) -->
+            <div class="mx-5 -mt-6 bg-white p-3 rounded-2xl shadow-lg border border-slate-100 flex items-center gap-3 relative z-20 overflow-hidden">
                 <div class="w-8 h-8 bg-orange-50 rounded-full flex items-center justify-center shrink-0">
                     <img src="https://i.postimg.cc/6p7RQSVx/megaphone.png" class="w-5 h-5 animate-pulse">
                 </div>
@@ -1569,9 +1570,20 @@
             </div>
 
             <div class="grid grid-cols-2 gap-3 mb-6">
-                <div class="bg-premium p-4 rounded-2xl text-white text-center shadow-lg"><p class="text-[10px] font-bold opacity-80">মেইন ব্যালেন্স</p><h2 class="text-xl font-extrabold mt-1">৳ <span id="walletMainDisplay">0.00</span></h2></div>
-                <div class="bg-blue-600 p-4 rounded-2xl text-white text-center shadow-lg"><p class="text-[10px] font-bold opacity-80">রিচার্জ ব্যালেন্স</p><h2 class="text-xl font-extrabold mt-1">৳ <span id="walletRechargeDisplay">0.00</span></h2></div>
-            </div>
+    <!-- মেইন ব্যালেন্স কার্ড -->
+    <div class="bg-premium p-4 rounded-2xl text-white text-center shadow-lg">
+        <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest leading-none mb-1">মেইন ব্যালেন্স</p>
+        <h2 class="text-xl font-extrabold leading-none">৳ <span id="walletMainDisplay">0.00</span></h2>
+        <p class="text-[9px] font-bold opacity-70 mt-1">$ <span id="walletMainUSDT">0.00</span> USDT</p>
+    </div>
+    
+    <!-- রিচার্জ ব্যালেন্স কার্ড -->
+    <div class="bg-blue-600 p-4 rounded-2xl text-white text-center shadow-lg">
+        <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest leading-none mb-1">রিচার্জ ব্যালেন্স</p>
+        <h2 class="text-xl font-extrabold leading-none">৳ <span id="walletRechargeDisplay">0.00</span></h2>
+        <p class="text-[9px] font-bold opacity-70 mt-1">$ <span id="walletRechargeUSDT">0.00</span> USDT</p>
+    </div>
+</div>
 
             <div class="flex bg-white p-1 rounded-2xl shadow-sm mb-6 border">
                 <button onclick="window.toggleWalletTab('deposit')" id="tabDeposit" class="flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow">ডিপোজিট</button>
@@ -2186,7 +2198,7 @@
         <div id="summaryScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
             <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">সারসংক্ষেপ</h2></div>
             <div class="glass-card p-5 rounded-[30px] space-y-4">
-    <h3 class="text-lg font-black text-slate-800 text-center mb-2">সারসংক্ষেপ 📊</h3>
+    <h3 class="text-lg font-black text-slate-800 text-center mb-2">সারসংক্ষেপ </h3>
     
     <!-- 🗓️ SMART TIME FILTER -->
     <div class="flex overflow-x-auto gap-2 mb-4 pb-1 scrollbar-hide">
@@ -4193,20 +4205,29 @@ async function loadPackages() {
                     }
                         
 
-                    // 💰 মেইন ব্যালেন্স এনিমেশন
-                    const newMain = userData.mainBalance || 0;
-                    animateNumberUpdate('mainBalanceDisplay', lastValues.main, newMain);
-                    animateNumberUpdate('walletMainDisplay', lastValues.main, newMain);
-                    const balAmt = document.getElementById('balanceAmount');
-                    if(balAmt) animateNumberUpdate('balanceAmount', lastValues.main, newMain);
-                    lastValues.main = newMain;
+                  // 💰 ব্যালেন্স এবং ইউএসডিটি আপডেট (১ ডলার = ১২০ টাকা)
+                    const bdtMain = userData.mainBalance || 0;
+                    const bdtRech = userData.rechargeBalance || 0;
+                    const usdtRate = 120;
 
-                    // 🔋 রিচার্জ ব্যালেন্স এনিমেশন
-                    const newRech = userData.rechargeBalance || 0;
-                    animateNumberUpdate('rechargePageBalance', lastValues.recharge, newRech);
-                    animateNumberUpdate('walletRechargeDisplay', lastValues.recharge, newRech);
-                    lastValues.recharge = newRech;
+                    // ১. মেইন ব্যালেন্স আপডেট
+                    animateNumberUpdate('walletMainDisplay', lastValues.main, bdtMain);
+                    if(document.getElementById('balanceAmount')) {
+                        document.getElementById('balanceAmount').textContent = "৳" + bdtMain.toFixed(2);
+                        document.getElementById('balanceAmountUSDT').textContent = "$" + (bdtMain / usdtRate).toFixed(2) + " USDT";
+                    }
+                    if(document.getElementById('walletMainUSDT')) {
+                        document.getElementById('walletMainUSDT').innerText = (bdtMain / usdtRate).toFixed(2);
+                    }
+                    lastValues.main = bdtMain;
 
+                    // ২. রিচার্জ ব্যালেন্স আপডেট
+                    animateNumberUpdate('walletRechargeDisplay', lastValues.recharge, bdtRech);
+                    animateNumberUpdate('rechargePageBalance', lastValues.recharge, bdtRech);
+                    if(document.getElementById('walletRechargeUSDT')) {
+                        document.getElementById('walletRechargeUSDT').innerText = (bdtRech / usdtRate).toFixed(2);
+                    }
+                    lastValues.recharge = bdtRech;
                     // 👥 রেফার আয় এনিমেশন
                     const newRef = userData.referralEarnings || 0;
                     animateNumberUpdate('referralEarnings', lastValues.ref, newRef);
@@ -5847,6 +5868,16 @@ await db.collection("history").doc(newReqId).set({
                 showSmartToast(`ন্যূনতম রিচার্জ পরিমাণ ৳${minRecharge}`, 'error');
                 return;
             }
+                  
+               // 🛑 ৩টি রেফার চেক (ফ্রি ইউজারদের জন্য)
+            const isFreeUser = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
+            if(isFreeUser) {
+                const referralCount = currentUserData.totalReferrals || 0;
+                if(referralCount < 3) {
+                    showSmartToast(`আপনার রেফার ${referralCount}। রিচার্জ করতে সর্বনিম্ন ৩টি রেফার প্রয়োজন।`, 'error');
+                    return;
+                }
+            }   
                      
             const fee = systemSettings.rechargeFee || 5;
             const totalAmount = amount + fee;
@@ -6938,10 +6969,10 @@ window.buySpins = async (count, price) => {
         let balanceTimeout;
         window.toggleBalance = () => {
             const balanceText = document.getElementById('balanceText');
-            const balanceAmount = document.getElementById('balanceAmount');
+            const balanceAmountContainer = document.getElementById('balanceAmountContainer'); // ফিক্সড: কন্টেইনার আইডি
             const balancePill = document.getElementById('balancePill');
             
-            // 🔊 সাউন্ড এবং 📳 ভাইব্রেশন ইফেক্ট
+            // ১. সাউন্ড এবং ভাইব্রেশন ইফেক্ট
             if(typeof window.playSound === 'function') window.playSound('snd_bonus');
             if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
                 window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
@@ -6949,37 +6980,38 @@ window.buySpins = async (count, price) => {
                 navigator.vibrate(50);
             }
 
-            // ব্যালেন্স দেখানো
-            if(balanceAmount.classList.contains('hidden')) {
+            if(!balanceAmountContainer || !balanceText) return; 
+
+            // ২. ব্যালেন্স দেখানোর লজিক
+            if(balanceAmountContainer.classList.contains('hidden')) {
                 balanceText.classList.add('hidden');
-                balanceAmount.classList.remove('hidden');
+                balanceAmountContainer.classList.remove('hidden');
                 
-                // 🎨 ম্যাজিক এনিমেশন ও গ্লো ইফেক্ট
-                balanceAmount.classList.add('animate__animated', 'animate__flipInX');
+                // ৩. ম্যাজিক এনিমেশন ও গ্লো ইফেক্ট
+                balanceAmountContainer.classList.add('animate__animated', 'animate__flipInX');
                 balancePill.classList.add('ring-2', 'ring-rose-400', 'shadow-lg', 'scale-105');
                 
+                // ৪. ডাটাবেস থেকে বিডিটি এবং ডলার আপডেট (১ ডলার = ১২০ টাকা)
                 if(currentUserData) {
-                    balanceAmount.textContent = `৳${currentUserData.mainBalance.toFixed(2)}`;
+                    const bdt = currentUserData.mainBalance || 0;
+                    const usdt = (bdt / 120).toFixed(2);
+                    document.getElementById('balanceAmount').textContent = "৳" + bdt.toFixed(2);
+                    document.getElementById('balanceAmountUSDT').textContent = "$" + usdt + " USDT";
                 }
 
-                // ⏳ ঠিক ৩ সেকেন্ড পর অটোমেটিক হাইড হয়ে যাবে
+                // ৫. ঠিক ৩ সেকেন্ড পর অটোমেটিক হাইড
                 if(balanceTimeout) clearTimeout(balanceTimeout);
                 balanceTimeout = setTimeout(() => {
-                    // এনিমেশন রিসেট
-                    balanceAmount.classList.remove('animate__animated', 'animate__flipInX');
-                    balanceAmount.classList.add('hidden');
-                    
+                    balanceAmountContainer.classList.add('hidden');
                     balanceText.classList.remove('hidden');
                     balanceText.classList.add('animate__animated', 'animate__fadeIn');
-                    
-                    // গ্লো ইফেক্ট সরানো
                     balancePill.classList.remove('ring-2', 'ring-rose-400', 'shadow-lg', 'scale-105');
                 }, 3000);
             } 
-            // যদি ইউজার ৩ সেকেন্ডের আগেই আবার ক্লিক করে, তাহলে সাথে সাথে হাইড হবে
+            // যদি ইউজার আবার ক্লিক করে হাইড করতে চায়
             else {
                 if(balanceTimeout) clearTimeout(balanceTimeout);
-                balanceAmount.classList.add('hidden');
+                balanceAmountContainer.classList.add('hidden');
                 balanceText.classList.remove('hidden');
                 balancePill.classList.remove('ring-2', 'ring-rose-400', 'shadow-lg', 'scale-105');
             }
