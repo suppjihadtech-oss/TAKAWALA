@@ -1042,6 +1042,48 @@
     20% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
     100% { transform: translate(-50%, -80%) scale(1); opacity: 0; }
 }
+
+
+/* 🌙 SMART DARK MODE OVERRIDES */
+body.dark-mode {
+    background-color: #0f172a !important; /* একদম ডার্ক স্লেট */
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode #mainApp {
+    background-color: #0f172a !important;
+}
+
+body.dark-mode .glass-card, 
+body.dark-mode .bg-white,
+body.dark-mode #bottomNav {
+    background-color: rgba(30, 41, 59, 0.9) !important; /* কার্ডগুলো হালকা স্লেট হবে */
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4, body.dark-mode span, body.dark-mode p:not(.text-slate-400) {
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode input, body.dark-mode select {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: white !important;
+}
+
+body.dark-mode .text-slate-700, body.dark-mode .text-slate-800, body.dark-mode .text-slate-600 {
+    color: #cbd5e1 !important;
+}
+
+body.dark-mode .bg-slate-50, body.dark-mode .bg-slate-100 {
+    background-color: #1e293b !important;
+}
+
+body.dark-mode .sum-filter-btn:not(.active-sum) {
+    background-color: #334155 !important;
+    color: #94a3b8 !important;
+}
     </style>
     
 </head>
@@ -1409,7 +1451,7 @@
                 <div class="bg-gradient-to-r from-blue-600 to-cyan-500 w-full h-32 flex items-center justify-between p-5 relative overflow-hidden rounded-[20px]">
                     <div class="absolute left-1/2 bottom-0 w-28 h-28 bg-white/10 rounded-full blur-2xl"></div>
                     <div class="text-white text-left relative z-10">
-                        <h3 class="text-[17px] font-black leading-tight mb-1.5 drop-shadow-md">অ্যাড দেখে আয়!<br><span class="text-cyan-100">প্রতিদিন ২০টি অ্যাড</span></h3>
+                        <h3 class="text-[17px] font-black leading-tight mb-1.5 drop-shadow-md">অ্যাড দেখে আয়!<br><span class="text-cyan-100">প্রতিদিন ৫০ টি  অ্যাড</span></h3>
                         <p class="text-[10px] bg-white/20 inline-block px-2.5 py-0.5 rounded-full backdrop-blur-sm border border-white/20 font-bold">ফ্রি ইনকাম সুযোগ</p>
                     </div>
                     <img src="https://img.icons8.com/fluency/96/play-button-circled.png" class="w-16 h-16 drop-shadow-xl relative z-10">
@@ -1446,10 +1488,17 @@
     </div>
 </div>
 
-<!-- ⚡ FLASH SALE BANNER (Trick #1 - Specific Time) -->
+<!-- ⚡ FLASH SALE BANNER -->
 <div id="flashSaleBanner" onclick="window.showPage('vipScreen')" class="hidden mx-5 mt-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 p-4 rounded-2xl shadow-lg shadow-purple-200 relative overflow-hidden transform transition duration-300 active:scale-95 z-20 cursor-pointer border border-purple-400">
+    
+    <!-- 🔴 LIVE BADGE (নতুন যোগ করা হলো) -->
+    <div class="absolute top-2 right-2 bg-gradient-to-r from-red-500 to-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-lg shadow-lg z-30 animate-pulse border border-white/50 flex items-center gap-1">
+        <span class="w-1.5 h-1.5 bg-white rounded-full"></span> LIVE
+    </div>
+
     <div class="absolute -right-6 -top-6 bg-white/20 w-24 h-24 rounded-full blur-xl animate-pulse"></div>
     <div class="flex justify-between items-center relative z-10 w-full">
+            
         <div>
             <div class="flex items-center gap-1.5 mb-1">
                 <i class="ri-flashlight-fill text-yellow-300 text-lg animate-bounce"></i>
@@ -1477,7 +1526,7 @@
                         <h3 class="text-base font-black leading-none tracking-wide flex items-center gap-2">
                             অ্যাড দেখে আয় 🎬
                         </h3>
-                        <p class="text-[10px] text-pink-50 font-bold mt-1 opacity-90">প্রতিদিন ২০টি অ্যাড দেখুন!</p>
+                        <p class="text-[10px] text-pink-50 font-bold mt-1 opacity-90">প্রতিদিন ৫০ টি  অ্যাড দেখুন!</p>
                     </div>
                 </div>
                 <div class="bg-white/20 p-1.5 rounded-full backdrop-blur-md relative z-10 group-hover:bg-white/30 transition">
@@ -1775,7 +1824,7 @@
                 
                 <div>
                     <p class="text-[11px] font-bold opacity-80 uppercase tracking-widest mb-1">আজকের টাস্ক</p>
-                    <h3 class="text-3xl font-black"><span id="watchCountDisplay">0</span><span class="text-lg opacity-70">/20</span></h3>
+                    <h3 class="text-3xl font-black"><span id="watchCountDisplay">0</span><span class="text-lg opacity-70">/50</span></h3>
                 </div>
                 <div class="text-right z-10">
                     <p class="text-[11px] font-bold opacity-80 uppercase tracking-widest mb-1">আজকের আয়</p>
@@ -1809,7 +1858,7 @@
                 <ul class="text-[10px] text-blue-700 space-y-1 ml-4 list-disc">
                     <li>অ্যাড প্লে হলে পুরোটা দেখুন অথবা নির্দিষ্ট সময় অপেক্ষা করুন।</li>
                     <li>অ্যাডটি কেটে দিলে বা ক্রস (X) বাটনে চাপলে রিওয়ার্ড পাবেন।</li>
-                    <li>প্রতিটি অ্যাড দেখার পর ১ মিনিট বিরতি নিতে হবে।</li>
+                    <li>প্রতিটি অ্যাড দেখার পর ১০ সেকেন্ড বিরতি নিতে হবে।</li>
                     <li>ভিপিএন (VPN) ব্যবহার করলে একাউন্ট ব্যান হবে।</li>
                 </ul>
             </div>
@@ -1891,6 +1940,8 @@
         <i class="ri-arrow-right-s-line text-white text-xl"></i>
     </div>
 </div>
+             
+          
              
              <!-- 🏆 LEADERBOARD BANNER -->
              <div onclick="window.showPage('leaderboardScreen'); window.loadLeaderboard();" class="w-full mt-4 mb-2 bg-gradient-to-r from-amber-500 to-orange-500 p-4 rounded-2xl shadow-lg shadow-orange-200 relative overflow-hidden group cursor-pointer flex items-center justify-between transform transition duration-300 active:scale-95">
@@ -2571,6 +2622,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- ✅ PROMO CLAIM SCREEN (এটি বসবে SUBSCRIPTION SCREEN এর উপরে) -->
         <div id="promoClaimScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight min-h-screen bg-white">
@@ -4132,7 +4184,10 @@ async function loadPackages() {
                     loadSummary(user.uid);
                     checkDailyBonus(user.uid);
                     loadTodayEarnings(user.uid);
-                    loadSettingsFromLocalStorage(); // Load settings
+                   // নিশ্চিত করা যাতে ডার্ক মোড লোড হওয়ার সময় কাজ করে
+if(localStorage.getItem('darkModeEnabled') === 'true') {
+    document.body.classList.add('dark-mode');
+} loadSettingsFromLocalStorage(); // Load settings
                     
                     // Show icons
                     document.getElementById('globalChatIcon').style.display = 'flex';
@@ -4280,9 +4335,8 @@ async function loadPackages() {
 
                     // রেফার লিংক আপডেট
                     if(document.getElementById('referralLink')) {
-    const botUsername = "TAKA_WALA_TG_BOT"; // তোমার বটের ইউজারনেম
-    const appName = "app"; // তোমার টেলিগ্রাম মিনিয়াঅ্যাপ এর শর্ট নেম (যা টেলিগ্রামে দিয়েছ)
-    const tgRefLink = `https://t.me/${botUsername}/${appName}?startapp=${userData.referralCode}`;
+    // এখানে app এর বদলে Earn ব্যবহার করা হয়েছে
+    const tgRefLink = `https://t.me/TAKA_WALA_TG_BOT/Earn?startapp=${currentUserData.referralCode}`;
     document.getElementById('referralLink').innerText = tgRefLink;
 }
                                       if(userData.createdAt && document.getElementById('joinDate')) {
@@ -5166,27 +5220,93 @@ totalReward += rewardAmt;
             }
         };
 
-       // ✅ NEW UPDATED TASK COMPLETION (অ্যাড সরানো হয়েছে, সরাসরি লিংক ওপেন হবে)
+     // ✅ স্মার্ট টাস্ক কনফার্মেশন সিস্টেম (অটো নিয়ম ও লাইন বাই লাইন ভিউ)
 window.isTaskRunning = false;
 
 window.completeTask = async (taskId, reward, taskType, title, description, link) => {
     if(!currentUserData) return;
     
+    // ডাবল ক্লিক প্রোটেকশন
     if (window.isTaskRunning) {
         showSmartToast('ইতিমধ্যে একটি টাস্ক চলছে! দয়া করে অপেক্ষা করুন।', 'warning');
         return;
     }
-    window.isTaskRunning = true; // টাস্ক লক করা হলো
-    
-    currentTaskInfo = { taskId, reward, taskType, title, description, link };
-    
-    // অ্যাড ছাড়াই সরাসরি টাস্ক লিংকে নিয়ে যাওয়া হবে
-    setTimeout(() => {
-        window.open(link, '_blank');
-    }, 500);
-    
-    startTaskTimer(); // অরিজিনাল ২০ সেকেন্ডের টাইমার শুরু হবে
-    showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হয়েছে। ২০ সেকেন্ড স্ক্রিনে থাকতে হবে।', 'info');
+
+    // ১. নিয়মগুলো লাইন বাই লাইন সাজানোর লজিক
+    let finalRulesHTML = "";
+    if (description && description.trim() !== "") {
+        // এডমিন প্যানেলের টেক্সটকে লাইন অনুযায়ী ভেঙে বুলেট পয়েন্ট বানানো
+        finalRulesHTML = description.split('\n')
+            .filter(line => line.trim() !== "") // খালি লাইন বাদ দেওয়া
+            .map(line => `
+                <div style="display:flex; align-items:start; gap:8px; margin-bottom:8px;">
+                    <i class="ri-checkbox-circle-fill text-emerald-500" style="margin-top:3px; font-size:14px;"></i>
+                    <span>${line.trim()}</span>
+                </div>
+            `).join('');
+    } else {
+        // যদি এডমিন ডেসক্রিপশন না দেয়, তবে এই ডিফল্ট নিয়ম দেখাবে
+        finalRulesHTML = `
+            <div style="display:flex; align-items:start; gap:8px; margin-bottom:8px;">
+                <i class="ri-checkbox-circle-fill text-emerald-500" style="margin-top:3px; font-size:14px;"></i>
+                <span>নিচের বাটনে ক্লিক করে কাজ শুরু করুন।</span>
+            </div>
+            <div style="display:flex; align-items:start; gap:8px; margin-bottom:8px;">
+                <i class="ri-checkbox-circle-fill text-emerald-500" style="margin-top:3px; font-size:14px;"></i>
+                <span>লিংক ওপেন হওয়ার পর কমপক্ষে ২০ সেকেন্ড অপেক্ষা করুন।</span>
+            </div>
+            <div style="display:flex; align-items:start; gap:8px; margin-bottom:8px;">
+                <i class="ri-checkbox-circle-fill text-emerald-500" style="margin-top:3px; font-size:14px;"></i>
+                <span>সফলভাবে কাজ শেষ করে সঠিক প্রমাণ বা স্ক্রিনশট জমা দিন।</span>
+            </div>
+        `;
+    }
+
+    // ২. প্রিমিয়াম iOS স্টাইল পপ-আপ ডিজাইন
+    Swal.fire({
+        title: `
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:5px;">
+                <i class="ri-file-list-3-line text-emerald-600"></i>
+                <span style="font-size:18px; font-weight:900; color:#1e293b; letter-spacing:-0.5px;">কাজের নিয়ম ও শর্ত</span>
+            </div>`,
+        html: `
+            <div class="animate__animated animate__fadeInUp" style="text-align:left; background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); padding:20px; border-radius:25px; border:1px dashed #10b981; margin-top:15px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);">
+                <div style="font-size:13px; color:#334155; line-height:1.6; font-weight:600; font-family: 'Hind Siliguri', sans-serif;">
+                    ${finalRulesHTML}
+                </div>
+            </div>
+            <div style="margin-top:15px; display:flex; align-items:center; justify-content:center; gap:5px; color:#ef4444; font-weight:800; font-size:11px; text-transform:uppercase;">
+                <i class="ri-error-warning-fill"></i> ভুল কাজ করলে পেমেন্ট পাবেন না
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'আমি শর্তে রাজি',
+        cancelButtonText: 'বাতিল',
+        confirmButtonColor: '#059669',
+        cancelButtonColor: '#f1f5f9',
+        background: '#ffffff',
+        width: '320px',
+        customClass: {
+            popup: 'rounded-[35px] border-none shadow-2xl',
+            confirmButton: 'rounded-xl px-5 py-3 font-bold shadow-lg',
+            cancelButton: 'rounded-xl px-5 py-3 font-bold text-slate-500'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // কাজ শুরু
+            window.isTaskRunning = true; 
+            currentTaskInfo = { taskId, reward, taskType, title, description, link };
+            
+            showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হচ্ছে...', 'info');
+            
+            // স্মার্ট ডিলের সাথে লিংক ওপেন
+            setTimeout(() => {
+                window.open(link, '_blank');
+            }, 800);
+            
+            startTaskTimer(); 
+        }
+    });
 };
      
      function startTaskTimer() {
@@ -6912,58 +7032,74 @@ window.buySpins = async (count, price) => {
         };
       
 
-        // ✅ SETTINGS FUNCTIONS
-        function loadSettingsFromLocalStorage() {
-            const notificationToggle = document.getElementById('notificationToggle');
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const soundToggle = document.getElementById('soundToggle');
-            const vibrationToggle = document.getElementById('vibrationToggle');
-            
-            if(localStorage.getItem('notificationEnabled') !== null) {
-                notificationToggle.checked = localStorage.getItem('notificationEnabled') === 'true';
-            }
-            
-            if(localStorage.getItem('darkModeEnabled') !== null) {
-                darkModeToggle.checked = localStorage.getItem('darkModeEnabled') === 'true';
-                if(darkModeToggle.checked) {
-                    document.body.classList.add('bg-slate-900', 'text-white');
-                }
-            }
-            
-            if(localStorage.getItem('soundEnabled') !== null) {
-                soundToggle.checked = localStorage.getItem('soundEnabled') === 'true';
-            }
-            
-            if(localStorage.getItem('vibrationEnabled') !== null) {
-                vibrationToggle.checked = localStorage.getItem('vibrationEnabled') === 'true';
-            }
-            
-            // Add event listeners
-            notificationToggle.addEventListener('change', function() {
-                localStorage.setItem('notificationEnabled', this.checked);
-                showSmartToast(`নোটিফিকেশন ${this.checked ? 'চালু' : 'বন্ধ'} করা হয়েছে`, 'info');
-            });
-            
-            darkModeToggle.addEventListener('change', function() {
-                localStorage.setItem('darkModeEnabled', this.checked);
-                if(this.checked) {
-                    document.body.classList.add('bg-slate-900', 'text-white');
-                } else {
-                    document.body.classList.remove('bg-slate-900', 'text-white');
-                }
-                showSmartToast(`ডার্ক মোড ${this.checked ? 'চালু' : 'বন্ধ'} করা হয়েছে`, 'info');
-            });
-            
-            soundToggle.addEventListener('change', function() {
-                localStorage.setItem('soundEnabled', this.checked);
-                showSmartToast(`সাউন্ড ${this.checked ? 'চালু' : 'বন্ধ'} করা হয়েছে`, 'info');
-            });
-            
-            vibrationToggle.addEventListener('change', function() {
-                localStorage.setItem('vibrationEnabled', this.checked);
-                showSmartToast(`ভাইব্রেশন ${this.checked ? 'চালু' : 'বন্ধ'} করা হয়েছে`, 'info');
-            });
+       // ✅ ৩টি কাজ একসাথে: সেটিংস লোড, ডার্ক মোড অ্যাক্টিভেশন এবং রিয়েল-টাইম সুইচিং
+function loadSettingsFromLocalStorage() {
+    const notificationToggle = document.getElementById('notificationToggle');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const soundToggle = document.getElementById('soundToggle');
+    const vibrationToggle = document.getElementById('vibrationToggle');
+
+    // ১. লোকাল স্টোরেজ থেকে আগের সেটিংস চেক করা (ডিফল্ট ভ্যালুসহ)
+    const isNotification = localStorage.getItem('notificationEnabled') !== 'false'; // ডিফল্ট অন
+    const isDark = localStorage.getItem('darkModeEnabled') === 'true'; // ডিফল্ট অফ
+    const isSound = localStorage.getItem('soundEnabled') !== 'false'; // ডিফল্ট অন
+    const isVibration = localStorage.getItem('vibrationEnabled') !== 'false'; // ডিফল্ট অন
+
+    // ২. টগল বাটনগুলোর পজিশন সেট করা
+    if(notificationToggle) notificationToggle.checked = isNotification;
+    if(soundToggle) soundToggle.checked = isSound;
+    if(vibrationToggle) vibrationToggle.checked = isVibration;
+    
+    // ৩. ডার্ক মোড চেক এবং বডিতে ক্লাস যোগ করা
+    if(darkModeToggle) {
+        darkModeToggle.checked = isDark;
+        if(isDark) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
         }
+    }
+
+    // ৪. ইউজার যখন কোনো বাটন পরিবর্তন করবে (Event Listeners)
+    
+    // নোটিফিকেশন সুইচ
+    if(notificationToggle) {
+        notificationToggle.onchange = function() {
+            localStorage.setItem('notificationEnabled', this.checked);
+            showSmartToast(`নোটিফিকেশন ${this.checked ? 'চালু' : 'বন্ধ'} হয়েছে`, 'info');
+        };
+    }
+
+    // 🌙 ডার্ক মোড সুইচ (সবচেয়ে গুরুত্বপূর্ণ)
+    if(darkModeToggle) {
+        darkModeToggle.onchange = function() {
+            localStorage.setItem('darkModeEnabled', this.checked);
+            if(this.checked) {
+                document.body.classList.add('dark-mode');
+                showSmartToast('ডার্ক মোড চালু হয়েছে 🌙', 'success');
+            } else {
+                document.body.classList.remove('dark-mode');
+                showSmartToast('ডার্ক মোড বন্ধ হয়েছে ☀️', 'info');
+            }
+        };
+    }
+
+    // সাউন্ড সুইচ
+    if(soundToggle) {
+        soundToggle.onchange = function() {
+            localStorage.setItem('soundEnabled', this.checked);
+            showSmartToast(`সাউন্ড ${this.checked ? 'চালু' : 'বন্ধ'} হয়েছে`, 'info');
+        };
+    }
+
+    // ভাইব্রেশন সুইচ
+    if(vibrationToggle) {
+        vibrationToggle.onchange = function() {
+            localStorage.setItem('vibrationEnabled', this.checked);
+            showSmartToast(`ভাইব্রেশন ${this.checked ? 'চালু' : 'বন্ধ'} হয়েছে`, 'info');
+        };
+    }
+}
 
         // ✅ bKash STYLE BALANCE TOGGLE (Auto Hide + Animation + Sound)
         let balanceTimeout;
@@ -8326,8 +8462,8 @@ window.loadLeaderboard = () => {
 // ==========================================
 let watchCooldownInterval = null;
 const WATCH_REWARD = 0.15; // ১৫ পয়সা
-const DAILY_LIMIT = 20; // দৈনিক ২০টি অ্যাড
-const COOLDOWN_SECONDS = 45; // ১ মিনিট
+const DAILY_LIMIT = 50; // দৈনিক ২০টি অ্যাড
+const COOLDOWN_SECONDS = 10; // ১ মিনিট
 
 // ১. স্ট্যাটাস লোড করা
 window.loadWatchEarnStats = async () => {
@@ -8451,7 +8587,7 @@ function checkWatchStatus(count, lastTimeMillis) {
             // কুলডাউন চলছে
             btn.classList.add('opacity-50', 'grayscale', 'cursor-not-allowed', 'pointer-events-none');
             title.innerText = "অপেক্ষা করুন ⏳";
-            text.innerText = "খুব দ্রুত অ্যাড দেখলে একাউন্ট ব্যান হতে পারে";
+            text.innerText = "পরবর্তী অ্যাডটি তৈরি হচ্ছে, ১০ সেকেন্ড অপেক্ষা করুন";
             cooldownBox.classList.remove('hidden');
 
             let timeLeft = COOLDOWN_SECONDS - diffSeconds;
@@ -8719,7 +8855,7 @@ window.shareToTelegramStory = async () => {
             
             // টেলিগ্রাম বটের ইউজারনেম এবং আপনার রেফারাল লিংক
             const botUser = "TAKA_WALA_TG_BOT"; 
-            const inviteLink = `https://t.me/${botUser}/app?startapp=${currentUserData.referralCode}`;
+            const inviteLink = `https://t.me/TAKA_WALA_TG_BOT/Earn?startapp=${currentUserData.referralCode}`;
 
             window.Telegram.WebApp.shareToStory(fileUrl, {
                 text: `🔥 ঘরে বসে মোবাইল দিয়ে আয় করুন!\n🎁 আমার লিংকে জয়েন করলেই ফ্রি বোনাস!\n\nজয়েন লিংক: ${inviteLink}`,
@@ -9013,7 +9149,8 @@ window.downloadAPK = () => {
         }
     });
 };
-                   
+           
+       
     </script>
     
         <audio id="snd_click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
