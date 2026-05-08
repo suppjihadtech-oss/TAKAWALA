@@ -2016,7 +2016,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         </div>
 
 
-        <!-- PROFILE SCREEN -->
+     <!-- PROFILE SCREEN -->
         <div id="profileScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
             <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">প্রোফাইল</h2></div>
             <div class="glass-card p-6 rounded-[25px] space-y-4">
@@ -2027,17 +2027,22 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                             <i class="ri-edit-line text-sm"></i>
                         </div>
                     </div>
-                    <h3 class="text-xl font-bold mt-2" id="profNameDisplay">Guest</h3>
+                    <!-- এখানে "Guest" লেখা ছিল, এখন এটি ডাইনামিক হবে -->
+                    <h3 class="text-xl font-bold mt-2" id="profNameDisplay">লোড হচ্ছে...</h3>
                 </div>
                 <div><label class="text-xs font-bold text-slate-500 ml-2">নাম</label><input type="text" id="profNameInput" class="w-full p-3 bg-white border rounded-xl font-bold"></div>
                 <div><label class="text-xs font-bold text-slate-500 ml-2">ঠিকানা</label><input type="text" id="profAddressInput" placeholder="আপনার ঠিকানা" class="w-full p-3 bg-white border rounded-xl font-bold"></div>
-                <div><label class="text-xs font-bold text-slate-500 ml-2">ফোন (ফিক্সড)</label><input type="text" id="profPhoneInput" disabled class="w-full p-3 bg-slate-100 border rounded-xl font-bold text-slate-500"></div>
-                <div><label class="text-xs font-bold text-slate-500 ml-2">ইমেইল</label><input type="email" id="profEmailInput" class="w-full p-3 bg-white border rounded-xl font-bold"></div>
+                
+                <!-- ফোন নাম্বার এখন এডিট করা যাবে (disabled সরানো হয়েছে) -->
+                <div><label class="text-xs font-bold text-slate-500 ml-2">ফোন নাম্বার</label><input type="text" id="profPhoneInput" class="w-full p-3 bg-white border rounded-xl font-bold"></div>
+                
+                <!-- ইমেইল এখন ফিক্সড (disabled করা হয়েছে) -->
+                <div><label class="text-xs font-bold text-slate-500 ml-2">ইমেইল (ফিক্সড)</label><input type="email" id="profEmailInput" disabled class="w-full p-3 bg-slate-100 border rounded-xl font-bold text-slate-500"></div>
+                
                 <button onclick="window.updateProfile()" class="w-full bg-premium text-white py-3 rounded-xl font-bold shadow-lg">আপডেট করুন</button>
                 <button onclick="window.showChangePassword()" class="w-full bg-slate-100 text-slate-800 py-3 rounded-xl font-bold shadow-lg">পাসওয়ার্ড পরিবর্তন</button>
             </div>
         </div>
-
         <!-- AVATAR SELECTOR MODAL -->
         <div id="avatarModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-10000 flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl p-6 max-w-md w-full">
@@ -4174,19 +4179,19 @@ rechargeBalance: 0,
             }
         });
 
-        // ✅ AUTH STATE LISTENER WITH LOGIN NOTICE
+      // ✅ AUTH STATE LISTENER WITH ALL FEATURES (FIXED)
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUserId = user.uid;
                 showLoading();
                 
-                // 🔥 পুরনো ইউজারদের টেলিগ্রাম আইডি আপডেট (ব্রডকাস্টের জন্য)
+                // 🔥 ১. পুরনো ইউজারদের টেলিগ্রাম আইডি আপডেট (ব্রডকাস্টের জন্য)
                 if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
                     const tId = window.Telegram.WebApp.initDataUnsafe.user.id;
                     db.collection("users").doc(user.uid).update({ tgId: tId }).catch(e => console.log("TG ID update error"));
                 }
                 
-                // ✅ OLD USER AUTO DEVICE TOKEN UPDATE (ম্যাজিক ট্রিক)
+                // ✅ ২. OLD USER AUTO DEVICE TOKEN UPDATE (ম্যাজিক ট্রিক)
                 let dToken = localStorage.getItem('TAKAWALA_device_id');
                 if (!dToken) {
                     dToken = 'ID-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
@@ -4206,50 +4211,72 @@ rechargeBalance: 0,
                         return;
                     }
                     
+                    // ৩. UI পরিবর্তন
                     document.getElementById('authScreen').classList.add('hidden'); 
                     document.getElementById('mainApp').classList.remove('hidden'); 
                     document.getElementById('bottomNav').classList.remove('hidden');
-    
-        window.showPage('homeScreen');            
+                    window.showPage('homeScreen');            
 
-        // 🔊 আপনার ওয়েলকাম ভয়েস প্লে করার ম্যাজিক কোড
-        setTimeout(() => {
-            if(typeof window.playSound === 'function') window.playSound('snd_welcome');
-        }, 800);
-        
+                    // 🔊 ৪. আপনার ওয়েলকাম ভয়েস প্লে করার ম্যাজিক কোড
+                    setTimeout(() => {
+                        if(typeof window.playSound === 'function') window.playSound('snd_welcome');
+                    }, 800);
+                    
+                    // ৫. সব ডেটা এবং সেটিংস লোড করা
                     syncUserData(user.uid); 
-  initInboxListener();                  renderTasks();
+                    initInboxListener();                  
+                    renderTasks();
                     loadSummary(user.uid);
                     checkDailyBonus(user.uid);
                     loadTodayEarnings(user.uid);
-                   // নিশ্চিত করা যাতে ডার্ক মোড লোড হওয়ার সময় কাজ করে
-if(localStorage.getItem('darkModeEnabled') === 'true') {
-    document.body.classList.add('dark-mode');
-} loadSettingsFromLocalStorage(); // Load settings
+
+                    // ডার্ক মোড এবং সেটিংস চেক
+                    if(localStorage.getItem('darkModeEnabled') === 'true') {
+                        document.body.classList.add('dark-mode');
+                    } 
+                    loadSettingsFromLocalStorage(); 
                     
-                    // Show icons
+                    // আইকনগুলো দেখানো
                     document.getElementById('globalChatIcon').style.display = 'flex';
                     document.getElementById('twaiChatbotIcon').style.display = 'flex';
-                    
-                    // ✅ SHOW LOGIN NOTICE AFTER SUCCESSFUL LOGIN
+
+                    // ৬. লগইন নোটিশ পপ-আপ (দেড় সেকেন্ড পর)
                     setTimeout(async () => {
-                        const noticeShown = await showLoginNotice();
-                        if(noticeShown) {
-                            console.log("Login notice shown successfully");
-                        }
+                        await showLoginNotice();
                     }, 1500);
                     
                     hideLoading();
                 }, 2000);
+
             } else {
+                // 🛑 ইউজার লগইন না থাকলে (Logged Out State)
                 document.getElementById('authScreen').classList.remove('hidden'); 
                 document.getElementById('mainApp').classList.add('hidden'); 
                 document.getElementById('bottomNav').classList.add('hidden');
                 document.getElementById('globalChatIcon').style.display = 'none';
                 document.getElementById('twaiChatbotIcon').style.display = 'none';
+
+                // সরাসরি রেজিস্ট্রেশন ট্যাবে নিয়ে যাবে
+                window.toggleAuthTab('register'); 
+
+                // রেজিস্ট্রেশনের জন্য সুন্দর একটি পপ-আপ নোটিশ
+                Swal.fire({
+                    title: '<span style="font-weight:900; color:#1e293b;">একাউন্ট প্রয়োজন! 🔐</span>',
+                    html: '<div style="font-size:14px; font-weight:600; color:#64748b;">ইনকাম শুরু করতে এবং পেমেন্ট পেতে দ্রুত রেজিস্ট্রেশন করে নিন অথবা লগইন করুন।</div>',
+                    icon: 'info',
+                    confirmButtonText: 'ঠিক আছে',
+                    confirmButtonColor: '#059669',
+                    background: '#ffffff',
+                    customClass: {
+                        popup: 'rounded-[30px] border border-white/50 shadow-2xl',
+                        confirmButton: 'rounded-xl px-8 py-3 font-bold'
+                    }
+                });
+                hideLoading();
             }
         });
-
+                  
+            
            // ✅ SYNC USER DATA (ALL-IN-ONE FIXED VERSION)
 function syncUserData(uid) {
     // ১. ইউজারের লাইভ ডাটা সিঙ্ক শুরু
@@ -4336,8 +4363,11 @@ function syncUserData(uid) {
             if(document.getElementById('profPhoneInput')) document.getElementById('profPhoneInput').value = userData.phone || "";
             if(document.getElementById('profEmailInput')) document.getElementById('profEmailInput').value = userData.email || "";
             if(document.getElementById('profAddressInput')) document.getElementById('profAddressInput').value = userData.address || "";
-            if(userData.avatar && document.getElementById('currentAvatar')) document.getElementById('currentAvatar').src = userData.avatar;
+            
+            // ✅ ঠিক এখানে লাইনটা বসবে (এটাই গেস্ট লেখা দূর করবে)
+            if(document.getElementById('profNameDisplay')) document.getElementById('profNameDisplay').innerText = userData.name || "User";
 
+            if(userData.avatar && document.getElementById('currentAvatar')) document.getElementById('currentAvatar').src = userData.avatar;
             if(userData.packageExpiresAt) {
                 const expiryDate = userData.packageExpiresAt.toDate();
                 if(new Date() > expiryDate) {
@@ -5165,19 +5195,29 @@ totalReward += rewardAmt;
         window.updateProfile = async () => { 
             try {
                 showLoading();
+                // নতুন ভ্যালুগুলো সংগ্রহ করা
+                const newName = document.getElementById('profNameInput').value;
+                const newPhone = document.getElementById('profPhoneInput').value;
+                const newAddress = document.getElementById('profAddressInput').value;
+
                 await db.collection("users").doc(currentUserId).update({ 
-                    name: document.getElementById('profNameInput').value, 
-                    email: document.getElementById('profEmailInput').value,
-                    address: document.getElementById('profAddressInput').value,
+                    name: newName, 
+                    phone: newPhone, // ফোন নাম্বার এখন সেভ হবে
+                    address: newAddress,
                     avatar: selectedAvatar
+                    // এখানে email আপডেট করার প্রয়োজন নেই কারণ ওটা ফিক্সড
                 }); 
                 
-                document.getElementById('currentAvatar').src = selectedAvatar;
+                // প্রোফাইল পেজের বড় নামটিও সাথে সাথে বদলে দেওয়া
+                if(document.getElementById('profNameDisplay')) {
+                    document.getElementById('profNameDisplay').innerText = newName;
+                }
                 
-                showSmartToast('প্রোফাইল আপডেট হয়েছে', 'success'); 
+                showSmartToast('প্রোফাইল আপডেট হয়েছে ✅', 'success'); 
                 hideLoading();
             } catch (e) {
-                showSmartToast('প্রোফাইল আপডেট করতে সমস্যা হয়েছে', 'error');
+                console.error(e);
+                showSmartToast('প্রোফাইল আপডেট করতে সমস্যা হয়েছে', 'error');
                 hideLoading();
             }
         };
