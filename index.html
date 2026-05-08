@@ -3512,58 +3512,56 @@ async function loadSystemSettings() {
             }
         }
         
-        // ✅ UPDATE PAYMENT METHOD STATUS
-        // ✅ আপডেট করা পেমেন্ট মেথড স্ট্যাটাস ফাংশন (টগল সিঙ্ক ফিক্স)
-        function updatePaymentMethodStatus(status) {
-            const methods = ['bKash', 'Nagad', 'Rocket', 'USDT'];
-            
-            methods.forEach(method => {
-                const depEl = document.getElementById(`payment_${method}`);
-                const withEl = document.getElementById(`withdraw_${method}`);
-                
-                // এডমিন থেকে আসা টগল চেক (bkashActive, nagadActive ইত্যাদি)
-                const toggleKey = method.toLowerCase() + "Active";
-                const isMethodActive = status && status[toggleKey] === true;
+       // ✅ পেমেন্ট মেথড স্ট্যাটাস আপডেট ফাংশন (এডমিন প্যানেলের সাথে হুবহু মিল)
+function updatePaymentMethodStatus(data) {
+    const methods = ['bKash', 'Nagad', 'Rocket', 'USDT'];
+    
+    methods.forEach(method => {
+        const depEl = document.getElementById(`payment_${method}`);
+        const withEl = document.getElementById(`withdraw_${method}`);
+        
+        // এডমিন প্যানেল যেভাবে সেভ করে: bkashActive, nagadActive...
+        const toggleKey = method.toLowerCase() + "Active"; 
+        const isMethodActive = data[toggleKey] === true;
 
-                // ডিপোজিট বাটনের লজিক
-                if(depEl) {
-                    const imgTag = depEl.querySelector('img');
-                    const currentImgSrc = imgTag ? imgTag.src : 'https://i.postimg.cc/0QRCvZDV/usdt.png';
-
-                    if(!isMethodActive) {
-                        depEl.classList.add('disabled-option');
-                        depEl.onclick = () => showSmartToast(`${method} ডিপোজিট বর্তমানে বন্ধ আছে`, 'warning');
-                        depEl.innerHTML = `
-                            <img src="${currentImgSrc}" class="h-10 object-contain opacity-40 grayscale">
-                            <div class="disabled-text">বন্ধ</div>
-                        `;
-                    } else {
-                        depEl.classList.remove('disabled-option');
-                        depEl.onclick = () => window.selectPayment(depEl, method);
-                        depEl.innerHTML = `<img src="${currentImgSrc}" class="h-10 object-contain">`;
-                    }
+        // --- ডিপোজিট বাটন কন্ট্রোল ---
+        if(depEl) {
+            if(!isMethodActive) {
+                depEl.classList.add('disabled-option');
+                depEl.style.opacity = "0.5";
+                depEl.onclick = () => showSmartToast(`${method} ডিপোজিট বর্তমানে বন্ধ আছে`, 'error');
+                // "বন্ধ" ব্যাজ যোগ করা (যদি না থাকে)
+                if(!depEl.querySelector('.disabled-text')) {
+                    depEl.innerHTML += `<div class="disabled-text">বন্ধ</div>`;
                 }
-                
-                // উইথড্র বাটনের লজিক
-                if(withEl) {
-                    const imgTag = withEl.querySelector('img');
-                    const currentImgSrc = imgTag ? imgTag.src : 'https://i.postimg.cc/0QRCvZDV/usdt.png';
-
-                    if(!isMethodActive) {
-                        withEl.classList.add('disabled-option');
-                        withEl.onclick = () => showSmartToast(`${method} উত্তোলন বর্তমানে বন্ধ আছে`, 'warning');
-                        withEl.innerHTML = `
-                            <img src="${currentImgSrc}" class="h-10 object-contain opacity-40 grayscale">
-                            <div class="disabled-text">বন্ধ</div>
-                        `;
-                    } else {
-                        withEl.classList.remove('disabled-option');
-                        withEl.onclick = () => window.selectWithdrawMethod(withEl, method);
-                        withEl.innerHTML = `<img src="${currentImgSrc}" class="h-10 object-contain">`;
-                    }
-                }
-            });
+            } else {
+                depEl.classList.remove('disabled-option');
+                depEl.style.opacity = "1";
+                depEl.onclick = () => window.selectPayment(depEl, method);
+                const badge = depEl.querySelector('.disabled-text');
+                if(badge) badge.remove();
+            }
         }
+        
+        // --- উইথড্র বাটন কন্ট্রোল ---
+        if(withEl) {
+            if(!isMethodActive) {
+                withEl.classList.add('disabled-option');
+                withEl.style.opacity = "0.5";
+                withEl.onclick = () => showSmartToast(`${method} উত্তোলন বর্তমানে বন্ধ আছে`, 'error');
+                if(!withEl.querySelector('.disabled-text')) {
+                    withEl.innerHTML += `<div class="disabled-text">বন্ধ</div>`;
+                }
+            } else {
+                withEl.classList.remove('disabled-option');
+                withEl.style.opacity = "1";
+                withEl.onclick = () => window.selectWithdrawMethod(withEl, method);
+                const badge = withEl.querySelector('.disabled-text');
+                if(badge) badge.remove();
+            }
+        }
+    });
+}
         
         // ✅ SHOW MAINTENANCE SCREEN
         function showMaintenanceScreen() {
@@ -4412,20 +4410,12 @@ function syncUserData(uid) {
         }
     });
 
-    // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক
-    // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক (User Panel - index.html)
+// ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক (FIXED)
     db.collection("settings").doc("appConfig").onSnapshot((d) => { 
         if(d.exists) {
             systemSettings = d.data();
             
-            // এডমিন থেকে আসা টগল স্ট্যাটাস
-            const paymentStatus = {
-                bKash: systemSettings.bkashActive,  // এডমিনের bkashActive টগল
-                Nagad: systemSettings.nagadActive,  // এডমিনের nagadActive টগল
-                Rocket: systemSettings.rocketActive, // এডমিনের rocketActive টগল
-                USDT: systemSettings.usdtActive     // এডমিনের usdtActive টগল
-            };
-
+            // পেমেন্ট নাম্বারগুলো মেমোরিতে সেট করা
             paymentNumbers = {
                 bKash: systemSettings.bkashNumber || "",
                 Nagad: systemSettings.nagadNumber || "",
@@ -4434,12 +4424,13 @@ function syncUserData(uid) {
                 USDT_BEP20: systemSettings.bep20Address || ""
             };
 
-            // পেমেন্ট মেথড আপডেট করার সময় স্ট্যাটাস পাঠিয়ে দাও
+            // 🔥 সরাসরি systemSettings পাঠিয়ে দাও, কোনো ফিল্টার করার দরকার নেই
             if(typeof updatePaymentMethodStatus === 'function') {
-                updatePaymentMethodStatus(paymentStatus);
+                updatePaymentMethodStatus(systemSettings);
             }
         }
     });
+    
     // ৩. নোটিশ সিঙ্ক
     db.collection("settings").doc("system").onSnapshot((d) => { 
         if(d.exists) {
