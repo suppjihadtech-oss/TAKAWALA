@@ -5,6 +5,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <title>TAKAWALA - Ultimate Final</title>
     
     <!-- Tailwind CSS -->
@@ -1305,77 +1306,83 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     <!-- MAIN APP -->
     <div id="mainApp" class="hidden pb-24 max-w-md mx-auto min-h-screen relative bg-white">
         
-       <!-- HOME SCREEN -->
-        <div id="homeScreen" class="animate__animated animate__fadeIn relative">
-            
-            <!-- ১. মেইন হেডার (সবুজ অংশ) -->
-            <div class="bg-premium pb-10 pt-8 px-5 rounded-b-[40px] text-white shadow-xl relative z-10">
-                <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-                
-                <!-- প্রোফাইল সেকশন -->
-                <div class="relative flex justify-between items-center mb-6">
-                    <div class="flex items-center gap-3" onclick="window.showPage('profileScreen')">
-                        <div class="relative">
-                            <img src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-12 h-12 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm">
-                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
-                        </div>
-                        <div>
-                           <h3 class="font-bold text-lg leading-tight text-white drop-shadow-sm flex items-center gap-1" id="userNameDisplay">Guest</h3>
-                            <div class="flex items-center gap-1 opacity-90">
-                                <img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-3">
-                                <span class="text-[11px] font-bold text-yellow-300 tracking-wide" id="userPlanDisplay">Free Member</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="notificationIcon" onclick="openInbox()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 relative cursor-pointer active:scale-90 shadow-sm">
-                        <img src="https://i.postimg.cc/c1nSnFz4/notofication.png" class="w-5 h-5 invert opacity-90">
-                        <div id="notifDot" class="hidden">
-                            <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
-                            <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
-                        </div>
-                    </div>
+      <!-- HOME SCREEN -->
+<div id="homeScreen" class="animate__animated animate__fadeIn relative">
+    
+    <!-- ১. মেইন হেডার (সবুজ প্রিমিয়াম অংশ) -->
+    <div class="bg-premium pb-12 pt-8 px-5 rounded-b-[40px] text-white shadow-xl relative z-10">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        
+        <!-- প্রোফাইল ও নোটিফিকেশন বার -->
+        <div class="relative flex justify-between items-center mb-6">
+            <div class="flex items-center gap-3" onclick="window.showPage('profileScreen')">
+                <div class="relative">
+                    <img src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-12 h-12 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm">
+                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
                 </div>
-
-                <!-- ব্যালেন্স এবং অ্যাড মানি বার -->
-                <div class="bg-white/10 backdrop-blur-md rounded-full p-1.5 border border-white/20 shadow-lg relative">
-                    <div class="flex items-center justify-between">
-                        <!-- ব্যালেন্স দেখার বাটন -->
-                        <div class="relative z-10 cursor-pointer" onclick="toggleBalance()">
-                            <div id="balancePill" class="balance-pill bg-white/95 rounded-full pl-1 pr-5 py-1 flex items-center gap-2 shadow-sm transition-all active:scale-95 h-10">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white shadow-md">
-                                    <i class="ri-wallet-3-fill text-sm"></i>
-                                </div>
-                                <div class="flex flex-col justify-center min-w-[80px]">
-                                    <span id="balanceText" class="text-[11px] font-bold text-slate-600 leading-none">ব্যালেন্স দেখুন</span>
-                                    <div id="balanceAmountContainer" class="hidden flex flex-col leading-none">
-                                        <span id="balanceAmount" class="text-[13px] font-black text-rose-600">৳0.00</span>
-                                        <span id="balanceAmountUSDT" class="text-[9px] font-bold text-slate-400">$0.00 USDT</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> 
-
-                        <!-- অ্যাড মানি বাটন -->
-                        <button onclick="window.showPage('walletScreen')" class="bg-white text-emerald-700 px-5 py-2 rounded-full text-[11px] font-bold shadow-md flex items-center gap-2 active:scale-95 transition-transform mr-1 h-9">
-                            <img src="https://i.postimg.cc/7ZGpHH5q/save-money.png" class="w-4 h-4">
-                            অ্যাড মানি
-                        </button>
+                <div>
+                   <h3 class="font-bold text-lg leading-tight text-white drop-shadow-sm flex items-center gap-1" id="userNameDisplay">লোড হচ্ছে...</h3>
+                    <div class="flex items-center gap-1 opacity-90">
+                        <img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="w-3">
+                        <span class="text-[11px] font-bold text-yellow-300 tracking-wide" id="userPlanDisplay">Free Member</span>
                     </div>
-                </div>
-            </div> <!-- ✅ এইখানে bg-premium ডিভটি ক্লোজ করা হয়েছে (Critical Fix) -->
-
-            <!-- ২. স্ক্রলিং নোটিশ (হেডারের নিচে বসবে) -->
-            <div class="mx-5 -mt-6 bg-white p-3 rounded-2xl shadow-lg border border-slate-100 flex items-center gap-3 relative z-20 overflow-hidden">
-                <div class="w-8 h-8 bg-orange-50 rounded-full flex items-center justify-center shrink-0">
-                    <img src="https://i.postimg.cc/6p7RQSVx/megaphone.png" class="w-5 h-5 animate-pulse">
-                </div>
-                <div class="w-full overflow-hidden">
-                     <marquee behavior="scroll" direction="left" scrollamount="4" class="text-sm font-bold text-slate-600 leading-none pt-1" id="noticeText">
-                        লোড হচ্ছে...
-                     </marquee>
                 </div>
             </div>
+            
+            <div id="notificationIcon" onclick="openInbox()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 relative cursor-pointer active:scale-90 shadow-sm">
+                <img src="https://i.postimg.cc/c1nSnFz4/notofication.png" class="w-5 h-5 invert opacity-90">
+                <div id="notifDot" class="hidden">
+                    <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
+                    <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ব্যালেন্স এবং অ্যাড মানি মেইন কন্টেইনার -->
+<div class="bg-white/10 backdrop-blur-md rounded-full p-1.5 border border-white/20 shadow-lg relative">
+    <div class="flex items-center justify-between gap-2">
+        
+        <!-- ব্যালেন্স দেখার বাটন (স্লিম সাইজ) -->
+        <div class="relative z-10 cursor-pointer" onclick="toggleBalance()">
+            <div id="balancePill" class="bg-white/95 rounded-full pl-1 pr-5 py-1 flex items-center gap-2 shadow-sm transition-all active:scale-95 h-10">
+                <!-- আইকন -->
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white shadow-md shrink-0">
+                    <i class="ri-wallet-3-fill text-sm"></i>
+                </div>
+                
+                <div class="flex flex-col justify-center min-w-[85px]">
+                    <!-- শুরুর টেক্সট -->
+                    <span id="balanceText" class="text-[11px] font-bold text-slate-600 leading-none">ব্যালেন্স দেখুন</span>
+                    
+                    <!-- ইনকাম ব্যালেন্স (শুধুমাত্র এটাই হোমে দেখাবে) -->
+                    <div id="balanceAmountContainer" class="hidden flex flex-col leading-none">
+                        <span id="balanceAmount" class="text-[13px] font-black text-rose-600 leading-none">৳0.00</span>
+                        <span id="balanceAmountUSDT" class="text-[8px] font-bold text-slate-400 mt-0.5 leading-none">$0.00 USDT</span>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <!-- অ্যাড মানি বাটন (ডান পাশে ফিক্সড থাকবে) -->
+        <button onclick="window.showPage('walletScreen')" class="bg-white text-emerald-700 px-5 rounded-full text-[11px] font-bold shadow-md flex items-center justify-center gap-2 active:scale-95 transition-transform shrink-0 border border-emerald-50 h-10">
+            <img src="https://i.postimg.cc/7ZGpHH5q/save-money.png" class="w-4 h-4">
+            অ্যাড মানি
+        </button>
+     </div>
+    </div>
+</div> <!-- মেইন কন্টেইনার শেষ -->
+
+    <!-- ২. স্ক্রলিং নোটিশ (হেডারের নিচে) -->
+    <div class="mx-5 -mt-6 bg-white p-3 rounded-2xl shadow-lg border border-slate-100 flex items-center gap-3 relative z-20 overflow-hidden">
+        <div class="w-8 h-8 bg-orange-50 rounded-full flex items-center justify-center shrink-0">
+            <img src="https://i.postimg.cc/6p7RQSVx/megaphone.png" class="w-5 h-5 animate-pulse">
+        </div>
+        <div class="w-full overflow-hidden">
+             <marquee behavior="scroll" direction="left" scrollamount="4" class="text-sm font-bold text-slate-600 leading-none pt-1" id="noticeText">
+                লোড হচ্ছে...
+             </marquee>
+        </div>
+    </div>
 
 <!-- 📊 ULTRA SLIM PROGRESS DASHBOARD -->
 <div class="mx-5 mt-4 grid grid-cols-2 gap-3 animate__animated animate__fadeInUp">
@@ -1451,7 +1458,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <div class="bg-gradient-to-r from-blue-600 to-cyan-500 w-full h-32 flex items-center justify-between p-5 relative overflow-hidden rounded-[20px]">
                     <div class="absolute left-1/2 bottom-0 w-28 h-28 bg-white/10 rounded-full blur-2xl"></div>
                     <div class="text-white text-left relative z-10">
-                        <h3 class="text-[17px] font-black leading-tight mb-1.5 drop-shadow-md">অ্যাড দেখে আয়!<br><span class="text-cyan-100">প্রতিদিন ৫০ টি  অ্যাড</span></h3>
+                        <h3 class="text-[17px] font-black leading-tight mb-1.5 drop-shadow-md">অ্যাড দেখে আয়!<br><span class="text-cyan-100">প্রতিদিন ১০০ টি  অ্যাড</span></h3>
                         <p class="text-[10px] bg-white/20 inline-block px-2.5 py-0.5 rounded-full backdrop-blur-sm border border-white/20 font-bold">ফ্রি ইনকাম সুযোগ</p>
                     </div>
                     <img src="https://img.icons8.com/fluency/96/play-button-circled.png" class="w-16 h-16 drop-shadow-xl relative z-10">
@@ -1526,7 +1533,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                         <h3 class="text-base font-black leading-none tracking-wide flex items-center gap-2">
                             অ্যাড দেখে আয় 🎬
                         </h3>
-                        <p class="text-[10px] text-pink-50 font-bold mt-1 opacity-90">প্রতিদিন ৫০ টি  অ্যাড দেখুন!</p>
+                        <p class="text-[10px] text-pink-50 font-bold mt-1 opacity-90">প্রতিদিন ১০০ টি  অ্যাড দেখুন!</p>
                     </div>
                 </div>
                 <div class="bg-white/20 p-1.5 rounded-full backdrop-blur-md relative z-10 group-hover:bg-white/30 transition">
@@ -1611,34 +1618,50 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <!-- টাস্কগুলো এখানে অটোমেটিক লোড হবে -->
     </div>
 </div>
-        <!-- WALLET SCREEN -->
-        <div id="walletScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-3"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">ওয়ালেট</h2></div>
-               <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules(document.getElementById('tabDeposit').classList.contains('bg-slate-800') ? 'ডিপোজিট' : 'উত্তোলন')" class="w-8 cursor-pointer">
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 mb-6">
-    <!-- মেইন ব্যালেন্স কার্ড -->
-    <div class="bg-premium p-4 rounded-2xl text-white text-center shadow-lg">
-        <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest leading-none mb-1">মেইন ব্যালেন্স</p>
-        <h2 class="text-xl font-extrabold leading-none">৳ <span id="walletMainDisplay">0.00</span></h2>
-        <p class="text-[9px] font-bold opacity-70 mt-1">$ <span id="walletMainUSDT">0.00</span> USDT</p>
+        
+            <!-- WALLET SCREEN -->
+<div id="walletScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
+    <!-- হেডার এবং নিয়মাবলী বাটন -->
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+            <button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
+                <i class="ri-arrow-left-line text-xl"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-slate-800">ওয়ালেট</h2>
+        </div>
+        <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules(document.getElementById('tabDeposit').classList.contains('bg-slate-800') ? 'ডিপোজিট' : 'উত্তোলন')" class="w-8 cursor-pointer active:scale-95 transition">
     </div>
-    
-    <!-- রিচার্জ ব্যালেন্স কার্ড -->
-    <div class="bg-blue-600 p-4 rounded-2xl text-white text-center shadow-lg">
-        <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest leading-none mb-1">রিচার্জ ব্যালেন্স</p>
-        <h2 class="text-xl font-extrabold leading-none">৳ <span id="walletRechargeDisplay">0.00</span></h2>
-        <p class="text-[9px] font-bold opacity-70 mt-1">$ <span id="walletRechargeUSDT">0.00</span> USDT</p>
-    </div>
-</div>
 
-            <div class="flex bg-white p-1 rounded-2xl shadow-sm mb-6 border">
-                <button onclick="window.toggleWalletTab('deposit')" id="tabDeposit" class="flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow">ডিপোজিট</button>
-                <button onclick="window.toggleWalletTab('withdraw')" id="tabWithdraw" class="flex-1 py-3 font-bold text-sm rounded-xl text-slate-500">উত্তোলন</button>
-                <button onclick="window.toggleWalletTab('transfer')" id="tabTransfer" class="flex-1 py-3 font-bold text-sm rounded-xl text-slate-500">ট্রান্সফার</button>
-            </div>
+    <!-- ৩টি ব্যালেন্স কার্ডের মডার্ন গ্রিড -->
+    <div class="grid grid-cols-3 gap-2 mb-6">
+        <!-- ১. ইনকাম ব্যালেন্স কার্ড (টাস্ক/রেফার/বোনাস) -->
+        <div class="bg-gradient-to-br from-rose-500 to-pink-600 p-3 rounded-2xl text-white text-center shadow-lg border border-white/10">
+            <p class="text-[8px] font-bold opacity-90 uppercase leading-none mb-1.5">ইনকাম ব্যালেন্স</p>
+            <h2 class="text-[13px] font-black leading-none">৳ <span id="walletMainDisplay">0.00</span></h2>
+            <p class="text-[7px] font-bold opacity-70 mt-1">$ <span id="walletMainUSDT">0.00</span></p>
+        </div>
+        
+        <!-- ২. ডিপোজিট ব্যালেন্স কার্ড (শুধুমাত্র প্যাকেজ কেনার জন্য) -->
+        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-2xl text-white text-center shadow-lg border border-white/10">
+            <p class="text-[8px] font-bold opacity-90 uppercase leading-none mb-1.5">ডিপোজিট ব্যালেন্স</p>
+            <h2 class="text-[13px] font-black leading-none">৳ <span id="walletDepositDisplay">0.00</span></h2>
+            <p class="text-[7px] font-bold opacity-70 mt-1">$ <span id="walletDepositUSDT">0.00</span></p>
+        </div>
+
+        <!-- ৩. রিচার্জ ব্যালেন্স কার্ড (ইনকাম থেকে ট্রান্সফার করা টাকা) -->
+        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-2xl text-white text-center shadow-lg border border-white/10">
+            <p class="text-[8px] font-bold opacity-90 uppercase leading-none mb-1.5">রিচার্জ ব্যালেন্স</p>
+            <h2 class="text-[13px] font-black leading-none">৳ <span id="walletRechargeDisplay">0.00</span></h2>
+            <p class="text-[7px] font-bold opacity-70 mt-1">$ <span id="walletRechargeUSDT">0.00</span></p>
+        </div>
+    </div>
+
+    <!-- টাস্ক বার বা ট্যাব সেকশন (এরপর থেকে আপনার বাকি কোড শুরু হবে) -->
+    <div class="flex bg-white p-1 rounded-2xl shadow-sm mb-6 border">
+        <button onclick="window.toggleWalletTab('deposit')" id="tabDeposit" class="flex-1 py-3 font-bold text-sm rounded-xl bg-slate-800 text-white shadow">ডিপোজিট</button>
+        <button onclick="window.toggleWalletTab('withdraw')" id="tabWithdraw" class="flex-1 py-3 font-bold text-sm rounded-xl text-slate-500">উত্তোলন</button>
+        <button onclick="window.toggleWalletTab('transfer')" id="tabTransfer" class="flex-1 py-3 font-bold text-sm rounded-xl text-slate-500">ট্রান্সফার</button>
+    </div>
 
             <div id="depositSection">
                 <div class="grid grid-cols-4 gap-3 mb-6">
@@ -1824,7 +1847,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 
                 <div>
                     <p class="text-[11px] font-bold opacity-80 uppercase tracking-widest mb-1">আজকের টাস্ক</p>
-                    <h3 class="text-3xl font-black"><span id="watchCountDisplay">0</span><span class="text-lg opacity-70">/50</span></h3>
+                    <h3 class="text-3xl font-black"><span id="watchCountDisplay">0</span><span class="text-lg opacity-70">/১০০</span></h3>
                 </div>
                 <div class="text-right z-10">
                     <p class="text-[11px] font-bold opacity-80 uppercase tracking-widest mb-1">আজকের আয়</p>
@@ -1842,7 +1865,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 </div>
                 
                 <h4 class="font-bold text-slate-800 text-lg mb-2" id="watchStatusTitle">ভিডিও দেখতে ক্লিক করুন</h4>
-                <p class="text-xs text-slate-500 mb-4" id="watchStatusText">প্রতিটি অ্যাড দেখার জন্য পাবেন ৳০.১৫</p>
+                <p class="text-xs text-slate-500 mb-4" id="watchStatusText">প্রতিটি অ্যাড দেখার জন্য পাবেন ৳০.১০</p>
                 
                 <!-- Cooldown Timer (Hidden by default) -->
                 <div id="cooldownBox" class="hidden bg-orange-50 border border-orange-200 rounded-xl p-3 text-orange-700 animate__animated animate__fadeIn">
@@ -1858,7 +1881,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <ul class="text-[10px] text-blue-700 space-y-1 ml-4 list-disc">
                     <li>অ্যাড প্লে হলে পুরোটা দেখুন অথবা নির্দিষ্ট সময় অপেক্ষা করুন।</li>
                     <li>অ্যাডটি কেটে দিলে বা ক্রস (X) বাটনে চাপলে রিওয়ার্ড পাবেন।</li>
-                    <li>প্রতিটি অ্যাড দেখার পর ১০ সেকেন্ড বিরতি নিতে হবে।</li>
+                    <li>প্রতিটি অ্যাড দেখার পর ৩০ সেকেন্ড বিরতি নিতে হবে।</li>
                     <li>ভিপিএন (VPN) ব্যবহার করলে একাউন্ট ব্যান হবে।</li>
                 </ul>
             </div>
@@ -3215,7 +3238,7 @@ function animateNumberUpdate(id, start, end, duration = 1000) {
     window.requestAnimationFrame(step);
 }
 
-let lastValues = { main: 0, recharge: 0, ref: 0 }; // আগের ভ্যালু জমানোর জন্য
+let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্যালু জমানোর জন্য
         
         let onAdCompleted = null; // ✅ নতুন লাইন: অ্যাড দেখার পর কি হবে তা মনে রাখার জন্য
         let currentUserId = null;
@@ -3702,100 +3725,113 @@ async function loadPackages() {
         document.getElementById('packageListContainer').innerHTML = `<p class="text-center text-red-500 font-bold">প্যাকেজ লোড করতে সমস্যা হয়েছে।</p>`;
     }
 }
-      // ✅ ডাইনামিক বাই প্যাকেজ ফাংশন (এডমিন প্যানেলের সাথে সিঙ্ক করা)
-        window.buyPackage = async (packageId, price, name, days) => {
-            if(!currentUserData) {
-                showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
-                return;
-            }
 
-            // 🛑 ১. ডাবল পারচেজ প্রোটেকশন (মেয়াদ থাকলে নতুন কেনা যাবে না)
-            if (currentUserData.plan !== "Free Member" && currentUserData.packageExpiresAt) {
-                try {
-                    const expiryDate = currentUserData.packageExpiresAt.toDate();
-                    const now = new Date();
-                    
-                    if (expiryDate > now) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'প্যাকেজ ইতিমধ্যে সক্রিয়!',
-                            html: `আপনার বর্তমান প্যাকেজের মেয়াদ <b>${expiryDate.toLocaleDateString('bn-BD')}</b> পর্যন্ত আছে। শেষ হলে আবার কিনতে পারবেন।`,
-                            confirmButtonText: 'বুঝেছি',
-                            confirmButtonColor: '#3b82f6',
-                            customClass: { popup: 'rounded-[25px]' }
-                        });
-                        return;
-                    }
-                } catch (e) { console.error("Expiry Check Error", e); }
-            }
+// ✅ VIP PACKAGE BUY FUNCTION (FIXED: ONLY FROM DEPOSIT BALANCE)
+window.buyPackage = async (packageId, price, name, days) => {
+    if(!currentUserData) {
+        showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
+        return;
+    }
+
+    // 🛑 ১. ডাবল পারচেজ প্রোটেকশন (মেয়াদ থাকলে নতুন কেনা যাবে না)
+    if (currentUserData.plan !== "Free Member" && currentUserData.packageExpiresAt) {
+        try {
+            const expiryDate = currentUserData.packageExpiresAt.toDate();
+            const now = new Date();
             
-            // ২. ব্যালেন্স চেক
-            if(currentUserData.mainBalance < price) {
-                showSmartToast(`পর্যাপ্ত ব্যালেন্স নেই! আপনার আছে ৳${currentUserData.mainBalance.toFixed(2)}`, 'error');
+            if (expiryDate > now) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'প্যাকেজ ইতিমধ্যে সক্রিয়!',
+                    html: `আপনার বর্তমান প্যাকেজের মেয়াদ <b>${expiryDate.toLocaleDateString('bn-BD')}</b> পর্যন্ত আছে। শেষ হলে আবার কিনতে পারবেন।`,
+                    confirmButtonText: 'বুঝেছি',
+                    confirmButtonColor: '#3b82f6',
+                    customClass: { popup: 'rounded-[25px]' }
+                });
                 return;
             }
+        } catch (e) { console.error("Expiry Check Error", e); }
+    }
+    
+    // 🛑 ২. ব্যালেন্স চেক (শুধুমাত্র ডিপোজিট ব্যালেন্স চেক করবে)
+    const currentDeposit = currentUserData.depositBalance || 0;
+    if(currentDeposit < price) {
+        Swal.fire({
+            icon: 'error',
+            title: 'ডিপোজিট ব্যালেন্স নেই!',
+            html: `প্যাকেজ কিনতে আপনার <b>ডিপোজিট ব্যালেন্সে</b> পর্যাপ্ত টাকা নেই।<br>আপনার বর্তমান ডিপোজিট ব্যালেন্স: ৳${currentDeposit.toFixed(2)}`,
+            confirmButtonText: 'টাকা ডিপোজিট করুন',
+            confirmButtonColor: '#059669',
+            customClass: { popup: 'rounded-[25px]' }
+        }).then((res) => {
+            if(res.isConfirmed) window.showPage('walletScreen');
+        });
+        return;
+    }
+    
+    // ৩. কনফার্মেশন পপ-আপ
+    const result = await Swal.fire({
+        title: `${name} কিনবেন?`,
+        html: `মূল্য: <b>৳${price}</b> | মেয়াদ: <b>${days} দিন</b><br><br>কিনলে আপনার ডিপোজিট ব্যালেন্স থাকবে: ৳${(currentDeposit - price).toFixed(2)}`,
+        showCancelButton: true,
+        confirmButtonText: 'হ্যাঁ, একটিভ করুন',
+        cancelButtonText: 'বাতিল',
+        confirmButtonColor: '#059669',
+        icon: 'question',
+        customClass: { popup: 'rounded-[25px]' }
+    });
+    
+    if (result.isConfirmed) {
+        showLoading();
+        try {
+            const userRef = db.collection("users").doc(currentUserId);
             
-            // ৩. কনফার্মেশন পপ-আপ
-            const result = await Swal.fire({
-                title: `${name} কিনবেন?`,
-                html: `মূল্য: <b>৳${price}</b> | মেয়াদ: <b>${days} দিন</b><br><br>কিনলে আপনার ব্যালেন্স থাকবে: ৳${(currentUserData.mainBalance - price).toFixed(2)}`,
-                showCancelButton: true,
-                confirmButtonText: 'হ্যাঁ, একটিভ করুন',
-                cancelButtonText: 'বাতিল',
-                confirmButtonColor: '#059669',
-                icon: 'question',
-                customClass: { popup: 'rounded-[25px]' }
+            // মেয়াদ ক্যালকুলেশন
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + parseInt(days));
+            
+            // 🔥 ১. ইউজারের ডাটা আপডেট (টাকা শুধু depositBalance থেকে কাটবে)
+            await userRef.update({
+                depositBalance: firebase.firestore.FieldValue.increment(-price), // ফিক্সড: ডিপোজিট থেকে মাইনাস
+                plan: name,
+                packageExpiresAt: expiryDate,
+                packageId: packageId,
+                totalSpent: firebase.firestore.FieldValue.increment(price)
             });
             
-            if (result.isConfirmed) {
-                showLoading();
-                try {
-                    const userRef = db.collection("users").doc(currentUserId);
-                    
-                    // মেয়াদ ক্যালকুলেশন
-                    const expiryDate = new Date();
-                    expiryDate.setDate(expiryDate.getDate() + parseInt(days));
-                    
-                    // ১. ইউজারের ডাটা আপডেট
-                    await userRef.update({
-                        mainBalance: firebase.firestore.FieldValue.increment(-price),
-                        plan: name,
-                        packageExpiresAt: expiryDate,
-                        packageId: packageId,
-                        totalSpent: firebase.firestore.FieldValue.increment(price) // এডমিনের জন্য খরচ ট্র্যাকিং
-                    });
-                    
-                    // ২. হিস্ট্রি লগ (এডমিন প্যানেলে দেখাবে)
-                    await db.collection("history").add({
-                        userId: currentUserId,
-                        name: currentUserData.name, // এডমিন প্যানেল ফিল্টারের জন্য সহজ হবে
-                        type: "প্যাকেজ ক্রয়",
-                        amount: -price,
-                        status: "Success",
-                        details: `${name} প্যাকেজটি ${days} দিনের জন্য কেনা হয়েছে।`,
-                        date: new Date().toLocaleDateString('bn-BD'),
-                        time: new Date().toLocaleTimeString('bn-BD'),
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    // ৩. টেলিগ্রাম নোটিফিকেশন
-                    const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয়*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${price}\n📅 *মেয়াদ:* ${days} দিন\n✅ *অবস্থা:* সফল`;
-                    await sendTelegramNotification(telegramMessage);
-                    
-                    showSmartToast(`${name} সফলভাবে সক্রিয় করা হয়েছে!`, 'success');
-                    window.playSound('snd_success');
-                    hideLoading();
-                    
-                    // হোমে নিয়ে যাওয়া
-                    setTimeout(() => { window.showPage('homeScreen'); }, 1500);
-                    
-                } catch (e) {
-                    console.error("Purchase error:", e);
-                    showSmartToast('ক্রয় করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
-                    hideLoading();
-                }
-            }
-        };
+            // ২. হিস্ট্রি লগ
+            await db.collection("history").add({
+                userId: currentUserId,
+                name: currentUserData.name,
+                type: "প্যাকেজ ক্রয়",
+                amount: -price,
+                status: "Success",
+                details: `${name} প্যাকেজটি ডিপোজিট ব্যালেন্স দিয়ে কেনা হয়েছে।`,
+                date: new Date().toLocaleDateString('bn-BD'),
+                time: new Date().toLocaleTimeString('bn-BD'),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // ৩. টেলিগ্রাম নোটিফিকেশন
+            const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় (ডিপোজিট ব্যালেন্স)*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${price}\n✅ *অবস্থা:* সফল`;
+            await sendTelegramNotification(telegramMessage);
+            
+            showSmartToast(`${name} সফলভাবে সক্রিয় করা হয়েছে!`, 'success');
+            window.playSound('snd_success');
+            if(typeof confetti === 'function') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            hideLoading();
+            
+            // হোমে নিয়ে যাওয়া
+            setTimeout(() => { window.showPage('homeScreen'); }, 1500);
+            
+        } catch (e) {
+            console.error("Purchase error:", e);
+            showSmartToast('ক্রয় করতে সমস্যা হয়েছে।', 'error');
+            hideLoading();
+        }
+    }
+};
+    
         // ✅ UPDATED DEPOSIT ADDRESS FUNCTION
         window.selectPayment = (el, method) => { 
             if(method === 'USDT') {
@@ -3997,8 +4033,10 @@ async function loadPackages() {
                     phone, 
                     email, 
                     tgId: (window.Telegram?.WebApp?.initDataUnsafe?.user?.id) || null,
+                    
                     mainBalance: 0, 
-                    rechargeBalance: 0, 
+depositBalance: 0, 
+rechargeBalance: 0,
                     plan: "Free Member", 
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(), 
                     totalEarnings: 0, 
@@ -4212,192 +4250,95 @@ if(localStorage.getItem('darkModeEnabled') === 'true') {
             }
         });
 
-               // ✅ SYNC USER DATA (FIXED SYNTAX, PLAN DISPLAY & VERIFIED BADGE)
-        function syncUserData(uid) {
-            // ১. ইউজারের লাইভ ডাটা সিঙ্ক
-            db.collection("users").doc(uid).onSnapshot((d) => {
-                if(d.exists) {
-                    currentUserData = d.data();
-                    const userData = currentUserData;
-                    const safe = (id, txt) => { if(document.getElementById(id)) document.getElementById(id).innerText = txt; }
+           // ✅ SYNC USER DATA (ALL-IN-ONE: User + Config + Notice)
+function syncUserData(uid) {
+    // ১. ইউজারের লাইভ ডাটা সিঙ্ক (Income, Deposit, Recharge Balance)
+    db.collection("users").doc(uid).onSnapshot((d) => {
+        if(d.exists) {
+            currentUserData = d.data();
+            const userData = currentUserData;
+            const usdtRate = 120;
 
-                    // 🏷️ নামের নিচে বর্তমান প্ল্যান আপডেট করা (সিলভার/গোল্ড/ডায়মন্ড)
-                    const planEl = document.getElementById('userPlanDisplay');
-                    if(planEl) planEl.innerText = userData.plan || "Free Member";
+            // নামের গ্রিটিং ও প্ল্যান আপডেট
+            const planEl = document.getElementById('userPlanDisplay');
+            if(planEl) planEl.innerText = userData.plan || "Free Member";
 
-                    // 🌅 ডাইনামিক গ্রিটিং এবং ভেরিফাইড ব্যাজ (VIP ইউজারদের জন্য)
-                    const displayH3 = document.getElementById('userNameDisplay');
-                    if (displayH3) {
-                        const hour = new Date().getHours();
-                        let greeting = '';
-                        if (hour >= 5 && hour < 12) greeting = 'শুভ সকাল ☀️';
-                        else if (hour >= 12 && hour < 17) greeting = 'শুভ দুপুর 🌤️';
-                        else if (hour >= 17 && hour < 20) greeting = 'শুভ বিকেল 🌥️';
-                        else greeting = 'শুভ রাত্রি 🌙';
+            const displayH3 = document.getElementById('userNameDisplay');
+            if (displayH3) {
+                const hour = new Date().getHours();
+                let greeting = (hour < 12) ? 'শুভ সকাল ☀️' : (hour < 17) ? 'শুভ দুপুর 🌤️' : (hour < 20) ? 'শুভ সন্ধ্যা 🌥️' : 'শুভ রাত্রি 🌙';
+                const isPremium = (userData.plan || "").toLowerCase() !== "free member";
+                displayH3.innerHTML = `${greeting}, ${userData.name} ${isPremium ? '<span class="text-blue-400 text-sm ml-1"><i class="ri-checkbox-circle-fill"></i></span>' : ''}`;
+            }
 
-                        // লজিক: যদি প্ল্যান "Free Member" না হয়, তবেই নীল টিক দেখাবে
-                        const currentPlan = (userData.plan || "").toLowerCase();
-                        const isPremium = currentPlan !== "" && currentPlan !== "free member" && !currentPlan.includes("free");
+            // ব্যালেন্স ক্যালকুলেশন
+            const bdtMain = userData.mainBalance || 0;
+            const bdtDep = userData.depositBalance || 0;
+            const bdtRech = userData.rechargeBalance || 0;
 
-                        displayH3.innerHTML = `
-                            ${greeting}, ${userData.name} 
-                            ${isPremium ? '<span id="verifiedBadge" class="text-blue-400 text-sm ml-1"><i class="ri-checkbox-circle-fill"></i></span>' : ''}
-                        `;
-                    }
+            // হোম স্ক্রিন ও ওয়ালেট ডাটা আপডেট
+            if(document.getElementById('balanceAmount')) {
+                animateNumberUpdate('balanceAmount', lastValues.main || 0, bdtMain);
+                document.getElementById('balanceAmountUSDT').textContent = "$" + (bdtMain / usdtRate).toFixed(2) + " USDT";
+            }
+            if(document.getElementById('walletMainDisplay')) animateNumberUpdate('walletMainDisplay', lastValues.main || 0, bdtMain);
+            if(document.getElementById('walletMainUSDT')) document.getElementById('walletMainUSDT').innerText = (bdtMain / usdtRate).toFixed(2);
+            lastValues.main = bdtMain;
 
-                    safe('profNameDisplay', userData.name);
-                    
-              // 🚀 ৪. Force Join Hard Check (মামা স্পেশাল)
-                    if(userData.isTelegramJoined !== true) {
-                        document.getElementById('forceJoinModal').classList.remove('hidden');
-                    } else {
-                        // যদি আগে জয়েন করা থাকে, তবুও ৫ সেকেন্ড পর একবার রিয়েল-টাইম চেক হবে
-                        setTimeout(() => {
-                            if(typeof window.reVerifyMembership === 'function') {
-                                window.reVerifyMembership(); 
-                            }
-                        }, 5000); 
-                    }
-                        
+            if(document.getElementById('walletDepositDisplay')) animateNumberUpdate('walletDepositDisplay', lastValues.dep || 0, bdtDep);
+            if(document.getElementById('walletDepositUSDT')) document.getElementById('walletDepositUSDT').innerText = (bdtDep / usdtRate).toFixed(2);
+            lastValues.dep = bdtDep;
 
-                  // 💰 ব্যালেন্স এবং ইউএসডিটি আপডেট (১ ডলার = ১২০ টাকা)
-                    const bdtMain = userData.mainBalance || 0;
-                    const bdtRech = userData.rechargeBalance || 0;
-                    const usdtRate = 120;
+            if(document.getElementById('walletRechargeDisplay')) animateNumberUpdate('walletRechargeDisplay', lastValues.rech || 0, bdtRech);
+            if(document.getElementById('rechargePageBalance')) animateNumberUpdate('rechargePageBalance', lastValues.rech || 0, bdtRech);
+            if(document.getElementById('walletRechargeUSDT')) document.getElementById('walletRechargeUSDT').innerText = (bdtRech / usdtRate).toFixed(2);
+            lastValues.rech = bdtRech;
 
-                    // ১. মেইন ব্যালেন্স আপডেট
-                    animateNumberUpdate('walletMainDisplay', lastValues.main, bdtMain);
-                    if(document.getElementById('balanceAmount')) {
-                        document.getElementById('balanceAmount').textContent = "৳" + bdtMain.toFixed(2);
-                        document.getElementById('balanceAmountUSDT').textContent = "$" + (bdtMain / usdtRate).toFixed(2) + " USDT";
-                    }
-                    if(document.getElementById('walletMainUSDT')) {
-                        document.getElementById('walletMainUSDT').innerText = (bdtMain / usdtRate).toFixed(2);
-                    }
-                    lastValues.main = bdtMain;
+            // অন্যান্য প্রোফাইল ডাটা আপডেট
+            if(document.getElementById('profNameInput')) document.getElementById('profNameInput').value = userData.name || "";
+            if(document.getElementById('profPhoneInput')) document.getElementById('profPhoneInput').value = userData.phone || "";
+            if(document.getElementById('currentAvatar') && userData.avatar) document.getElementById('currentAvatar').src = userData.avatar;
 
-                    // ২. রিচার্জ ব্যালেন্স আপডেট
-                    animateNumberUpdate('walletRechargeDisplay', lastValues.recharge, bdtRech);
-                    animateNumberUpdate('rechargePageBalance', lastValues.recharge, bdtRech);
-                    if(document.getElementById('walletRechargeUSDT')) {
-                        document.getElementById('walletRechargeUSDT').innerText = (bdtRech / usdtRate).toFixed(2);
-                    }
-                    lastValues.recharge = bdtRech;
-                    // 👥 রেফার আয় এনিমেশন
-                    const newRef = userData.referralEarnings || 0;
-                    animateNumberUpdate('referralEarnings', lastValues.ref, newRef);
-                    lastValues.ref = newRef;
-                    
-                 // 📊 হোম স্ক্রিন প্রগ্রেস ড্যাশবোর্ড আপডেট
-                    try {
-                        const todayStr = new Date().toLocaleDateString('bn-BD');
-                        db.collection("task_submissions")
-                            .where("userId", "==", uid)
-                            .where("date", "==", todayStr)
-                            .get().then(snap => {
-                                const done = snap.size;
-                                document.getElementById('homeTaskDone').innerText = done;
-                                db.collection("tasks").where("status", "==", "active").get().then(tSnap => {
-                                    const total = tSnap.size;
-                                    document.getElementById('homeTaskTotal').innerText = `/${total}`;
-                                    const percent = total > 0 ? (done / total) * 100 : 0;
-                                    document.getElementById('homeTaskBar').style.width = percent + '%';
-                                });
-                            });
-                        const currentBal = userData.mainBalance || 0;
-                        const goalPercent = Math.min(Math.round((currentBal / 50) * 100), 100);
-                        document.getElementById('homeGoalPercent').innerText = goalPercent + '%';
-                        document.getElementById('homeGoalBar').style.width = goalPercent + '%';
-                    } catch (e) { console.log("Dashboard Error"); }  
-                    
-                    // প্রোফাইল ইনপুট আপডেট
-                    if(document.getElementById('profNameInput')) document.getElementById('profNameInput').value = userData.name;
-                    if(document.getElementById('profPhoneInput')) document.getElementById('profPhoneInput').value = userData.phone;
-                    if(document.getElementById('profEmailInput')) document.getElementById('profEmailInput').value = userData.email;
-                    if(document.getElementById('profAddressInput')) document.getElementById('profAddressInput').value = userData.address || '';
-                    
-                    // এভাটার আপডেট
-                    if(userData.avatar && document.getElementById('currentAvatar')) {
-                        document.getElementById('currentAvatar').src = userData.avatar;
-                    }
+            // ড্যাশবোর্ড আপডেট (Task & Goal)
+            try {
+                const goalPercent = Math.min(Math.round((bdtMain / 50) * 100), 100);
+                if(document.getElementById('homeGoalPercent')) document.getElementById('homeGoalPercent').innerText = goalPercent + '%';
+                if(document.getElementById('homeGoalBar')) document.getElementById('homeGoalBar').style.width = goalPercent + '%';
+            } catch (e) {}
 
-                    // প্যাকেজ মেয়াদ চেক
-                    if(userData.packageExpiresAt) {
-                        const expiryDate = userData.packageExpiresAt.toDate();
-                        const now = new Date();
-                        if(now > expiryDate) {
-                            db.collection("users").doc(uid).update({
-                                plan: "Free Member",
-                                packageExpiresAt: firebase.firestore.FieldValue.delete()
-                            });
-                        }
-                    }
-
-                    // রেফার লিংক আপডেট
-                    if(document.getElementById('referralLink')) {
-    // এখানে app এর বদলে Earn ব্যবহার করা হয়েছে
-    const tgRefLink = `https://t.me/TAKA_WALA_TG_BOT/Earn?startapp=${currentUserData.referralCode}`;
-    document.getElementById('referralLink').innerText = tgRefLink;
-}
-                                      if(userData.createdAt && document.getElementById('joinDate')) {
-                        const date = userData.createdAt.toDate();
-                        document.getElementById('joinDate').innerText = date.toLocaleDateString('bn-BD');
-                    }
-            
-                   
-                }
-            }, (error) => { 
-                // ১. লোডিং বন্ধ করা (সাদা স্ক্রিন ফিক্স)
-                hideLoading();
-
-                // ২. যদি পারমিশন এরর আসে (ডুপ্লিকেট একাউন্ট বা ব্যান)
-                if (error.code === 'permission-denied') {
-                    console.warn("Security Alert: Permission Denied");
-                    
-                    // সাথে সাথে লগআউট করে দেওয়া
-                    auth.signOut(); 
-
-                    // হোম স্ক্রিন লুকিয়ে লগইন স্ক্রিন দেখানো
-                    document.getElementById('mainApp').classList.add('hidden');
-                    document.getElementById('authScreen').classList.remove('hidden');
-
-                    // সুন্দর ওয়ার্নিং মেসেজ
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'অ্যাক্সেস নেই! 🚫',
-                        html: 'আপনার ডিভাইসে সমস্যা পাওয়া গেছে অথবা আপনি <b>একাধিক একাউন্ট</b> খোলার চেষ্টা করেছেন।',
-                        confirmButtonColor: '#ef4444',
-                        confirmButtonText: 'ঠিক আছে',
-                        customClass: { popup: 'rounded-[25px]' }
-                    });
-                } else {
-                    console.error("Sync Error:", error);
-                }
-            });
-            
-            // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক
-            db.collection("settings").doc("appConfig").onSnapshot((d) => { 
-                if(d.exists) {
-                    systemSettings = d.data();
-                    paymentNumbers = {
-                        bKash: systemSettings.bkashNumber || "",
-                        Nagad: systemSettings.nagadNumber || "",
-                        Rocket: systemSettings.rocketNumber || "",
-                        USDT_Polygon: systemSettings.polygonAddress || "",
-                        USDT_BEP20: systemSettings.bep20Address || ""
-                    };
-                    updatePaymentMethodStatus();
-                }
-            });
-
-            // ৩. নোটিশ সিঙ্ক
-            db.collection("settings").doc("system").onSnapshot((d) => { 
-                if(d.exists) {
-                    const noticeElement = document.getElementById('noticeText');
-                    if (noticeElement) noticeElement.innerHTML = d.data().noticeText || "স্বাগতম!";
-                }
-            });
+            // Force Join Check
+            if(userData.isTelegramJoined !== true) {
+                if(document.getElementById('forceJoinModal')) document.getElementById('forceJoinModal').classList.remove('hidden');
+            }
         }
+    }, (err) => { 
+        console.error("User Sync Error:", err); 
+        if(err.code === 'permission-denied') auth.signOut();
+    });
+
+    // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক (Payment Numbers & Settings)
+    db.collection("settings").doc("appConfig").onSnapshot((d) => { 
+        if(d.exists) {
+            systemSettings = d.data();
+            paymentNumbers = {
+                bKash: systemSettings.bkashNumber || "",
+                Nagad: systemSettings.nagadNumber || "",
+                Rocket: systemSettings.rocketNumber || "",
+                USDT_Polygon: systemSettings.polygonAddress || "",
+                USDT_BEP20: systemSettings.bep20Address || ""
+            };
+            if(typeof updatePaymentMethodStatus === 'function') updatePaymentMethodStatus();
+        }
+    });
+
+    // ৩. নোটিশ সিঙ্ক (Marquee Notice)
+    db.collection("settings").doc("system").onSnapshot((d) => { 
+        if(d.exists) {
+            const noticeElement = document.getElementById('noticeText');
+            if (noticeElement) noticeElement.innerHTML = d.data().noticeText || "স্বাগতম!";
+        }
+    });
+} // <--- এই একটি ব্র্যাকেট দিয়েই পুরো syncUserData ফাংশন শেষ হলো
         // ✅ FIXED: LOAD TODAY'S EARNINGS (SOLVED FIREBASE QUERY ERROR)
         async function loadTodayEarnings(uid) {
             try {
@@ -6380,10 +6321,22 @@ window.loadSummary = () => window.loadFilteredSummary('all');
 
             // শুক্রবার মিস্ট্রি বক্স লজিক
             if (dayName === 'Friday') {
-                finalAmount = Math.floor(Math.random() * (15 - 5 + 1)) + 5; 
-                message = `🎉 জুম্মা মোবারক! মিস্ট্রি বক্সে পেয়েছেন ৳${finalAmount}`;
-            }
+    // ১ থেকে ১০০০ এর মধ্যে একটি লটারি নাম্বার জেনারেট হবে
+    let luck = Math.floor(Math.random() * 1000) + 1;
 
+    if (luck <= 2) {
+        // লটারি ১ বা ২ পড়লে ১০ টাকা (হাজারে ২ জন)
+        finalAmount = 10; 
+    } else if (luck <= 10) {
+        // লটারি ৩ থেকে ১০ পড়লে ৯ টাকা (খুবই কম)
+        finalAmount = 9;
+    } else {
+        // বাকি সবাই ৬, ৭ অথবা ৮ টাকার মধ্যে রেন্ডমলি পাবে (সবচেয়ে বেশি হবে এটি)
+        finalAmount = Math.floor(Math.random() * (8 - 6 + 1)) + 6; 
+    }
+
+    message = `🎉 জুম্মা মোবারক! মিস্ট্রি বক্সে পেয়েছেন ৳${finalAmount}`;
+}
             const result = await Swal.fire({
                 title: '🎁 বোনাস নিন',
                 html: `<div class="text-center">
@@ -8461,9 +8414,9 @@ window.loadLeaderboard = () => {
 // 🎬 WATCH & EARN (POWERFUL AD SYSTEM)
 // ==========================================
 let watchCooldownInterval = null;
-const WATCH_REWARD = 0.15; // ১৫ পয়সা
-const DAILY_LIMIT = 50; // দৈনিক ২০টি অ্যাড
-const COOLDOWN_SECONDS = 10; // ১ মিনিট
+const WATCH_REWARD = 0.10; // ১০ পয়সা
+const DAILY_LIMIT = 100; // দৈনিক ২০টি অ্যাড
+const COOLDOWN_SECONDS = 30; // ১ মিনিট
 
 // ১. স্ট্যাটাস লোড করা
 window.loadWatchEarnStats = async () => {
@@ -8587,7 +8540,7 @@ function checkWatchStatus(count, lastTimeMillis) {
             // কুলডাউন চলছে
             btn.classList.add('opacity-50', 'grayscale', 'cursor-not-allowed', 'pointer-events-none');
             title.innerText = "অপেক্ষা করুন ⏳";
-            text.innerText = "পরবর্তী অ্যাডটি তৈরি হচ্ছে, ১০ সেকেন্ড অপেক্ষা করুন";
+            text.innerText = "পরবর্তী অ্যাডটি তৈরি হচ্ছে, ৩০ সেকেন্ড অপেক্ষা করুন";
             cooldownBox.classList.remove('hidden');
 
             let timeLeft = COOLDOWN_SECONDS - diffSeconds;
