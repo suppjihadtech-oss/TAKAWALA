@@ -3513,43 +3513,53 @@ async function loadSystemSettings() {
         }
         
         // ✅ UPDATE PAYMENT METHOD STATUS
-        function updatePaymentMethodStatus() {
+        // ✅ আপডেট করা পেমেন্ট মেথড স্ট্যাটাস ফাংশন (টগল সিঙ্ক ফিক্স)
+        function updatePaymentMethodStatus(status) {
             const methods = ['bKash', 'Nagad', 'Rocket', 'USDT'];
+            
             methods.forEach(method => {
-                const element = document.getElementById(`payment_${method}`);
-                const withdrawElement = document.getElementById(`withdraw_${method}`);
+                const depEl = document.getElementById(`payment_${method}`);
+                const withEl = document.getElementById(`withdraw_${method}`);
                 
-                if(element) {
-                    if(method === 'USDT') {
-                        element.classList.remove('disabled-option');
-                        element.onclick = () => window.selectPayment(element, method);
-                        element.innerHTML = `<img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain">`;
-                    } else if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
-                        element.classList.add('disabled-option');
-                        element.onclick = null;
-                        element.innerHTML = `
-                            <img src="${element.querySelector('img').src}" class="h-10 object-contain opacity-50">
+                // এডমিন থেকে আসা টগল চেক (bkashActive, nagadActive ইত্যাদি)
+                const toggleKey = method.toLowerCase() + "Active";
+                const isMethodActive = status && status[toggleKey] === true;
+
+                // ডিপোজিট বাটনের লজিক
+                if(depEl) {
+                    const imgTag = depEl.querySelector('img');
+                    const currentImgSrc = imgTag ? imgTag.src : 'https://i.postimg.cc/0QRCvZDV/usdt.png';
+
+                    if(!isMethodActive) {
+                        depEl.classList.add('disabled-option');
+                        depEl.onclick = () => showSmartToast(`${method} ডিপোজিট বর্তমানে বন্ধ আছে`, 'warning');
+                        depEl.innerHTML = `
+                            <img src="${currentImgSrc}" class="h-10 object-contain opacity-40 grayscale">
                             <div class="disabled-text">বন্ধ</div>
                         `;
                     } else {
-                        element.classList.remove('disabled-option');
-                        element.onclick = () => window.selectPayment(element, method);
-                        element.innerHTML = `<img src="https://i.postimg.cc/${method === 'bKash' ? 'C5vDR4nz/1656235223bkash-logo.png' : method === 'Nagad' ? 'k4phWWbK/1679248787Nagad-Logo.png' : method === 'Rocket' ? 'xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png' : '0QRCvZDV/usdt.png'}" class="h-10 object-contain">`;
+                        depEl.classList.remove('disabled-option');
+                        depEl.onclick = () => window.selectPayment(depEl, method);
+                        depEl.innerHTML = `<img src="${currentImgSrc}" class="h-10 object-contain">`;
                     }
                 }
                 
-                if(withdrawElement) {
-                    if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
-                        withdrawElement.classList.add('disabled-option');
-                        withdrawElement.onclick = null;
-                        withdrawElement.innerHTML = `
-                            <img src="${withdrawElement.querySelector('img').src}" class="h-10 object-contain opacity-50">
+                // উইথড্র বাটনের লজিক
+                if(withEl) {
+                    const imgTag = withEl.querySelector('img');
+                    const currentImgSrc = imgTag ? imgTag.src : 'https://i.postimg.cc/0QRCvZDV/usdt.png';
+
+                    if(!isMethodActive) {
+                        withEl.classList.add('disabled-option');
+                        withEl.onclick = () => showSmartToast(`${method} উত্তোলন বর্তমানে বন্ধ আছে`, 'warning');
+                        withEl.innerHTML = `
+                            <img src="${currentImgSrc}" class="h-10 object-contain opacity-40 grayscale">
                             <div class="disabled-text">বন্ধ</div>
                         `;
                     } else {
-                        withdrawElement.classList.remove('disabled-option');
-                        withdrawElement.onclick = () => window.selectWithdrawMethod(withdrawElement, method);
-                        withdrawElement.innerHTML = `<img src="https://i.postimg.cc/${method === 'bKash' ? 'C5vDR4nz/1656235223bkash-logo.png' : method === 'Nagad' ? 'k4phWWbK/1679248787Nagad-Logo.png' : method === 'Rocket' ? 'xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png' : '0QRCvZDV/usdt.png'}" class="h-10 object-contain">`;
+                        withEl.classList.remove('disabled-option');
+                        withEl.onclick = () => window.selectWithdrawMethod(withEl, method);
+                        withEl.innerHTML = `<img src="${currentImgSrc}" class="h-10 object-contain">`;
                     }
                 }
             });
@@ -4336,6 +4346,11 @@ function syncUserData(uid) {
             const newRef = userData.referralEarnings || 0;
             animateNumberUpdate('referralEarnings', lastValues.ref || 0, newRef);
             lastValues.ref = newRef;
+            
+            // ✅ রেফার সংখ্যা আপডেট করার জন্য এই লাইনটি যোগ করো
+            if(document.getElementById('referralCount')) {
+                document.getElementById('referralCount').innerText = userData.totalReferrals || 0;
+            }
 
             // 📊 ড্যাশবোর্ড প্রগ্রেস আপডেট
             try {
@@ -4398,9 +4413,19 @@ function syncUserData(uid) {
     });
 
     // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক
+    // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক (User Panel - index.html)
     db.collection("settings").doc("appConfig").onSnapshot((d) => { 
         if(d.exists) {
             systemSettings = d.data();
+            
+            // এডমিন থেকে আসা টগল স্ট্যাটাস
+            const paymentStatus = {
+                bKash: systemSettings.bkashActive,  // এডমিনের bkashActive টগল
+                Nagad: systemSettings.nagadActive,  // এডমিনের nagadActive টগল
+                Rocket: systemSettings.rocketActive, // এডমিনের rocketActive টগল
+                USDT: systemSettings.usdtActive     // এডমিনের usdtActive টগল
+            };
+
             paymentNumbers = {
                 bKash: systemSettings.bkashNumber || "",
                 Nagad: systemSettings.nagadNumber || "",
@@ -4408,10 +4433,13 @@ function syncUserData(uid) {
                 USDT_Polygon: systemSettings.polygonAddress || "",
                 USDT_BEP20: systemSettings.bep20Address || ""
             };
-            if(typeof updatePaymentMethodStatus === 'function') updatePaymentMethodStatus();
+
+            // পেমেন্ট মেথড আপডেট করার সময় স্ট্যাটাস পাঠিয়ে দাও
+            if(typeof updatePaymentMethodStatus === 'function') {
+                updatePaymentMethodStatus(paymentStatus);
+            }
         }
     });
-
     // ৩. নোটিশ সিঙ্ক
     db.collection("settings").doc("system").onSnapshot((d) => { 
         if(d.exists) {
