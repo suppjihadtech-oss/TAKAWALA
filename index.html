@@ -4250,19 +4250,21 @@ if(localStorage.getItem('darkModeEnabled') === 'true') {
             }
         });
 
-           // ✅ SYNC USER DATA (ALL-IN-ONE: User + Config + Notice)
+           // ✅ SYNC USER DATA (ALL-IN-ONE FIXED VERSION)
 function syncUserData(uid) {
-    // ১. ইউজারের লাইভ ডাটা সিঙ্ক (Income, Deposit, Recharge Balance)
+    // ১. ইউজারের লাইভ ডাটা সিঙ্ক শুরু
     db.collection("users").doc(uid).onSnapshot((d) => {
         if(d.exists) {
             currentUserData = d.data();
             const userData = currentUserData;
-            const usdtRate = 120;
+            const usdtRate = 120; // ১ ডলার = ১২০ টাকা
 
-            // নামের গ্রিটিং ও প্ল্যান আপডেট
-            const planEl = document.getElementById('userPlanDisplay');
-            if(planEl) planEl.innerText = userData.plan || "Free Member";
+            // 🏷️ নামের নিচে বর্তমান প্ল্যান আপডেট
+            if(document.getElementById('userPlanDisplay')) {
+                document.getElementById('userPlanDisplay').innerText = userData.plan || "Free Member";
+            }
 
+            // 🌅 ডাইনামিক গ্রিটিং এবং ভেরিফাইড ব্যাজ
             const displayH3 = document.getElementById('userNameDisplay');
             if (displayH3) {
                 const hour = new Date().getHours();
@@ -4271,12 +4273,19 @@ function syncUserData(uid) {
                 displayH3.innerHTML = `${greeting}, ${userData.name} ${isPremium ? '<span class="text-blue-400 text-sm ml-1"><i class="ri-checkbox-circle-fill"></i></span>' : ''}`;
             }
 
-            // ব্যালেন্স ক্যালকুলেশন
+            // 🚀 ৪. Force Join Hard Check
+            if(userData.isTelegramJoined !== true) {
+                if(document.getElementById('forceJoinModal')) document.getElementById('forceJoinModal').classList.remove('hidden');
+            } else {
+                setTimeout(() => { if(typeof window.reVerifyMembership === 'function') window.reVerifyMembership(); }, 5000); 
+            }
+
+            // 💰 ৩-স্তর ব্যালেন্স এবং ইউএসডিটি আপডেট
             const bdtMain = userData.mainBalance || 0;
             const bdtDep = userData.depositBalance || 0;
             const bdtRech = userData.rechargeBalance || 0;
 
-            // হোম স্ক্রিন ও ওয়ালেট ডাটা আপডেট
+            // ১. ইনকাম ব্যালেন্স (হোম ও ওয়ালেট)
             if(document.getElementById('balanceAmount')) {
                 animateNumberUpdate('balanceAmount', lastValues.main || 0, bdtMain);
                 document.getElementById('balanceAmountUSDT').textContent = "$" + (bdtMain / usdtRate).toFixed(2) + " USDT";
@@ -4285,38 +4294,80 @@ function syncUserData(uid) {
             if(document.getElementById('walletMainUSDT')) document.getElementById('walletMainUSDT').innerText = (bdtMain / usdtRate).toFixed(2);
             lastValues.main = bdtMain;
 
+            // ২. ডিপোজিট ব্যালেন্স (ওয়ালেট)
             if(document.getElementById('walletDepositDisplay')) animateNumberUpdate('walletDepositDisplay', lastValues.dep || 0, bdtDep);
             if(document.getElementById('walletDepositUSDT')) document.getElementById('walletDepositUSDT').innerText = (bdtDep / usdtRate).toFixed(2);
             lastValues.dep = bdtDep;
 
+            // ৩. রিচার্জ ব্যালেন্স (ওয়ালেট ও রিচার্জ পেজ)
             if(document.getElementById('walletRechargeDisplay')) animateNumberUpdate('walletRechargeDisplay', lastValues.rech || 0, bdtRech);
             if(document.getElementById('rechargePageBalance')) animateNumberUpdate('rechargePageBalance', lastValues.rech || 0, bdtRech);
             if(document.getElementById('walletRechargeUSDT')) document.getElementById('walletRechargeUSDT').innerText = (bdtRech / usdtRate).toFixed(2);
             lastValues.rech = bdtRech;
 
-            // অন্যান্য প্রোফাইল ডাটা আপডেট
-            if(document.getElementById('profNameInput')) document.getElementById('profNameInput').value = userData.name || "";
-            if(document.getElementById('profPhoneInput')) document.getElementById('profPhoneInput').value = userData.phone || "";
-            if(document.getElementById('currentAvatar') && userData.avatar) document.getElementById('currentAvatar').src = userData.avatar;
+            // 👥 রেফার আয় এনিমেশন
+            const newRef = userData.referralEarnings || 0;
+            animateNumberUpdate('referralEarnings', lastValues.ref || 0, newRef);
+            lastValues.ref = newRef;
 
-            // ড্যাশবোর্ড আপডেট (Task & Goal)
+            // 📊 ড্যাশবোর্ড প্রগ্রেস আপডেট
             try {
+                const todayStr = new Date().toLocaleDateString('bn-BD');
+                db.collection("task_submissions")
+                    .where("userId", "==", uid)
+                    .where("date", "==", todayStr)
+                    .get().then(snap => {
+                        const done = snap.size;
+                        if(document.getElementById('homeTaskDone')) document.getElementById('homeTaskDone').innerText = done;
+                        db.collection("tasks").where("status", "==", "active").get().then(tSnap => {
+                            const total = tSnap.size;
+                            if(document.getElementById('homeTaskTotal')) document.getElementById('homeTaskTotal').innerText = `/${total}`;
+                            const percent = total > 0 ? (done / total) * 100 : 0;
+                            if(document.getElementById('homeTaskBar')) document.getElementById('homeTaskBar').style.width = percent + '%';
+                        });
+                    });
                 const goalPercent = Math.min(Math.round((bdtMain / 50) * 100), 100);
                 if(document.getElementById('homeGoalPercent')) document.getElementById('homeGoalPercent').innerText = goalPercent + '%';
                 if(document.getElementById('homeGoalBar')) document.getElementById('homeGoalBar').style.width = goalPercent + '%';
-            } catch (e) {}
+            } catch (e) { console.log("Dashboard Error"); }  
 
-            // Force Join Check
-            if(userData.isTelegramJoined !== true) {
-                if(document.getElementById('forceJoinModal')) document.getElementById('forceJoinModal').classList.remove('hidden');
+            // 👤 প্রোফাইল ও অন্যান্য তথ্য আপডেট (এগুলো আগে ফাংশনের বাইরে ছিল)
+            if(document.getElementById('profNameInput')) document.getElementById('profNameInput').value = userData.name || "";
+            if(document.getElementById('profPhoneInput')) document.getElementById('profPhoneInput').value = userData.phone || "";
+            if(document.getElementById('profEmailInput')) document.getElementById('profEmailInput').value = userData.email || "";
+            if(document.getElementById('profAddressInput')) document.getElementById('profAddressInput').value = userData.address || "";
+            if(userData.avatar && document.getElementById('currentAvatar')) document.getElementById('currentAvatar').src = userData.avatar;
+
+            if(userData.packageExpiresAt) {
+                const expiryDate = userData.packageExpiresAt.toDate();
+                if(new Date() > expiryDate) {
+                    db.collection("users").doc(uid).update({ plan: "Free Member", packageExpiresAt: firebase.firestore.FieldValue.delete() });
+                }
             }
+
+            if(document.getElementById('referralLink')) {
+    // নিশ্চিত করুন লিংকে কোনো বাড়তি অক্ষর যোগ হচ্ছে না
+    const tgRefLink = `https://t.me/TAKA_WALA_TG_BOT/Earn?startapp=${userData.referralCode}`;
+    document.getElementById('referralLink').innerText = tgRefLink;
+}
+
+            if(userData.createdAt && document.getElementById('joinDate')) {
+                const date = userData.createdAt.toDate();
+                document.getElementById('joinDate').innerText = date.toLocaleDateString('bn-BD');
+            }
+
         }
-    }, (err) => { 
-        console.error("User Sync Error:", err); 
-        if(err.code === 'permission-denied') auth.signOut();
+    }, (error) => { 
+        hideLoading();
+        if (error.code === 'permission-denied') {
+            auth.signOut(); 
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('authScreen').classList.remove('hidden');
+            Swal.fire({ icon: 'error', title: 'অ্যাক্সেস নেই! 🚫', html: 'আপনার একাউন্টটি ব্যান করা হয়েছে।', confirmButtonColor: '#ef4444' });
+        }
     });
 
-    // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক (Payment Numbers & Settings)
+    // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক
     db.collection("settings").doc("appConfig").onSnapshot((d) => { 
         if(d.exists) {
             systemSettings = d.data();
@@ -4331,14 +4382,14 @@ function syncUserData(uid) {
         }
     });
 
-    // ৩. নোটিশ সিঙ্ক (Marquee Notice)
+    // ৩. নোটিশ সিঙ্ক
     db.collection("settings").doc("system").onSnapshot((d) => { 
         if(d.exists) {
             const noticeElement = document.getElementById('noticeText');
             if (noticeElement) noticeElement.innerHTML = d.data().noticeText || "স্বাগতম!";
         }
     });
-} // <--- এই একটি ব্র্যাকেট দিয়েই পুরো syncUserData ফাংশন শেষ হলো
+}
         // ✅ FIXED: LOAD TODAY'S EARNINGS (SOLVED FIREBASE QUERY ERROR)
         async function loadTodayEarnings(uid) {
             try {
@@ -6595,10 +6646,14 @@ window.showSpinGame = async () => {
 // ৩. চাকা ড্র করার ফাংশন
 function drawWheel() {
     const canvas = document.getElementById('wheelCanvas');
-    if(!canvas) return;
+    if(!canvas) return; // এই লাইনটি এরর ঠেকাবে
+    
     const ctx = canvas.getContext('2d');
+    if(!ctx) return; // সেফটি চেক
+    
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
+   
     const radius = canvas.width / 2 - 10;
     const sliceDeg = 360 / spinRewards.length;
 
@@ -7505,27 +7560,29 @@ window.switchTaskTab = (type) => {
              // ✅ INITIALIZE EVENT LISTENERS
         document.addEventListener('DOMContentLoaded', function() {
             // ১. রেফার কোড ডিটেক্টর
-            let refCode = "";
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tgData = window.Telegram.WebApp.initDataUnsafe;
-                if (tgData && tgData.start_param) refCode = tgData.start_param.replace(/^R/, ''); 
-            }
-            if (!refCode) {
-                const urlParams = new URLSearchParams(window.location.search);
-                refCode = (urlParams.get('ref') || urlParams.get('startapp') || "").replace(/^R/, '');
-            }
+            // ✅ রেফার কোড ডিটেক্টর (ফিক্সড: এখন আর R কাটবে না)
+let refCode = "";
+if (window.Telegram && window.Telegram.WebApp) {
+    const tgData = window.Telegram.WebApp.initDataUnsafe;
+    // এখানে আগে .replace(/^R/, '') ছিল, সেটা সরিয়ে দিলাম
+    if (tgData && tgData.start_param) refCode = tgData.start_param; 
+}
+if (!refCode) {
+    const urlParams = new URLSearchParams(window.location.search);
+    // এখান থেকেও .replace সরিয়ে দিলাম
+    refCode = (urlParams.get('ref') || urlParams.get('startapp') || "");
+}
 
-            if (refCode) {
-                const regRefField = document.getElementById('regReferralCode');
-                if (regRefField) {
-                    regRefField.value = refCode;
-                    setTimeout(() => {
-                        showSmartToast('রেফার কোড যুক্ত হয়েছে!', 'success');
-                        window.toggleAuthTab('register'); 
-                    }, 1000);
-                }
-            }
-            
+if (refCode) {
+    const regRefField = document.getElementById('regReferralCode');
+    if (regRefField) {
+        regRefField.value = refCode;
+        setTimeout(() => {
+            showSmartToast('রেফার কোড যুক্ত হয়েছে!', 'success');
+            window.toggleAuthTab('register'); 
+        }, 1000);
+    }
+}
             
             
             // ২. ইনপুট লিসেনারস
