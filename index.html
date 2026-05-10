@@ -1384,6 +1384,26 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         </div>
     </div>
 
+<!-- 🚀 IDENTITY ACTIVATION CARD -->
+<div id="activationCard" class="hidden mx-5 mt-4 animate__animated animate__pulse animate__infinite">
+    <div class="bg-gradient-to-r from-red-500 to-orange-600 p-4 rounded-2xl shadow-lg border border-white/20 relative overflow-hidden">
+        <div class="flex items-center justify-between relative z-10">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
+                    <i class="ri-shield-user-fill text-white text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-white font-black text-sm leading-tight">আইডেন্টিটি ভেরিফিকেশন বাকি!</h3>
+                    <p class="text-orange-100 text-[10px] font-bold">কাজ শুরু করতে আইডি অ্যাক্টিভ করুন (৳১০)</p>
+                </div>
+            </div>
+            <button onclick="window.handleActivation()" class="bg-white text-orange-600 px-4 py-2 rounded-xl text-xs font-black shadow-md active:scale-95 transition-all">
+                অ্যাক্টিভ করুন
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- 📊 ULTRA SLIM PROGRESS DASHBOARD -->
 <div class="mx-5 mt-4 grid grid-cols-2 gap-3 animate__animated animate__fadeInUp">
     <div class="bg-white/60 backdrop-blur-sm p-3 rounded-2xl border border-slate-100 flex flex-col justify-between h-[75px]">
@@ -1854,6 +1874,19 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     <h3 class="text-xl font-bold">৳<span id="watchEarnDisplay">0.00</span></h3>
                 </div>
             </div>
+
+<!-- ⚠️ UNACTIVATED WARNING FOR WATCH & EARN -->
+<div id="watchEarnActivationWarning" class="hidden mx-2 mt-4 bg-red-50 border border-red-200 p-3 rounded-2xl animate__animated animate__shakeX">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center shrink-0 shadow-lg">
+            <i class="ri-error-warning-fill text-white text-lg"></i>
+        </div>
+        <div>
+            <p class="text-[11px] font-black text-red-700 leading-tight">সতর্কতা: আপনার আইডি অ্যাক্টিভ নেই!</p>
+            <p class="text-[10px] font-bold text-red-500 mt-0.5">আইডি অ্যাক্টিভ না করা পর্যন্ত এই ইনকামটি আপনি উত্তোলন করতে পারবেন না।</p>
+        </div>
+    </div>
+</div>
 
             <!-- Action Area -->
             <div class="bg-white p-6 rounded-[30px] shadow-sm border border-slate-100 text-center">
@@ -3807,6 +3840,7 @@ window.buyPackage = async (packageId, price, name, days) => {
             await userRef.update({
                 depositBalance: firebase.firestore.FieldValue.increment(-price), // ফিক্সড: ডিপোজিট থেকে মাইনাস
                 plan: name,
+                isActivated: true,
                 packageExpiresAt: expiryDate,
                 packageId: packageId,
                 totalSpent: firebase.firestore.FieldValue.increment(price)
@@ -4050,6 +4084,7 @@ window.buyPackage = async (packageId, price, name, days) => {
                     mainBalance: 0, 
 depositBalance: 0, 
 rechargeBalance: 0,
+isActivated: false,
                     plan: "Free Member", 
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(), 
                     totalEarnings: 0, 
@@ -4291,7 +4326,17 @@ function syncUserData(uid) {
     db.collection("users").doc(uid).onSnapshot((d) => {
         if(d.exists) {
             currentUserData = d.data();
-            const userData = currentUserData;
+            const userData = currentUserData; 
+
+            // ✅ আইডি অ্যাক্টিভেশন চেক লজিক
+            const activationCard = document.getElementById('activationCard');
+            if (activationCard) {
+                if (userData.isActivated === false) {
+                    activationCard.classList.remove('hidden');
+                } else {
+                    activationCard.classList.add('hidden');
+                }
+            }
             const usdtRate = 120; // ১ ডলার = ১২০ টাকা
 
             // 🏷️ নামের নিচে বর্তমান প্ল্যান আপডেট
@@ -5275,6 +5320,10 @@ totalReward += rewardAmt;
 window.isTaskRunning = false;
 
 window.completeTask = async (taskId, reward, taskType, title, description, link) => {
+if (currentUserData.isActivated === false) {
+        return window.handleActivation();
+    }
+
     if(!currentUserData) return;
     
     // ডাবল ক্লিক প্রোটেকশন
@@ -5828,6 +5877,10 @@ await db.collection("history").doc(newReqId).set({
         
         // ✅ UPDATED WITHDRAW FUNCTION WITH SCHEDULE
         window.submitWithdraw = async () => {
+        if (currentUserData.isActivated === false) {
+        return window.handleActivation();
+    }
+        
             const number = document.getElementById('withdrawNumber').value.trim();
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
             const method = document.getElementById('selectedWithdrawMethod').value;
@@ -5880,7 +5933,41 @@ await db.collection("history").doc(newReqId).set({
             if (userPin !== currentUserData.transactionPin) {
                 return showSmartToast('ভুল পিন দিয়েছেন!', 'error');
             }
+            
+            // ⏳ পেন্ডিং উইথড্র চেক (মামা স্পেশাল)
+    showLoading();
+    const pendingWithdrawCheck = await db.collection("pending_requests")
+        .where("userId", "==", currentUserId)
+        .where("type", "==", "Withdraw")
+        .where("status", "==", "Pending")
+        .get();
 
+    if (!pendingWithdrawCheck.empty) {
+        hideLoading();
+        return Swal.fire({
+            icon: 'warning',
+            title: 'আবেদন পেন্ডিং আছে! ⏳',
+            text: 'আপনার একটি উত্তোলনের আবেদন বর্তমানে পেন্ডিং আছে। সেটি সফল বা বাতিল না হওয়া পর্যন্ত নতুন আবেদন করতে পারবেন না।',
+            confirmButtonText: 'ঠিক আছে',
+            confirmButtonColor: '#ef4444',
+            customClass: { popup: 'rounded-[25px]' }
+        });
+    }
+    hideLoading();
+            
+// 🚀 স্মার্ট লিমিট লজিক (Free vs VIP)
+    const userPlan = (currentUserData.plan || "").toLowerCase();
+    const isVIP = userPlan.includes("vip") || userPlan.includes("gold") || userPlan.includes("silver") || userPlan.includes("platinum");
+    
+    const dailyLimit = isVIP ? 2 : 1; 
+    const maxMFS = isVIP ? 50 : 30;
+
+    if (userWithdrawCount >= dailyLimit) {
+        return showSmartToast(`দুঃখিত! ${isVIP ? 'VIP' : 'ফ্রি'} মেম্বার হিসেবে আপনি দিনে সর্বোচ্চ ${dailyLimit} বার টাকা তুলতে পারবেন।`, 'error');
+    }
+    if (amount > maxMFS) {
+        return showSmartToast(`দুঃখিত! আপনি একবারে সর্বোচ্চ ৳${maxMFS} উত্তোলন করতে পারবেন।`, 'error');
+    }
             
             if(!currentUserData) {
                 showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
@@ -5901,16 +5988,7 @@ await db.collection("history").doc(newReqId).set({
                 }
             }
             
-            let dailyLimit = 1;
-            if(!isFreeUser) {
-                dailyLimit = 2;
-            }
-            
-            if(userWithdrawCount >= dailyLimit) {
-                showSmartToast(`আপনি আজ ${userWithdrawCount} বার উত্তোলন করেছেন। দৈনিক সর্বোচ্চ ${dailyLimit} বার উত্তোলন করতে পারবেন।`, 'error');
-                return;
-            }
-            
+                        
             const vatPercentage = systemSettings.vatPercentage || 0;
             const vat = amount * (vatPercentage / 100);
             const received = amount - vat;
@@ -5965,6 +6043,7 @@ await db.collection("history").doc(newReqId).set({
                     });
                     
                     userWithdrawCount++;
+   currentUserData.withdraw_count = userWithdrawCount; // লোকাল আপডেট                 
                     
                     // Send Telegram notification
                     const telegramMessage = `💸 *নতুন উত্তোলন রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *অ্যাকাউন্ট:* ${number}\n💵 *পরিমাণ:* ৳${amount}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *প্রাপ্ত:* ৳${received.toFixed(2)}\n⏰ *সময়সূচী:* ${withinSchedule ? 'ভিতরে' : 'বাইরে'}`;
@@ -6088,6 +6167,36 @@ await db.collection("history").doc(newReqId).set({
             if (userPin !== currentUserData.transactionPin) {
                 return showSmartToast('ভুল পিন দিয়েছেন!', 'error');
             }
+            // ⏳ পেন্ডিং রিচার্জ চেক (মামা স্পেশাল)
+    showLoading();
+    const pendingRechargeCheck = await db.collection("pending_requests")
+        .where("userId", "==", currentUserId)
+        .where("type", "==", "Recharge")
+        .where("status", "==", "Pending")
+        .get();
+
+    if (!pendingRechargeCheck.empty) {
+        hideLoading();
+        return Swal.fire({
+            icon: 'warning',
+            title: 'আবেদন পেন্ডিং আছে! ⏳',
+            text: 'আপনার একটি রিচার্জের আবেদন বর্তমানে পেন্ডিং আছে। সেটি সম্পন্ন হওয়া পর্যন্ত অপেক্ষা করুন।',
+            confirmButtonText: 'ঠিক আছে',
+            confirmButtonColor: '#3b82f6',
+            customClass: { popup: 'rounded-[25px]' }
+        });
+    }
+    hideLoading();
+            
+            // 🚀 রিচার্জ লিমিট লজিক
+    const userPlan = (currentUserData.plan || "").toLowerCase();
+    const isVIP = userPlan.includes("vip") || userPlan.includes("gold") || userPlan.includes("silver") || userPlan.includes("platinum");
+    
+    const maxRechargeLimit = isVIP ? 30 : 20; 
+
+    if (amount > maxRechargeLimit) {
+        return showSmartToast(`দুঃখিত! ${isVIP ? 'VIP' : 'ফ্রি'} মেম্বার হিসেবে আপনি সর্বোচ্চ ৳${maxRechargeLimit} রিচার্জ করতে পারবেন।`, 'error');
+    }
             
             const withinSchedule = isWithinWithdrawalSchedule();
             
@@ -6745,6 +6854,9 @@ function drawWheel() {
 
 // ৪. স্পিন করার মেইন ফাংশন (Ad সহ)
 window.spinTheWheel = async () => {
+if (currentUserData.isActivated === false) {
+        return window.handleActivation();
+    }
     let spins = parseInt(document.getElementById('spinCount').innerText || "0");
 
     if (spins <= 0) {
@@ -8537,6 +8649,16 @@ const COOLDOWN_SECONDS = 30; // ১ মিনিট
 // ১. স্ট্যাটাস লোড করা
 window.loadWatchEarnStats = async () => {
     if(!currentUserData) return;
+   
+    // 🚀 এখানে এই লজিকটুকু পেস্ট করো 👇
+    const warningBox = document.getElementById('watchEarnActivationWarning');
+    if (warningBox) {
+        if (currentUserData.isActivated === false) {
+            warningBox.classList.remove('hidden');
+        } else {
+            warningBox.classList.add('hidden');
+        }
+    }
     
     const todayStr = new Date().toLocaleDateString('bn-BD');
     let watchCount = 0;
@@ -9217,6 +9339,118 @@ window.downloadAPK = () => {
             title: 'font-black text-indigo-600'
         }
     });
+};
+
+// ✅ ১০ টাকা দিয়ে আইডি অ্যাক্টিভেশন ফাংশন
+window.handleActivation = async () => {
+    if (!currentUserData) return;
+    
+    const activationFee = 10;
+    const currentDeposit = currentUserData.depositBalance || 0;
+
+    // ১. ব্যালেন্স চেক
+    if (currentDeposit < activationFee) {
+        Swal.fire({
+            icon: 'error',
+            title: 'ব্যালেন্স পর্যাপ্ত নয়!',
+            html: `আইডি অ্যাক্টিভ করতে <b>৳১০</b> প্রয়োজন। আপনার বর্তমান ডিপোজিট ব্যালেন্স <b>৳${currentDeposit.toFixed(2)}</b>। দয়া করে আগে ১০ টাকা ডিপোজিট করুন।`,
+            confirmButtonText: 'ডিপোজিট করুন',
+            confirmButtonColor: '#059669',
+            showCancelButton: true,
+            cancelButtonText: 'পরে করব'
+        }).then((result) => {
+            if (result.isConfirmed) window.showPage('walletScreen');
+        });
+        return;
+    }
+
+    // ২. কনফার্মেশন পপ-আপ
+    const confirmResult = await Swal.fire({
+        title: 'আইডি অ্যাক্টিভ করবেন?',
+        text: "আপনার ডিপোজিট ব্যালেন্স থেকে ১০ টাকা কেটে নেওয়া হবে।",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'হ্যাঁ, অ্যাক্টিভ করুন',
+        cancelButtonText: 'বাতিল',
+        confirmButtonColor: '#059669'
+    });
+
+    if (confirmResult.isConfirmed) {
+        showLoading();
+        try {
+            const userRef = db.collection("users").doc(currentUserId);
+
+            // ৩. ফায়ারবেস আপডেট (টাকা কাটা ও অ্যাক্টিভ করা)
+            await userRef.update({
+                depositBalance: firebase.firestore.FieldValue.increment(-activationFee),
+                isActivated: true
+            });
+// 🎁 রেফারেল অ্যাক্টিভেশন বোনাস লজিক (মামা স্পেশাল)
+            if (currentUserData.referredBy) {
+                const refCode = currentUserData.referredBy.trim();
+                const referrers = await db.collection("users").where("referralCode", "==", refCode).get();
+
+                if (!referrers.empty) {
+                    const referrerDoc = referrers.docs[0];
+                    const referrerId = referrerDoc.id;
+                    const refBonus = 3; // বোনাস ৩ টাকা
+
+                    // ১. রেফারারের একাউন্টে টাকা যোগ করা
+                    await db.collection("users").doc(referrerId).update({
+                        mainBalance: firebase.firestore.FieldValue.increment(refBonus),
+                        totalEarnings: firebase.firestore.FieldValue.increment(refBonus)
+                    });
+
+                    // ২. রেফারারের হিস্ট্রিতে রেকর্ড রাখা
+                    await db.collection("history").add({
+                        userId: referrerId,
+                        type: "রেফার অ্যাক্টিভেশন বোনাস",
+                        amount: refBonus,
+                        status: "Success",
+                        details: `${currentUserData.name} আইডি অ্যাক্টিভ করেছে!`,
+                        date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    // ৩. রেফারারকে টেলিগ্রামে জানিয়ে দেওয়া
+                    const refData = referrerDoc.data();
+                    const tgMsg = `🎁 *রেফার অ্যাক্টিভেশন বোনাস!*\n\n👤 আপনার বন্ধু *${currentUserData.name}* তার আইডি অ্যাক্টিভ করেছে।\n💰 আপনি পেয়েছেন: *৳${refBonus}*`;
+                    // এখানে টেলিগ্রাম নোটিফিকেশন ফাংশন কল করা যেতে পারে (ঐচ্ছিক)
+                }
+            }
+
+            // ৪. হিস্ট্রি লগ রাখা
+            await db.collection("history").add({
+                userId: currentUserId,
+                type: "আইডি অ্যাক্টিভেশন",
+                amount: -activationFee,
+                status: "Success",
+                details: "১০ টাকা ফি দিয়ে আইডি অ্যাক্টিভ করা হয়েছে।",
+                date: new Date().toLocaleDateString('bn-BD'),
+                time: new Date().toLocaleTimeString('bn-BD'),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            hideLoading();
+            
+            // ৫. সাকসেস মেসেজ ও অটো রিলোড
+            await Swal.fire({
+                icon: 'success',
+                title: 'অভিনন্দন! 🎉',
+                text: 'আপনার আইডি সফলভাবে অ্যাক্টিভ হয়েছে। এখন আপনি সব কাজ করতে পারবেন।',
+                confirmButtonText: 'ধন্যবাদ',
+                confirmButtonColor: '#059669'
+            });
+            
+            location.reload(); // পেজ রিলোড
+
+        } catch (e) {
+            console.error("Activation Error:", e);
+            showSmartToast('অ্যাক্টিভ করতে সমস্যা হয়েছে, আবার চেষ্টা করুন।', 'error');
+            hideLoading();
+        }
+    }
 };
            
        
