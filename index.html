@@ -987,6 +987,103 @@
         .stripe-bg { background-image: linear-gradient(45deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15) 75%, transparent 75%, transparent); background-size: 1rem 1rem; animation: bg-slide 1s linear infinite; }     
        
        .active-sum { background: #10b981 !important; color: white !important; }      
+                      
+         /* 🎭 ULTRA SMART FLOATING SIDE WIDGETS - UPDATED FOR BENGALI */
+.side-widget-container-left {
+    position: fixed;
+    top: 195px; /* একটু নিচে নামিয়ে দিলাম */
+    left: 8px;
+    z-index: 45; /* যাতে অন্য কিছুর নিচে না পড়ে */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: auto;
+}
+
+.side-widget-container-right {
+    position: fixed;
+    top: 195px;
+    right: 8px;
+    z-index: 45;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: auto;
+}
+
+.side-btn {
+    width: 58px; /* উইডথ সামান্য বাড়ালাম */
+    height: 68px; /* হাইট অ্যাডজাস্ট করলাম */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+}
+
+.side-btn:active {
+    transform: scale(0.85) rotate(-5deg); /* ক্লিক করলে সুন্দর একটা টুইস্ট হবে */
+}
+
+.side-btn img {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 3px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+
+.side-btn span {
+    font-size: 9px; /* বাংলা ফন্ট সাইজ একদম পারফেক্ট */
+    font-weight: 800;
+    color: #334155;
+    text-transform: none; /* বাংলার জন্য আপারকেস লাগবে না */
+    text-align: center;
+    line-height: 1.1;
+    font-family: 'Hind Siliguri', sans-serif;
+}
+
+/* ⏰ টাইমার ব্যাজ স্টাইল */
+.happy-timer-badge {
+    position: absolute;
+    bottom: -6px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    font-size: 8px !important;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-weight: 900;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: pulse 1s infinite;
+}
+
+/* শাইন ইফেক্ট উইজেট বাটনগুলোতেও থাকবে */
+.side-btn::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: rotate(35deg);
+    animation: widget-shine 4s infinite;
+}
+
+@keyframes widget-shine {
+    0% { left: -150%; }
+    20% { left: 150%; }
+    100% { left: 150%; }
+}
                        
     </style>
     <!-- Monetag Ad Script -->
@@ -1308,6 +1405,37 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         
       <!-- HOME SCREEN -->
 <div id="homeScreen" class="animate__animated animate__fadeIn relative">
+    
+    <!-- ✅ FLOATING SIDE WIDGETS (বাংলা ভার্সন) -->
+<div class="side-widget-container-left">
+    <!-- ১. হ্যাপি আওয়ার বাটন -->
+    <div id="sideHappyHour" onclick="window.showPage('vipScreen')" class="side-btn animate__animated animate__bounceInLeft">
+        <img src="https://i.postimg.cc/TwfTZM7Z/award.png" class="animate-pulse">
+        <span style="color: #d97706;">হ্যাপি<br>আওয়ার</span>
+        <div id="sideHappyTimer" class="happy-timer-badge">--:--</div>
+    </div>
+
+    <!-- ২. ডেইলি বোনাস বাটন -->
+    <div onclick="window.showDailyBonus()" class="side-btn animate__animated animate__bounceInLeft" style="animation-delay: 0.1s">
+        <img src="https://i.postimg.cc/qqLQKVHV/bonus.png">
+        <span>ডেইলি<br>বোনাস</span>
+    </div>
+</div>
+
+<div class="side-widget-container-right">
+    <!-- ৩. রেফার বাটন -->
+    <div onclick="window.showPage('referralScreen')" class="side-btn animate__animated animate__bounceInRight">
+        <img src="https://i.postimg.cc/c4xbp54V/add-friend.png">
+        <span style="color: #2563eb;">বন্ধুদের<br>রেফার</span>
+    </div>
+
+    <!-- ৪. লাকি ড্র বাটন -->
+    <div onclick="window.showLuckyDraw()" class="side-btn animate__animated animate__bounceInRight" style="animation-delay: 0.1s">
+        <img src="https://i.postimg.cc/hj8zWcRb/tickets.png" class="animate-bounce">
+        <span style="color: #7c3aed;">লাকি<br>ড্র</span>
+    </div>
+</div>
+<!-- ✅ উইজেট শেষ -->
     
     <!-- ১. মেইন হেডার (সবুজ প্রিমিয়াম অংশ) -->
     <div class="bg-premium pb-12 pt-8 px-5 rounded-b-[40px] text-white shadow-xl relative z-10">
@@ -2811,6 +2939,90 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 </div>
             </div>
         </div>
+<!-- ✅ ULTRA PREMIUM SUPPORT SCREEN -->
+<div id="supportScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight min-h-screen bg-slate-50 pb-24">
+    <!-- হেডার -->
+    <div class="flex items-center gap-3 mb-6">
+        <button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
+            <i class="ri-arrow-left-line text-xl text-slate-700"></i>
+        </button>
+        <h2 class="text-2xl font-black text-slate-800 tracking-tight">লাইভ সাপোর্ট</h2>
+    </div>
+
+    <!-- মেইন কন্টেন্ট কার্ড -->
+    <div class="glass-card p-6 rounded-[35px] text-center relative overflow-hidden border border-white shadow-2xl">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full -mr-12 -mt-12"></div>
+        
+        <!-- লোগো/আইকন -->
+        <div class="inline-flex items-center gap-2 bg-blue-50 px-5 py-2 rounded-full mb-6 border border-blue-100 shadow-sm">
+            <i class="ri-customer-service-2-fill text-blue-600 text-lg animate-pulse"></i>
+            <span class="text-[12px] font-black text-blue-700 uppercase tracking-wider">লাইভ সাপোর্ট সেন্টার</span>
+        </div>
+
+        <h3 class="text-2xl font-black text-slate-800 mb-2">Live Chat Support</h3>
+        <p class="text-xs text-slate-500 leading-relaxed mb-8 px-2 font-medium">
+            যে কোনো প্রয়োজনে সরাসরি আমাদের এডমিন প্যানেলের সাথে কথা বলুন। নিচের ক্যাটাগরি অনুযায়ী বাটন সিলেক্ট করুন।
+        </p>
+
+        <!-- ⏰ সময়সূচী বক্স (তোমার দেওয়া সময় অনুযায়ী) -->
+        <div class="bg-gradient-to-br from-slate-50 to-blue-50 border border-blue-100 rounded-[25px] p-5 text-left mb-8 relative">
+            <div class="flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-md">
+                    <i class="ri-time-line text-lg"></i>
+                </div>
+                <span class="font-black text-slate-700 text-sm">যোগাযোগের সময়সূচী:</span>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="flex justify-between items-center bg-white/60 p-2.5 rounded-xl border border-white">
+                    <span class="text-[11px] font-bold text-slate-500 uppercase">সকাল শিফট</span>
+                    <span class="text-xs font-black text-slate-800">০৮:০০ AM - ১১:০০ AM</span>
+                </div>
+                <div class="flex justify-between items-center bg-white/60 p-2.5 rounded-xl border border-white">
+                    <span class="text-[11px] font-bold text-slate-500 uppercase">বিকাল-রাত</span>
+                    <span class="text-xs font-black text-slate-800">০২:০০ PM - ০৯:৩০ PM</span>
+                </div>
+            </div>
+
+            <!-- ⚠️ ওয়ার্নিং টেক্সট -->
+            <div class="mt-4 pt-4 border-t border-blue-100/50">
+                <p class="text-[10px] text-red-500 font-bold leading-relaxed flex items-start gap-1.5">
+                    <i class="ri-error-warning-fill text-sm shrink-0"></i>
+                    বাকি সময়গুলোতে এডমিন বিজি থাকবে। তাই নির্ধারিত সময়ের বাইরে কোনোভাবেই বিরক্ত করা যাবে না।
+                </p>
+            </div>
+        </div>
+
+        <!-- 🚀 এডমিন বাটনসমূহ -->
+        <div class="space-y-4">
+            <!-- পেমেন্ট এডমিন -->
+            <button onclick="window.contactAdmin('payment')" class="w-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white py-4 rounded-2xl font-black shadow-xl shadow-emerald-100 flex items-center justify-center gap-3 active:scale-95 transition-all group">
+                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center border border-white/20 group-hover:rotate-12 transition-transform">
+                    <i class="ri-bank-card-fill text-xl"></i>
+                </div>
+                <div class="text-left">
+                    <p class="text-[13px] leading-none">পেমেন্ট এডমিন</p>
+                    <p class="text-[9px] opacity-80 font-normal mt-1">ডিপোজিট ও উইথড্র বা পেমেন্ট সংক্রান্ত সাহায্য</p>
+                </div>
+                <i class="ri-arrow-right-s-line ml-auto text-xl opacity-50"></i>
+            </button>
+
+            <!-- সাধারণ এডমিন -->
+            <button onclick="window.contactAdmin('general')" class="w-full bg-gradient-to-r from-blue-600 to-indigo-500 text-white py-4 rounded-2xl font-black shadow-xl shadow-blue-100 flex items-center justify-center gap-3 active:scale-95 transition-all group">
+                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center border border-white/20 group-hover:rotate-12 transition-transform">
+                    <i class="ri-message-3-fill text-xl"></i>
+                </div>
+                <div class="text-left">
+                    <p class="text-[13px] leading-none">সাধারণ সমস্যা</p>
+                    <p class="text-[9px] opacity-80 font-normal mt-1">টাস্ক ও অন্যান্য বিষয়ের জন্য</p>
+                </div>
+                <i class="ri-arrow-right-s-line ml-auto text-xl opacity-50"></i>
+            </button>
+        </div>
+
+        <p class="text-[10px] text-slate-400 font-bold mt-8 uppercase tracking-[3px]">T A K A W A L A</p>
+    </div>
+</div>
 
     <!-- ✅ MODERN iPHONE DOCK BOTTOM NAV -->
     <div id="bottomNav" class="hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl shadow-[0_-5px_30px_rgba(0,0,0,0.1)] rounded-t-[30px] flex justify-around items-end pb-4 pt-2 z-50 border-t border-white/50">
@@ -6647,8 +6859,27 @@ confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         };
         
         
-            window.openSupport = () => { 
-    window.open('https://t.me/TAKA_WALA_ADMIN', '_blank'); 
+            // ✅ সাপোর্ট পেজ ওপেন করার ফাংশন
+window.openSupport = () => { 
+    window.showPage('supportScreen'); 
+};
+
+// ✅ এডমিন ক্যাটাগরি অনুযায়ী টেলিগ্রাম ওপেন করা
+window.contactAdmin = (type) => {
+    let telegramUser = "TAKA_WALA_ADMIN"; // ডিফল্ট সাধারণ এডমিন
+    let message = "";
+
+    if (type === 'payment') {
+        telegramUser = "TAKAWALA_PAYMENT"; // তোমার পেমেন্ট এডমিন ইউজারনেম এখানে দাও
+        message = encodeURIComponent("আসসালামু আলাইকুম, আমি পেমেন্ট সংক্রান্ত বিষয়ে কথা বলতে চাই।");
+    } else {
+        telegramUser = "TAKA_WALA_ADMIN"; // তোমার মেইন এডমিন ইউজারনেম এখানে দাও
+        message = encodeURIComponent("আসসালামু আলাইকুম, আমি অ্যাপের সাধারণ সমস্যা/টাস্ক নিয়ে কথা বলতে চাই।");
+    }
+
+    // টেলিগ্রামে নিয়ে যাওয়া
+    window.open(`https://t.me/${telegramUser}?text=${message}`, '_blank');
+    showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
 };
         
                        // ✅ DYNAMIC DRIVE OFFER FUNCTION (UPDATED WITH AD)
@@ -9452,7 +9683,33 @@ window.handleActivation = async () => {
         }
     }
 };
-           
+         
+         // ✅ Side Widget Happy Hour Controller
+function updateSideWidgets() {
+    const happyBtn = document.getElementById('sideHappyHour');
+    const happyTimer = document.getElementById('sideHappyTimer');
+    
+    if (!happyBtn || !happyTimer) return;
+
+    // তোমার existing isHappyHourActive ফাংশন ব্যবহার করছি
+    if (window.isHappyHourActive()) {
+        happyBtn.style.display = "flex";
+        happyBtn.style.borderColor = "#f59e0b"; // গোল্ডেন বর্ডার
+        
+        // টাইমার আপডেট (মেইন ফ্ল্যাশ সেল টাইমার থেকে ডাটা নিবে)
+        const mainTimer = document.getElementById('flashCountdown');
+        if (mainTimer) {
+            happyTimer.innerText = mainTimer.innerText;
+        }
+    } else {
+        // হ্যাপি আওয়ার না থাকলে বাটনটি হালকা স্বচ্ছ হয়ে থাকবে বা চাইলে হাইড করতে পারো
+        happyBtn.style.opacity = "0.5";
+        happyTimer.innerText = "OFF";
+    }
+}
+
+// প্রতি সেকেন্ডে উইজেট আপডেট হবে
+setInterval(updateSideWidgets, 1000);  
        
     </script>
     
