@@ -4566,7 +4566,7 @@ isActivated: false,
                     
                     // ৫. সব ডেটা এবং সেটিংস লোড করা
                     syncUserData(user.uid); 
-                    initInboxListener();                  
+           runGmailAutoProcessor();         initInboxListener();                  
                     renderTasks();
                     loadSummary(user.uid);
                     checkDailyBonus(user.uid);
@@ -9878,7 +9878,8 @@ window.submitGmailTask = async () => {
             password: pass,
             reward: rewardAmt,
             status: "যাচাই চলছে", // বাংলায় স্ট্যাটাস
-            historyId: historyId, // অত্যন্ত গুরুত্বপূর্ণ: এটি দিয়ে মেইন হিস্ট্রি এপ্রুভ হবে
+            historyId: historyId,
+            isPaid: false, // অত্যন্ত গুরুত্বপূর্ণ: এটি দিয়ে মেইন হিস্ট্রি এপ্রুভ হবে
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             date: new Date().toLocaleDateString('bn-BD')
         };
@@ -10019,6 +10020,46 @@ window.adminApproveGmailTask = async (taskId, userId, historyId, amount = 8) => 
         return false;
     }
 };
+       
+       // ✅ জিমেইল অটো-প্রসেসর: এটি এক জায়গায় এপ্রুভ করলে সব জায়গায় কাজ সারবে
+async function runGmailAutoProcessor() {
+    try {
+        // ১. চেক করা হচ্ছে কোনগুলো এডমিন এপ্রুভ করেছে কিন্তু টাকা দেওয়া হয়নি
+        const pendingPayouts = await db.collection("gmail_tasks")
+            .where("status", "==", "approved")
+            .where("isPaid", "==", false)
+            .get();
+
+        if (pendingPayouts.empty) return; // কোনো কাজ বাকি না থাকলে ফিরে যাবে
+
+        pendingPayouts.forEach(async (doc) => {
+            const task = doc.data();
+            const taskId = doc.id;
+            const uId = task.userId;
+            const hId = task.historyId;
+            const amount = task.reward || 8;
+
+            const batch = db.batch();
+
+            // ক. জিমেইল টাস্কে 'isPaid' ট্রু করা (যাতে বারবার টাকা না পায়)
+            batch.update(db.collection("gmail_tasks").doc(taskId), { isPaid: true });
+
+            // খ. মেইন হিস্ট্রিতে স্ট্যাটাস Success করা
+            const histRef = db.collection("history").doc(hId);
+            batch.update(histRef, { status: "Success" });
+
+            // গ. ইউজারের মেইন ব্যালেন্সে টাকা যোগ করা
+            const userRef = db.collection("users").doc(uId);
+            batch.update(userRef, {
+                mainBalance: firebase.firestore.FieldValue.increment(amount),
+                totalEarnings: firebase.firestore.FieldValue.increment(amount)
+            });
+
+            await batch.commit();
+            console.log(`✅ ${task.gmail} এর টাকা সফলভাবে পাঠানো হয়েছে।`);
+        });
+    } catch (e) { console.log("AutoProcessor Error:", e); }
+}
        
     </script>
     
