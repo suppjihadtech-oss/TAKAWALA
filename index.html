@@ -3081,9 +3081,10 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <p class="text-[12px] font-black text-red-500 text-center pt-2">ভুল পাসওয়ার্ড দিলে আপনার একাউন্ট বাতিল হবে।</p>
         </div>
 
-        <button onclick="window.unlockGmailForm()" class="w-full mt-6 bg-emerald-500 text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-emerald-100 active:scale-95 transition-all">
-            বুঝেছি
-        </button>
+        <!-- ✅ আপডেটেড টেলিগ্রাম বাটন -->
+<button onclick="window.unlockGmailForm()" class="w-full mt-6 bg-blue-600 text-white py-4 rounded-2xl font-black text-base shadow-lg shadow-blue-100 active:scale-95 transition-all flex items-center justify-center gap-2">
+    <i class="ri-telegram-fill text-2xl"></i> তথ্য পেতে এডমিনের সাথে কথা বলুন
+</button>
     </div>
 
     <!-- 📝 Submission Form -->
@@ -3841,7 +3842,7 @@ async function loadSystemSettings() {
             }
         }
         
-       // ✅ পেমেন্ট মেথড স্ট্যাটাস আপডেট ফাংশন (এডমিন প্যানেলের সাথে হুবহু মিল)
+ // ✅ সব পেমেন্ট মেথড (বিকাশ, নগদ, রকেট, ইউএসডিটি) ডাইনামিক কন্ট্রোল
 function updatePaymentMethodStatus(data) {
     const methods = ['bKash', 'Nagad', 'Rocket', 'USDT'];
     
@@ -3849,7 +3850,7 @@ function updatePaymentMethodStatus(data) {
         const depEl = document.getElementById(`payment_${method}`);
         const withEl = document.getElementById(`withdraw_${method}`);
         
-        // এডমিন প্যানেল যেভাবে সেভ করে: bkashActive, nagadActive...
+        // ফায়ারবেস থেকে কী (Key) চেক করা (যেমন: bkashActive, usdtActive)
         const toggleKey = method.toLowerCase() + "Active"; 
         const isMethodActive = data[toggleKey] === true;
 
@@ -3859,7 +3860,6 @@ function updatePaymentMethodStatus(data) {
                 depEl.classList.add('disabled-option');
                 depEl.style.opacity = "0.5";
                 depEl.onclick = () => showSmartToast(`${method} ডিপোজিট বর্তমানে বন্ধ আছে`, 'error');
-                // "বন্ধ" ব্যাজ যোগ করা (যদি না থাকে)
                 if(!depEl.querySelector('.disabled-text')) {
                     depEl.innerHTML += `<div class="disabled-text">বন্ধ</div>`;
                 }
@@ -4176,21 +4176,24 @@ window.buyPackage = async (packageId, price, name, days) => {
 };
     
         // ✅ UPDATED DEPOSIT ADDRESS FUNCTION
-        window.selectPayment = (el, method) => { 
-            if(method === 'USDT') {
-                // USDT is always enabled in deposit
-            } else if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
-                showSmartToast(`${method} লেনদেন বন্ধ`, 'error');
-                return;
-            }
-            
-            document.querySelectorAll('#depositSection .grid .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
-            el.classList.add('border-green-500','bg-green-50'); 
-            selectedMethod = method;
-            document.getElementById('selectedDepositMethod').value = method;
-            
-            updateDepositAddress(method);
-        };
+        // ✅ ডিপোজিট মেথড সিলেক্ট এবং কন্ট্রোল
+window.selectPayment = (el, method) => { 
+    const toggleKey = method.toLowerCase() + "Active";
+    
+    // চেক করা হচ্ছে এডমিন প্যানেল থেকে এই মেথড অন আছে কি না
+    if(systemSettings[toggleKey] !== true) {
+        showSmartToast(`${method} ডিপোজিট বর্তমানে বন্ধ আছে`, 'error');
+        return;
+    }
+    
+    document.querySelectorAll('#depositSection .grid .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
+    el.classList.add('border-green-500','bg-green-50'); 
+    
+    selectedMethod = method;
+    document.getElementById('selectedDepositMethod').value = method;
+    
+    updateDepositAddress(method);
+};
         
                                 // ✅ FIXED: DATABASE CONNECTED DEPOSIT FUNCTION (USDT + LOCAL)
         function updateDepositAddress(method) {
@@ -7832,18 +7835,30 @@ window.switchTaskTab = (type) => {
             document.getElementById('selectedOperator').value = operator;
         };
         
-        window.selectWithdrawMethod = (el, method) => { 
-            if(!paymentNumbers[method] || paymentNumbers[method] === "OFF" || paymentNumbers[method] === "") {
-                showSmartToast(`${method} লেনদেন বন্ধ`, 'error');
-                return;
-            }
-            
-            document.querySelectorAll('#withdrawSection .grid .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
-            el.classList.add('border-green-500','bg-green-50'); 
-            selectedMethod = method;
-            document.getElementById('selectedWithdrawMethod').value = method;
-        };
+        // ✅ উইথড্র মেথড সিলেক্ট এবং কন্ট্রোল
+window.selectWithdrawMethod = (el, method) => { 
+    const toggleKey = method.toLowerCase() + "Active";
+    
+    // চেক করা হচ্ছে এডমিন প্যানেল থেকে এই মেথড অন আছে কি না
+    if(systemSettings[toggleKey] !== true) {
+        showSmartToast(`${method} উত্তোলন বর্তমানে বন্ধ আছে`, 'error');
+        return;
+    }
+    
+    document.querySelectorAll('#withdrawSection .grid .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
+    el.classList.add('border-green-500','bg-green-50'); 
+    
+    selectedMethod = method;
+    document.getElementById('selectedWithdrawMethod').value = method;
 
+    // যদি মেথড USDT হয়, তবে ইনপুট বক্সের নাম পাল্টে যাবে
+    const numInput = document.getElementById('withdrawNumber');
+    if(method === 'USDT') {
+        numInput.placeholder = "আপনার USDT WALLET ADDRESS দিন";
+    } else {
+        numInput.placeholder = "অ্যাকাউন্ট নাম্বার দিন";
+    }
+};
         // ✅ SUBSCRIPTION FUNCTIONS        
      
         window.selectStarPackage = (stars) => {
