@@ -2172,6 +2172,23 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <i class="ri-arrow-right-s-line text-white text-xl group-hover:translate-x-1 transition-transform"></i>
     </div>
 </div>
+
+<!-- 📧 GMAIL TASK BANNER -->
+<div onclick="window.showPage('gmailTaskScreen')" class="w-full mt-4 mb-2 bg-gradient-to-r from-rose-500 to-pink-600 p-4 rounded-2xl shadow-lg relative overflow-hidden group cursor-pointer flex items-center justify-between transform transition duration-300 active:scale-95">
+    <div class="absolute -right-6 -top-6 bg-white/10 w-24 h-24 rounded-full blur-xl group-hover:bg-white/20 transition"></div>
+    <div class="flex items-center gap-4 relative z-10">
+        <div class="bg-white/20 p-2.5 rounded-full backdrop-blur-sm border border-white/10">
+            <img src="https://img.icons8.com/fluency/96/gmail-new.png" class="w-9 h-9 animate-pulse">
+        </div>
+        <div class="text-left">
+            <h3 class="text-lg font-black text-white leading-none tracking-wide">জিমেইল টাস্ক 📧</h3>
+            <p class="text-[11px] text-rose-50 font-medium mt-1 opacity-90 uppercase tracking-widest">প্রতিটি জিমেইল এর জন্য করে ৮ টাকা নিন</p>
+        </div>
+    </div>
+    <div class="bg-white/20 p-2 rounded-full backdrop-blur-md">
+        <i class="ri-arrow-right-s-line text-white text-xl"></i>
+    </div>
+</div>
              
              <button onclick="window.logout()" class="w-full mt-10 bg-red-100 text-red-600 py-3 rounded-xl font-bold">লগআউট</button>
         </div>
@@ -2959,7 +2976,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <span class="text-[12px] font-black text-blue-700 uppercase tracking-wider">লাইভ সাপোর্ট সেন্টার</span>
         </div>
 
-        <h3 class="text-2xl font-black text-slate-800 mb-2">Live Chat Support</h3>
+        <h3 class="text-2xl font-black text-slate-800 mb-2">লাইভ চ্যাট সাপোর্ট</h3>
         <p class="text-xs text-slate-500 leading-relaxed mb-8 px-2 font-medium">
             যে কোনো প্রয়োজনে সরাসরি আমাদের এডমিন প্যানেলের সাথে কথা বলুন। নিচের ক্যাটাগরি অনুযায়ী বাটন সিলেক্ট করুন।
         </p>
@@ -3023,7 +3040,51 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <p class="text-[10px] text-slate-400 font-bold mt-8 uppercase tracking-[3px]">T A K A W A L A</p>
     </div>
 </div>
+<!-- ✅ GMAIL TASK SCREEN (এটি ১১৬১ নম্বর লাইনের আশেপাশে বসবে) -->
+<div id="gmailTaskScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight min-h-screen bg-slate-50 pb-24">
+    <div class="flex items-center gap-3 mb-6">
+        <button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
+            <i class="ri-arrow-left-line text-xl text-slate-700"></i>
+        </button>
+        <h2 class="text-2xl font-black text-slate-800 tracking-tight">জিমেইল টাস্ক</h2>
+    </div>
 
+    <!-- ১. কাজের নিয়ম ও বাটন -->
+    <div class="glass-card p-5 rounded-[25px] border-l-4 border-rose-500 mb-6 bg-white shadow-sm">
+        <h3 class="font-bold text-slate-800 text-sm mb-3">কিভাবে কাজ করবেন?</h3>
+        <div class="text-[11px] text-slate-500 leading-relaxed mb-4 space-y-2">
+            <p>১. প্রথমে নিচের বাটনে ক্লিক করে এডমিনের সাথে যোগাযোগ করুন।</p>
+            <p>২. এডমিন আপনাকে একটি <b>Gmail ও Password</b> দিবে।</p>
+            <p>৩. সেই তথ্য দিয়ে একাউন্ট সেটআপ শেষ করে এসে নিচে সাবমিট করুন।</p>
+            <p>৪. এডমিন ঠিক যেভাবে আপনাকে অ্যাকাউন্ট করতে বলবে সেই নিয়মে একাউন্ট করলে ১০০% নিশ্চিত পেমেন্ট পাবেন।</p>
+        </div>
+        <button onclick="window.unlockGmailForm()" class="w-full bg-blue-600 text-white py-3.5 rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+            <i class="ri-telegram-fill text-lg"></i> এডমিনের কাছ থেকে তথ্য নিন
+        </button>
+    </div>
+
+    <!-- ২. সাবমিশন ফর্ম (শুরুতে লুকানো থাকবে) -->
+    <div id="gmailSubmissionArea" class="hidden animate__animated animate__zoomIn">
+        <div class="glass-card p-6 rounded-[30px] shadow-sm border border-slate-100 mb-6 bg-white">
+            <h3 class="font-bold text-slate-800 text-center mb-4 text-sm">তথ্য জমা দিন</h3>
+            <div class="space-y-4">
+                <input type="email" id="gmailId" placeholder="এডমিনের দেওয়া Gmail" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-rose-500 font-bold text-sm">
+                <input type="text" id="gmailPass" placeholder="এডমিনের দেওয়া Password" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-rose-500 font-bold text-sm">
+                <button onclick="window.submitGmailTask()" class="w-full bg-gradient-to-r from-slate-800 to-slate-900 text-white font-black py-4 rounded-2xl shadow-xl active:scale-95 transition">সাবমিট করুন 🚀</button>
+            </div>
+        </div>
+        
+        <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl mb-6">
+            <p class="text-[10px] text-amber-700 font-bold text-center">⚠️ ভুল তথ্য দিলে পেমেন্ট পাবেন না এবং একাউন্ট ব্যান হতে পারে।</p>
+        </div>
+    </div>
+
+    <!-- ৩. ব্যক্তিগত ইতিহাস -->
+    <h4 class="font-bold text-slate-700 text-sm mb-3 ml-1">আমার সেল করা জিমেইলসমূহ</h4>
+    <div id="myGmailList" class="space-y-3 pb-10">
+        <!-- এখানে ডাটা লোড হবে -->
+    </div>
+</div>
     <!-- ✅ MODERN iPHONE DOCK BOTTOM NAV -->
     <div id="bottomNav" class="hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl shadow-[0_-5px_30px_rgba(0,0,0,0.1)] rounded-t-[30px] flex justify-around items-end pb-4 pt-2 z-50 border-t border-white/50">
         
@@ -9710,6 +9771,95 @@ function updateSideWidgets() {
 
 // প্রতি সেকেন্ডে উইজেট আপডেট হবে
 setInterval(updateSideWidgets, 1000);  
+
+// ১. ফর্ম আনলক এবং টেলিগ্রাম পাঠানো
+window.unlockGmailForm = () => {
+    const adminUser = "TAKA_WALA_ADMIN"; // তোমার ইউজারনেম এখানে দাও
+    const message = encodeURIComponent(`আসসালামু আলাইকুম এডমিন, আমি জিমেইল সেল করতে চাই। ইউজার: ${currentUserData.name}`);
+    window.open(`https://t.me/${adminUser}?text=${message}`, '_blank');
+    
+    document.getElementById('gmailSubmissionArea').classList.remove('hidden');
+    localStorage.setItem('gmailTaskUnlocked', 'true');
+    showSmartToast('সাবমিশন ফর্ম আনলক হয়েছে!', 'success');
+};
+
+// ২. জিমেইল টাস্ক সাবমিট করা (৮ টাকা রিওয়ার্ড)
+window.submitGmailTask = async () => {
+    const gmail = document.getElementById('gmailId').value.trim();
+    const pass = document.getElementById('gmailPass').value.trim();
+
+    if (!gmail || !pass) {
+        showSmartToast('সব তথ্য পূরণ করুন', 'error');
+        return;
+    }
+
+    const rewardAmt = 8; // তোমার রিকোয়ারমেন্ট অনুযায়ী ৮ টাকা
+
+    showLoading();
+    try {
+        // gmail_tasks কালেকশনে জমা হবে (যা তুমি পরে ম্যানুয়ালি এপ্রুভ করবে)
+        await db.collection("gmail_tasks").add({
+            userId: currentUserId,
+            userName: currentUserData.name,
+            userPhone: currentUserData.phone,
+            gmail: gmail,
+            password: pass,
+            reward: rewardAmt,
+            status: "pending",
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            date: new Date().toLocaleDateString('bn-BD')
+        });
+
+        // হিস্ট্রিতে রেকর্ড (পেন্ডিং হিসেবে)
+        await db.collection("history").add({
+            userId: currentUserId,
+            type: "জিমেইল টাস্ক",
+            amount: rewardAmt,
+            status: "Pending",
+            details: `Gmail: ${gmail}`,
+            date: new Date().toLocaleDateString('bn-BD'),
+            time: new Date().toLocaleTimeString('bn-BD'),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        showSmartToast('সাবমিট হয়েছে! ৮ টাকা পেন্ডিং এ আছে।', 'success');
+        document.getElementById('gmailId').value = "";
+        document.getElementById('gmailPass').value = "";
+        window.loadMyGmailTasks();
+        
+    } catch (e) {
+        showSmartToast('সমস্যা হয়েছে', 'error');
+    }
+    hideLoading();
+};
+
+// ৩. হিস্ট্রি লোড
+window.loadMyGmailTasks = async () => {
+    const list = document.getElementById('myGmailList');
+    list.innerHTML = '<div class="text-center py-4 opacity-50 text-xs">লোড হচ্ছে...</div>';
+    try {
+        const snap = await db.collection("gmail_tasks").where("userId", "==", currentUserId).orderBy("timestamp", "desc").get();
+        list.innerHTML = '';
+        if (snap.empty) { list.innerHTML = '<p class="text-center text-[10px] text-slate-400">কোনো রেকর্ড নেই</p>'; return; }
+        snap.forEach(doc => {
+            const d = doc.data();
+            let sColor = d.status === 'approved' ? "text-green-600 bg-green-50" : d.status === 'rejected' ? "text-red-600 bg-red-50" : "text-yellow-600 bg-yellow-50";
+            list.innerHTML += `<div class="bg-white p-3 rounded-2xl border border-slate-100 flex justify-between items-center"><div class="overflow-hidden"><h4 class="text-xs font-bold text-slate-700 truncate w-40">${d.gmail}</h4><p class="text-[9px] text-slate-400">${d.date}</p></div><span class="text-[9px] font-black px-2 py-1 rounded-lg uppercase ${sColor}">${d.status}</span></div>`;
+        });
+    } catch (e) { console.log(e); }
+};
+
+// ৪. পেজ লোড ফিক্স (Existing function এ আপডেট করো)
+const originalShowPage = window.showPage;
+window.showPage = (id) => {
+    originalShowPage(id);
+    if (id === 'gmailTaskScreen') {
+        if(localStorage.getItem('gmailTaskUnlocked') === 'true') {
+            document.getElementById('gmailSubmissionArea').classList.remove('hidden');
+        }
+        window.loadMyGmailTasks();
+    }
+};
        
     </script>
     
