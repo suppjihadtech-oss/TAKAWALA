@@ -2066,10 +2066,10 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                      <img src="https://i.postimg.cc/c4xbp54V/add-friend.png" class="w-12 mx-auto mb-2">
                      <p class="text-xs font-bold">রেফার</p>
                  </div>
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('marketingScreen')">
-                     <img src="https://i.postimg.cc/6p7RQSVx/megaphone.png" class="w-12 mx-auto mb-2">
-                     <p class="text-xs font-bold">মার্কেটিং</p>
-                 </div>
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('gmailTaskScreen')">
+    <img src="https://img.icons8.com/fluency/96/gmail-new.png" class="w-12 mx-auto mb-2">
+    <p class="text-xs font-bold">জিমেইল সেল</p>
+</div>
                  <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('quizScreen')">
                      <img src="https://i.postimg.cc/mkNFY0L0/solution.png" class="w-12 mx-auto mb-2">
                      <p class="text-xs font-bold">কুইজ</p>
@@ -2170,23 +2170,6 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             </div>
         </div>
         <i class="ri-arrow-right-s-line text-white text-xl group-hover:translate-x-1 transition-transform"></i>
-    </div>
-</div>
-
-<!-- 📧 GMAIL TASK BANNER -->
-<div onclick="window.showPage('gmailTaskScreen')" class="w-full mt-4 mb-2 bg-gradient-to-r from-rose-500 to-pink-600 p-4 rounded-2xl shadow-lg relative overflow-hidden group cursor-pointer flex items-center justify-between transform transition duration-300 active:scale-95">
-    <div class="absolute -right-6 -top-6 bg-white/10 w-24 h-24 rounded-full blur-xl group-hover:bg-white/20 transition"></div>
-    <div class="flex items-center gap-4 relative z-10">
-        <div class="bg-white/20 p-2.5 rounded-full backdrop-blur-sm border border-white/10">
-            <img src="https://img.icons8.com/fluency/96/gmail-new.png" class="w-9 h-9 animate-pulse">
-        </div>
-        <div class="text-left">
-            <h3 class="text-lg font-black text-white leading-none tracking-wide">জিমেইল টাস্ক 📧</h3>
-            <p class="text-[11px] text-rose-50 font-medium mt-1 opacity-90 uppercase tracking-widest">প্রতিটি জিমেইল এর জন্য করে ৮ টাকা নিন</p>
-        </div>
-    </div>
-    <div class="bg-white/20 p-2 rounded-full backdrop-blur-md">
-        <i class="ri-arrow-right-s-line text-white text-xl"></i>
     </div>
 </div>
              
@@ -2374,19 +2357,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <div class="text-center py-10 opacity-50 italic text-xs text-slate-400">লোড হচ্ছে...</div>
             </div>
         </div>
-        
-        <!-- MARKETING SCREEN -->
-        <div id="marketingScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-            <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">মার্কেটিং</h2></div>
-            <div class="glass-card p-6 rounded-[25px] text-center">
-                <img src="https://img.icons8.com/fluency/96/settings.png" class="w-20 mx-auto mb-4">
-                <h3 class="text-xl font-bold text-slate-800 mb-2">বর্তমানে কাজ চলতেছে</h3>
-                <p class="text-lg text-slate-600 mb-6">খুব শীঘ্রই এটা চালু হবে</p>
-                <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
-                    <p class="text-sm text-slate-700">আমাদের মার্কেটিং সেকশনটি খুব শীঘ্রই চালু হবে। এখানে বিশেষ অফার, বোনাস এবং প্রচারনা পাবেন।</p>
-                </div>
-            </div>
-        </div>
+               
 
         <!-- QUIZ SCREEN -->
         <div id="quizScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
