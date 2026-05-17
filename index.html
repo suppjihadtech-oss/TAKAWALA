@@ -1084,6 +1084,7 @@
     20% { left: 150%; }
     100% { left: 150%; }
 }
+      
                        
     </style>
     <!-- Monetag Ad Script -->
@@ -1098,49 +1099,71 @@
         .swiper-pagination-bullet { background: #cbd5e1; opacity: 1; transition: all 0.3s ease; }
         .swiper-pagination-bullet-active { background: #059669; width: 18px; border-radius: 10px; }
         
-     /* 🎁 MYSTERY BOX REVEAL ANIMATION */
-.reward-box-anim {
+     /* ✨ ULTRA PREMIUM 3D REWARD BOX ANIMATION */
+.reward-box-3d {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    z-index: 9999999;
-    font-size: 100px;
-    color: #fbbf24;
-    text-shadow: 0 10px 40px rgba(251, 191, 36, 0.6);
-    animation: boxPopAndBurst 1.5s cubic-bezier(0.17, 0.89, 0.32, 1.49) forwards;
+    z-index: 10000000;
+    width: 150px;
+    height: 150px;
+    background: url('https://i.postimg.cc/Ghdg5VfP/1778991755480-removebg-preview.png') no-repeat center center;
+    background-size: contain;
+    filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.6));
+    animation: boxPopIn 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.49) forwards, 
+               boxShake 0.1s 0.6s infinite;
 }
 
-@keyframes boxPopAndBurst {
-    0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 0; }
-    50% { transform: translate(-50%, -50%) scale(1.5) rotate(15deg); opacity: 1; }
-    80% { transform: translate(-50%, -50%) scale(1.2) rotate(-15deg); }
-    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; filter: blur(10px); }
+@keyframes boxPopIn {
+    0% { transform: translate(-50%, -50%) scale(0) rotate(-45deg); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
 }
 
-.reward-text-pop {
+@keyframes boxShake {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    25% { transform: translate(-52%, -50%) rotate(-3deg); }
+    75% { transform: translate(-48%, -50%) rotate(3deg); }
+    100% { transform: translate(-50%, -50%) rotate(0deg); }
+}
+
+.box-burst {
+    animation: boxExplode 0.4s ease-out forwards !important;
+}
+
+@keyframes boxExplode {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.5); filter: brightness(2) blur(5px); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(2); filter: brightness(3) blur(20px); opacity: 0; }
+}
+
+.money-fly-up {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 10000000;
+    z-index: 10000001;
     font-size: 40px;
     font-weight: 900;
     color: #fff;
-    background: linear-gradient(to right, #4f46e5, #9333ea);
-    padding: 10px 30px;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #10b981, #059669);
+    padding: 10px 25px;
     border-radius: 50px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    animation: textFloatUp 2s ease-out forwards;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+    animation: moneyPop 1.5s ease-out forwards;
     pointer-events: none;
+    border: 3px solid #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-@keyframes textFloatUp {
-    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-    20% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-    100% { transform: translate(-50%, -80%) scale(1); opacity: 0; }
+@keyframes moneyPop {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    30% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    100% { transform: translate(-50%, -150%) scale(1); opacity: 0; }
 }
-
 
 /* 🌙 SMART DARK MODE OVERRIDES */
 body.dark-mode {
@@ -4950,7 +4973,7 @@ function renderTasks() {
                                         <p class="text-[10px] font-bold text-slate-500 flex items-center gap-1">${randomProof}</p>
                                     </div>
 
-                                    <button onclick="window.completeTask('${taskId}', ${t.reward}, '${safeTaskType}', '${safeTitle}', '${safeDesc}', '${safeLink}')" 
+                                    <button onclick="window.completeTask('${taskId}', ${t.reward}, '${safeTaskType}', '${safeTitle}', '${safeDesc}', '${safeLink}', ${t.needsProof || false})" 
                                         class="w-full h-10 bg-slate-900 text-white rounded-xl text-[11px] font-bold active:scale-95 transition-all shadow-md flex justify-center items-center gap-1">
                                         কাজ শুরু করুন <i class="ri-arrow-right-line"></i>
                                     </button>
@@ -5589,7 +5612,7 @@ totalReward += rewardAmt;
      // ✅ স্মার্ট টাস্ক কনফার্মেশন সিস্টেম (অটো নিয়ম ও লাইন বাই লাইন ভিউ)
 window.isTaskRunning = false;
 
-window.completeTask = async (taskId, reward, taskType, title, description, link) => {
+window.completeTask = async (taskId, reward, taskType, title, description, link, needsProof) => {
 if (currentUserData.isActivated === false) {
         return window.handleActivation();
     }
@@ -5665,7 +5688,7 @@ if (currentUserData.isActivated === false) {
         if (result.isConfirmed) {
             // কাজ শুরু
             window.isTaskRunning = true; 
-            currentTaskInfo = { taskId, reward, taskType, title, description, link };
+            currentTaskInfo = { taskId, reward, taskType, title, description, link, needsProof };
             
             showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হচ্ছে...', 'info');
             
@@ -5698,17 +5721,19 @@ if (currentUserData.isActivated === false) {
                 const linkStr = (currentTaskInfo.link || "").toLowerCase();
                 const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
 
-                // 🔥 ম্যাজিক: টাইমার শেষ হলে আগে অ্যাড আসবে, তারপর রেওয়ার্ড/প্রুফ ফর্ম
-                onAdCompleted = () => {
-                    if(!isSocialMedia) {
-                        // এটি ওয়েবসাইট টাস্ক, তাই কোনো প্রুফ ছাড়াই ডাইরেক্ট টাকা দিয়ে দিবে!
-                        window.submitWebsiteProofDirectly();
-                    } else {
-                        // এটি সোশ্যাল টাস্ক, তাই প্রমাণ (প্রুফ ফর্ম) চাইবে!
-                        showProofSubmissionForm();
-                        showSmartToast('অভিনন্দন! এখন কাজের প্রমাণ জমা দিন।', 'success');
-                    }
-                };
+// মামা চেক করবে যে এটা সোশ্যাল মিডিয়া অথবা এডমিন কি ওয়েবসাইট প্রুফ চেয়েছে কি না
+const mustSubmitProof = isSocialMedia || currentTaskInfo.needsProof === true;
+
+onAdCompleted = () => {
+    if(!mustSubmitProof) {
+        // প্রুফ না লাগলে সরাসরি টাকা
+        window.submitWebsiteProofDirectly();
+    } else {
+        // প্রুফ লাগলে ফর্ম দেখাবে
+        showProofSubmissionForm();
+        showSmartToast('অভিনন্দন! এখন কাজের প্রমাণ জমা দিন।', 'success');
+    }
+};
 
                 // এখন অ্যাড কল করা হলো
                 showInterstitialAd();
@@ -5733,23 +5758,30 @@ if (currentUserData.isActivated === false) {
             let proof1Placeholder = "আপনার ইউজারনেম বা জিমেইল দিন";
             let icon = "ri-user-line";
 
-            // টাস্ক টাইপ চেক করে লেভেল চেঞ্জ হবে
+            // টাস্ক টাইপ চেক করে লেভেল চেঞ্জ হবে (মামা ফিক্সড ভার্সন)
             if(currentTaskInfo) {
-                if(currentTaskInfo.taskType === 'youtube' || currentTaskInfo.link.includes('youtube')) {
+                if(currentTaskInfo.link.includes('youtube') || currentTaskInfo.link.includes('youtu.be')) {
                     proof1Label = "আপনার ইউটিউব চ্যানেলের নাম বা জিমেইল";
                     proof1Placeholder = "উদাহরন: My Channel Name";
                     icon = "ri-youtube-fill";
-                } else if(currentTaskInfo.taskType === 'telegram' || currentTaskInfo.link.includes('t.me')) {
+                } 
+                else if(currentTaskInfo.link.includes('t.me') || currentTaskInfo.link.includes('telegram')) {
                     proof1Label = "আপনার টেলিগ্রাম ইউজারনেম";
                     proof1Placeholder = "উদাহরন: @username";
                     icon = "ri-telegram-fill";
-                } else if(currentTaskInfo.taskType === 'facebook' || currentTaskInfo.link.includes('facebook')) {
+                } 
+                else if(currentTaskInfo.link.includes('facebook') || currentTaskInfo.link.includes('fb.watch')) {
                     proof1Label = "আপনার ফেসবুক প্রোফাইল নাম/লিংক";
                     proof1Placeholder = "উদাহরন: Facebook Profile Link";
                     icon = "ri-facebook-circle-fill";
                 }
+                // এটি হলো নতুন ওয়েবসাইট প্রুফ লজিক
+                else if(currentTaskInfo.needsProof === true) {
+                    proof1Label = "আপনার নাম বা ভিজিট করা পেজের টাইটেল";
+                    proof1Placeholder = "আপনার নাম লিখুন";
+                    icon = "ri-global-line";
+                }
             }
-
             // 2. গর্জিয়াস HTML ফর্ম ডিজাইন ও হেল্পার বাটন
             container.innerHTML = `
                 <div class="space-y-4 animate__animated animate__fadeInUp">
@@ -6204,24 +6236,28 @@ await db.collection("history").doc(newReqId).set({
                 return showSmartToast('ভুল পিন দিয়েছেন!', 'error');
             }
             
-            // ⏳ পেন্ডিং উইথড্র চেক (মামা স্পেশাল)
+         // ⏳ উইথড্র পেন্ডিং চেক (মামা স্পেশাল লক)
     showLoading();
-    const pendingWithdrawCheck = await db.collection("pending_requests")
+    const pendingWithdraw = await db.collection("pending_requests")
         .where("userId", "==", currentUserId)
         .where("type", "==", "Withdraw")
         .where("status", "==", "Pending")
-        .get();
+        .limit(1).get();
 
-    if (!pendingWithdrawCheck.empty) {
+    if (!pendingWithdraw.empty) {
         hideLoading();
-        return Swal.fire({
+        Swal.fire({
+            title: '<span style="color:#f59e0b">আবেদন পেন্ডিং! ⏳</span>',
+            html: `<div style="text-align:center; font-size:14px; font-weight:600; color:#475569;">
+                    মামা, আপনার একটি <b>উত্তোলনের আবেদন</b> বর্তমানে প্রসেসিংয়ে আছে। <br><br>
+                    সেটি সফল (Success) বা বাতিল না হওয়া পর্যন্ত আপনি নতুন কোনো উত্তোলনের রিকোয়েস্ট দিতে পারবেন না।
+                   </div>`,
             icon: 'warning',
-            title: 'আবেদন পেন্ডিং আছে! ⏳',
-            text: 'আপনার একটি উত্তোলনের আবেদন বর্তমানে পেন্ডিং আছে। সেটি সফল বা বাতিল না হওয়া পর্যন্ত নতুন আবেদন করতে পারবেন না।',
-            confirmButtonText: 'ঠিক আছে',
-            confirmButtonColor: '#ef4444',
-            customClass: { popup: 'rounded-[25px]' }
+            confirmButtonText: 'বুঝেছি',
+            confirmButtonColor: '#3b82f6',
+            customClass: { popup: 'rounded-[30px]' }
         });
+        return; 
     }
     hideLoading();
             
@@ -6390,14 +6426,46 @@ await db.collection("history").doc(newReqId).set({
             }
                   
                // 🛑 ৩টি রেফার চেক (ফ্রি ইউজারদের জন্য)
+            // 🛡️ মেগা সিকিউরিটি: একটিভ রেফার চেক (মামা স্পেশাল)
             const isFreeUser = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
             if(isFreeUser) {
-                const referralCount = currentUserData.totalReferrals || 0;
-                if(referralCount < 3) {
-                    showSmartToast(`আপনার রেফার ${referralCount}। রিচার্জ করতে সর্বনিম্ন ৩টি রেফার প্রয়োজন।`, 'error');
-                    return;
+                showLoading(); // চেক করার সময় লোডিং দেখাবে
+                try {
+                    const myCode = currentUserData.referralCode.trim();
+                    // ডাটাবেস থেকে ইউজারের সব রেফারালদের ডাটা চেক করা হচ্ছে
+                    const refSnap = await db.collection("users").where("referredBy", "==", myCode).get();
+                    
+                    // চেক করবে কয়জন রেফার মেম্বার অন্তত ৫টি টাস্ক কমপ্লিট করেছে
+                    let activeRefCount = 0;
+                    refSnap.forEach(doc => {
+                        const refData = doc.data();
+                        if((refData.totalTasks || 0) >= 5) {
+                            activeRefCount++;
+                        }
+                    });
+
+                    if(activeRefCount < 3) {
+                        hideLoading();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'উইথড্র আটকে দেওয়া হয়েছে! 🚫',
+                            html: `<div style="text-align:left; font-size:13px; line-height:1.6;">
+                                    মামা, আপনার ৩টি <b>এক্টিভ রেফার</b> নেই। <br><br>
+                                    বর্তমানে আপনার একটিভ রেফার: <b style="color:red;">${activeRefCount} জন</b><br>
+                                    প্রয়োজন: <b>৩ জন</b><br><br>
+                                    <span style="color:#475569;">নিয়ম: আপনার রেফারে জয়েন করা মেম্বারদের অন্তত ৫টি করে টাস্ক কমপ্লিট করতে হবে, তবেই তারা এক্টিভ হিসেবে গণ্য হবে।</span>
+                                   </div>`,
+                            confirmButtonText: 'বুঝেছি',
+                            confirmButtonColor: '#ef4444',
+                            customClass: { popup: 'rounded-[25px]' }
+                        });
+                        return;
+                    }
+                } catch (e) {
+                    console.log("Ref Check Error:", e);
                 }
-            }   
+                hideLoading();
+            }
                      
             const fee = systemSettings.rechargeFee || 5;
             const totalAmount = amount + fee;
@@ -6437,27 +6505,30 @@ await db.collection("history").doc(newReqId).set({
             if (userPin !== currentUserData.transactionPin) {
                 return showSmartToast('ভুল পিন দিয়েছেন!', 'error');
             }
-            // ⏳ পেন্ডিং রিচার্জ চেক (মামা স্পেশাল)
+            // ⏳ রিচার্জ পেন্ডিং চেক (মামা স্পেশাল লক)
     showLoading();
-    const pendingRechargeCheck = await db.collection("pending_requests")
+    const pendingRecharge = await db.collection("pending_requests")
         .where("userId", "==", currentUserId)
         .where("type", "==", "Recharge")
         .where("status", "==", "Pending")
-        .get();
+        .limit(1).get();
 
-    if (!pendingRechargeCheck.empty) {
+    if (!pendingRecharge.empty) {
         hideLoading();
-        return Swal.fire({
-            icon: 'warning',
-            title: 'আবেদন পেন্ডিং আছে! ⏳',
-            text: 'আপনার একটি রিচার্জের আবেদন বর্তমানে পেন্ডিং আছে। সেটি সম্পন্ন হওয়া পর্যন্ত অপেক্ষা করুন।',
+        Swal.fire({
+            title: '<span style="color:#0284c7">রিচার্জ পেন্ডিং! 📱</span>',
+            html: `<div style="text-align:center; font-size:14px; font-weight:600; color:#475569;">
+                    আপনার একটি <b>রিচার্জের আবেদন</b> বর্তমানে পেন্ডিং আছে। <br><br>
+                    মামা, রিকোয়েস্টটি সম্পন্ন হওয়া পর্যন্ত দয়া করে অপেক্ষা করুন। এর মধ্যে নতুন রিচার্জ রিকোয়েস্ট দেওয়া যাবে না।
+                   </div>`,
+            icon: 'info',
             confirmButtonText: 'ঠিক আছে',
-            confirmButtonColor: '#3b82f6',
-            customClass: { popup: 'rounded-[25px]' }
+            confirmButtonColor: '#0284c7',
+            customClass: { popup: 'rounded-[30px]' }
         });
+        return;
     }
-    hideLoading();
-            
+         hideLoading()   
             // 🚀 রিচার্জ লিমিট লজিক
     const userPlan = (currentUserData.plan || "").toLowerCase();
     const isVIP = userPlan.includes("vip") || userPlan.includes("gold") || userPlan.includes("silver") || userPlan.includes("platinum");
@@ -6867,33 +6938,29 @@ window.loadSummary = () => window.loadFilteredSummary('all');
                             document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
                         }
 
-                        // 🔥 দুই পাশ থেকে বার্থডে স্টাইল কনফেটি
+                      // ১. ৩ডি বক্স এনিমেশন চালু (মামা স্পেশাল)
+                        window.trigger3DBoxReward(`৳${finalAmount}`);
+
+                        // ২. দুই পাশ থেকে বার্থডে স্টাইল কনফেটি বৃষ্টি (৩ সেকেন্ড ধরে চলবে)
                         if(typeof confetti === 'function') {
                             var duration = 3000;
                             var end = Date.now() + duration;
-
                             (function frame() {
                                 confetti({
-                                    particleCount: 5, angle: 60, spread: 55, origin: { x: 0 },
-                                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#purple']
+                                    particleCount: 3, angle: 60, spread: 55, origin: { x: 0 },
+                                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
                                 });
                                 confetti({
-                                    particleCount: 5, angle: 120, spread: 55, origin: { x: 1 },
-                                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#purple']
+                                    particleCount: 3, angle: 120, spread: 55, origin: { x: 1 },
+                                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
                                 });
-
-                                if (Date.now() < end) {
-                                    requestAnimationFrame(frame);
-                                }
+                                if (Date.now() < end) { requestAnimationFrame(frame); }
                             }());
                         }
 
+                        // ৩. মেসেজ এবং সাউন্ড
                         showSmartToast(message, 'success');
-        
-// বোনাস পেলে বড় কনফেটি
-confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                
-          window.playSound('snd_success');
+                        window.playSound('snd_success');
      
                         hideLoading();
                         
@@ -7187,31 +7254,9 @@ if (currentUserData.isActivated === false) {
 
         setTimeout(async () => {
             // 🎁 ১. বক্স পপ-আপ এনিমেশন শুরু (মামা স্পেশাল)
-            const boxDiv = document.createElement('div');
-            boxDiv.className = 'reward-box-anim';
-            boxDiv.innerHTML = '<i class="ri-gift-2-fill"></i>';
-            document.body.appendChild(boxDiv);
-
-            // ২. ঠিক ১ সেকেন্ড পর বক্সটি "ফাটবে" এবং অ্যামাউন্ট দেখাবে
-            setTimeout(() => {
-                boxDiv.remove();
-                
-                // কনফেটি বিস্ফোরণ
-                if(typeof confetti === 'function') {
-                    confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
-                }
-
-                // টাকার অংক স্ক্রিনে ভেসে উঠবে (বক্স ফাটার পর)
-                if(reward.type !== 'empty') {
-                    const textPop = document.createElement('div');
-                    textPop.className = 'reward-text-pop';
-                    textPop.innerText = reward.label;
-                    document.body.appendChild(textPop);
-                    setTimeout(() => textPop.remove(), 2000);
-                }
-                
-                window.playSound('snd_success');
-            }, 1200);
+            if(reward.type !== 'empty') {
+                window.trigger3DBoxReward(reward.label);
+            }
 
             showLoading(); // বাকি ডাটাবেস প্রসেসিং চলবে...
             try {
@@ -7748,6 +7793,32 @@ window.toggleWalletTab = (t) => {
         }
         
        if(t === 'withdraw' && typeof window.renderSavedAccount === 'function') window.renderSavedAccount();
+       
+     // 🛡️ ইউজার যাতে ফর্ম টাচ করতে না পারে (স্মার্ট লক)
+    if(t === 'withdraw' || t === 'recharge' || t === 'deposit') {
+        const type = t.charAt(0).toUpperCase() + t.slice(1);
+        const sectionId = t === 'withdraw' ? 'withdrawSection' : (t === 'recharge' ? 'rechargeScreen' : 'depositSection');
+        
+        db.collection("pending_requests")
+            .where("userId", "==", currentUserId)
+            .where("type", "==", type)
+            .where("status", "==", "Pending")
+            .onSnapshot(snap => {
+                const section = document.getElementById(sectionId);
+                if(section) {
+                    if(!snap.empty) {
+                        section.style.opacity = "0.5";
+                        section.style.pointerEvents = "none";
+                        section.style.filter = "grayscale(100%)";
+                        showSmartToast(`আপনার একটি ${type} রিকোয়েস্ট পেন্ডিং আছে!`, 'warning');
+                    } else {
+                        section.style.opacity = "1";
+                        section.style.pointerEvents = "auto";
+                        section.style.filter = "none";
+                    }
+                }
+            });
+    }  
         
     }
 };
@@ -10031,6 +10102,39 @@ async function runGmailAutoProcessor() {
         });
     } catch (e) { console.log("AutoProcessor Error:", e); }
 }
+
+// ✅ ৩ডি বক্স এনিমেশন কন্ট্রোলার
+window.trigger3DBoxReward = (amountLabel) => {
+    // সাউন্ড প্লে
+    window.playSound('snd_bonus');
+    
+    // বক্স তৈরি
+    const box = document.createElement('div');
+    box.className = 'reward-box-3d';
+    document.body.appendChild(box);
+
+    // ১.২ সেকেন্ড পর বক্স ফাটবে
+    setTimeout(() => {
+        box.classList.add('box-burst');
+        
+        // টাকার অ্যামাউন্ট বের হওয়া
+        const money = document.createElement('div');
+        money.className = 'money-fly-up';
+        money.innerHTML = `<i class="ri-money-dollar-circle-fill"></i> ${amountLabel}`;
+        document.body.appendChild(money);
+        
+        // কনফেটি ফাটানো
+        if(typeof confetti === 'function') {
+            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+        }
+        
+        // সবশেষে রিমুভ করা
+        setTimeout(() => {
+            box.remove();
+            money.remove();
+        }, 1500);
+    }, 1200);
+};
        
     </script>
     
