@@ -1210,6 +1210,41 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
 </head>
 <body class="bg-slate-50">
 
+<!-- 🚫 ULTRA MODERN BANNED SCREEN -->
+<div id="bannedScreen" class="hidden fixed inset-0 z-[99999999] bg-slate-950 flex items-center justify-center p-6 overflow-hidden">
+    <!-- Background Glowing Orbs -->
+    <div class="absolute top-[-10%] left-[-10%] w-80 h-80 bg-red-600/30 rounded-full blur-[100px] animate-pulse"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-80 h-80 bg-rose-600/20 rounded-full blur-[100px] animate-pulse"></div>
+
+    <div class="relative w-full max-w-md bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[40px] shadow-2xl p-8 text-center animate__animated animate__zoomIn">
+        
+        <!-- Animated Red Warning Icon -->
+        <div class="relative w-28 h-28 mx-auto mb-8">
+            <div class="absolute inset-0 bg-red-500 blur-2xl opacity-20 rounded-full"></div>
+            <div class="relative w-full h-full bg-slate-900 rounded-full flex items-center justify-center border border-white/10 shadow-inner">
+                <i class="ri-error-warning-fill text-6xl text-transparent bg-clip-text bg-gradient-to-tr from-red-500 to-rose-500 animate-pulse"></i>
+            </div>
+        </div>
+
+        <h1 class="text-3xl font-black text-white mb-3 tracking-wide drop-shadow-lg">অ্যাকাউন্ট ব্যান করা হয়েছে! 🚫</h1>
+        <p id="banReasonText" class="text-sm font-medium text-slate-400 mb-8 leading-relaxed px-4">
+            দুঃখিত, নিয়মনীতি অমান্য করার কারণে আপনার অ্যাকাউন্টটি স্থায়ীভাবে ব্লক করা হয়েছে।
+        </p>
+
+        <!-- Support Button -->
+        <button onclick="window.contactAdmin('general')" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-3 shadow-lg group">
+            <i class="ri-customer-service-2-fill text-2xl group-hover:scale-125 transition-transform"></i> সাপোর্টে কথা বলুন
+        </button>
+        
+        <!-- Force Signout Button -->
+        <button onclick="window.forceLogoutFromBan()" class="w-full mt-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-3 rounded-2xl transition-all active:scale-95">
+            লগআউট করুন
+        </button>
+        
+        <p class="text-[9px] text-slate-600 font-bold mt-6 uppercase tracking-[3px]">T A K A W A L A</p>
+    </div>
+</div>
+
    <!-- 🛠️ ULTRA MODERN MAINTENANCE SCREEN -->
     <div id="maintenanceScreen" class="hidden fixed inset-0 z-[9999999] bg-slate-950 flex items-center justify-center p-6 overflow-hidden">
         
@@ -2629,7 +2664,25 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
              <h2 class="text-2xl font-bold text-slate-800">প্যাকেজ</h2>
          </div>
      </div>
-
+<!-- 🌙 EID SPECIAL PROMO CARD -->
+<div class="bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 p-5 rounded-3xl text-white mb-6 relative overflow-hidden shadow-lg border border-white/20 animate__animated animate__pulse animate__infinite animate__slower">
+    <div class="absolute -right-6 -top-6 bg-white/10 w-24 h-24 rounded-full blur-xl animate-pulse"></div>
+    <div class="relative z-10 text-left">
+        <div class="flex items-center gap-1.5 mb-1">
+            <i class="ri-moon-clear-fill text-yellow-300 text-lg"></i>
+            <h3 class="text-sm font-black uppercase drop-shadow-md text-white">ঈদ-উল-আযহা ধামাকা অফার! 🌙</h3>
+        </div>
+        <p class="text-[10px] text-red-100 font-medium">ভিআইপি প্যাকেজে ২০% ছাড় পেতে প্রোমো কোড ব্যবহার করুন</p>
+        
+        <!-- Promo Code Input & Button -->
+        <div class="flex gap-2 mt-3">
+            <input type="text" id="packagePromoInput" placeholder="EID20%OFF" class="flex-1 px-4 py-2.5 rounded-xl text-xs font-black tracking-widest text-red-600 uppercase outline-none bg-white/95 focus:ring-2 focus:ring-yellow-400">
+            <button onclick="window.applyPackagePromo()" class="bg-yellow-400 hover:bg-yellow-500 text-red-800 font-black px-4 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md shrink-0">
+                প্রয়োগ করুন
+            </button>
+        </div>
+    </div>
+</div>
      <!-- ✅ রিয়েল-টাইম প্যাকেজ কাউন্টডাউন বক্স -->
      <div id="activePackageTimer" class="hidden glass-card p-5 rounded-3xl border-2 border-green-500 mb-6 bg-gradient-to-br from-green-50 to-white shadow-lg animate__animated animate__pulse animate__infinite">
         <div class="flex items-center gap-3 mb-3">
@@ -3547,6 +3600,7 @@ window.sendTWAI = () => {
         
         // ✅ GLOBAL VARIABLES
         let currentUserData = null;
+        let appliedPromoPercent = 0; 
         
         // ✅ নাম্বার এনিমেশন লজিক
 function animateNumberUpdate(id, start, end, duration = 1000) {
@@ -3997,6 +4051,14 @@ async function loadPackages() {
             }
 
             let finalPrice = basePrice - pDiscount;
+            
+            // 🌙 ঈদ স্পেশাল ২০% প্রোমো ডিসকাউন্ট হিসাব করা
+            if (typeof appliedPromoPercent !== 'undefined' && appliedPromoPercent > 0) {
+                const promoDiscount = Math.round(finalPrice * (appliedPromoPercent / 100));
+                finalPrice = finalPrice - promoDiscount;
+                pDiscount += promoDiscount; // মোট ডিসকাউন্ট ব্যাজে যোগ করার জন্য
+            }
+
             if(finalPrice < 0) finalPrice = 0; // দাম যেন মাইনাস না হয়
 
             let discountBadge = '';
@@ -4403,38 +4465,20 @@ isActivated: false,
                 
                 await db.collection("users").doc(uc.user.uid).set(userData);
                 
-                if(referralCode) {
+               if(referralCode) {
     try {
         const referralQuery = await db.collection("users").where("referralCode", "==", referralCode).get();
         if(!referralQuery.empty) {
             const referrerDoc = referralQuery.docs[0];
             const referrerId = referrerDoc.id;
             
-            // বোনাস নিশ্চিত করা
-            let bAmt = parseFloat(systemSettings.referralBonus) || 5;
-            
-            // রেফারারের একাউন্টে টাকা পাঠানো
+            // রেফারারকে সরাসরি টাকা না দিয়ে শুধু রেফারেল সংখ্যা ও ফ্রি স্পিন বাড়ানো হলো
             await db.collection("users").doc(referrerId).update({
-                mainBalance: firebase.firestore.FieldValue.increment(bAmt),
-                totalEarnings: firebase.firestore.FieldValue.increment(bAmt),
                 totalReferrals: firebase.firestore.FieldValue.increment(1),
-                dailySpins: firebase.firestore.FieldValue.increment(1), // ১টি ফ্রি স্পিন বোনাস
-                referralEarnings: firebase.firestore.FieldValue.increment(bAmt)
+                dailySpins: firebase.firestore.FieldValue.increment(1) 
             });
             
-            // হিস্ট্রি যোগ করা
-            await db.collection("history").add({
-                userId: referrerId,
-                type: "রেফার বোনাস",
-                amount: bAmt,
-                status: "Success",
-                details: `${name} আপনার রেফারে জয়েন করেছে`,
-                date: new Date().toLocaleDateString('bn-BD'),
-                time: new Date().toLocaleTimeString('bn-BD'),
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            await db.collection("users").doc(uc.user.uid).update({ referredBy: referralCode  });
+            await db.collection("users").doc(uc.user.uid).update({ referredBy: referralCode });
         }
     } catch (e) { console.error("Referral Error:", e); }
 }
@@ -4621,6 +4665,15 @@ function syncUserData(uid) {
             currentUserData = d.data();
             const userData = currentUserData; 
 
+// 🛑 ১. ডাটাবেস ফিল্ড চেক (isBanned: true অথবা status: "banned")
+            if (userData.isBanned === true || userData.status === "banned" || userData.status === "Banned") {
+                showBannedScreen(userData.banReason || "দুঃখিত, নিয়মনীতি অমান্য করার কারণে আপনার অ্যাকাউন্টটি স্থায়ীভাবে ব্লক করা হয়েছে।");
+                return;
+            }
+
+            // ব্যান না থাকলে স্ক্রিন হাইড থাকবে
+            document.getElementById('bannedScreen').classList.add('hidden');
+
             // ✅ আইডি অ্যাক্টিভেশন চেক লজিক
             const activationCard = document.getElementById('activationCard');
             if (activationCard) {
@@ -4732,19 +4785,72 @@ function syncUserData(uid) {
     document.getElementById('referralLink').innerText = tgRefLink;
 }
 
-            if(userData.createdAt && document.getElementById('joinDate')) {
-                const date = userData.createdAt.toDate();
-                document.getElementById('joinDate').innerText = date.toLocaleDateString('bn-BD');
+            // ✅ মাত্র ৩টি কাজ সম্পন্ন করলে অটোমেটিক রেফার বোনাস যোগ হওয়ার স্মার্ট সিস্টেম
+            if (userData.referredBy && !userData.isReferralBonusPaid) {
+                db.collection("history")
+                    .where("userId", "==", uid)
+                    .get()
+                    .then(async (historySnap) => {
+                        let activityCount = 0;
+                        historySnap.forEach(doc => {
+                            const type = (doc.data().type || "").toLowerCase();
+                            // টাস্ক সাবমিট, ডেইলি বোনাস, কুইজ বা স্পিন জয় থাকলে অ্যাক্টিভিটি হিসেবে গণ্য হবে
+                            if (type.includes("টাস্ক") || type.includes("ভিজিট") || type.includes("বোনাস") || type.includes("কুইজ") || type.includes("স্পিন")) {
+                                activityCount++;
+                            }
+                        });
+
+                        // যদি নতুন ইউজার অন্তত ৩টি কাজ সম্পন্ন করে থাকে
+                        if (activityCount >= 3) {
+                            try {
+                                const refCode = userData.referredBy.trim();
+                                const refQuery = await db.collection("users").where("referralCode", "==", refCode).get();
+
+                                if (!refQuery.empty) {
+                                    const referrerId = refQuery.docs[0].id;
+                                    const bAmt = parseFloat(systemSettings.referralBonus) || 5; // এডমিনের ডাইনামিক বোনাস রেট
+
+                                    const batch = db.batch();
+                                    
+                                    // ১. রেফারারের মেইন ব্যালেন্সে টাকা পাঠানো
+                                    batch.update(db.collection("users").doc(referrerId), {
+                                        mainBalance: firebase.firestore.FieldValue.increment(bAmt),
+                                        totalEarnings: firebase.firestore.FieldValue.increment(bAmt),
+                                        referralEarnings: firebase.firestore.FieldValue.increment(bAmt)
+                                    });
+
+                                    // ২. রেফারারের হিস্ট্রিতে সাকসেস নোটিফিকেশন যোগ করা
+                                    const newHistoryRef = db.collection("history").doc();
+                                    batch.set(newHistoryRef, {
+                                        userId: referrerId,
+                                        type: "রেফার বোনাস 🎁",
+                                        amount: bAmt,
+                                        status: "Success",
+                                        details: `আপনার আমন্ত্রিত মেম্বার (${userData.name}) এক্টিভ হয়েছেন!`,
+                                        date: new Date().toLocaleDateString('bn-BD'),
+                                        time: new Date().toLocaleTimeString('bn-BD'),
+                                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                                    });
+
+                                    // ৩. নিজের আইডিতে লক করে দেওয়া যাতে ২য় বার বোনাস জেনারেট না হয়
+                                    batch.update(db.collection("users").doc(uid), {
+                                        isReferralBonusPaid: true
+                                    });
+
+                                    await batch.commit();
+                                    await sendTelegramNotification(`🎉 *রেফারাল অ্যাক্টিভেশন সফল!*\n👤 ${userData.name} এক্টিভ হওয়ায় রেফারার পেলেন ৳${bAmt}`);
+                                }
+                            } catch (err) { console.log("Referral Award Err:", err); }
+                        }
+                    });
             }
 
         }
-    }, (error) => { 
+  }, (error) => { 
         hideLoading();
         if (error.code === 'permission-denied') {
-            auth.signOut(); 
-            document.getElementById('mainApp').classList.add('hidden');
-            document.getElementById('authScreen').classList.remove('hidden');
-            Swal.fire({ icon: 'error', title: 'অ্যাক্সেস নেই! 🚫', html: 'আপনার একাউন্টটি ব্যান করা হয়েছে।', confirmButtonColor: '#ef4444' });
+            // ২. ফায়ারবেস সিকিউরিটি রুলস দিয়ে ব্যান করা হলে
+            showBannedScreen("দুঃখিত, নিয়মনীতি অমান্য করার কারণে আপনার অ্যাকাউন্টটি স্থায়ীভাবে ব্লক করা হয়েছে।");
         }
     });
 
@@ -6286,13 +6392,13 @@ await db.collection("history").doc(newReqId).set({
             }
             
             const isFreeUser = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
-            if(isFreeUser) {
-                const referralCount = currentUserData.totalReferrals || 0;
-                if(referralCount < 3) {
-                    showSmartToast(`আপনার রেফার ${referralCount}। উইথড্র করতে সর্বনিম্ন ৩টি রেফার প্রয়োজন।`, 'error');
-                    return;
-                }
-            }
+if(isFreeUser) {
+    const referralCount = currentUserData.totalReferrals || 0;
+    if(referralCount < 1) {
+        showSmartToast(`আপনার রেফার ${referralCount}। উইথড্র করতে সর্বনিম্ন ১টি রেফার প্রয়োজন।`, 'error');
+        return;
+    }
+}
             
                         
             const vatPercentage = systemSettings.vatPercentage || 0;
@@ -6444,16 +6550,16 @@ await db.collection("history").doc(newReqId).set({
                         }
                     });
 
-                    if(activeRefCount < 3) {
+                    if(activeRefCount < 1) {
                         hideLoading();
                         Swal.fire({
                             icon: 'error',
                             title: 'উইথড্র আটকে দেওয়া হয়েছে! 🚫',
                             html: `<div style="text-align:left; font-size:13px; line-height:1.6;">
-                                    মামা, আপনার ৩টি <b>এক্টিভ রেফার</b> নেই। <br><br>
+                                    মামা, আপনার অন্তত ১টি <b>এক্টিভ রেফার</b> নেই। <br><br>
                                     বর্তমানে আপনার একটিভ রেফার: <b style="color:red;">${activeRefCount} জন</b><br>
-                                    প্রয়োজন: <b>৩ জন</b><br><br>
-                                    <span style="color:#475569;">নিয়ম: আপনার রেফারে জয়েন করা মেম্বারদের অন্তত ৫টি করে টাস্ক কমপ্লিট করতে হবে, তবেই তারা এক্টিভ হিসেবে গণ্য হবে।</span>
+                                    প্রয়োজন: <b>১ জন</b><br><br>
+                                    <span style="color:#475569;">নিয়ম: আপনার রেফারে জয়েন করা মেম্বারকে অন্তত ৫টি টাস্ক কমপ্লিট করতে হবে, তবেই সে এক্টিভ হিসেবে গণ্য হবে।</span>
                                    </div>`,
                             confirmButtonText: 'বুঝেছি',
                             confirmButtonColor: '#ef4444',
@@ -10134,6 +10240,65 @@ window.trigger3DBoxReward = (amountLabel) => {
             money.remove();
         }, 1500);
     }, 1200);
+};
+
+// ✅ ব্যান স্ক্রিন দেখানোর ফাংশন
+function showBannedScreen(reason) {
+    hideLoading();
+    
+    // ১. মেইন স্ক্রিনগুলো পুরোপুরি হাইড করা
+    document.getElementById('mainApp').classList.add('hidden');
+    document.getElementById('authScreen').classList.add('hidden');
+    document.getElementById('bottomNav').classList.add('hidden');
+    document.getElementById('globalChatIcon').style.display = 'none';
+    document.getElementById('twaiChatbotIcon').style.display = 'none';
+    
+    // ২. ব্যান স্ক্রিন শো করা
+    const bannedScreen = document.getElementById('bannedScreen');
+    if(bannedScreen) {
+        bannedScreen.classList.remove('hidden');
+    }
+    
+    const reasonText = document.getElementById('banReasonText');
+    if(reasonText && reason) {
+        reasonText.innerText = reason;
+    }
+}
+
+// ✅ ব্যান স্ক্রিন থেকে লগআউট করার ফাংশন
+window.forceLogoutFromBan = async () => {
+    showLoading();
+    try {
+        await auth.signOut();
+        document.getElementById('bannedScreen').classList.add('hidden');
+        document.getElementById('authScreen').classList.remove('hidden');
+    } catch (e) {
+        console.log("Signout error", e);
+    }
+    hideLoading();
+};
+
+// 🌙 ঈদ স্পেশাল ২০% প্রোমো কোড ভেরিফিকেশন ও অ্যাপ্লাই লজিক
+window.applyPackagePromo = () => {
+    const input = document.getElementById('packagePromoInput');
+    if (!input) return;
+
+    const code = input.value.trim().toUpperCase();
+
+    // কোড EID20%OFF (অথবা স্পেশাল ক্যারেক্টার ঝামেলার জন্য EID20PERCENTOFF ও সচল রাখা হলো)
+    if (code === 'EID20%OFF' || code === 'EID20PERCENTOFF') {
+        appliedPromoPercent = 20; // ২০% ছাড় সেট হলো
+        showSmartToast('ঈদ ধামাকা অফার! ২০% ডিসকাউন্ট সফলভাবে যুক্ত হয়েছে। 🎉', 'success');
+        
+        // কনফেটি এনিমেশন ও সাকসেস অডিও
+        if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        window.playSound('snd_success');
+        
+        // প্যাকেজগুলো পুনরায় রেন্ডার হবে নতুন মূল্যে
+        loadPackages();
+    } else {
+        showSmartToast('ভুল প্রোমো কোড! সঠিক কোডটি দিন। ❌', 'error');
+    }
 };
        
     </script>
