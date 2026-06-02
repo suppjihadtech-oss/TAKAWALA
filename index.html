@@ -1444,7 +1444,14 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
 
             <div id="registerForm" class="hidden space-y-3 text-left">
                 <input type="text" id="regName" placeholder="আপনার নাম" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
-                <input type="text" id="regPhone" placeholder="মোবাইল নাম্বার" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
+                <!-- বাংলাদেশী পতাকাসহ প্রিমিয়াম মোবাইল নাম্বার ইনপুট -->
+                <div class="relative flex items-center bg-slate-50 border rounded-2xl focus-within:border-green-500 overflow-hidden">
+                    <div class="flex items-center gap-1.5 pl-4 pr-2.5 py-4 border-r border-slate-200 select-none bg-slate-100/50 shrink-0">
+                        <span class="text-xl leading-none">🇧🇩</span>
+                        <span class="text-xs font-black text-slate-500">+৮৮</span>
+                    </div>
+                    <input type="tel" id="regPhone" placeholder="০১XXXXXXXXX (১১ ডিজিট)" class="w-full p-4 pl-3 bg-transparent outline-none font-bold text-slate-700">
+                </div>
                 <input type="email" id="regEmail" placeholder="ইমেইল" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
                 <div class="relative">
                     <input type="password" id="regPass" placeholder="পাসওয়ার্ড (৬+ সংখ্যা)" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold pr-12">
@@ -4365,6 +4372,34 @@ window.selectPayment = (el, method) => {
             if(!name || !phone || !email || !pass || !referralCode) return showSmartToast('সব তথ্য দিন (রেফার কোডসহ)', 'error');
             
             if(pass.length < 6) return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');
+          
+          // ১. সব তথ্য খালি আছে কি না চেক
+            if(!name || !phone || !email || !pass || !referralCode) return showSmartToast('সব তথ্য দিন (রেফার কোডসহ)', 'error');
+            
+            // ২. নাম ভ্যালিডেশন (কমপক্ষে ৩ অক্ষরের বাংলা বা ইংরেজি বর্ণ, কোনো সংখ্যা বা প্রতীক গ্রহণযোগ্য নয়)
+            const nameRegex = /^[a-zA-Z\s\u0980-\u09FF]{3,30}$/;
+            if (!nameRegex.test(name.trim())) {
+                showSmartToast('দয়া করে আপনার সঠিক নাম লিখুন (৩-৩০ অক্ষরের বাংলা বা ইংরেজি)', 'error');
+                return;
+            }
+
+            // ৩. বাংলাদেশী মোবাইল নাম্বার চেক (০১X দিয়ে শুরু এবং মোট ১১ ডিজিট হওয়া বাধ্যতামূলক) [2]
+            const phoneRegex = /^01[3-9]\d{8}$/;
+            const cleanedPhone = phone.trim().replace(/[\s-+]/g, ''); // বাড়তি স্পেস বা প্লাস সাইন পরিষ্কার করা
+            if (!phoneRegex.test(cleanedPhone)) {
+                showSmartToast('সঠিক বাংলাদেশী ১১ ডিজিটের মোবাইল নাম্বার দিন (যেমন: 017xxxxxxxx)', 'error');
+                return;
+            }
+
+            // ৪. ইমেইল ভ্যালিডেশন (ফেক ইমেইল বা আজেবাজে লেখা আটকাতে) [3]
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email.trim())) {
+                showSmartToast('দয়া করে একটি সঠিক ও সচল ইমেইল এড্রেস দিন', 'error');
+                return;
+            }
+
+            // ৫. পাসওয়ার্ড মিনিমাম ৬ সংখ্যা চেক
+            if(pass.length < 6) return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');  
             
             try {
     showLoading();
@@ -4432,8 +4467,8 @@ window.selectPayment = (el, method) => {
                 
                 const userData = { 
                     name, 
-                    phone, 
-                    email, 
+                    phone: cleanedPhone, // ক্লিন নাম্বারটি সেভ হবে
+                    email,
                     tgId: (window.Telegram?.WebApp?.initDataUnsafe?.user?.id) || null,
                     
                     mainBalance: 0, 
@@ -5662,6 +5697,23 @@ totalReward += rewardAmt;
                 const newName = document.getElementById('profNameInput').value;
                 const newPhone = document.getElementById('profPhoneInput').value;
                 const newAddress = document.getElementById('profAddressInput').value;
+                
+                // ১. নাম ভ্যালিডেশন
+                const nameRegex = /^[a-zA-Z\s\u0980-\u09FF]{3,30}$/;
+                if (!nameRegex.test(newName.trim())) {
+                    showSmartToast('সঠিক নাম দিন (কমপক্ষে ৩ অক্ষরের বাংলা বা ইংরেজি)', 'error');
+                    hideLoading();
+                    return;
+                }
+
+                // ২. মোবাইল নাম্বার ভ্যালিডেশন [2]
+                const phoneRegex = /^01[3-9]\d{8}$/;
+                const cleanedPhone = newPhone.trim().replace(/[\s-+]/g, '');
+                if (!phoneRegex.test(cleanedPhone)) {
+                    showSmartToast('সঠিক বাংলাদেশী ১১ ডিজিটের নাম্বার দিন (017xxxxxxxx)', 'error');
+                    hideLoading();
+                    return;
+                }
 
                 await db.collection("users").doc(currentUserId).update({ 
                     name: newName, 
@@ -6298,6 +6350,7 @@ await db.collection("history").doc(newReqId).set({
                 return;
             }
             
+                      
             if(!method) {
                 showSmartToast('উত্তোলন মেথড সিলেক্ট করুন', 'error');
                 return;
@@ -6370,6 +6423,21 @@ await db.collection("history").doc(newReqId).set({
 // 🚀 স্মার্ট লিমিট লজিক (Free vs VIP)
     const userPlan = (currentUserData.plan || "").toLowerCase();
     const isVIP = userPlan.includes("vip") || userPlan.includes("gold") || userPlan.includes("silver") || userPlan.includes("platinum");
+    // 🛑 ফ্রি মেম্বারদের জন্য উইথড্র লিমিট চেক (কঠোর ১০০৳ লিমিট)
+            if (!isVIP) {
+                const alreadyWithdrawn = parseFloat(currentUserData.totalWithdraw || 0);
+                if (alreadyWithdrawn >= 100) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'লিমিট শেষ! ❌',
+                        text: '❌ আপনার ফ্রি উইথড্র লিমিট (১০০৳) শেষ! পরবর্তী উইথড্র করতে আপনার অ্যাকাউন্টটি VIP প্যাকেজে আপগ্রেড করুন।',
+                        confirmButtonText: 'ঠিক আছে',
+                        confirmButtonColor: '#ef4444',
+                        customClass: { popup: 'rounded-[25px]' }
+                    });
+                    return; // উইথড্র প্রসেস বন্ধ
+                }
+            }
     
     const dailyLimit = isVIP ? 2 : 1; 
     const maxMFS = isVIP ? 50 : 30;
@@ -6639,6 +6707,44 @@ if(isFreeUser) {
     const userPlan = (currentUserData.plan || "").toLowerCase();
     const isVIP = userPlan.includes("vip") || userPlan.includes("gold") || userPlan.includes("silver") || userPlan.includes("platinum");
     
+    // 🛑 ফ্রি মেম্বারদের জন্য মোবাইল রিচার্জ লিমিট চেক (কঠোর ৫০৳ লিমিট)
+            if (!isVIP) {
+                showLoading();
+                try {
+                    const historySnap = await db.collection("history")
+                        .where("userId", "==", currentUserId)
+                        .get();
+                    
+                    let totalRecharged = 0;
+                    historySnap.forEach(doc => {
+                        const h = doc.data();
+                        const t = (h.type || "").toLowerCase();
+                        if (t === "recharge" || t === "রিচার্জ") {
+                            const totalAmt = Math.abs(parseFloat(h.amount) || 0);
+                            const baseAmt = totalAmt > 5 ? totalAmt - 5 : totalAmt;
+                            totalRecharged += baseAmt;
+                        }
+                    });
+
+                    hideLoading();
+
+                    if (totalRecharged >= 50) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'লিমিট শেষ! ❌',
+                            text: '❌ আপনার ফ্রি মোবাইল রিচার্জ লিমিট (৫০৳) শেষ! পুনরায় রিচার্জ বা উইথড্র করতে আপনার অ্যাকাউন্টটি VIP প্যাকেজে আপগ্রেড করুন।',
+                            confirmButtonText: 'ঠিক আছে',
+                            confirmButtonColor: '#ef4444',
+                            customClass: { popup: 'rounded-[25px]' }
+                        });
+                        return; // রিচার্জ প্রসেস বন্ধ
+                    }
+                } catch (e) {
+                    console.error(e);
+                    hideLoading();
+                }
+            }
+    
     const maxRechargeLimit = isVIP ? 30 : 20; 
 
     if (amount > maxRechargeLimit) {
@@ -6878,12 +6984,12 @@ window.loadSummary = () => window.loadFilteredSummary('all');
             const todayName = days[today.getDay()];
             const todayDateStr = today.toDateString();
 
-            // ২. বোনাস অ্যামাউন্ট
-            let bonusAmounts = {
-                'Saturday': 2, 'Sunday': 2, 'Monday': 3, 
-                'Tuesday': 3, 'Wednesday': 4, 'Thursday': 4, 
-                'Friday': 0 
-            };
+          // ২. বোনাস অ্যামাউন্ট (ইউজারের বোনাস প্রফিট কমানো হলো)
+                let bonusAmounts = {
+                    'Saturday': 1, 'Sunday': 1, 'Monday': 1.5, 
+                    'Tuesday': 1.5, 'Wednesday': 2, 'Thursday': 2, 
+                    'Friday': 0 
+                };
 
             try {
                 const settingsDoc = await db.collection("settings").doc("daily_bonus").get();
@@ -6985,24 +7091,24 @@ window.loadSummary = () => window.loadFilteredSummary('all');
             let finalAmount = baseAmount;
             let message = `আজকের বোনাস ৳${baseAmount}`;
 
-            // শুক্রবার মিস্ট্রি বক্স লজিক
-            if (dayName === 'Friday') {
-    // ১ থেকে ১০০০ এর মধ্যে একটি লটারি নাম্বার জেনারেট হবে
-    let luck = Math.floor(Math.random() * 1000) + 1;
-
-    if (luck <= 2) {
-        // লটারি ১ বা ২ পড়লে ১০ টাকা (হাজারে ২ জন)
-        finalAmount = 10; 
-    } else if (luck <= 10) {
-        // লটারি ৩ থেকে ১০ পড়লে ৯ টাকা (খুবই কম)
-        finalAmount = 9;
-    } else {
-        // বাকি সবাই ৬, ৭ অথবা ৮ টাকার মধ্যে রেন্ডমলি পাবে (সবচেয়ে বেশি হবে এটি)
-        finalAmount = Math.floor(Math.random() * (8 - 6 + 1)) + 6; 
-    }
-
-    message = `🎉 জুম্মা মোবারক! মিস্ট্রি বক্সে পেয়েছেন ৳${finalAmount}`;
-}
+            // শুক্রবার মিস্ট্রি বক্স লজিক (সর্বোচ্চ ৬ থেকে ৮ টাকা করার জন্য নতুন কম রেট)
+                if (dayName === 'Friday') {
+                    // ১ থেকে ১০০ এর মধ্যে একটি লটারি নাম্বার জেনারেট হবে
+                    let luck = Math.floor(Math.random() * 100) + 1;
+                
+                    if (luck <= 5) {
+                        // মাত্র ৫% ভাগ্যের জোড়ে সর্বোচ্চ ৮ টাকা পাবে
+                        finalAmount = 8; 
+                    } else if (luck <= 15) {
+                        // ১০% ভাগ্যের জোড়ে ৭ টাকা পাবে
+                        finalAmount = 7;
+                    } else {
+                        // বাকি ৮৫% সাধারণ ইউজার রেন্ডমলি ৪, ৫ অথবা ৬ টাকা পাবে
+                        finalAmount = Math.floor(Math.random() * (6 - 4 + 1)) + 4; 
+                    }
+                
+                    message = `🎉 জুম্মা মোবারক! মিস্ট্রি বক্সে পেয়েছেন ৳${finalAmount}`;
+                }
             const result = await Swal.fire({
                 title: '🎁 বোনাস নিন',
                 html: `<div class="text-center">
@@ -7064,10 +7170,31 @@ window.loadSummary = () => window.loadFilteredSummary('all');
                             }());
                         }
 
-                        // ৩. মেসেজ এবং সাউন্ড
-                        showSmartToast(message, 'success');
+                       // ৩. মেসেজ এবং সাউন্ড (গর্জিয়াস সুইট অ্যালার্ট পপ-আপ)
+                        Swal.fire({
+                            title: '🎉 বোনাস ক্লেইম সফল!',
+                            html: `
+                                <div class="text-center animate__animated animate__zoomIn">
+                                    <img src="https://i.postimg.cc/dtj5JQqK/gift-box.png" class="w-16 mx-auto mb-3 animate-bounce" style="filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));">
+                                    <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100 p-4 rounded-2xl mb-4">
+                                        <p class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">আপনি ক্লেইম করেছেন</p>
+                                        <h2 class="text-3xl font-black text-purple-600 mt-1">৳${finalAmount.toFixed(2)}</h2>
+                                    </div>
+                                    <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+                                        আজকের ডেইলি বোনাসের টাকা সরাসরি আপনার মেইন ব্যালেন্সে জমা করে দেওয়া হয়েছে। অ্যাপে সক্রিয় থাকুন এবং প্রতিদিন আপনার ফ্রি বোনাসটি বুঝে নিতে ভুলবেন না! 🚀
+                                    </p>
+                                </div>
+                            `,
+                            confirmButtonText: 'ধন্যবাদ, বুঝেছি',
+                            confirmButtonColor: '#8b5cf6',
+                            background: '#ffffff',
+                            customClass: {
+                                popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                                confirmButton: 'rounded-xl px-8 py-3 font-bold'
+                            }
+                        });
+
                         window.playSound('snd_success');
-     
                         hideLoading();
                         
                     } catch (e) {
