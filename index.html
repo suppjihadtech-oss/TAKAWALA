@@ -2256,52 +2256,95 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     <!-- এখানে "Guest" লেখা ছিল, এখন এটি ডাইনামিক হবে -->
                     <h3 class="text-xl font-bold mt-2" id="profNameDisplay">লোড হচ্ছে...</h3>
                 </div>
-                <div><label class="text-xs font-bold text-slate-500 ml-2">নাম</label><input type="text" id="profNameInput" class="w-full p-3 bg-white border rounded-xl font-bold"></div>
-                <div><label class="text-xs font-bold text-slate-500 ml-2">ঠিকানা</label><input type="text" id="profAddressInput" placeholder="আপনার ঠিকানা" class="w-full p-3 bg-white border rounded-xl font-bold"></div>
-                
-                <!-- ফোন নাম্বার এখন এডিট করা যাবে (disabled সরানো হয়েছে) -->
-                <div><label class="text-xs font-bold text-slate-500 ml-2">ফোন নাম্বার</label><input type="text" id="profPhoneInput" class="w-full p-3 bg-white border rounded-xl font-bold"></div>
-                
-                <!-- ইমেইল এখন ফিক্সড (disabled করা হয়েছে) -->
-                <div><label class="text-xs font-bold text-slate-500 ml-2">ইমেইল (ফিক্সড)</label><input type="email" id="profEmailInput" disabled class="w-full p-3 bg-slate-100 border rounded-xl font-bold text-slate-500"></div>
+                <!-- নাম ইনপুট -->
+<div>
+    <label class="text-xs font-bold text-slate-400 ml-2 mb-1.5 block">নাম</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="ri-user-line text-lg"></i>
+        </div>
+        <input type="text" id="profNameInput" class="w-full pl-10 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm outline-none focus:border-green-500 focus:bg-white transition-all shadow-inner text-slate-700">
+    </div>
+</div>
+
+<!-- ঠিকানা ইনপুট -->
+<div>
+    <label class="text-xs font-bold text-slate-400 ml-2 mb-1.5 block">ঠিকানা</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="ri-map-pin-line text-lg"></i>
+        </div>
+        <input type="text" id="profAddressInput" placeholder="আপনার সম্পূর্ণ ঠিকানা লিখুন" class="w-full pl-10 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm outline-none focus:border-green-500 focus:bg-white transition-all shadow-inner text-slate-700">
+    </div>
+</div>
+
+<!-- ফোন নাম্বার ইনপুট -->
+<div>
+    <label class="text-xs font-bold text-slate-400 ml-2 mb-1.5 block">ফোন নাম্বার</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="ri-phone-line text-lg"></i>
+        </div>
+        <input type="text" id="profPhoneInput" class="w-full pl-10 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-sm outline-none focus:border-green-500 focus:bg-white transition-all shadow-inner text-slate-700">
+    </div>
+</div>
+
+<!-- ইমেইল ফিক্সড ইনপুট -->
+<div>
+    <label class="text-xs font-bold text-slate-400 ml-2 mb-1.5 block">ইমেইল (ফিক্সড)</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="ri-mail-line text-lg"></i>
+        </div>
+        <input type="email" id="profEmailInput" disabled class="w-full pl-10 p-3.5 bg-slate-100 border border-slate-200 rounded-2xl font-bold text-sm text-slate-400 outline-none select-none cursor-not-allowed">
+    </div>
+</div>
                 
                 <button onclick="window.updateProfile()" class="w-full bg-premium text-white py-3 rounded-xl font-bold shadow-lg">আপডেট করুন</button>
                 <button onclick="window.showChangePassword()" class="w-full bg-slate-100 text-slate-800 py-3 rounded-xl font-bold shadow-lg">পাসওয়ার্ড পরিবর্তন</button>
             </div>
         </div>
         <!-- AVATAR SELECTOR MODAL -->
-        <div id="avatarModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-10000 flex items-center justify-center p-4">
-            <div class="bg-white rounded-2xl p-6 max-w-md w-full">
-                <h3 class="text-xl font-bold mb-4 text-center">এভাটার সিলেক্ট করুন</h3>
-                <div class="grid grid-cols-4 gap-3">
-                    <div onclick="window.selectAvatar('https://img.icons8.com/fluency/96/user-male-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
-                        <img src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-16 h-16 mx-auto">
-                    </div>
-                    <div onclick="window.selectAvatar('https://img.icons8.com/color/96/user-male-circle--v1.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
-                        <img src="https://img.icons8.com/color/96/user-male-circle--v1.png" class="w-16 h-16 mx-auto">
-                    </div>
-                    <div onclick="window.selectAvatar('https://img.icons8.com/office/96/user-male-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
-                        <img src="https://img.icons8.com/office/96/user-male-circle.png" class="w-16 h-16 mx-auto">
-                    </div>
-                    <div onclick="window.selectAvatar('https://img.icons8.com/plasticine/96/user-male-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
-                        <img src="https://img.icons8.com/plasticine/96/user-male-circle.png" class="w-16 h-16 mx-auto">
-                    </div>
-                    <div onclick="window.selectAvatar('https://img.icons8.com/dusk/96/user-male-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
-                        <img src="https://img.icons8.com/dusk/96/user-male-circle.png" class="w-16 h-16 mx-auto">
-                    </div>
-                    <div onclick="window.selectAvatar('https://img.icons8.com/fluency/96/user-female-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
-                        <img src="https://img.icons8.com/fluency/96/user-female-circle.png" class="w-16 h-16 mx-auto">
-                    </div>
-                    <div onclick="window.selectAvatar('https://img.icons8.com/color/96/user-female-circle--v1.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
-                        <img src="https://img.icons8.com/color/96/user-female-circle--v1.png" class="w-16 h-16 mx-auto">
-                    </div>
-                    <div onclick="window.selectAvatar('https://img.icons8.com/office/96/user-female-circle.png')" class="p-2 border rounded-xl cursor-pointer hover:border-green-500">
-                        <img src="https://img.icons8.com/office/96/user-female-circle.png" class="w-16 h-16 mx-auto">
-                    </div>
-                </div>
-                <button onclick="window.closeAvatarModal()" class="w-full mt-4 bg-slate-100 text-slate-800 py-3 rounded-xl font-bold">বন্ধ করুন</button>
+<div id="avatarModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[10000] flex items-center justify-center p-4 transition-all duration-300">
+    <div class="bg-white rounded-[30px] p-6 max-w-xs w-full shadow-2xl border border-white animate__animated animate__zoomIn relative">
+        <!-- iOS Style Indicator Bar -->
+        <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
+        
+        <h3 class="text-lg font-black mb-4 text-center text-slate-800 tracking-tight flex items-center justify-center gap-1.5">
+            <i class="ri-user-smile-line text-green-500"></i> এভাটার সিলেক্ট করুন
+        </h3>
+        
+        <!-- Grid Items with Bounce Hover -->
+        <div class="grid grid-cols-4 gap-3 mb-5">
+            <div onclick="window.selectAvatar('https://img.icons8.com/fluency/96/user-male-circle.png')" class="p-1.5 border border-slate-100 rounded-2xl cursor-pointer hover:border-green-500 hover:scale-105 active:scale-95 transition-all bg-slate-50/50 shadow-sm flex items-center">
+                <img src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-full object-contain drop-shadow-md">
+            </div>
+            <div onclick="window.selectAvatar('https://img.icons8.com/color/96/user-male-circle--v1.png')" class="p-1.5 border border-slate-100 rounded-2xl cursor-pointer hover:border-green-500 hover:scale-105 active:scale-95 transition-all bg-slate-50/50 shadow-sm flex items-center">
+                <img src="https://img.icons8.com/color/96/user-male-circle--v1.png" class="w-full object-contain drop-shadow-md">
+            </div>
+            <div onclick="window.selectAvatar('https://img.icons8.com/office/96/user-male-circle.png')" class="p-1.5 border border-slate-100 rounded-2xl cursor-pointer hover:border-green-500 hover:scale-105 active:scale-95 transition-all bg-slate-50/50 shadow-sm flex items-center">
+                <img src="https://img.icons8.com/office/96/user-male-circle.png" class="w-full object-contain drop-shadow-md">
+            </div>
+            <div onclick="window.selectAvatar('https://img.icons8.com/plasticine/96/user-male-circle.png')" class="p-1.5 border border-slate-100 rounded-2xl cursor-pointer hover:border-green-500 hover:scale-105 active:scale-95 transition-all bg-slate-50/50 shadow-sm flex items-center">
+                <img src="https://img.icons8.com/plasticine/96/user-male-circle.png" class="w-full object-contain drop-shadow-md">
+            </div>
+            <div onclick="window.selectAvatar('https://img.icons8.com/dusk/96/user-male-circle.png')" class="p-1.5 border border-slate-100 rounded-2xl cursor-pointer hover:border-green-500 hover:scale-105 active:scale-95 transition-all bg-slate-50/50 shadow-sm flex items-center">
+                <img src="https://img.icons8.com/dusk/96/user-male-circle.png" class="w-full object-contain drop-shadow-md">
+            </div>
+            <div onclick="window.selectAvatar('https://img.icons8.com/fluency/96/user-female-circle.png')" class="p-1.5 border border-slate-100 rounded-2xl cursor-pointer hover:border-green-500 hover:scale-105 active:scale-95 transition-all bg-slate-50/50 shadow-sm flex items-center">
+                <img src="https://img.icons8.com/fluency/96/user-female-circle.png" class="w-full object-contain drop-shadow-md">
+            </div>
+            <div onclick="window.selectAvatar('https://img.icons8.com/color/96/user-female-circle--v1.png')" class="p-1.5 border border-slate-100 rounded-2xl cursor-pointer hover:border-green-500 hover:scale-105 active:scale-95 transition-all bg-slate-50/50 shadow-sm flex items-center">
+                <img src="https://img.icons8.com/color/96/user-female-circle--v1.png" class="w-full object-contain drop-shadow-md">
+            </div>
+            <div onclick="window.selectAvatar('https://img.icons8.com/office/96/user-female-circle.png')" class="p-1.5 border border-slate-100 rounded-2xl cursor-pointer hover:border-green-500 hover:scale-105 active:scale-95 transition-all bg-slate-50/50 shadow-sm flex items-center">
+                <img src="https://img.icons8.com/office/96/user-female-circle.png" class="w-full object-contain drop-shadow-md">
             </div>
         </div>
+        
+        <button onclick="window.closeAvatarModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3.5 rounded-2xl font-bold active:scale-95 transition shadow-sm text-sm">বন্ধ করুন</button>
+    </div>
+</div>
 
        <!-- REFERRAL SCREEN (ULTIMATE PREMIUM) -->
         <div id="referralScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
@@ -2671,20 +2714,22 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
              <h2 class="text-2xl font-bold text-slate-800">প্যাকেজ</h2>
          </div>
      </div>
-<!-- 🌙 EID SPECIAL PROMO CARD -->
-<div class="bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 p-5 rounded-3xl text-white mb-6 relative overflow-hidden shadow-lg border border-white/20 animate__animated animate__pulse animate__infinite animate__slower">
-    <div class="absolute -right-6 -top-6 bg-white/10 w-24 h-24 rounded-full blur-xl animate-pulse"></div>
+<!-- 🎁 ADMIN SECRET PROMO CARD -->
+<div class="bg-gradient-to-r from-slate-950 via-purple-950 to-slate-950 p-5 rounded-3xl text-white mb-6 relative overflow-hidden shadow-xl border border-purple-500/30 animate__animated animate__pulse animate__infinite animate__slower">
+    <div class="absolute -right-6 -top-6 bg-purple-500/10 w-24 h-24 rounded-full blur-xl animate-pulse"></div>
+    <div class="absolute -left-6 -bottom-6 bg-indigo-500/10 w-24 h-24 rounded-full blur-xl animate-pulse"></div>
+    
     <div class="relative z-10 text-left">
         <div class="flex items-center gap-1.5 mb-1">
-            <i class="ri-moon-clear-fill text-yellow-300 text-lg"></i>
-            <h3 class="text-sm font-black uppercase drop-shadow-md text-white">ঈদ-উল-আযহা ধামাকা অফার! 🌙</h3>
+            <i class="ri-magic-line text-yellow-400 text-lg"></i>
+            <h3 class="text-sm font-black uppercase drop-shadow-md text-white">সিক্রেট কুপন কোড 🔑</h3>
         </div>
-        <p class="text-[10px] text-red-100 font-medium">ভিআইপি প্যাকেজে ২০% ছাড় পেতে প্রোমো কোড ব্যবহার করুন</p>
+        <p class="text-[10px] text-purple-200 font-medium">এডমিনদের থেকে পাওয়া গোপন প্রোমো কোডটি দিয়ে প্রতিটি প্যাকেজে % ডিসকাউন্ট সচল করুন</p>
         
         <!-- Promo Code Input & Button -->
         <div class="flex gap-2 mt-3">
-            <input type="text" id="packagePromoInput" placeholder="প্রোমো কোড দিন!" class="flex-1 px-4 py-2.5 rounded-xl text-xs font-black tracking-widest text-red-600 uppercase outline-none bg-white/95 focus:ring-2 focus:ring-yellow-400">
-            <button onclick="window.applyPackagePromo()" class="bg-yellow-400 hover:bg-yellow-500 text-red-800 font-black px-4 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md shrink-0">
+            <input type="text" id="packagePromoInput" placeholder="গোপন কোডটি লিখুন" class="flex-1 px-4 py-2.5 rounded-xl text-xs font-black tracking-widest text-purple-300 placeholder-purple-500/50 uppercase outline-none bg-slate-900/50 border border-purple-500/30 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400">
+            <button onclick="window.applyPackagePromo()" class="bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md shrink-0">
                 প্রয়োগ করুন
             </button>
         </div>
@@ -6335,11 +6380,11 @@ await db.collection("history").doc(newReqId).set({
             }
         };
         
-        // ✅ UPDATED WITHDRAW FUNCTION WITH SCHEDULE
+       // ✅ UPDATED WITHDRAW FUNCTION WITH SCHEDULE
         window.submitWithdraw = async () => {
         if (currentUserData.isActivated === false) {
         return window.handleActivation();
-    }
+        }
         
             const number = document.getElementById('withdrawNumber').value.trim();
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
@@ -6369,7 +6414,48 @@ await db.collection("history").doc(newReqId).set({
                 return;
             }
             
-                        // 🔐 পিন ভেরিফিকেশন (উইথড্র)
+            // 🛡️ মেগা সিকিউরিটি: একটিভ রেফার চেক (উইথড্র সেকশন লক)
+            const isFreeUserCheck = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
+            if(isFreeUserCheck) {
+                showLoading(); // চেক করার সময় লোডিং দেখাবে
+                try {
+                    const myCode = currentUserData.referralCode.trim();
+                    // ডাটাবেস থেকে ইউজারের সব রেফারালদের ডাটা চেক করা হচ্ছে
+                    const refSnap = await db.collection("users").where("referredBy", "==", myCode).get();
+                    
+                    // চেক করবে কয়জন রেফার মেম্বার অন্তত ৫টি টাস্ক কমপ্লিট করেছে
+                    let activeRefCount = 0;
+                    refSnap.forEach(doc => {
+                        const refData = doc.data();
+                        if((refData.totalTasks || 0) >= 5) {
+                            activeRefCount++;
+                        }
+                    });
+
+                    if(activeRefCount < 1) {
+                        hideLoading();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'উইথড্র আটকে দেওয়া হয়েছে! 🚫',
+                            html: `<div style="text-align:left; font-size:13px; line-height:1.6;">
+                                    মামা, আপনার অন্তত ১টি <b>এক্টিভ রেফার</b> নেই। <br><br>
+                                    বর্তমানে আপনার একটিভ রেফার: <b style="color:red;">${activeRefCount} জন</b><br>
+                                    প্রয়োজন: <b>১ জন</b><br><br>
+                                    <span style="color:#475569;">নিয়ম: আপনার রেফারে জয়েন করা মেম্বারকে অন্তত ৫টি টাস্ক কমপ্লিট করতে হবে, তবেই সে এক্টিভ হিসেবে গণ্য হবে।</span>
+                                   </div>`,
+                            confirmButtonText: 'বুঝেছি',
+                            confirmButtonColor: '#ef4444',
+                            customClass: { popup: 'rounded-[25px]' }
+                        });
+                        return;
+                    }
+                } catch (e) {
+                    console.log("Ref Check Error:", e);
+                }
+                hideLoading();
+            }
+            
+            // 🔐 পিন ভেরিফিকেশন (উইথড্র)
             if (!currentUserData.transactionPin) {
                 return Swal.fire({
                     title: 'পিন সেট করা নেই!',
@@ -6599,7 +6685,7 @@ if(isFreeUser) {
                 return;
             }
                   
-               // 🛑 ৩টি রেফার চেক (ফ্রি ইউজারদের জন্য)
+             
             // 🛡️ মেগা সিকিউরিটি: একটিভ রেফার চেক (মামা স্পেশাল)
             const isFreeUser = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
             if(isFreeUser) {
@@ -6622,7 +6708,7 @@ if(isFreeUser) {
                         hideLoading();
                         Swal.fire({
                             icon: 'error',
-                            title: 'উইথড্র আটকে দেওয়া হয়েছে! 🚫',
+                            title: 'রিচার্জ আটকে দেওয়া হয়েছে! 🚫',
                             html: `<div style="text-align:left; font-size:13px; line-height:1.6;">
                                     মামা, আপনার অন্তত ১টি <b>এক্টিভ রেফার</b> নেই। <br><br>
                                     বর্তমানে আপনার একটিভ রেফার: <b style="color:red;">${activeRefCount} জন</b><br>
@@ -7486,70 +7572,129 @@ if (currentUserData.isActivated === false) {
         if(typeof window.playSound === 'function') window.playSound('snd_click');
 
         setTimeout(async () => {
-            // 🎁 ১. বক্স পপ-আপ এনিমেশন শুরু (মামা স্পেশাল)
-            if(reward.type !== 'empty') {
-                window.trigger3DBoxReward(reward.label);
-            }
-
-            showLoading(); // বাকি ডাটাবেস প্রসেসিং চলবে...
+            showLoading(); // ১. ডাটাবেস প্রসেসিং শুরু করার সময় লোডার দেখাবে
             try {
                 const userRef = db.collection("users").doc(currentUserId);
                 
                 if (reward.type === 'money') {
-                // ১. ব্যালেন্স আপডেট
-                await userRef.update({
-                    mainBalance: firebase.firestore.FieldValue.increment(reward.amount),
-                    totalEarnings: firebase.firestore.FieldValue.increment(reward.amount),
-                    dailySpins: firebase.firestore.FieldValue.increment(-1)
-                });
+                    // ২. ব্যালেন্স আপডেট
+                    await userRef.update({
+                        mainBalance: firebase.firestore.FieldValue.increment(reward.amount),
+                        totalEarnings: firebase.firestore.FieldValue.increment(reward.amount),
+                        dailySpins: firebase.firestore.FieldValue.increment(-1)
+                    });
 
-                // ২. হিস্ট্রিতে রেকর্ড যোগ (মামা স্পেশাল)
-                await db.collection("history").add({
-                    userId: currentUserId,
-                    type: "স্পিন জয় 🎰",
-                    amount: reward.amount,
-                    status: "Success",
-                    details: `লাকি স্পিন থেকে ${reward.label} জিতেছেন`,
-                    date: new Date().toLocaleDateString('bn-BD'),
-                    time: new Date().toLocaleTimeString('bn-BD'),
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                    // ৩. হিস্ট্রিতে রেকর্ড যোগ
+                    await db.collection("history").add({
+                        userId: currentUserId,
+                        type: "স্পিন জয় 🎰",
+                        amount: reward.amount,
+                        status: "Success",
+                        details: `লাকি স্পিন থেকে ${reward.label} জিতেছেন`,
+                        date: new Date().toLocaleDateString('bn-BD'),
+                        time: new Date().toLocaleTimeString('bn-BD'),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
 
-                Swal.fire({ title: 'অভিনন্দন! 🎉', html: `আপনি জিতেছেন <b>৳${reward.amount.toFixed(2)}</b>`, icon: 'success', confirmButtonColor: '#4f46e5' });
-            
-                    // 🎉 বুম! টাকা জেতার সাথে সাথে ধুমধাম কনফেটি
-if (typeof confetti === 'function') {
-    // মাঝখান থেকে বড় বিস্ফোরণ
-    confetti({
-        particleCount: 150,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
-    });
-    
-    // বাম পাশ থেকে রঙিন কাগজ
-    confetti({
-        particleCount: 80,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 }
-    });
-    
-    // ডান পাশ থেকে রঙিন কাগজ
-    confetti({
-        particleCount: 80,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 }
-    });
-}
+                    // ৪. ডাটাবেস কাজ শেষ হওয়ার পর লোডার বন্ধ করব
+                    hideLoading();
+
+                    // ৫. এবার ৩ডি বক্স ও রঙিন কাগজ উড়ানো শুরু হবে (কোনো সাদা স্ক্রিনের বাধা থাকবে না!)
+                    window.trigger3DBoxReward(reward.label);
+
+                    if (typeof confetti === 'function') {
+                        // ৩ সেকেন্ড ধরে কনফেটি বৃষ্টি
+                        var duration = 3000;
+                        var end = Date.now() + duration;
+                        (function frame() {
+                            confetti({
+                                particleCount: 5, angle: 60, spread: 55, origin: { x: 0 },
+                                colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+                            });
+                            confetti({
+                                particleCount: 5, angle: 120, spread: 55, origin: { x: 1 },
+                                colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+                            });
+                            if (Date.now() < end) { requestAnimationFrame(frame); }
+                        }());
+                    }
+
+                    // ৬. ৩ডি পপ-আপের ভেতরে গর্জিয়াস কাস্টম থিমযুক্ত সুইট অ্যালার্ট পপ-আপ
+                    Swal.fire({
+                        title: '🎉 স্পিন জয় সফল!',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <img src="https://i.postimg.cc/02p5C1GN/fortune-wheel.png" class="w-16 mx-auto mb-3 animate-bounce" style="filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));">
+                                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 p-4 rounded-2xl mb-4">
+                                    <p class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">আপনি জিতেছেন</p>
+                                    <h2 class="text-3xl font-black text-indigo-600 mt-1">৳${reward.amount.toFixed(2)}</h2>
+                                </div>
+                                <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+                                    স্পিন থেকে পাওয়া জেনুইন টাকা সরাসরি আপনার মেইন ব্যালেন্সে জমা করে দেওয়া হয়েছে। আবার ট্রাই করুন! 🎰
+                                </p>
+                            </div>
+                        `,
+                        confirmButtonText: 'দারুণ, বুঝেছি',
+                        confirmButtonColor: '#4f46e5',
+                        background: '#ffffff',
+                        customClass: {
+                            popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                            confirmButton: 'rounded-xl px-8 py-3 font-bold'
+                        }
+                    });
+
                 } 
                 else if (reward.type === 'extra') {
-                    Swal.fire({ title: 'দারুণ! 🌀', text: 'আপনি আরও ১টি ফ্রি স্পিন পেয়েছেন!', icon: 'info', confirmButtonColor: '#fbbf24' });
+                    // এক্সট্রা স্পিন পাওয়ার ক্ষেত্রে
+                    hideLoading();
+                    
+                    window.trigger3DBoxReward("স্পিন +১");
+                    
+                    Swal.fire({
+                        title: 'দারুণ! 🌀',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <img src="https://i.postimg.cc/hj8zWcRb/tickets.png" class="w-16 mx-auto mb-3 animate-bounce" style="filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));">
+                                <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-100 p-4 rounded-2xl mb-4">
+                                    <p class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">বোনাস স্পিন</p>
+                                    <h2 class="text-2xl font-black text-amber-600 mt-1">১টি ফ্রি স্পিন</h2>
+                                </div>
+                                <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+                                    আপনি আরও ১টি অতিরিক্ত ফ্রি স্পিন বোনাস পেয়েছেন! চাকাটি আবার ঘুরিয়ে দেখুন আপনার ভাগ্য। 🎰
+                                </p>
+                            </div>
+                        `,
+                        confirmButtonText: 'ধন্যবাদ',
+                        confirmButtonColor: '#fbbf24',
+                        background: '#ffffff',
+                        customClass: {
+                            popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                            confirmButton: 'rounded-xl px-8 py-3 font-bold'
+                        }
+                    });
                 } 
                 else {
+                    // কিছুই না পাওয়ার ক্ষেত্রে (Empty)
                     await userRef.update({ dailySpins: firebase.firestore.FieldValue.increment(-1) });
-                    Swal.fire({ title: 'ইসস! ☹️', text: 'এবার কিছু পাননি। আবার চেষ্টা করুন!', icon: 'error', confirmButtonColor: '#312e81' });
+                    hideLoading();
+                    
+                    Swal.fire({
+                        title: 'ইসস! ☹️',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <p class="text-4xl mb-3">😢</p>
+                                <h3 class="text-lg font-black text-slate-700">এবার ভাগ্য খারাপ!</h3>
+                                <p class="text-xs text-slate-400 mt-2 px-4">দুঃখিত মামা, এই স্পিনে আপনি কিছু পাননি। মন খারাপ না করে আবার চেষ্টা করে দেখুন!</p>
+                            </div>
+                        `,
+                        confirmButtonText: 'আবার চেষ্টা করুন',
+                        confirmButtonColor: '#312e81',
+                        background: '#ffffff',
+                        customClass: {
+                            popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                            confirmButton: 'rounded-xl px-8 py-3 font-bold'
+                        }
+                    });
                 }
 
                 // আপডেট ইউজার ইন্টারফেস
@@ -7557,8 +7702,10 @@ if (typeof confetti === 'function') {
                 document.getElementById('spinCount').innerText = updatedSpins;
                 if(typeof window.playSound === 'function') window.playSound('snd_success');
                 
-            } catch (e) { console.error("Spin Error:", e); }
-            hideLoading();
+            } catch (e) { 
+                console.error("Spin Error:", e); 
+                hideLoading();
+            }
             btn.disabled = false;
             btn.classList.remove('opacity-50');
         }, 6500);
@@ -8754,20 +8901,22 @@ async function runAutoLuckyDraw() {
             return;
         }
 
-        // ২. গতদিনের বা আগের সব পেন্ডিং টিকেট খুঁজে বের করা
+       // ২. শুধুমাত্র আজকের কেনা টিকেটগুলো খুঁজে বের করা (যাতে পুরনো কোনো দিনের টেস্ট টিকেট ড্র-তে না আসে)
         const snapshot = await db.collection("lucky_tickets")
-            .where("status", "==", "pending")
+            .where("date", "==", todayStr)
             .get();
 
-        if (snapshot.empty) {
-            console.log("ড্র করার মতো কোনো পেন্ডিং টিকেট নেই।");
+        // ক্লায়েন্ট-সাইড ফিল্টারিং (যাতে কোনো ইনডেক্স এরর না আসে)
+        const pendingToday = snapshot.docs.filter(doc => doc.data().status === "pending");
+
+        if (pendingToday.length === 0) {
+            console.log("আজ ড্র করার মতো কোনো পেন্ডিং টিকেট নেই।");
             return;
         }
 
-        // ৩. রেন্ডমলি একজনকে বিজয়ী নির্বাচন করা
-        const allDocs = snapshot.docs;
-        const randomIndex = Math.floor(Math.random() * allDocs.length);
-        const winnerDoc = allDocs[randomIndex];
+        // ৩. আজকের একটিভ টিকেটগুলোর মধ্য থেকে রেন্ডমলি একজনকে বিজয়ী নির্বাচন করা
+        const randomIndex = Math.floor(Math.random() * pendingToday.length);
+        const winnerDoc = pendingToday[randomIndex];
         const winnerData = winnerDoc.data();
 
         // ৪. ১১ থেকে ৩০ টাকার মধ্যে রেন্ডম পুরস্কার নির্ধারণ (সিক্রেট লজিক 🤫)
@@ -8847,14 +8996,20 @@ async function runAutoLuckyDraw() {
 let luckyDrawInterval = null;
 
 // ✅ SHOW LUCKY DRAW PAGE WITH TIMER
+// LUCKY DRAW SCREEN
 window.showLuckyDraw = async () => {
     window.showPage('luckyDrawScreen');
 
-runAutoLuckyDraw(); 
+    // প্রথমে অটোমেটিক ড্র ফাংশনটি রান হবে
+    await runAutoLuckyDraw(); 
+
+    // ২ সেকেন্ড বিরতি দিয়ে চেক করবে ইউজার জিতেছে নাকি হেরেছে (ফলাফল পপ-আপ)
+    setTimeout(() => {
+        checkMyLuckyDrawResult();
+    }, 2000);
 
     // ব্যালেন্স আপডেট
     if(currentUserData) {
-        // সেফটি চেক: ইলিমেন্ট আছে কিনা
         const balanceEl = document.getElementById('luckyDrawBalance');
         if(balanceEl) balanceEl.innerText = currentUserData.mainBalance.toFixed(2);
     }
@@ -9098,13 +9253,49 @@ window.processMagicPromo = async () => {
                     });
 
                     const tgMsg = `🎁 *প্রোমো কোড ক্লেইম*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n🎫 *কোড:* ${promoCode}\n💰 *বোনাস:* ৳${bonusAmount}`;
-                    await sendTelegramNotification(tgMsg);
+                            await sendTelegramNotification(tgMsg);
 
-                    if(typeof confetti === 'function') confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
-                    window.playSound('snd_success');
-                    inputField.value = '';
-                    showSmartToast(`৳${bonusAmount} বোনাস পেয়েছেন।`, 'success');
-                    window.showPage('homeScreen');
+                            // ১. লোডারটি এনিমেশনের আগেই অফ করব
+                            hideLoading();
+
+                            // ২. ৩ডি বক্স ও রঙিন কণা উড়ানো শুরু করব
+                            window.trigger3DBoxReward("৳" + bonusAmount);
+                            
+                            if(typeof confetti === 'function') {
+                                confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+                            }
+                            window.playSound('snd_success');
+                            
+                            // ৩. প্রোমো কোড ইনপুট বক্সটি খালি করব
+                            inputField.value = '';
+
+                            // ৪. প্রফেশনাল ও কাস্টম ডিজাইনের উইনার পপ-আপ এবং রিডাইরেক্ট
+                            Swal.fire({
+                                title: '🎉 প্রোমো বোনাস সফল!',
+                                html: `
+                                    <div class="text-center animate__animated animate__zoomIn">
+                                        <img src="https://i.postimg.cc/dtj5JQqK/gift-box.png" class="w-16 mx-auto mb-3 animate-bounce" style="filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));">
+                                        <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100 p-4 rounded-2xl mb-4">
+                                            <p class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">কোড প্রয়োগ করে পেয়েছেন</p>
+                                            <h2 class="text-3xl font-black text-purple-600 mt-1">৳${bonusAmount.toFixed(2)}</h2>
+                                        </div>
+                                        <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+                                            প্রোমো কোড থেকে পাওয়া স্পেশাল বোনাসটি সরাসরি আপনার মেইন ব্যালেন্সে সফলভাবে জমা করে দেওয়া হয়েছে। 🚀
+                                        </p>
+                                    </div>
+                                `,
+                                confirmButtonText: 'ধন্যবাদ, বুঝেছি',
+                                confirmButtonColor: '#8b5cf6',
+                                background: '#ffffff',
+                                customClass: {
+                                    popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                                    confirmButton: 'rounded-xl px-8 py-3 font-bold'
+                                }
+                            }).then(() => {
+                                // পপ-আপে "বুঝেছি" বাটনে চাপ দেওয়ার পর হোমে ফেরত নিয়ে যাবে
+                                window.showPage('homeScreen'); 
+                            });
+                            return;
                 }
             }
         } catch (e) { showSmartToast('সার্ভার সমস্যা!', 'error'); }
@@ -10405,17 +10596,17 @@ window.forceLogoutFromBan = async () => {
     hideLoading();
 };
 
-// 🌙 ঈদ স্পেশাল ২০% প্রোমো কোড ভেরিফিকেশন ও অ্যাপ্লাই লজিক
+// 🎁 সিক্রেট ৮% প্রোমো কোড ভেরিফিকেশন ও অ্যাপ্লাই লজিক
 window.applyPackagePromo = () => {
     const input = document.getElementById('packagePromoInput');
     if (!input) return;
 
     const code = input.value.trim().toUpperCase();
 
-    // কোড EID20%OFF (অথবা স্পেশাল ক্যারেক্টার ঝামেলার জন্য EID20PERCENTOFF ও সচল রাখা হলো)
-    if (code === 'EID20%OFF' || code === 'EID20PERCENTOFF') {
-        appliedPromoPercent = 20; // ২০% ছাড় সেট হলো
-        showSmartToast('ঈদ ধামাকা অফার! ২০% ডিসকাউন্ট সফলভাবে যুক্ত হয়েছে। 🎉', 'success');
+    // সিক্রেট কোড TWSECRETGIFT ভ্যালিডেশন
+    if (code === 'TWSECRETGIFT') {
+        appliedPromoPercent = 8; // ৮% ডিসকাউন্ট সেট হলো
+        showSmartToast('অভিনন্দন! গোপন কুপন কোড সফল হয়েছে। প্রতিটি প্যাকেজে ৮% ডিসকাউন্ট সচল! 🎁', 'success');
         
         // কনফেটি এনিমেশন ও সাকসেস অডিও
         if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
@@ -10424,9 +10615,122 @@ window.applyPackagePromo = () => {
         // প্যাকেজগুলো পুনরায় রেন্ডার হবে নতুন মূল্যে
         loadPackages();
     } else {
-        showSmartToast('ভুল প্রোমো কোড! সঠিক কোডটি দিন। ❌', 'error');
+        showSmartToast('ভুল গোপন কোড! সঠিক কোডটি দিন। ❌', 'error');
     }
 };
+       
+       // 🎰 ইউজারের ব্যক্তিগত লাকি ড্র রেজাল্ট (জিতলে/হারলে) চেক করার কাস্টম ফাংশন
+async function checkMyLuckyDrawResult() {
+    if (!currentUserId) return;
+    const todayStr = new Date().toLocaleDateString('bn-BD');
+
+    try {
+        // ফায়ারবেস ইনডেক্স এরর এড়াতে একবারে সব টিকেট এনে ক্লায়েন্ট-সাইডে ফিল্টার করছি
+        const ticketSnap = await db.collection("lucky_tickets")
+            .where("userId", "==", currentUserId)
+            .get();
+
+        if (ticketSnap.empty) return;
+
+        let wonTicket = null;
+        let lostTickets = [];
+
+        ticketSnap.forEach(doc => {
+            const data = doc.data();
+            // ক) যদি বিজয়ী টিকেট থাকে যা এখনো ইউজারকে দেখানো হয়নি
+            if (data.status === 'winner' && data.isResultShown !== true) {
+                wonTicket = { id: doc.id, ...data };
+            } 
+            // খ) যদি কোনো পুরনো পেন্ডিং টিকেট থাকে যার ড্র ডেট পার হয়ে গেছে (অর্থাৎ লস হয়েছে)
+            else if (data.status === 'pending' && data.date !== todayStr) {
+                lostTickets.push({ id: doc.id, ...data });
+            }
+        });
+
+        // 🏆 ১. ইউজার বিজয়ী হলে যা ঘটবে (উইনার পপ-আপ)
+        if (wonTicket) {
+            const prize = wonTicket.prizeAmount || 15;
+
+            // ডাটাবেসে চেক করা স্ট্যাটাস ট্রু করে দেব যাতে ২য় বার পপ-আপ না আসে
+            await db.collection("lucky_tickets").doc(wonTicket.id).update({
+                isResultShown: true
+            });
+
+            // ৩ডি বক্স এনিমেশন ও কনফেটি বৃষ্টি
+            window.trigger3DBoxReward(`৳${prize}`);
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            }
+
+            Swal.fire({
+                title: '🏆 লাকি ড্র বিজয়ী!',
+                html: `
+                    <div class="text-center animate__animated animate__zoomIn">
+                        <img src="https://i.postimg.cc/hj8zWcRb/tickets.png" class="w-16 mx-auto mb-3 animate-bounce" style="filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));">
+                        <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border border-yellow-200 p-4 rounded-2xl mb-4">
+                            <p class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">আপনার টিকেট #${wonTicket.ticketNumber} বিজয়ী হয়েছে!</p>
+                            <h2 class="text-3xl font-black text-amber-600 mt-1">৳${prize.toFixed(2)}</h2>
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+                            অভিনন্দন মামা! আপনি লাকি ড্র লটারিতে বিজয়ী হয়েছেন। পুরস্কারের টাকা সরাসরি আপনার ব্যালেন্সে যোগ করা হয়েছে। 🎉
+                        </p>
+                    </div>
+                `,
+                confirmButtonText: 'আলহামদুলিল্লাহ্‌',
+                confirmButtonColor: '#d97706',
+                background: '#ffffff',
+                customClass: {
+                    popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                    confirmButton: 'rounded-xl px-8 py-3 font-bold'
+                }
+            });
+            return; 
+        }
+
+        // ☹️ ২. ইউজার না জিতলে যা ঘটবে (লুজার পপ-আপ)
+        if (lostTickets.length > 0) {
+            const batch = db.batch();
+            let lostTicketNumbers = [];
+
+            lostTickets.forEach(ticket => {
+                lostTicketNumbers.push(`#${ticket.ticketNumber}`);
+                // ডাটাবেসে আপডেট করে দেব যাতে বারবার লস পপ-আপ এসে ডিস্টার্ব না করে
+                batch.update(db.collection("lucky_tickets").doc(ticket.id), {
+                    status: 'lost',
+                    isResultShown: true
+                });
+            });
+
+            await batch.commit();
+
+            Swal.fire({
+                title: 'ইসস মামা! ☹️',
+                html: `
+                    <div class="text-center animate__animated animate__zoomIn">
+                        <p class="text-5xl mb-3">🎟️</p>
+                        <h3 class="text-lg font-black text-slate-700">এবার ভাগ্য সহায় হয়নি</h3>
+                        <p class="text-[10px] bg-slate-100 text-slate-500 px-3 py-1.5 rounded-xl font-mono inline-block mb-3">
+                            টিকেট: ${lostTicketNumbers.join(', ')}
+                        </p>
+                        <p class="text-xs text-slate-500 leading-relaxed px-4">
+                            আপনার পূর্বের টিকেটটি ড্র-তে বিজয়ী হয়নি। মন খারাপ করবেন না, ড্র-তে অংশগ্রহণ করলেই জেতার সুযোগ থাকে। আবার ট্রাই করুন! 👍
+                        </p>
+                    </div>
+                `,
+                confirmButtonText: 'আবার চেষ্টা করব',
+                confirmButtonColor: '#6b21a8',
+                background: '#ffffff',
+                customClass: {
+                    popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                    confirmButton: 'rounded-xl px-8 py-3 font-bold'
+                }
+            });
+        }
+
+    } catch (e) {
+        console.error("Check Draw Result Error:", e);
+    }
+}
        
     </script>
     
