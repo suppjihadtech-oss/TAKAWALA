@@ -4264,8 +4264,12 @@ window.buyPackage = async (packageId, price, name, days) => {
             });
             
             // ৩. টেলিগ্রাম নোটিফিকেশন
+            // ৩. টেলিগ্রাম নোটিফিকেশন
             const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় (ডিপোজিট ব্যালেন্স)*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${price}\n✅ *অবস্থা:* সফল`;
             await sendTelegramNotification(telegramMessage);
+            
+            // 🎁 ম্যাজিক সিকিউরিটি ফিক্স: প্যাকেজ কেনা সফল হলেই ডিসকাউন্ট কোড অটোমেটিক রিসেট হবে
+            appliedPromoPercent = 0; 
             
             showSmartToast(`${name} সফলভাবে সক্রিয় করা হয়েছে!`, 'success');
             window.playSound('snd_success');
@@ -6508,7 +6512,7 @@ await db.collection("history").doc(newReqId).set({
             
 // 🚀 স্মার্ট লিমিট লজিক (Free vs VIP)
     const userPlan = (currentUserData.plan || "").toLowerCase();
-    const isVIP = userPlan.includes("vip") || userPlan.includes("gold") || userPlan.includes("silver") || userPlan.includes("platinum");
+    const isVIP = !userPlan.includes("free") && !userPlan.includes("ফ্রি") && userPlan !== "";
     // 🛑 ফ্রি মেম্বারদের জন্য উইথড্র লিমিট চেক (কঠোর ১০০৳ লিমিট)
             if (!isVIP) {
                 const alreadyWithdrawn = parseFloat(currentUserData.totalWithdraw || 0);
@@ -6789,9 +6793,9 @@ if(isFreeUser) {
         return;
     }
          hideLoading()   
-            // 🚀 রিচার্জ লিমিট লজিক
+    // 🚀 রিচার্জ লিমিট লজিক
     const userPlan = (currentUserData.plan || "").toLowerCase();
-    const isVIP = userPlan.includes("vip") || userPlan.includes("gold") || userPlan.includes("silver") || userPlan.includes("platinum");
+    const isVIP = !userPlan.includes("free") && !userPlan.includes("ফ্রি") && userPlan !== "";
     
     // 🛑 ফ্রি মেম্বারদের জন্য মোবাইল রিচার্জ লিমিট চেক (কঠোর ৫০৳ লিমিট)
             if (!isVIP) {
