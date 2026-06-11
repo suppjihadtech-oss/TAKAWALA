@@ -5929,87 +5929,12 @@ if (currentUserData.isActivated === false) {
     });
 };
      
-     // ==========================================
-// 🛡️ ANTI-CHEAT WEBSITE VISIT CONTROLLER (BULLETPROOF)
+    // ==========================================
+// 💸 SIMPLE WEBSITE VISIT CONTROLLER (NO-DELAY & NO-FLICKER FIX)
 // ==========================================
 
-// ১. ৩০ সেকেন্ড না থেকে ফিরে আসলে টাস্ক আজীবনের জন্য ব্লক করার ফাংশন
-window.blockTaskDueToCheating = async (taskId, taskTitle) => {
-    // 🚨 ফিক্স: যেকোনো ভ্যালিডেশন চেকের আগেই লক ক্লিয়ার করা হলো
-    window.isTaskRunning = false;
-    window.taskStartTime = null;
-    localStorage.removeItem('TAKAWALA_isTaskRunning');
-    localStorage.removeItem('TAKAWALA_taskStartTime');
-    localStorage.removeItem('TAKAWALA_currentTaskInfo');
-
-    if(!currentUserId || !taskId) return;
-    localStorage.removeItem('TAKAWALA_taskStartTime');
-    localStorage.removeItem('TAKAWALA_currentTaskInfo');
-    
-    showLoading();
-    try {
-        const todayStr = new Date().toLocaleDateString('bn-BD');
-        
-        await db.collection("task_submissions").add({
-            userId: currentUserId,
-            taskId: taskId,
-            taskTitle: taskTitle,
-            reward: 0,
-            userName: currentUserData.name,
-            userPhone: currentUserData.phone,
-            proofText: "চেষ্টা ব্যর্থ (৩০ সেকেন্ডের আগে ফিরে আসা)",
-            screenshotUrl: "N/A",
-            status: "Blocked",
-            date: todayStr,
-            time: new Date().toLocaleTimeString('bn-BD'),
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        await db.collection("history").add({
-            userId: currentUserId,
-            type: "ব্যর্থ টাস্ক 🚫",
-            amount: 0,
-            status: "Blocked",
-            details: `অসমাপ্ত কাজ: ${taskTitle} (৩০ সেকেন্ডের আগে ফিরে এসেছেন)`,
-            date: todayStr,
-            time: new Date().toLocaleTimeString('bn-BD'),
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        
-        hideLoading();
-        
-        Swal.fire({
-            title: 'কাজটি ব্লক করা হয়েছে! 🚫',
-            html: `
-                <div class="text-center animate__animated animate__shakeX">
-                    <p class="text-5xl mb-3">⚠️</p>
-                    <h3 class="text-lg font-black text-red-600">৩০ সেকেন্ড সময় পূর্ণ করেননি!</h3>
-                    <p class="text-xs text-slate-500 mt-2 leading-relaxed px-4">
-                        মামা, আপনি ওয়েবসাইটটিতে ৩০ সেকেন্ড থাকার আগেই অ্যাপে ফিরে এসেছেন। নিয়মনীতি অমান্য করার কারণে এই কাজটি আজকের জন্য <b>ব্লক/হারিয়ে</b> গেল এবং কোনো টাকা দেওয়া হলো না।
-                    </p>
-                </div>
-            `,
-            confirmButtonText: 'আমি দুঃখিত, ঠিকভাবে করব',
-            confirmButtonColor: '#ef4444',
-            background: '#ffffff',
-            customClass: {
-                popup: 'rounded-[30px] border border-red-100 shadow-2xl',
-                confirmButton: 'rounded-xl px-8 py-3 font-bold'
-            }
-        });
-        
-        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100]); 
-        renderTasks(); 
-        
-    } catch(e) {
-        console.error("Block Task Error:", e);
-        hideLoading();
-    }
-};
-
-// ২. সফলভাবে ৩০ সেকেন্ড পার করে ফিরে আসলে পেমেন্ট দেওয়ার ফাংশন
+// ১. সফলভাবে ফিরে আসলে সরাসরি পেমেন্ট বা প্রুফ সেকশনে নিয়ে যাওয়ার ফাংশন
 function completeTaskSuccessfully() {
-    // 🚨 ফিক্স: যেকোনো চেকের আগেই লক ও লোকাল স্টোরেজ ক্লিয়ার করা হলো
     window.isTaskRunning = false;
     window.taskStartTime = null;
     localStorage.removeItem('TAKAWALA_isTaskRunning');
@@ -6017,8 +5942,6 @@ function completeTaskSuccessfully() {
     localStorage.removeItem('TAKAWALA_currentTaskInfo');
 
     if (!currentTaskInfo) return;
-    localStorage.removeItem('TAKAWALA_taskStartTime');
-    localStorage.removeItem('TAKAWALA_currentTaskInfo');
     
     const linkStr = (currentTaskInfo.link || "").toLowerCase();
     const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|indigo|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
@@ -6033,63 +5956,38 @@ function completeTaskSuccessfully() {
         }
     };
 
+    // সরাসরি কোনো ল্যাগ ছাড়া ইনস্ট্যান্ট অ্যাড শো করবে
     showInterstitialAd();
 }
 
-// ১. ডিবান্স লকিং ভেরিয়েবল (ঝিলিক মারা বন্ধ করার জন্য)
-let checkTaskDebounceTimeout = false;
-
-// ৩. অটো-চেকার ফাংশন (ইউজার যেকোনোভাবে অ্যাপে ফিরে আসলেই সাথে সাথে সচল হবে)
+// ২. অটো-চেকার ফাংশন (ইউজার ফিরে আসার প্রথম মিলিসেকেন্ডেই ডেটা ক্লিয়ার করবে রেস কন্ডিশন এড়াতে)
 window.checkTaskStatusOnReturn = () => {
-    // 🚨 ফিক্স: একই সাথে মাল্টিপল ইভেন্ট ফায়ার হওয়া এবং পেজ ঝিলিক মারা (Flickering) বন্ধ করতে ডিবান্সার
-    if (checkTaskDebounceTimeout) return;
-    
     let savedIsRunning = localStorage.getItem('TAKAWALA_isTaskRunning');
+    
     if (savedIsRunning === 'true') {
-        // ডিবান্স লক সক্রিয় করা (২ সেকেন্ডের জন্য ইভেন্ট জ্যাম ব্লক)
-        checkTaskDebounceTimeout = true;
-        setTimeout(() => { checkTaskDebounceTimeout = false; }, 2000); 
+        // রেস কন্ডিশন ও ঝিলিক মারা বন্ধ করতে সবার আগে লোকাল স্টোরেজ ক্লিয়ার করা হলো
+        localStorage.removeItem('TAKAWALA_isTaskRunning');
+        localStorage.removeItem('TAKAWALA_taskStartTime');
         
-        let savedStartTime = parseInt(localStorage.getItem('TAKAWALA_taskStartTime') || '0');
         let savedTaskInfo = JSON.parse(localStorage.getItem('TAKAWALA_currentTaskInfo') || 'null');
+        localStorage.removeItem('TAKAWALA_currentTaskInfo');
         
-        if (savedStartTime && savedTaskInfo) {
-            // মেমোরি রিস্টোর করা
-            window.isTaskRunning = true;
-            window.taskStartTime = savedStartTime;
+        window.isTaskRunning = false;
+        window.taskStartTime = null;
+
+        if (savedTaskInfo) {
             currentTaskInfo = savedTaskInfo;
-            
-            // সোশ্যাল মিডিয়া অথবা প্রুফ সাবমিশন টাস্ক কিনা তা যাচাই করা
-            const linkStr = (savedTaskInfo.link || "").toLowerCase();
-            const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|indigo|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
-            const mustSubmitProof = isSocialMedia || savedTaskInfo.needsProof === true;
-            
-            if (mustSubmitProof) {
-                // সোশ্যাল মিডিয়া টাস্কের ক্ষেত্রে কোনো ৩০ সেকেন্ডের বাধা থাকবে না
-                completeTaskSuccessfully();
-            } else {
-                // ওয়েবসাইট ভিজিট টাস্কের ক্ষেত্রে ৩০ সেকেন্ডের কঠোর নিয়ম
-                let secondsElapsed = (Date.now() - savedStartTime) / 1000;
-                
-                if (secondsElapsed < 30) {
-                    window.blockTaskDueToCheating(savedTaskInfo.taskId, savedTaskInfo.title);
-                } else {
-                    completeTaskSuccessfully();
-                }
-            }
+            completeTaskSuccessfully();
         }
     }
 };
-// ৪. ৩টি ভিন্ন উপায়ে রিটার্ন ডিটেক্ট করা (যাতে ১ মিলি-সেকেন্ডও ল্যাগ না হয়)
+
+// ৩. রিটার্ন ডিটেকশন ইভেন্ট লিসেনার
 document.addEventListener('visibilitychange', () => {
     if (!document.hidden) window.checkTaskStatusOnReturn();
 });
 window.addEventListener('focus', window.checkTaskStatusOnReturn);
 window.addEventListener('pageshow', window.checkTaskStatusOnReturn);
-
-// টেলিগ্রাম যদি স্লিপ মোড থেকে অ্যাপটি সম্পূর্ণ রিলোড করে থাকে, তবুও কাজ সচল করবে
-window.addEventListener('DOMContentLoaded', window.checkTaskStatusOnReturn);
-     
 
                      // ✅ GORGEOUS PROOF SUBMISSION FORM (WITH 5 MIN TIMER & UPLOAD HELPER)
         function showProofSubmissionForm() {
