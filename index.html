@@ -1510,12 +1510,12 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         
         <!-- প্রোফাইল ও নোটিফিকেশন বার -->
-        <div class="relative flex justify-between items-center mb-6">
-            <div class="flex items-center gap-3" onclick="window.showPage('profileScreen')">
-                <div class="relative">
-                    <img src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-12 h-12 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm">
-                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
-                </div>
+<div class="relative flex justify-between items-center mb-6">
+    <div class="flex items-center gap-3" onclick="window.showPage('profileScreen')">
+        <div class="relative">
+            <img id="homeAvatar" src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-12 h-12 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm">
+            <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></span>
+        </div>
                 <div>
                    <h3 class="font-bold text-lg leading-tight text-white drop-shadow-sm flex items-center gap-1" id="userNameDisplay">লোড হচ্ছে...</h3>
                     <div class="flex items-center gap-1 opacity-90">
@@ -3294,6 +3294,12 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <h2 id="uReceiptStatus" class="text-2xl font-black text-slate-800 tracking-tight mb-1">Status</h2>
             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-4">অফিসিয়াল পেমেন্ট রিসিট</p>
 
+            <!-- ⏰ লাইভ কাউন্টডাউন টাইমার বক্স (নতুন) -->
+            <div id="uReceiptCountdownBox" class="hidden bg-slate-900 text-white rounded-2xl p-4 mb-4 animate__animated animate__pulse animate__infinite">
+                <p id="uReceiptCountdownLabel" class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1">প্রসেসিং হতে সর্বোচ্চ বাকি</p>
+                <h1 id="uReceiptCountdownTimer" class="text-2xl font-mono font-black text-yellow-400 tracking-widest">00:00:00</h1>
+            </div>
+
             <!-- Copyable TRX ID Box -->
             <div class="bg-white border-2 border-slate-100 rounded-xl p-2 mb-5 flex items-center justify-between relative overflow-hidden shadow-sm">
                 <div class="text-left pl-2 overflow-hidden">
@@ -4859,7 +4865,10 @@ function syncUserData(uid) {
             // ✅ ঠিক এখানে লাইনটা বসবে (এটাই গেস্ট লেখা দূর করবে)
             if(document.getElementById('profNameDisplay')) document.getElementById('profNameDisplay').innerText = userData.name || "User";
 
-            if(userData.avatar && document.getElementById('currentAvatar')) document.getElementById('currentAvatar').src = userData.avatar;
+            if(userData.avatar) {
+    if(document.getElementById('currentAvatar')) document.getElementById('currentAvatar').src = userData.avatar;
+    if(document.getElementById('homeAvatar')) document.getElementById('homeAvatar').src = userData.avatar;
+}
             if(userData.packageExpiresAt) {
                 const expiryDate = userData.packageExpiresAt.toDate();
                 if(new Date() > expiryDate) {
@@ -5389,9 +5398,23 @@ window.openHistoryReceipt = async (docId) => {
         document.getElementById('uReceiptTime').innerText = data.time || "";
         document.getElementById('uReceiptDate').innerText = data.date || "";
 
-        // ৪. মেথড এবং আইকন লজিক
-        const method = (data.method || data.paymentMethod || data.operator || "System").toUpperCase();
-        document.getElementById('uReceiptMethod').innerText = method;
+        // ৫. মেথড এবং আইকন লজিক (উইথড্র ও রিচার্জের জন্য স্মার্ট ডিটেইলস এক্সট্র্যাক্টর)
+let method = (data.method || data.paymentMethod || data.operator || "").toUpperCase();
+
+// ফলব্যাক: যদি মেথড ফিল্ড সরাসরি না থাকে, তবে details (যেমন: bKash - 017...) থেকে আলাদা করে নেবে
+if (!method && data.details) {
+    const parts = data.details.split(" - ");
+    if (parts.length > 0) {
+        method = parts[0].trim().toUpperCase();
+    }
+}
+
+// কোনোটিই না মিললে ডিফল্ট SYSTEM দেখাবে
+if (!method) {
+    method = "SYSTEM";
+}
+
+document.getElementById('uReceiptMethod').innerText = method;
         
         const methodIconEl = document.getElementById('uReceiptMethodIcon');
         let methodIcon = "";
@@ -5476,6 +5499,57 @@ window.openHistoryReceipt = async (docId) => {
             amountEl.className = "font-black text-slate-800 text-base";
         }
 
+        // ⏰ লাইভ টাইমার কাউন্টডাউন শুরু
+        const countdownBox = document.getElementById('uReceiptCountdownBox');
+        const countdownTimer = document.getElementById('uReceiptCountdownTimer');
+        const countdownLabel = document.getElementById('uReceiptCountdownLabel');
+
+        // আগের কোনো টাইমার ইন্টারভাল চালু থাকলে তা পরিষ্কার করা
+        if (window.receiptTimerInterval) clearInterval(window.receiptTimerInterval);
+
+        if (status === 'Pending' && countdownBox && countdownTimer) {
+            countdownBox.classList.remove('hidden');
+            countdownLabel.innerText = "প্রসেসিং হতে সর্বোচ্চ বাকি";
+
+            // ট্রানজেকশনের ধরন অনুযায়ী টাইমিং সেট করা
+            const typeStr = (data.type || "").toLowerCase();
+            let limitHours = 12; // ডিফল্ট ডিপোজিট ও রিচার্জের জন্য ১২ ঘণ্টা
+            
+            if (typeStr.includes('withdraw') || typeStr.includes('উত্তোলন')) {
+                limitHours = 24; // উইথড্রর জন্য ২৪ ঘণ্টা
+            }
+
+            // ফায়ারবেস বা সাধারণ ডেট অবজেক্ট কনভার্ট করা
+            const trxTime = data.timestamp ? (data.timestamp.toDate ? data.timestamp.toDate() : new Date(data.timestamp)) : new Date();
+            const startTime = trxTime.getTime();
+            const endTime = startTime + (limitHours * 60 * 60 * 1000); // লক্ষ্য সময় নির্ধারণ
+
+            const updateCountdown = () => {
+                const now = new Date().getTime();
+                const distance = endTime - now;
+
+                if (distance < 0) {
+                    clearInterval(window.receiptTimerInterval);
+                    countdownTimer.innerText = "00:00:00";
+                    countdownLabel.innerText = "খুব শীঘ্রই সম্পন্ন করা হবে";
+                    return;
+                }
+
+                // ঘণ্টা, মিনিট ও সেকেন্ড গণনা
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                countdownTimer.innerText = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            };
+
+            updateCountdown(); // প্রথমবার ইনস্ট্যান্ট কল
+            window.receiptTimerInterval = setInterval(updateCountdown, 1000); // প্রতি সেকেন্ডে কাউন্টডাউন
+        } else {
+            if (countdownBox) countdownBox.classList.add('hidden');
+        }
+
         // ৭. মডাল ওপেন করা
         document.getElementById('userReceiptModal').classList.remove('hidden');
         
@@ -5496,9 +5570,12 @@ window.copyReceiptTrx = () => {
     }
 };
 
-// ✅ CLOSE MODAL FUNCTION
+// ✅ CLOSE MODAL FUNCTION (টাইমার ইন্টারভাল ক্লিয়ারসহ)
 window.closeUserReceiptModal = () => {
     document.getElementById('userReceiptModal').classList.add('hidden');
+    if (window.receiptTimerInterval) {
+        clearInterval(window.receiptTimerInterval);
+    }
 };
 
        // ✅ এডমিন প্যানেলের সাথে সিঙ্ক করা সম্পূর্ণ কুইজ সিস্টেম
@@ -6317,12 +6394,12 @@ window.submitProof = async () => {
       }; // <--- এই ক্লোজিং ব্র্যাকেটটি আগের কোডে বাদ পড়েছিল 
         // ✅ এডমিন প্যানেল থেকে ভ্যাট ও ফি ডাইনামিক ক্যালকুলেশন (রিপ্লেসড)
         window.calculateDepositVAT = () => {
-            const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
-            const vatPercentage = systemSettings.vatFee || 0; // 👉 সঠিক vatFee ভেরিয়েবল ব্যবহার
-                const vat = amount * (vatPercentage / 100);
-                const totalAmount = amount + vat;
-            document.getElementById('vatCalculation').innerHTML = `ভ্যাট (${vatPercentage}%): ৳${vat.toFixed(2)} | মোট: ৳${total.toFixed(2)}`;
-        };
+    const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
+    const vatPercentage = systemSettings.vatFee || 0; 
+    const vat = amount * (vatPercentage / 100);
+    const totalAmount = amount + vat;
+    document.getElementById('vatCalculation').innerHTML = `ভ্যাট (${vatPercentage}%): ৳${vat.toFixed(2)} | মোট: ৳${totalAmount.toFixed(2)}`;
+};
         
         window.calculateWithdrawVAT = () => {
             const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
@@ -6340,19 +6417,25 @@ window.submitProof = async () => {
         };
         // ✅ UPDATED DEPOSIT FUNCTION
         window.submitDeposit = async () => {
-            const trxId = document.getElementById('depositTrxId').value.trim();
-            const amount = parseFloat(document.getElementById('depositAmount').value);
-            const method = document.getElementById('selectedDepositMethod').value;
-            
-            if(!trxId || !amount || amount <= 0) {
-                showSmartToast('সঠিক তথ্য দিন', 'error');
-                return;
-            }
-            
-            if(!method) {
-                showSmartToast('পেমেন্ট মেথড সিলেক্ট করুন', 'error');
-                return;
-            }
+    const trxId = document.getElementById('depositTrxId').value.trim();
+    const amount = parseFloat(document.getElementById('depositAmount').value);
+    const method = document.getElementById('selectedDepositMethod').value;
+    
+    // নির্দিষ্ট মেথড ভ্যালিডেশন
+    if(!method) {
+        showSmartToast('দয়া করে প্রথমে টাকা পাঠানোর একটি মেথড সিলেক্ট করুন', 'error');
+        return;
+    }
+    // নির্দিষ্ট TrxID ভ্যালিডেশন
+    if(!trxId) {
+        showSmartToast('দয়া করে আপনার পেমেন্টের সঠিক TRXID (ট্রানজেকশন আইডি) দিন', 'error');
+        return;
+    }
+    // নির্দিষ্ট অ্যামাউন্ট ভ্যালিডেশন
+    if(!amount || isNaN(amount) || amount <= 0) {
+        showSmartToast('দয়া করে ডিপোজিট করার জন্য একটি সঠিক পরিমাণ (টাকার অংক) লিখুন', 'error');
+        return;
+    }
             
             const minDeposit = systemSettings.minDeposit || 50;
             if(amount < minDeposit) {
@@ -6420,37 +6503,48 @@ await db.collection("history").doc(newReqId).set({
         
        // ✅ UPDATED WITHDRAW FUNCTION WITH SCHEDULE
         window.submitWithdraw = async () => {
-        if (currentUserData.isActivated === false) {
+    if (currentUserData.isActivated === false) {
         return window.handleActivation();
-        }
-        
-            const number = document.getElementById('withdrawNumber').value.trim();
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const method = document.getElementById('selectedWithdrawMethod').value;
-            
-            if(!number || !amount || amount <= 0) {
-                showSmartToast('সঠিক তথ্য দিন', 'error');
-                return;
-            }
-            
-                      
-            if(!method) {
-                showSmartToast('উত্তোলন মেথড সিলেক্ট করুন', 'error');
-                return;
-            }
-            
-            const minWithdraw = systemSettings.minWithdraw || 50;
-            const maxWithdraw = systemSettings.maxWithdraw || 5000;
-            
-            if(amount < minWithdraw) {
-                showSmartToast(`ন্যূনতম উত্তোলন পরিমাণ ৳${minWithdraw}`, 'error');
-                return;
-            }
-            
-            if(amount > maxWithdraw) {
-                showSmartToast(`সর্বোচ্চ উত্তোলন পরিমাণ ৳${maxWithdraw}`, 'error');
-                return;
-            }
+    }
+
+    const number = document.getElementById('withdrawNumber').value.trim();
+    const amount = parseFloat(document.getElementById('withdrawAmount').value);
+    const method = document.getElementById('selectedWithdrawMethod').value;
+    
+    // ১. মেথড ভ্যালিডেশন
+    if(!method) {
+        showSmartToast('দয়া করে প্রথমে টাকা উত্তোলনের জন্য একটি মেথড সিলেক্ট করুন', 'error');
+        return;
+    }
+    // ২. নম্বর বা ওয়ালেট ভ্যালিডেশন
+    if(!number) {
+        showSmartToast(method === 'USDT' ? 'দয়া করে আপনার সঠিক USDT ওয়ালেট অ্যাড্রেস দিন' : 'দয়া করে টাকা উত্তোলনের মোবাইল নম্বরটি দিন', 'error');
+        return;
+    }
+    // ৩. মোবাইল নম্বর ফরম্যাট ভ্যালিডেশন (USDT ছাড়া অন্যান্য মেথডের ক্ষেত্রে বাংলাদেশী নম্বর চেক)
+    if(method !== 'USDT' && !/^01[3-9]\d{8}$/.test(number)) {
+        showSmartToast('দয়া করে ১১ ডিজিটের সঠিক সচল মোবাইল নম্বর দিন (যেমন: 017xxxxxxxx)', 'error');
+        return;
+    }
+    // ৪. নির্দিষ্ট অ্যামাউন্ট ভ্যালিডেশন
+    if(!amount || isNaN(amount) || amount <= 0) {
+        showSmartToast('দয়া করে উত্তোলনের জন্য একটি সঠিক পরিমাণ (টাকার অংক) লিখুন', 'error');
+        return;
+    }
+
+    // ৫. উত্তোলন সীমা চেক (ডাইনামিক অ্যাডমিন সেটিংস থেকে)
+    const minWithdraw = systemSettings.minWithdraw || 50;
+    const maxWithdraw = systemSettings.maxWithdraw || 5000;
+
+    if(amount < minWithdraw) {
+        showSmartToast(`ন্যূনতম উত্তোলন পরিমাণ ৳${minWithdraw}`, 'error');
+        return;
+    }
+
+    if(amount > maxWithdraw) {
+        showSmartToast(`সর্বোচ্চ উত্তোলন পরিমাণ ৳${maxWithdraw}`, 'error');
+        return;
+    }
             
             // 🛡️ মেগা সিকিউরিটি: একটিভ রেফার চেক (উইথড্র সেকশন লক)
             const isFreeUserCheck = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
@@ -6708,14 +6802,30 @@ if(isFreeUser) {
         
        // ✅ এডমিন প্যানেলের সাথে সিঙ্ক করা রিচার্জ ফাংশন (Corrected)
         window.submitRecharge = async () => { 
-            const phone = document.getElementById('rechPhone').value.trim();
-            const amount = parseFloat(document.getElementById('rechAmount').value);
-            const operator = document.getElementById('selectedOperator').value;
-            
-            if(!phone || !amount || amount <= 0) {
-                showSmartToast('সঠিক তথ্য দিন', 'error');
-                return;
-            }
+    const phone = document.getElementById('rechPhone').value.trim();
+    const amount = parseFloat(document.getElementById('rechAmount').value);
+    const operator = document.getElementById('selectedOperator').value;
+    
+    // অপারেটর ভ্যালিডেশন
+    if(!operator) {
+        showSmartToast('দয়া করে রিচার্জের জন্য মোবাইল অপারেটর সিলেক্ট করুন', 'error');
+        return;
+    }
+    // নম্বর ভ্যালিডেশন
+    if(!phone) {
+        showSmartToast('দয়া করে মোবাইল রিচার্জ করার নম্বরটি দিন', 'error');
+        return;
+    }
+    // বাংলাদেশী নম্বর ফরম্যাট ভ্যালিডেশন
+    if(!/^01[3-9]\d{8}$/.test(phone)) {
+        showSmartToast('দয়া করে ১১ ডিজিটের সঠিক সচল মোবাইল নম্বর দিন (যেমন: 017xxxxxxxx)', 'error');
+        return;
+    }
+    // নির্দিষ্ট অ্যামাউন্ট ভ্যালিডেশন
+    if(!amount || isNaN(amount) || amount <= 0) {
+        showSmartToast('দয়া করে রিচার্জ করার জন্য একটি সঠিক পরিমাণ (টাকার অংক) লিখুন', 'error');
+        return;
+    }
             
             const minRecharge = systemSettings.minRecharge || 20;
             if(amount < minRecharge) {
