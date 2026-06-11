@@ -5990,7 +5990,7 @@ window.blockTaskDueToCheating = async (taskId, taskTitle) => {
 function completeTaskSuccessfully() {
     if (!currentTaskInfo) return;
     
-    // লক ও টাইম ক্লিয়ার করা
+    // লক ও কাজের শুরুর সময় ক্লিয়ার করা
     window.isTaskRunning = false;
     window.taskStartTime = null;
     
@@ -6000,16 +6000,16 @@ function completeTaskSuccessfully() {
 
     onAdCompleted = () => {
         if(!mustSubmitProof) {
-            // ওয়েবসাইট ভিজিট হলে সরাসরি পেমেন্ট
+            // ওয়েবসাইট ভিজিট (প্রুফ ছাড়া) হলে সরাসরি পেমেন্ট
             window.submitWebsiteProofDirectly();
         } else {
-            // সোশ্যাল বা প্রমাণ ভিত্তিক হলে প্রুফ ফর্ম দেখাবে
+            // সোশ্যাল বা প্রুফ চাওয়া টাস্ক হলে প্রুফ ফর্ম দেখাবে
             showProofSubmissionForm();
             showSmartToast('অভিনন্দন! এখন কাজের প্রমাণ জমা দিন।', 'success');
         }
     };
 
-    // ইন্টাস্ট্রিশিয়াল অ্যাড দেখাবে
+    // 👉 অ্যাডসটেরা (Adsterra) পপ-আপ অ্যাড প্রদর্শন করা হচ্ছে (উভয় টাস্কের জন্যই)
     showInterstitialAd();
 }
 
