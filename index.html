@@ -5827,10 +5827,19 @@ if (currentUserData.isActivated === false) {
 
     if(!currentUserData) return;
     
-    // ডাবল ক্লিক প্রোটেকশন
+    // ডাবল ক্লিক ও ওল্ড টাস্ক জ্যাম প্রোটেকশন
     if (window.isTaskRunning) {
-        showSmartToast('ইতিমধ্যে একটি টাস্ক চলছে! দয়া করে অপেক্ষা করুন।', 'warning');
-        return;
+        let savedStartTime = parseInt(localStorage.getItem('TAKAWALA_taskStartTime') || '0');
+        // ৫ মিনিটের বেশি সময় কোনো টাস্ক আটকে থাকলে তা স্বয়ংক্রিয়ভাবে রিসেট হবে
+        if (savedStartTime && (Date.now() - savedStartTime) > 300000) { 
+            window.isTaskRunning = false;
+            localStorage.removeItem('TAKAWALA_isTaskRunning');
+            localStorage.removeItem('TAKAWALA_taskStartTime');
+            localStorage.removeItem('TAKAWALA_currentTaskInfo');
+        } else {
+            showSmartToast('ইতিমধ্যে একটি টাস্ক চলছে! দয়া করে অপেক্ষা করুন।', 'warning');
+            return;
+        }
     }
 
     // ১. নিয়মগুলো লাইন বাই লাইন সাজানোর লজিক
@@ -5926,12 +5935,14 @@ if (currentUserData.isActivated === false) {
 
 // ১. ৩০ সেকেন্ড না থেকে ফিরে আসলে টাস্ক আজীবনের জন্য ব্লক করার ফাংশন
 window.blockTaskDueToCheating = async (taskId, taskTitle) => {
-    if(!currentUserId || !taskId) return;
-    
-    // টাইমার, লকিং ও লোকাল মেমোরি সম্পূর্ণ ক্লিয়ার করা
+    // 🚨 ফিক্স: যেকোনো ভ্যালিডেশন চেকের আগেই লক ক্লিয়ার করা হলো
     window.isTaskRunning = false;
     window.taskStartTime = null;
     localStorage.removeItem('TAKAWALA_isTaskRunning');
+    localStorage.removeItem('TAKAWALA_taskStartTime');
+    localStorage.removeItem('TAKAWALA_currentTaskInfo');
+
+    if(!currentUserId || !taskId) return;
     localStorage.removeItem('TAKAWALA_taskStartTime');
     localStorage.removeItem('TAKAWALA_currentTaskInfo');
     
@@ -5998,12 +6009,14 @@ window.blockTaskDueToCheating = async (taskId, taskTitle) => {
 
 // ২. সফলভাবে ৩০ সেকেন্ড পার করে ফিরে আসলে পেমেন্ট দেওয়ার ফাংশন
 function completeTaskSuccessfully() {
-    if (!currentTaskInfo) return;
-    
-    // লক, টাইমার ও লোকাল মেমোরি সম্পূর্ণ ক্লিয়ার করা
+    // 🚨 ফিক্স: যেকোনো চেকের আগেই লক ও লোকাল স্টোরেজ ক্লিয়ার করা হলো
     window.isTaskRunning = false;
     window.taskStartTime = null;
     localStorage.removeItem('TAKAWALA_isTaskRunning');
+    localStorage.removeItem('TAKAWALA_taskStartTime');
+    localStorage.removeItem('TAKAWALA_currentTaskInfo');
+
+    if (!currentTaskInfo) return;
     localStorage.removeItem('TAKAWALA_taskStartTime');
     localStorage.removeItem('TAKAWALA_currentTaskInfo');
     
@@ -6023,10 +6036,20 @@ function completeTaskSuccessfully() {
     showInterstitialAd();
 }
 
+// ১. ডিবান্স লকিং ভেরিয়েবল (ঝিলিক মারা বন্ধ করার জন্য)
+let checkTaskDebounceTimeout = false;
+
 // ৩. অটো-চেকার ফাংশন (ইউজার যেকোনোভাবে অ্যাপে ফিরে আসলেই সাথে সাথে সচল হবে)
 window.checkTaskStatusOnReturn = () => {
+    // 🚨 ফিক্স: একই সাথে মাল্টিপল ইভেন্ট ফায়ার হওয়া এবং পেজ ঝিলিক মারা (Flickering) বন্ধ করতে ডিবান্সার
+    if (checkTaskDebounceTimeout) return;
+    
     let savedIsRunning = localStorage.getItem('TAKAWALA_isTaskRunning');
     if (savedIsRunning === 'true') {
+        // ডিবান্স লক সক্রিয় করা (২ সেকেন্ডের জন্য ইভেন্ট জ্যাম ব্লক)
+        checkTaskDebounceTimeout = true;
+        setTimeout(() => { checkTaskDebounceTimeout = false; }, 2000); 
+        
         let savedStartTime = parseInt(localStorage.getItem('TAKAWALA_taskStartTime') || '0');
         let savedTaskInfo = JSON.parse(localStorage.getItem('TAKAWALA_currentTaskInfo') || 'null');
         
@@ -6042,11 +6065,10 @@ window.checkTaskStatusOnReturn = () => {
             const mustSubmitProof = isSocialMedia || savedTaskInfo.needsProof === true;
             
             if (mustSubmitProof) {
-                // সোশ্যাল মিডিয়া টাস্কের ক্ষেত্রে ৩০ সেকেন্ডের সীমাবদ্ধতা থাকবে না
-                // ইউজার ফিরে আসলেই প্রুফ সাবমিশন ফর্ম দেখাবে
+                // সোশ্যাল মিডিয়া টাস্কের ক্ষেত্রে কোনো ৩০ সেকেন্ডের বাধা থাকবে না
                 completeTaskSuccessfully();
             } else {
-                // সাধারণ ওয়েবসাইট ভিজিট টাস্কের ক্ষেত্রে ৩০ সেকেন্ডের কঠোর নিয়ম প্রযোজ্য হবে
+                // ওয়েবসাইট ভিজিট টাস্কের ক্ষেত্রে ৩০ সেকেন্ডের কঠোর নিয়ম
                 let secondsElapsed = (Date.now() - savedStartTime) / 1000;
                 
                 if (secondsElapsed < 30) {
@@ -6288,13 +6310,17 @@ window.submitWebsiteProofDirectly = async () => {
         hideLoading();
         renderTasks(); // কাজ শেষ, টাস্ক লিস্ট আপডেট
 
-    } catch (e) {
+   } catch (e) {
         console.error("Auto Submit Error:", e);
         showSmartToast('টাস্ক সম্পন্ন করতে সমস্যা হয়েছে', 'error');
+        // 🚨 ফিক্স: নেটওয়ার্ক ইরর বা টাইমআউট হলেও ব্যাকগ্রাউন্ড লক রিলিজ করা হলো
+        window.isTaskRunning = false;
+        localStorage.removeItem('TAKAWALA_isTaskRunning');
+        localStorage.removeItem('TAKAWALA_taskStartTime');
+        localStorage.removeItem('TAKAWALA_currentTaskInfo');
         hideLoading();
     }
-};
-
+}; // <--- এই ক্লোজিং ব্র্যাকেটটি আগের কোডে বাদ পড়েছিল
 
 // ✅ টাস্ক সাবমিটের ফিক্সড কোড (সোশ্যাল মিডিয়া/স্ক্রিনশট টাস্কের জন্য সিকিউরিটি সহ)
 window.submitProof = async () => {
@@ -6391,10 +6417,16 @@ window.submitProof = async () => {
         window.closeProofModal();
         renderTasks(); 
     } catch (e) {
+        console.error("Submit Proof Error:", e);
         showSmartToast('জমা দিতে সমস্যা হয়েছে', 'error');
+        // 🚨 ফিক্স: ইরর আসলেও লক রিলিজ করে দেওয়া হলো
+        window.isTaskRunning = false;
+        localStorage.removeItem('TAKAWALA_isTaskRunning');
+        localStorage.removeItem('TAKAWALA_taskStartTime');
+        localStorage.removeItem('TAKAWALA_currentTaskInfo');
         hideLoading();
     }
-};
+      }; // <--- এই ক্লোজিং ব্র্যাকেটটি আগের কোডে বাদ পড়েছিল 
         // ✅ এডমিন প্যানেল থেকে ভ্যাট ও ফি ডাইনামিক ক্যালকুলেশন (রিপ্লেসড)
         window.calculateDepositVAT = () => {
             const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
