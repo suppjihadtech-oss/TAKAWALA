@@ -2027,21 +2027,22 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
                     <i class="ri-arrow-left-line text-xl text-slate-700"></i>
                 </button>
-                <h2 class="text-2xl font-black text-slate-800 tracking-tight">টপ আর্নারস 🏆</h2>
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight">সেরা লিডারবোর্ড 🏆</h2>
             </div>
 
-            <!-- গর্জিয়াস হেডার ব্যানার -->
-            <div class="bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 p-6 rounded-[30px] text-white text-center shadow-lg shadow-amber-200 mb-6 relative overflow-hidden">
-                <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full blur-xl"></div>
-                <div class="absolute -left-4 -bottom-4 w-20 h-20 bg-white/20 rounded-full blur-xl"></div>
-                <i class="ri-vip-crown-2-fill text-4xl mb-1 drop-shadow-md"></i>
-                <h3 class="font-black text-2xl tracking-wide">লাইভ লিডারবোর্ড</h3>
-                <p class="text-[11px] font-bold opacity-90 mt-1 uppercase tracking-widest bg-black/10 inline-block px-3 py-1 rounded-full border border-white/20">আজকের সেরা ১০ জন</p>
+            <!-- ডাইনামিক ক্যাটাগরি ট্যাব -->
+            <div class="flex bg-white p-1 rounded-2xl shadow-sm mb-6 border border-slate-100">
+                <button onclick="window.switchLeaderboardTab('earn')" id="tabEarnLeaderboard" class="flex-1 py-3 font-bold text-xs rounded-xl bg-purple-600 text-white shadow-md transition-all">
+                    <i class="ri-money-dollar-circle-line mr-1"></i> ইনকাম লিডারবোর্ড
+                </button>
+                <button onclick="window.switchLeaderboardTab('referral')" id="tabRefLeaderboard" class="flex-1 py-3 font-bold text-xs rounded-xl text-slate-500 transition-all">
+                    <i class="ri-share-forward-line mr-1"></i> রেফারেল লিডারবোর্ড
+                </button>
             </div>
 
-            <!-- লিডারবোর্ড লিস্ট (জাভাস্ক্রিপ্ট এখানে ডেটা বসাবে) -->
-            <div id="leaderboardContainer" class="space-y-3 relative z-10 pb-10">
-                <!-- Data will load here via JS -->
+            <!-- লিডারবোর্ড মেইন কন্টেইনার (পোডিয়াম ও তালিকা এখানে ইনজেক্ট হবে) -->
+            <div id="leaderboardContainer" class="relative z-10 pb-10">
+                <!-- Data will load here dynamically via JS -->
             </div>
         </div>
         
@@ -3653,7 +3654,7 @@ window.sendTWAI = () => {
         // ✅ GLOBAL VARIABLES
         let currentUserData = null;
         let appliedPromoPercent = 0; 
-        
+        let currentLeaderboardTab = 'earn'; // 👉 লিডারবোর্ড ট্র্যাকিং ভেরিয়েবল
         // ✅ নাম্বার এনিমেশন লজিক
 function animateNumberUpdate(id, start, end, duration = 1000) {
     const obj = document.getElementById(id);
@@ -5899,60 +5900,135 @@ if (currentUserData.isActivated === false) {
             
             showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হচ্ছে...', 'info');
             
-            // স্মার্ট ডিলের সাথে লিংক ওপেন
+            // স্মার্ট ডিলের সাথে লিংক ওপেন এবং কাজের শুরুর সময় রেকর্ড করা
             setTimeout(() => {
                 window.open(link, '_blank');
+                window.taskStartTime = Date.now(); // 👉 নতুন কাজের সময় রেকর্ড
             }, 800);
-            
-            startTaskTimer(); 
         }
     });
 };
      
-     function startTaskTimer() {
-    if(taskTimer) clearInterval(taskTimer);
-            
-    // ১. সময় কমিয়ে মাত্র ৫ সেকেন্ড করা হলো
-    let timeLeft = 5; 
-    let cheatCount = 0; // ২. চিট কাউন্টার শুরু (০ থেকে)
-            
-    taskTimer = setInterval(() => {
-        // যদি ইউজার স্ক্রিনে থাকে (ট্যাব একটিভ থাকে)
-        if (!document.hidden) {
-            timeLeft--;
-                    
-            if(timeLeft <= 0) {
-                clearInterval(taskTimer);
-                        
-                // লিংক দিয়ে চেক করা হচ্ছে এটা ওয়েবসাইট নাকি সোশ্যাল মিডিয়া
-                const linkStr = (currentTaskInfo.link || "").toLowerCase();
-                const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
+     // ==========================================
+// 🛡️ ANTI-CHEAT WEBSITE VISIT CONTROLLER
+// ==========================================
 
-// মামা চেক করবে যে এটা সোশ্যাল মিডিয়া অথবা এডমিন কি ওয়েবসাইট প্রুফ চেয়েছে কি না
-const mustSubmitProof = isSocialMedia || currentTaskInfo.needsProof === true;
+// ১. ৩০ সেকেন্ড না থেকে ফিরে আসলে টাস্ক আজীবনের জন্য ব্লক করার ফাংশন
+window.blockTaskDueToCheating = async (taskId, taskTitle) => {
+    if(!currentUserId || !taskId) return;
+    
+    // টাইমার ও লকিং ক্লিয়ার করা
+    window.isTaskRunning = false;
+    window.taskStartTime = null;
+    
+    showLoading();
+    try {
+        const todayStr = new Date().toLocaleDateString('bn-BD');
+        
+        // ফায়ারবেস task_submissions-এ "Blocked" স্ট্যাটাসে ডাটা জমা করা
+        // এর ফলে renderTasks() কুয়েরি করার সময় কাজটি আজকের জন্য গায়েব করে দেবে
+        await db.collection("task_submissions").add({
+            userId: currentUserId,
+            taskId: taskId,
+            taskTitle: taskTitle,
+            reward: 0,
+            userName: currentUserData.name,
+            userPhone: currentUserData.phone,
+            proofText: "চেষ্টা ব্যর্থ (৩০ সেকেন্ডের আগে ফিরে আসা)",
+            screenshotUrl: "N/A",
+            status: "Blocked",
+            date: todayStr,
+            time: new Date().toLocaleTimeString('bn-BD'),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
 
-onAdCompleted = () => {
-    if(!mustSubmitProof) {
-        // প্রুফ না লাগলে সরাসরি টাকা
-        window.submitWebsiteProofDirectly();
-    } else {
-        // প্রুফ লাগলে ফর্ম দেখাবে
-        showProofSubmissionForm();
-        showSmartToast('অভিনন্দন! এখন কাজের প্রমাণ জমা দিন।', 'success');
+        // হিস্ট্রিতে পেনাল্টি রেকর্ড যোগ
+        await db.collection("history").add({
+            userId: currentUserId,
+            type: "ব্যর্থ টাস্ক 🚫",
+            amount: 0,
+            status: "Blocked",
+            details: `অসমাপ্ত কাজ: ${taskTitle} (৩০ সেকেন্ডের আগে ফিরে এসেছেন)`,
+            date: todayStr,
+            time: new Date().toLocaleTimeString('bn-BD'),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        hideLoading();
+        
+        // কঠোর সতর্কবার্তা পপ-আপ
+        Swal.fire({
+            title: 'কাজটি ব্লক করা হয়েছে! 🚫',
+            html: `
+                <div class="text-center animate__animated animate__shakeX">
+                    <p class="text-5xl mb-3">⚠️</p>
+                    <h3 class="text-lg font-black text-red-600">৩০ সেকেন্ড সময় পূর্ণ করেননি!</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed px-4">
+                        মামা, আপনি ওয়েবসাইটটিতে ৩০ সেকেন্ড থাকার আগেই অ্যাপে ফিরে এসেছেন। নিয়মনীতি অমান্য করার কারণে এই কাজটি আজকের জন্য <b>ব্লক/হারিয়ে</b> গেল এবং কোনো টাকা দেওয়া হলো না।
+                    </p>
+                </div>
+            `,
+            confirmButtonText: 'আমি দুঃখিত, ঠিকভাবে করব',
+            confirmButtonColor: '#ef4444',
+            background: '#ffffff',
+            customClass: {
+                popup: 'rounded-[30px] border border-red-100 shadow-2xl',
+                confirmButton: 'rounded-xl px-8 py-3 font-bold'
+            }
+        });
+        
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100]); // ফোন ভাইব্রেট হবে
+        renderTasks(); // টাস্ক লিস্ট রিফ্রেশ (যাতে কাজটি তালিকা থেকে গায়েব হয়ে যায়)
+        
+    } catch(e) {
+        console.error("Block Task Error:", e);
+        hideLoading();
     }
 };
 
-                // এখন অ্যাড কল করা হলো
-                showInterstitialAd();
-            }
+// ২. সফলভাবে ৩০ সেকেন্ড পার করে ফিরে আসলে পেমেন্ট দেওয়ার ফাংশন
+function completeTaskSuccessfully() {
+    if (!currentTaskInfo) return;
+    
+    // লক ও টাইম ক্লিয়ার করা
+    window.isTaskRunning = false;
+    window.taskStartTime = null;
+    
+    const linkStr = (currentTaskInfo.link || "").toLowerCase();
+    const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
+    const mustSubmitProof = isSocialMedia || currentTaskInfo.needsProof === true;
+
+    onAdCompleted = () => {
+        if(!mustSubmitProof) {
+            // ওয়েবসাইট ভিজিট হলে সরাসরি পেমেন্ট
+            window.submitWebsiteProofDirectly();
         } else {
-            // ৩. ইউজার অন্য ট্যাব বা অ্যাপে গেলে এখানে আসবে
-            // ইউজার অন্য ট্যাবে গেলেও কোনো বাধা নেই, টাইমার চলতে থাকবে। 
-            // শুধু ইউজারকে একটা মনে করিয়ে দেওয়ার মেসেজ দিবে।
-            showSmartToast(`⚠️ টাস্ক সম্পন্ন করতে পেইজে ফিরে আসুন।`, 'warning');
+            // সোশ্যাল বা প্রমাণ ভিত্তিক হলে প্রুফ ফর্ম দেখাবে
+            showProofSubmissionForm();
+            showSmartToast('অভিনন্দন! এখন কাজের প্রমাণ জমা দিন।', 'success');
         }
-    }, 1000);
+    };
+
+    // ইন্টাস্ট্রিশিয়াল অ্যাড দেখাবে
+    showInterstitialAd();
 }
+
+// ৩. গ্লোবাল লিসেনার: ইউজার অ্যাপে ফিরে আসলেই সময় চেক করবে
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) { // যখন ইউজার অ্যাপের স্ক্রিনে ফিরে আসবে
+        if (window.isTaskRunning && window.taskStartTime && currentTaskInfo) {
+            let secondsElapsed = (Date.now() - window.taskStartTime) / 1000;
+            
+            // যদি ৩০ সেকেন্ডের কম সময় বাইরে থেকে থাকে
+            if (secondsElapsed < 30) {
+                window.blockTaskDueToCheating(currentTaskInfo.taskId, currentTaskInfo.title);
+            } else {
+                // ৩০ সেকেন্ড বা তার বেশি সময় পার হলে সফল
+                completeTaskSuccessfully();
+            }
+        }
+    }
+});
      
 
                      // ✅ GORGEOUS PROOF SUBMISSION FORM (WITH 5 MIN TIMER & UPLOAD HELPER)
@@ -6284,15 +6360,15 @@ window.submitProof = async () => {
         // ✅ এডমিন প্যানেল থেকে ভ্যাট ও ফি ডাইনামিক ক্যালকুলেশন (রিপ্লেসড)
         window.calculateDepositVAT = () => {
             const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
-            const vatPercentage = systemSettings.vatFee || 0; 
-            const vat = amount * (vatPercentage / 100);
-            const total = amount + vat;
+            const vatPercentage = systemSettings.vatFee || 0; // 👉 সঠিক vatFee ভেরিয়েবল ব্যবহার
+                const vat = amount * (vatPercentage / 100);
+                const totalAmount = amount + vat;
             document.getElementById('vatCalculation').innerHTML = `ভ্যাট (${vatPercentage}%): ৳${vat.toFixed(2)} | মোট: ৳${total.toFixed(2)}`;
         };
         
         window.calculateWithdrawVAT = () => {
             const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
-            const vatPercentage = systemSettings.withdrawFee || 0; 
+            const vatPercentage = systemSettings.withdrawFee || 0; // 👉 সঠিক withdrawFee ভেরিয়েবল ব্যবহার
             const vat = amount * (vatPercentage / 100);
             const received = amount - vat;
             document.getElementById('withdrawVat').innerHTML = `চার্জ (${vatPercentage}%): ৳${vat.toFixed(2)} | প্রাপ্ত: ৳${received.toFixed(2)}`;
@@ -6368,7 +6444,7 @@ await db.collection("history").doc(newReqId).set({
 });
                 
                 // Send Telegram notification
-                const telegramMessage = `💰 *নতুন ডিপোজিট রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n💵 *পরিমাণ:* ৳${amount}\n🧾 *TrxID:* ${trxId}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *মোট:* ৳${totalAmount.toFixed(2)}`;
+                const telegramMessage = `💰 *নতুন ডিপোজিট রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n💵 *ডিপোজিট পরিমাণ:* ৳${amount.toFixed(2)}\n🧾 *TrxID:* ${trxId}\n📊 *ভ্যাট (${vatPercentage}%):* ৳${vat.toFixed(2)}\n💰 *মোট পরিশোধ:* ৳${totalAmount.toFixed(2)}`;
                 await sendTelegramNotification(telegramMessage);
                 
                 showSmartToast('ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
@@ -6615,8 +6691,8 @@ if(isFreeUser) {
                     userWithdrawCount++;
    currentUserData.withdraw_count = userWithdrawCount; // লোকাল আপডেট                 
                     
-                    // Send Telegram notification
-                    const telegramMessage = `💸 *নতুন উত্তোলন রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *অ্যাকাউন্ট:* ${number}\n💵 *পরিমাণ:* ৳${amount}\n📊 *ভ্যাট:* ৳${vat.toFixed(2)}\n💰 *প্রাপ্ত:* ৳${received.toFixed(2)}\n⏰ *সময়সূচী:* ${withinSchedule ? 'ভিতরে' : 'বাইরে'}`;
+                  // Send Telegram notification
+                    const telegramMessage = `💸 *নতুন উত্তোলন রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *অ্যাকাউন্ট:* ${number}\n💵 *উত্তোলন পরিমাণ:* ৳${amount.toFixed(2)}\n📊 *উত্তোলন চার্জ (${vatPercentage}%):* ৳${vat.toFixed(2)}\n💰 *প্রাপ্ত পরিমাণ (নিট):* ৳${received.toFixed(2)}\n⏰ *সময়সূচী:* ${withinSchedule ? 'ভিতরে' : 'বাইরে'}`;
                     await sendTelegramNotification(telegramMessage);
                     
                     let successMessage = 'উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন';
@@ -6888,7 +6964,7 @@ if(isFreeUser) {
                     userRechargeCount++;
                     
                     // ৪. টেলিগ্রাম নোটিফিকেশন
-                    const telegramMessage = `📱 *নতুন রিচার্জ রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📞 *নাম্বার:* ${phone}\n🏢 *অপারেটর:* ${operator}\n💵 *পরিমাণ:* ৳${amount}\n💰 *মোট:* ৳${totalAmount}`;
+                    const telegramMessage = `📱 *নতুন রিচার্জ রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📞 *নাম্বার:* ${phone}\n🏢 *অপারেটর:* ${operator}\n💵 *রিচার্জ পরিমাণ:* ৳${amount.toFixed(2)}\n📊 *সার্ভিস চার্জ:* ৳${fee.toFixed(2)}\n💰 *মোট কেটে নেওয়া হবে:* ৳${totalAmount.toFixed(2)}`;
                     await sendTelegramNotification(telegramMessage);
                     
                     let successMessage = 'রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে';
@@ -9308,135 +9384,212 @@ window.processMagicPromo = async () => {
 };
              
           // ==========================================
-// 🏆 ULTRA MODERN LIVE LEADERBOARD SCRIPT
-// ==========================================
-// ✅ গ্লোবাল লিসেনার রিমুভার (ল্যাগ/হ্যাং হওয়া থেকে বাঁচানোর জন্য)
-let leaderboardUnsub = null;
+        // 🏆 NEW PODIUM POD STYLE LEADERBOARD SCRIPT
+        // ==========================================
+        let leaderboardUnsub = null;
 
-window.loadLeaderboard = () => {
-    const container = document.getElementById('leaderboardContainer');
-    if(!container) return;
+        // ট্যাব পরিবর্তনের ট্রিগার
+        window.switchLeaderboardTab = (tab) => {
+            currentLeaderboardTab = tab;
+            const btnEarn = document.getElementById('tabEarnLeaderboard');
+            const btnRef = document.getElementById('tabRefLeaderboard');
+            
+            if(tab === 'earn') {
+                btnEarn.className = 'flex-1 py-3 font-bold text-xs rounded-xl bg-purple-600 text-white shadow-md transition-all';
+                btnRef.className = 'flex-1 py-3 font-bold text-xs rounded-xl text-slate-500 transition-all';
+            } else {
+                btnRef.className = 'flex-1 py-3 font-bold text-xs rounded-xl bg-purple-600 text-white shadow-md transition-all';
+                btnEarn.className = 'flex-1 py-3 font-bold text-xs rounded-xl text-slate-500 transition-all';
+            }
+            window.loadLeaderboard();
+        };
 
-    // ১. মডার্ন স্কেলিটন লোডিং এনিমেশন
-    container.innerHTML = `
-        <div class="flex flex-col gap-3 animate-pulse mt-2">
-            <div class="h-16 bg-white/50 border border-slate-200 rounded-2xl w-full"></div>
-            <div class="h-16 bg-white/50 border border-slate-200 rounded-2xl w-full"></div>
-            <div class="h-16 bg-white/50 border border-slate-200 rounded-2xl w-full"></div>
-        </div>
-    `;
+        // রিয়েল-টাইম লিডারবোর্ড লোডার
+        window.loadLeaderboard = () => {
+            const container = document.getElementById('leaderboardContainer');
+            if(!container) return;
 
-    // ২. আগের লিসেনার খোলা থাকলে সেটা বন্ধ করে দেওয়া
-    if (leaderboardUnsub) {
-        leaderboardUnsub();
-    }
+            // প্রিমিয়াম কঙ্কাল (Skeleton) লোডিং
+            container.innerHTML = `
+                <div class="flex flex-col gap-3 animate-pulse mt-4">
+                    <div class="h-40 bg-white/60 border border-slate-100 rounded-3xl w-full"></div>
+                    <div class="h-16 bg-white/60 border border-slate-100 rounded-2xl w-full"></div>
+                    <div class="h-16 bg-white/60 border border-slate-100 rounded-2xl w-full"></div>
+                </div>
+            `;
 
-    try {
-        // ৩. রিয়েল-টাইম ফায়ারবেস অনস্ন্যাপশট (Live Real-time data)
-        leaderboardUnsub = db.collection("users")
-    .where("todayEarnings", ">", 0) // যাদের আজকের ইনকাম ০ এর বেশি
-    .orderBy("todayEarnings", "desc")
-    .limit(10)
-            .onSnapshot(snapshot => {
-                
-                if(snapshot.empty) {
-                    container.innerHTML = `
-                        <div class="text-center py-12 opacity-60">
-                            <i class="ri-trophy-line text-6xl text-slate-300 drop-shadow-sm"></i>
-                            <p class="text-slate-500 font-bold mt-3 text-sm">এখনো কেউ টাকা আয় করেনি!</p>
-                        </div>`;
-                    return;
-                }
+            // আগের লিসেনার মেমোরি থেকে ক্লিয়ার করা
+            if (leaderboardUnsub) {
+                leaderboardUnsub();
+            }
 
-                let rank = 1;
-                let listHTML = ''; 
-                let hasVisibleUsers = false;
+            // সর্টিং কন্ডিশন সেট করা
+            const sortByField = currentLeaderboardTab === 'earn' ? 'totalEarnings' : 'totalReferrals';
 
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const isMe = (doc.id === currentUserId);
-                    
-                    // ৪. আর্নিং 0 হলেও এখন লিডারবোর্ড দেখাবে (লিস্ট যাতে ফাঁকা না হয়)
-                    const earningsValue = parseFloat(data.totalEarnings || 0);
-                    if(earningsValue < 0) return; // শুধু মাইনাস ফিগার থাকলে তাকে বাদ দিবে
+            try {
+                leaderboardUnsub = db.collection("users")
+                    .orderBy(sortByField, "desc")
+                    .limit(10)
+                    .onSnapshot(snapshot => {
+                        
+                        if(snapshot.empty) {
+                            container.innerHTML = `
+                                <div class="text-center py-16 opacity-60">
+                                    <i class="ri-trophy-line text-6xl text-slate-300 drop-shadow-sm"></i>
+                                    <p class="text-slate-500 font-bold mt-3 text-sm">কোনো তথ্য পাওয়া যায়নি!</p>
+                                </div>`;
+                            return;
+                        }
 
-                    const earnings = earningsValue.toFixed(2);
-                    hasVisibleUsers = true;
+                        const users = [];
+                        snapshot.forEach(doc => {
+                            const data = doc.data();
+                            // শুধু ধনাত্মক এবং বাস্তব সংখ্যা ফিল্টারিং
+                            const val = parseFloat(data[sortByField]) || 0;
+                            if(val >= 0) {
+                                users.push({ id: doc.id, ...data });
+                            }
+                        });
 
-                    const name = data.name || "Unknown User";
-                    const avatar = data.avatar || "https://img.icons8.com/fluency/96/user-male-circle.png";
+                        // যদি তালিকা একদমই ফাকা থাকে
+                        if(users.length === 0) {
+                            container.innerHTML = `<p class="text-center text-slate-400 py-10 font-bold">লিডারবোর্ড খালি</p>`;
+                            return;
+                        }
 
-                    let cardClass = "bg-white border-slate-100 hover:border-blue-200 hover:shadow-md";
-                    let rankBg = "bg-slate-100 text-slate-500 border border-slate-200";
-                    let rankIcon = rank;
-                    let nameColor = "text-slate-700";
-                    let crownEffect = "";
+                        // ১, ২, এবং ৩ নম্বর পজিশনের প্লেয়ারদের অবজেক্ট গঠন
+                        const top1 = users[0] || null;
+                        const top2 = users[1] || null;
+                        const top3 = users[2] || null;
 
-                    // ৫. টপ ৩ জনের ডাইনামিক ডিজাইন
-                    if (rank === 1) {
-                        cardClass = "bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-300 transform scale-[1.03] shadow-lg ring-2 ring-yellow-400 ring-offset-2 z-10 relative mb-4";
-                        rankBg = "bg-gradient-to-br from-yellow-400 to-amber-600 text-white shadow-md border-none";
-                        rankIcon = '<i class="ri-vip-crown-fill text-xl animate-pulse"></i>';
-                        nameColor = "text-yellow-800 font-black text-base";
-                        crownEffect = '<span class="absolute -top-3 -right-2 text-2xl drop-shadow-md animate-bounce">👑</span>';
-                    } else if (rank === 2) {
-                        cardClass = "bg-gradient-to-r from-slate-50 to-gray-100 border-slate-300 mb-2";
-                        rankBg = "bg-gradient-to-br from-slate-400 to-gray-500 text-white shadow-sm border-none";
-                        nameColor = "text-slate-800 font-bold";
-                    } else if (rank === 3) {
-                        cardClass = "bg-gradient-to-r from-orange-50 to-red-50 border-orange-200 mb-2";
-                        rankBg = "bg-gradient-to-br from-orange-400 to-red-400 text-white shadow-sm border-none";
-                        nameColor = "text-orange-900 font-bold";
-                    }
+                        // ভ্যালু সুন্দরভাবে প্রদর্শনের হেল্পার
+                        const formatVal = (user) => {
+                            if(!user) return '';
+                            if(currentLeaderboardTab === 'earn') {
+                                return `৳${(parseFloat(user.totalEarnings) || 0).toFixed(2)}`;
+                            } else {
+                                return `${parseInt(user.totalReferrals) || 0}টি`;
+                            }
+                        };
 
-                    let meBadge = isMe ? '<span class="bg-blue-600 text-white text-[9px] px-2 py-0.5 rounded-full font-black ml-1 shadow-sm animate-pulse border border-blue-400">YOU</span>' : '';
-
-                    listHTML += `
-                        <div class="flex items-center justify-between p-4 rounded-2xl border ${cardClass} transition-all duration-300 animate__animated animate__fadeInRight" style="animation-delay: ${rank * 0.08}s">
-                            <div class="flex items-center gap-3 w-[70%]">
-                                <div class="w-10 h-10 rounded-full ${rankBg} flex items-center justify-center font-black text-sm shrink-0">
-                                    ${rankIcon}
+                        // ৩ জনের পোডিয়াম লে-আউট জেনারেশন (অর্ডার: ৩য় স্থান, ১ম স্থান, ২য় স্থান)
+                        let podiumHTML = `
+                            <div class="flex justify-center items-end gap-3 mb-6 px-1 mt-4">
+                                <!-- Rank 3 (Left Card - Bronze Style) -->
+                                <div class="flex-1 bg-amber-50/50 border border-amber-200 rounded-3xl p-3 text-center flex flex-col items-center justify-center relative shadow-sm h-[135px]">
+                                    <div class="absolute -top-4 text-xl text-orange-400">
+                                        <i class="ri-vip-crown-2-fill"></i>
+                                    </div>
+                                    ${top3 ? `
+                                        <div class="relative">
+                                            <img src="${top3.avatar || 'https://img.icons8.com/fluency/96/user-male-circle.png'}" class="w-11 h-11 rounded-full border-2 border-orange-300 bg-white object-cover">
+                                            <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-orange-400 text-white text-[9px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-white">3</span>
+                                        </div>
+                                        <h4 class="font-bold text-slate-700 text-xs mt-2.5 truncate w-20 leading-none">${top3.name}</h4>
+                                        <p class="text-[11px] font-black text-orange-600 mt-1.5 leading-none">${formatVal(top3)}</p>
+                                    ` : `
+                                        <div class="w-11 h-11 rounded-full border border-dashed border-slate-300 bg-slate-50 flex items-center justify-center text-slate-400">
+                                            <i class="ri-user-line text-lg"></i>
+                                        </div>
+                                        <h4 class="font-bold text-slate-400 text-xs mt-2">ফাঁকা</h4>
+                                    `}
                                 </div>
-                                <div class="relative shrink-0">
-                                    <img src="${avatar}" class="w-11 h-11 rounded-full border-2 border-white shadow-md bg-white object-cover">
-                                    ${crownEffect}
+
+                                <!-- Rank 1 (Center Card - Tallest Gold Style) -->
+                                <div class="flex-1 bg-yellow-50/70 border-2 border-yellow-400 rounded-[28px] p-4 text-center flex flex-col items-center justify-center relative shadow-md h-[165px] transform scale-105 z-10">
+                                    <div class="absolute -top-5 text-2xl text-yellow-500 animate-pulse">
+                                        <i class="ri-vip-crown-fill"></i>
+                                    </div>
+                                    ${top1 ? `
+                                        <div class="relative">
+                                            <img src="${top1.avatar || 'https://img.icons8.com/fluency/96/user-male-circle.png'}" class="w-14 h-14 rounded-full border-2 border-yellow-400 bg-white object-cover">
+                                            <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-yellow-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border border-white">1</span>
+                                        </div>
+                                        <h4 class="font-extrabold text-slate-800 text-sm mt-2.5 truncate w-24 leading-none">${top1.name}</h4>
+                                        <p class="text-xs font-black text-yellow-600 mt-1.5 leading-none">${formatVal(top1)}</p>
+                                    ` : `
+                                        <div class="w-14 h-14 rounded-full border border-dashed border-slate-300 bg-slate-50 flex items-center justify-center text-slate-400">
+                                            <i class="ri-user-line text-xl"></i>
+                                        </div>
+                                        <h4 class="font-bold text-slate-400 text-xs mt-2">ফাঁকা</h4>
+                                    `}
                                 </div>
-                                <div class="overflow-hidden">
-                                    <h4 class="${nameColor} text-sm truncate flex items-center gap-1">
-                                        ${name} ${meBadge}
-                                    </h4>
-                                    <p class="text-[10px] font-bold opacity-70 uppercase tracking-widest text-slate-500 mt-0.5">আজকের আয়</p>
+
+                                <!-- Rank 2 (Right Card - Silver Style) -->
+                                <div class="flex-1 bg-slate-50/70 border border-slate-300 rounded-3xl p-3 text-center flex flex-col items-center justify-center relative shadow-sm h-[145px]">
+                                    <div class="absolute -top-4 text-xl text-slate-400">
+                                        <i class="ri-vip-crown-2-fill"></i>
+                                    </div>
+                                    ${top2 ? `
+                                        <div class="relative">
+                                            <img src="${top2.avatar || 'https://img.icons8.com/fluency/96/user-male-circle.png'}" class="w-12 h-12 rounded-full border-2 border-slate-300 bg-white object-cover">
+                                            <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-slate-400 text-white text-[9px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-white">2</span>
+                                        </div>
+                                        <h4 class="font-bold text-slate-700 text-xs mt-2.5 truncate w-20 leading-none">${top2.name}</h4>
+                                        <p class="text-[11px] font-black text-slate-600 mt-1.5 leading-none">${formatVal(top2)}</p>
+                                    ` : `
+                                        <div class="w-12 h-12 rounded-full border border-dashed border-slate-300 bg-slate-50 flex items-center justify-center text-slate-400">
+                                            <i class="ri-user-line text-lg"></i>
+                                        </div>
+                                        <h4 class="font-bold text-slate-400 text-xs mt-2">ফাঁকা</h4>
+                                    `}
                                 </div>
                             </div>
-                            <div class="text-right shrink-0">
-                                <span class="block font-black text-lg ${rank === 1 ? 'text-amber-600' : 'text-emerald-600'}">৳${earnings}</span>
-                            </div>
-                        </div>
-                    `;
-                    rank++;
-                });
+                        `;
 
-                if(!hasVisibleUsers) {
-                    container.innerHTML = `
-                        <div class="text-center py-12 opacity-60">
-                            <i class="ri-trophy-line text-6xl text-slate-300 drop-shadow-sm"></i>
-                            <p class="text-slate-500 font-bold mt-3 text-sm">এখনো কেউ টাকা আয় করেনি!</p>
-                        </div>`;
-                } else {
-                    // ৬. সবগুলো একসাথে বসিয়ে দেওয়া (ফাস্ট রেন্ডারিং)
-                    container.innerHTML = listHTML;
-                }
+                        // বাকি ৪ থেকে ১০ নম্বরের লিস্ট জেনারেশন
+                        let listHTML = '<div class="space-y-3 mt-4">';
+                        for (let i = 3; i < users.length; i++) {
+                            const u = users[i];
+                            const rank = i + 1;
+                            const isMe = (u.id === currentUserId);
+                            
+                            const initials = u.name ? u.name.substring(0, 2).toUpperCase() : 'MI';
+                            const avatarHTML = u.avatar ? 
+                                `<img src="${u.avatar}" class="w-11 h-11 rounded-full border border-slate-100 shadow-sm bg-white object-cover">` :
+                                `<div class="w-11 h-11 rounded-full bg-purple-100 text-purple-600 border border-slate-100 shadow-sm flex items-center justify-center font-bold text-xs">${initials}</div>`;
 
-            }, (error) => {
-                console.error("Leaderboard Real-time Error:", error);
-                container.innerHTML = '<div class="bg-red-50 border border-red-200 p-4 rounded-xl text-center mt-5"><p class="text-red-500 font-bold text-sm">ডেটা লাইভ করতে সার্ভার সমস্যা হয়েছে!</p></div>';
-            });
+                            const meBadge = isMe ? '<span class="bg-blue-600 text-white text-[9px] px-1.5 py-0.5 rounded-full font-black ml-1 shadow-sm border border-blue-400">YOU</span>' : '';
 
-    } catch (e) {
-        console.error(e);
-        container.innerHTML = '<div class="bg-red-50 border border-red-200 p-4 rounded-xl text-center mt-5"><p class="text-red-500 font-bold text-sm">ডেটা লোড করতে সমস্যা হয়েছে!</p></div>';
-    }
-};
+                            listHTML += `
+                                <div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 animate__animated animate__fadeInUp" style="animation-delay: ${(rank - 3) * 0.05}s">
+                                    <div class="flex items-center gap-3 w-[70%]">
+                                        <!-- Rank Index -->
+                                        <span class="text-sm font-black text-slate-400 w-5 text-center">${rank}</span>
+                                        <!-- Avatar -->
+                                        <div class="relative shrink-0">
+                                            ${avatarHTML}
+                                        </div>
+                                        <!-- User details -->
+                                        <div class="overflow-hidden">
+                                            <h4 class="font-bold text-slate-800 text-sm truncate flex items-center gap-1">
+                                                ${u.name} ${meBadge}
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <!-- Value Pill -->
+                                    <div class="shrink-0">
+                                        <span class="inline-block bg-purple-50 text-purple-700 px-3.5 py-1.5 rounded-full font-black text-xs border border-purple-100/50">
+                                            ${formatVal(u)}
+                                        </span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        listHTML += '</div>';
+
+                        // কন্টেইনারে পোডিয়াম এবং ৪-১০ জনের ডেটা একসাথে যুক্ত করা
+                        container.innerHTML = podiumHTML + listHTML;
+
+                    }, (error) => {
+                        console.error("Podium Error:", error);
+                        container.innerHTML = '<p class="text-center text-red-500 font-bold py-10">সার্ভার সমস্যা হয়েছে!</p>';
+                    });
+            } catch (e) {
+                console.error("Main Podium logic error:", e);
+                container.innerHTML = '<p class="text-center text-red-500 font-bold py-10">লোড হতে সমস্যা হয়েছে!</p>';
+            }
+        };
 
 // ==========================================
 // 🎬 WATCH & EARN (POWERFUL AD SYSTEM)
@@ -9533,16 +9686,37 @@ window.startWatchAd = async () => {
             currentUserData.lastWatchTime = now.getTime();
             currentUserData.lastWatchDate = todayStr;
 
-            showSmartToast(`৳${WATCH_REWARD} সফলভাবে যোগ হয়েছে! 🎉`, 'success');
-            window.playSound('snd_success');
-            
-            // UI আপডেট
+            // ১. ৩ডি বক্স এনিমেশন ট্রিগার (অ্যাড রিওয়ার্ড অ্যামাউন্ট সহ)
+            window.trigger3DBoxReward(`৳${WATCH_REWARD.toFixed(2)}`);
+
+            // ২. UI এবং স্ট্যাটাস আপডেট
             window.loadWatchEarnStats();
-            
-            // ছোট কনফেটি
-            if(typeof confetti === 'function') {
-                confetti({ particleCount: 50, spread: 40, origin: { y: 0.8 } });
-            }
+
+            // ৩. ৩ডি বক্স এনিমেশন শেষ হওয়ার পর (২ সেকেন্ড পর) গর্জিয়াস পপ-আপ দেখানো
+            setTimeout(() => {
+                Swal.fire({
+                    title: '🎉 অ্যাড রিওয়ার্ড সফল!',
+                    html: `
+                        <div class="text-center animate__animated animate__zoomIn">
+                            <img src="https://img.icons8.com/fluency/96/play-button-circled.png" class="w-16 mx-auto mb-3 animate-bounce" style="filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));">
+                            <div class="bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-100 p-4 rounded-2xl mb-4">
+                                <p class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">আপনি ক্লেইম করেছেন</p>
+                                <h2 class="text-3xl font-black text-rose-600 mt-1">৳${WATCH_REWARD.toFixed(2)}</h2>
+                            </div>
+                            <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+                                অ্যাড দেখার বোনাসটি সরাসরি আপনার মেইন ব্যালেন্সে সফলভাবে জমা করে দেওয়া হয়েছে। পরবর্তী অ্যাড দেখতে প্রস্তুত হোন! 🎬
+                            </p>
+                        </div>
+                    `,
+                    confirmButtonText: 'ঠিক আছে, ধন্যবাদ',
+                    confirmButtonColor: '#f43f5e', // থিমের সাথে সামঞ্জস্যপূর্ণ রোজ কালার
+                    background: '#ffffff',
+                    customClass: {
+                        popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                        confirmButton: 'rounded-xl px-8 py-3 font-bold'
+                    }
+                });
+            }, 2000); // ২ সেকেন্ড (২০০০ মিলি-সেকেন্ড) বিলম্ব
 
         } catch (e) {
             console.error("Watch Earn Error:", e);
