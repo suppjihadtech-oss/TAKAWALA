@@ -5409,18 +5409,21 @@ if (!method && data.details) {
     }
 }
 
-// 🛡️ সিকিউরিটি ফিল্টার: যদি এক্সট্র্যাক্ট করা মেথডটি কোনো বড় সাকসেস নোট বা টেক্সট হয়ে থাকে
+// 🛡️ সিকিউরিটি ফিল্টার: ইংরেজি বর্ণমালা পরীক্ষা ও সাকসেস নোট ফিল্টারিং
 const knownMethods = ['BKASH', 'NAGAD', 'ROCKET', 'USDT', 'GP', 'ROBI', 'AIRTEL', 'BL', 'BANGLALINK', 'TELETALK', 'UPAY'];
-const isValidMethod = knownMethods.some(m => method.includes(m)) && method.length < 15;
+const isEnglishWord = /^[A-Z0-9\s]+$/.test(method); // মেথডটি কেবল ইংরেজি সংখ্যা ও বর্ণমালার কিনা চেক
+const isValidMethod = isEnglishWord && knownMethods.some(m => method.includes(m)) && method.length < 15;
 
 if (!isValidMethod) {
-    // সাকসেস হওয়ার পর যদি details ফিল্ডে সাকসেস নোট বসে যায়, তবে টাইপ অনুযায়ী সুন্দর ও পেশাদার নাম দেখাবে
+    // সাকসেস হওয়ার পর যদি details ফিল্ডে সাকসেস নোট বসে যায়, তবে টাইপ ও অ্যামাউন্ট অনুযায়ী সুন্দর ও পেশাদার নাম দেখাবে
     const typeStr = (data.type || "").toLowerCase();
-    if (typeStr.includes('withdraw') || typeStr.includes('উত্তোলন')) {
+    const amt = parseFloat(data.amount || 0);
+    
+    if (typeStr.includes('withdraw') || typeStr.includes('উত্তোলন') || typeStr.includes('out') || (amt < 0 && !typeStr.includes('recharge') && !typeStr.includes('রিচার্জ'))) {
         method = "MOBILE BANKING";
     } else if (typeStr.includes('recharge') || typeStr.includes('রিচার্জ')) {
         method = "MOBILE RECHARGE";
-    } else if (typeStr.includes('deposit') || typeStr.includes('ডিপোজিট')) {
+    } else if (typeStr.includes('deposit') || typeStr.includes('ডিপোজিট') || typeStr.includes('in') || amt > 0) {
         method = "ONLINE DEPOSIT";
     } else {
         method = "SYSTEM";
