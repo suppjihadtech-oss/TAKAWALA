@@ -5902,31 +5902,43 @@ if (currentUserData.isActivated === false) {
             
             // স্মার্ট ডিলের সাথে লিংক ওপেন এবং কাজের শুরুর সময় রেকর্ড করা
             setTimeout(() => {
-                window.open(link, '_blank');
-                window.taskStartTime = Date.now(); // 👉 নতুন কাজের সময় রেকর্ড
+                // 👉 ট্রিক ১: টেলিগ্রামের অফিশিয়াল Native SDK দিয়ে ওভারলে ব্রাউজারে লিংক ওপেন করা (এতে অ্যাপ ফ্রিজ হবে না)
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.openLink(link);
+                } else {
+                    window.open(link, '_blank'); 
+                }
+
+                // 👉 ট্রিক ২: ব্যাকগ্রাউন্ড স্লিপ বা রিলোড প্রোটেকশনের জন্য LocalStorage-এ ডাটা সেভ করা
+                localStorage.setItem('TAKAWALA_isTaskRunning', 'true');
+                localStorage.setItem('TAKAWALA_taskStartTime', Date.now().toString());
+                localStorage.setItem('TAKAWALA_currentTaskInfo', JSON.stringify(currentTaskInfo));
+                
+                window.taskStartTime = Date.now(); 
             }, 800);
         }
     });
 };
      
      // ==========================================
-// 🛡️ ANTI-CHEAT WEBSITE VISIT CONTROLLER
+// 🛡️ ANTI-CHEAT WEBSITE VISIT CONTROLLER (BULLETPROOF)
 // ==========================================
 
 // ১. ৩০ সেকেন্ড না থেকে ফিরে আসলে টাস্ক আজীবনের জন্য ব্লক করার ফাংশন
 window.blockTaskDueToCheating = async (taskId, taskTitle) => {
     if(!currentUserId || !taskId) return;
     
-    // টাইমার ও লকিং ক্লিয়ার করা
+    // টাইমার, লকিং ও লোকাল মেমোরি সম্পূর্ণ ক্লিয়ার করা
     window.isTaskRunning = false;
     window.taskStartTime = null;
+    localStorage.removeItem('TAKAWALA_isTaskRunning');
+    localStorage.removeItem('TAKAWALA_taskStartTime');
+    localStorage.removeItem('TAKAWALA_currentTaskInfo');
     
     showLoading();
     try {
         const todayStr = new Date().toLocaleDateString('bn-BD');
         
-        // ফায়ারবেস task_submissions-এ "Blocked" স্ট্যাটাসে ডাটা জমা করা
-        // এর ফলে renderTasks() কুয়েরি করার সময় কাজটি আজকের জন্য গায়েব করে দেবে
         await db.collection("task_submissions").add({
             userId: currentUserId,
             taskId: taskId,
@@ -5942,7 +5954,6 @@ window.blockTaskDueToCheating = async (taskId, taskTitle) => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        // হিস্ট্রিতে পেনাল্টি রেকর্ড যোগ
         await db.collection("history").add({
             userId: currentUserId,
             type: "ব্যর্থ টাস্ক 🚫",
@@ -5956,7 +5967,6 @@ window.blockTaskDueToCheating = async (taskId, taskTitle) => {
         
         hideLoading();
         
-        // কঠোর সতর্কবার্তা পপ-আপ
         Swal.fire({
             title: 'কাজটি ব্লক করা হয়েছে! 🚫',
             html: `
@@ -5977,8 +5987,8 @@ window.blockTaskDueToCheating = async (taskId, taskTitle) => {
             }
         });
         
-        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100]); // ফোন ভাইব্রেট হবে
-        renderTasks(); // টাস্ক লিস্ট রিফ্রেশ (যাতে কাজটি তালিকা থেকে গায়েব হয়ে যায়)
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100]); 
+        renderTasks(); 
         
     } catch(e) {
         console.error("Block Task Error:", e);
@@ -5990,45 +6000,62 @@ window.blockTaskDueToCheating = async (taskId, taskTitle) => {
 function completeTaskSuccessfully() {
     if (!currentTaskInfo) return;
     
-    // লক ও কাজের শুরুর সময় ক্লিয়ার করা
+    // লক, টাইমার ও লোকাল মেমোরি সম্পূর্ণ ক্লিয়ার করা
     window.isTaskRunning = false;
     window.taskStartTime = null;
+    localStorage.removeItem('TAKAWALA_isTaskRunning');
+    localStorage.removeItem('TAKAWALA_taskStartTime');
+    localStorage.removeItem('TAKAWALA_currentTaskInfo');
     
     const linkStr = (currentTaskInfo.link || "").toLowerCase();
-    const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
+    const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|indigo|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
     const mustSubmitProof = isSocialMedia || currentTaskInfo.needsProof === true;
 
     onAdCompleted = () => {
         if(!mustSubmitProof) {
-            // ওয়েবসাইট ভিজিট (প্রুফ ছাড়া) হলে সরাসরি পেমেন্ট
             window.submitWebsiteProofDirectly();
         } else {
-            // সোশ্যাল বা প্রুফ চাওয়া টাস্ক হলে প্রুফ ফর্ম দেখাবে
             showProofSubmissionForm();
             showSmartToast('অভিনন্দন! এখন কাজের প্রমাণ জমা দিন।', 'success');
         }
     };
 
-    // 👉 অ্যাডসটেরা (Adsterra) পপ-আপ অ্যাড প্রদর্শন করা হচ্ছে (উভয় টাস্কের জন্যই)
     showInterstitialAd();
 }
 
-// ৩. গ্লোবাল লিসেনার: ইউজার অ্যাপে ফিরে আসলেই সময় চেক করবে
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) { // যখন ইউজার অ্যাপের স্ক্রিনে ফিরে আসবে
-        if (window.isTaskRunning && window.taskStartTime && currentTaskInfo) {
-            let secondsElapsed = (Date.now() - window.taskStartTime) / 1000;
+// ৩. অটো-চেকার ফাংশন (ইউজার যেকোনোভাবে অ্যাপে ফিরে আসলেই সাথে সাথে সচল হবে)
+window.checkTaskStatusOnReturn = () => {
+    let savedIsRunning = localStorage.getItem('TAKAWALA_isTaskRunning');
+    if (savedIsRunning === 'true') {
+        let savedStartTime = parseInt(localStorage.getItem('TAKAWALA_taskStartTime') || '0');
+        let savedTaskInfo = JSON.parse(localStorage.getItem('TAKAWALA_currentTaskInfo') || 'null');
+        
+        if (savedStartTime && savedTaskInfo) {
+            // মেমোরি রিস্টোর করা
+            window.isTaskRunning = true;
+            window.taskStartTime = savedStartTime;
+            currentTaskInfo = savedTaskInfo;
             
-            // যদি ৩০ সেকেন্ডের কম সময় বাইরে থেকে থাকে
+            let secondsElapsed = (Date.now() - savedStartTime) / 1000;
+            
             if (secondsElapsed < 30) {
-                window.blockTaskDueToCheating(currentTaskInfo.taskId, currentTaskInfo.title);
+                window.blockTaskDueToCheating(savedTaskInfo.taskId, savedTaskInfo.title);
             } else {
-                // ৩০ সেকেন্ড বা তার বেশি সময় পার হলে সফল
                 completeTaskSuccessfully();
             }
         }
     }
+};
+
+// ৪. ৩টি ভিন্ন উপায়ে রিটার্ন ডিটেক্ট করা (যাতে ১ মিলি-সেকেন্ডও ল্যাগ না হয়)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) window.checkTaskStatusOnReturn();
 });
+window.addEventListener('focus', window.checkTaskStatusOnReturn);
+window.addEventListener('pageshow', window.checkTaskStatusOnReturn);
+
+// টেলিগ্রাম যদি স্লিপ মোড থেকে অ্যাপটি সম্পূর্ণ রিলোড করে থাকে, তবুও কাজ সচল করবে
+window.addEventListener('DOMContentLoaded', window.checkTaskStatusOnReturn);
      
 
                      // ✅ GORGEOUS PROOF SUBMISSION FORM (WITH 5 MIN TIMER & UPLOAD HELPER)
