@@ -6036,17 +6036,28 @@ window.checkTaskStatusOnReturn = () => {
             window.taskStartTime = savedStartTime;
             currentTaskInfo = savedTaskInfo;
             
-            let secondsElapsed = (Date.now() - savedStartTime) / 1000;
+            // সোশ্যাল মিডিয়া অথবা প্রুফ সাবমিশন টাস্ক কিনা তা যাচাই করা
+            const linkStr = (savedTaskInfo.link || "").toLowerCase();
+            const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|indigo|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
+            const mustSubmitProof = isSocialMedia || savedTaskInfo.needsProof === true;
             
-            if (secondsElapsed < 30) {
-                window.blockTaskDueToCheating(savedTaskInfo.taskId, savedTaskInfo.title);
-            } else {
+            if (mustSubmitProof) {
+                // সোশ্যাল মিডিয়া টাস্কের ক্ষেত্রে ৩০ সেকেন্ডের সীমাবদ্ধতা থাকবে না
+                // ইউজার ফিরে আসলেই প্রুফ সাবমিশন ফর্ম দেখাবে
                 completeTaskSuccessfully();
+            } else {
+                // সাধারণ ওয়েবসাইট ভিজিট টাস্কের ক্ষেত্রে ৩০ সেকেন্ডের কঠোর নিয়ম প্রযোজ্য হবে
+                let secondsElapsed = (Date.now() - savedStartTime) / 1000;
+                
+                if (secondsElapsed < 30) {
+                    window.blockTaskDueToCheating(savedTaskInfo.taskId, savedTaskInfo.title);
+                } else {
+                    completeTaskSuccessfully();
+                }
             }
         }
     }
 };
-
 // ৪. ৩টি ভিন্ন উপায়ে রিটার্ন ডিটেক্ট করা (যাতে ১ মিলি-সেকেন্ডও ল্যাগ না হয়)
 document.addEventListener('visibilitychange', () => {
     if (!document.hidden) window.checkTaskStatusOnReturn();
