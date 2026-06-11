@@ -5827,18 +5827,10 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
 
     if(!currentUserData) return;
     
-    // ডাবল ক্লিক ও ওল্ড টাস্ক জ্যাম প্রোটেকশন
+    // ডাবল ক্লিক প্রোটেকশন (ইন-মেমোরি)
     if (window.isTaskRunning) {
-        let savedStartTime = parseInt(localStorage.getItem('TAKAWALA_taskStartTime') || '0');
-        if (savedStartTime && (Date.now() - savedStartTime) > 300000) { 
-            window.isTaskRunning = false;
-            localStorage.removeItem('TAKAWALA_isTaskRunning');
-            localStorage.removeItem('TAKAWALA_taskStartTime');
-            localStorage.removeItem('TAKAWALA_currentTaskInfo');
-        } else {
-            showSmartToast('ইতিমধ্যে একটি টাস্ক চলছে! দয়া করে অপেক্ষা করুন।', 'warning');
-            return;
-        }
+        showSmartToast('ইতিমধ্যে একটি টাস্ক চলছে! দয়া করে অপেক্ষা করুন।', 'warning');
+        return;
     }
 
     // কাজের নিয়মাবলী পপ-আপ
@@ -5857,10 +5849,6 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
             <div style="display:flex; align-items:start; gap:8px; margin-bottom:8px;">
                 <i class="ri-checkbox-circle-fill text-emerald-500" style="margin-top:3px; font-size:14px;"></i>
                 <span>নিচের বাটনে ক্লিক করে কাজ শুরু করুন।</span>
-            </div>
-            <div style="display:flex; align-items:start; gap:8px; margin-bottom:8px;">
-                <i class="ri-checkbox-circle-fill text-emerald-500" style="margin-top:3px; font-size:14px;"></i>
-                <span>লিংক ওপেন হওয়ার পর কমপক্ষে ৩০ সেকেন্ড অপেক্ষা করুন।</span>
             </div>
         `;
     }
@@ -5896,99 +5884,27 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
                 // ডিফল্ট ব্রাউজারে লিঙ্ক ওপেন
                 window.open(link, '_blank'); 
 
-                localStorage.setItem('TAKAWALA_isTaskRunning', 'true');
-                localStorage.setItem('TAKAWALA_taskStartTime', Date.now().toString());
-                localStorage.setItem('TAKAWALA_currentTaskInfo', JSON.stringify(currentTaskInfo));
-                
-                window.taskStartTime = Date.now(); 
+                // ১ সেকেন্ডের মাথায় ব্যাকগ্রাউন্ডে ইনস্ট্যান্ট অ্যাড চালু (লোকাল স্টোরেজ ছাড়া)
+                setTimeout(() => {
+                    completeTaskSuccessfully();
+                }, 1000);
+
             }, 800);
         }
     });
 };
      
     // ==========================================
-// 🛡️ ANTI-CHEAT WEBSITE VISIT CONTROLLER (REBORN & BUG-FREE)
+// 💸 SIMPLE WEBSITE VISIT CONTROLLER (EXTREMELY PLAIN & CLEAN)
 // ==========================================
 
-// ১. ৩০ সেকেন্ড সময় পূর্ণ না করে ফিরে আসলে টাস্ক ব্লক করার ফাংশন
-window.blockTaskDueToCheating = async (taskId, taskTitle) => {
-    window.isTaskRunning = false;
-    window.taskStartTime = null;
-    localStorage.removeItem('TAKAWALA_isTaskRunning');
-    localStorage.removeItem('TAKAWALA_taskStartTime');
-    localStorage.removeItem('TAKAWALA_currentTaskInfo');
+// ওয়ান-টাইম পুরনো ব্রাউজার জ্যাম পরিষ্কার করা (যাতে আগের কোনো টেস্ট ডেটা লগইনে ডিস্টার্ব না করে)
+localStorage.removeItem('TAKAWALA_isTaskRunning');
+localStorage.removeItem('TAKAWALA_taskStartTime');
+localStorage.removeItem('TAKAWALA_currentTaskInfo');
 
-    if(!currentUserId || !taskId) return;
-    
-    showLoading();
-    try {
-        const todayStr = new Date().toLocaleDateString('bn-BD');
-        
-        await db.collection("task_submissions").add({
-            userId: currentUserId,
-            taskId: taskId,
-            taskTitle: taskTitle,
-            reward: 0,
-            userName: currentUserData.name,
-            userPhone: currentUserData.phone,
-            proofText: "চেষ্টা ব্যর্থ (৩০ সেকেন্ডের আগে ফিরে আসা)",
-            screenshotUrl: "N/A",
-            status: "Blocked",
-            date: todayStr,
-            time: new Date().toLocaleTimeString('bn-BD'),
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        await db.collection("history").add({
-            userId: currentUserId,
-            type: "ব্যর্থ টাস্ক 🚫",
-            amount: 0,
-            status: "Blocked",
-            details: `অসমাপ্ত কাজ: ${taskTitle} (৩০ সেকেন্ডের আগে ফিরে এসেছেন)`,
-            date: todayStr,
-            time: new Date().toLocaleTimeString('bn-BD'),
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        
-        hideLoading();
-        
-        Swal.fire({
-            title: 'কাজটি ব্লক করা হয়েছে! 🚫',
-            html: `
-                <div class="text-center animate__animated animate__shakeX">
-                    <p class="text-5xl mb-3">⚠️</p>
-                    <h3 class="text-lg font-black text-red-600">৩০ সেকেন্ড সময় পূর্ণ করেননি!</h3>
-                    <p class="text-xs text-slate-500 mt-2 leading-relaxed px-4">
-                        মামা, আপনি ওয়েবসাইটটিতে ৩০ সেকেন্ড থাকার আগেই অ্যাপে ফিরে এসেছেন। নিয়মনীতি অমান্য করার কারণে এই কাজটি আজকের জন্য <b>ব্লক/হারিয়ে</b> গেল এবং কোনো টাকা দেওয়া হলো না।
-                    </p>
-                </div>
-            `,
-            confirmButtonText: 'আমি দুঃখিত, ঠিকভাবে করব',
-            confirmButtonColor: '#ef4444',
-            background: '#ffffff',
-            customClass: {
-                popup: 'rounded-[30px] border border-red-100 shadow-2xl',
-                confirmButton: 'rounded-xl px-8 py-3 font-bold'
-            }
-        });
-        
-        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100]); 
-        renderTasks(); 
-        
-    } catch(e) {
-        console.error("Block Task Error:", e);
-        hideLoading();
-    }
-};
-
-// ২. সফলভাবে ফিরে আসলে অ্যাড দেখানোর ফাংশন
+// ১. সফলভাবে কাজ শেষ করার সাদামাটা ফাংশন
 function completeTaskSuccessfully() {
-    window.isTaskRunning = false;
-    window.taskStartTime = null;
-    localStorage.removeItem('TAKAWALA_isTaskRunning');
-    localStorage.removeItem('TAKAWALA_taskStartTime');
-    localStorage.removeItem('TAKAWALA_currentTaskInfo');
-
     if (!currentTaskInfo) return;
     
     const linkStr = (currentTaskInfo.link || "").toLowerCase();
@@ -6004,8 +5920,11 @@ function completeTaskSuccessfully() {
         }
     };
 
+    // সরাসরি কোনো জ্যাম ছাড়াই অ্যাড ওপেন হবে
     showInterstitialAd();
 }
+
+// [নোট: এখানে সমস্ত focus, visibilitychange, pageshow এবং DOMContentLoaded লিসেনার সম্পূর্ণ মুছে ফেলা হয়েছে]
 
 // ৩. অটো-চেকার ফাংশন (এন্টি-চিট ভ্যালিডেশন লজিক)
 window.checkTaskStatusOnReturn = () => {
@@ -10988,5 +10907,3 @@ async function checkMyLuckyDrawResult() {
         </div>
     </div>
     
-</body>
-</html>
