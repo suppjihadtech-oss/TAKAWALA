@@ -259,11 +259,14 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(15, 23, 42, 0.65); /* ডার্ক স্লিম ব্যাকগ্রাউন্ড */
+            backdrop-filter: blur(8px); /* প্রিমিয়াম ব্লার ইফেক্ট */
+            -webkit-backdrop-filter: blur(8px);
             z-index: 99999;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
         }
         
         .loading-logo {
@@ -4711,7 +4714,7 @@ isActivated: false,
                     }, 1500);
                     
                     hideLoading();
-                }, 2000);
+                }, 300);
 
             } else {
                 // 🛑 ইউজার লগইন না থাকলে (Logged Out State)
@@ -5870,7 +5873,7 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
         confirmButtonText: 'আমি শর্তে রাজি',
         cancelButtonText: 'বাতিল',
         confirmButtonColor: '#059669',
-        cancelButtonColor: '#f1f5f9',
+        cancelButtonColor: '#fbbf24',
         width: '320px',
         customClass: { popup: 'rounded-[35px]' }
     }).then((result) => {
@@ -7842,7 +7845,7 @@ window.buySpins = async (count, price) => {
                     popup: 'rounded-[30px] border border-white/50 shadow-2xl',
                     title: 'text-xl font-black text-slate-800',
                     confirmButton: 'rounded-xl px-6 py-3 text-sm font-bold',
-                    cancelButton: 'rounded-xl px-6 py-3 text-sm font-bold text-slate-500'
+                    cancelButton: 'rounded-xl px-5 py-3 font-bold text-slate-800'
                 }
             });
 
@@ -10907,3 +10910,5 @@ async function checkMyLuckyDrawResult() {
         </div>
     </div>
     
+</body>
+</html>
