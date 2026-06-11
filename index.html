@@ -5821,7 +5821,7 @@ totalReward += rewardAmt;
 window.isTaskRunning = false;
 
 window.completeTask = async (taskId, reward, taskType, title, description, link, needsProof) => {
-if (currentUserData.isActivated === false) {
+    if (currentUserData.isActivated === false) {
         return window.handleActivation();
     }
 
@@ -5830,7 +5830,6 @@ if (currentUserData.isActivated === false) {
     // ডাবল ক্লিক ও ওল্ড টাস্ক জ্যাম প্রোটেকশন
     if (window.isTaskRunning) {
         let savedStartTime = parseInt(localStorage.getItem('TAKAWALA_taskStartTime') || '0');
-        // ৫ মিনিটের বেশি সময় কোনো টাস্ক আটকে থাকলে তা স্বয়ংক্রিয়ভাবে রিসেট হবে
         if (savedStartTime && (Date.now() - savedStartTime) > 300000) { 
             window.isTaskRunning = false;
             localStorage.removeItem('TAKAWALA_isTaskRunning');
@@ -5842,12 +5841,11 @@ if (currentUserData.isActivated === false) {
         }
     }
 
-    // ১. নিয়মগুলো লাইন বাই লাইন সাজানোর লজিক
+    // কাজের নিয়মাবলী পপ-আপ
     let finalRulesHTML = "";
     if (description && description.trim() !== "") {
-        // এডমিন প্যানেলের টেক্সটকে লাইন অনুযায়ী ভেঙে বুলেট পয়েন্ট বানানো
         finalRulesHTML = description.split('\n')
-            .filter(line => line.trim() !== "") // খালি লাইন বাদ দেওয়া
+            .filter(line => line.trim() !== "")
             .map(line => `
                 <div style="display:flex; align-items:start; gap:8px; margin-bottom:8px;">
                     <i class="ri-checkbox-circle-fill text-emerald-500" style="margin-top:3px; font-size:14px;"></i>
@@ -5855,7 +5853,6 @@ if (currentUserData.isActivated === false) {
                 </div>
             `).join('');
     } else {
-        // যদি এডমিন ডেসক্রিপশন না দেয়, তবে এই ডিফল্ট নিয়ম দেখাবে
         finalRulesHTML = `
             <div style="display:flex; align-items:start; gap:8px; margin-bottom:8px;">
                 <i class="ri-checkbox-circle-fill text-emerald-500" style="margin-top:3px; font-size:14px;"></i>
@@ -5863,30 +5860,22 @@ if (currentUserData.isActivated === false) {
             </div>
             <div style="display:flex; align-items:start; gap:8px; margin-bottom:8px;">
                 <i class="ri-checkbox-circle-fill text-emerald-500" style="margin-top:3px; font-size:14px;"></i>
-                <span>লিংক ওপেন হওয়ার পর কমপক্ষে ২০ সেকেন্ড অপেক্ষা করুন।</span>
-            </div>
-            <div style="display:flex; align-items:start; gap:8px; margin-bottom:8px;">
-                <i class="ri-checkbox-circle-fill text-emerald-500" style="margin-top:3px; font-size:14px;"></i>
-                <span>সফলভাবে কাজ শেষ করে সঠিক প্রমাণ বা স্ক্রিনশট জমা দিন।</span>
+                <span>লিংক ওপেন হওয়ার পর কমপক্ষে ৩০ সেকেন্ড অপেক্ষা করুন।</span>
             </div>
         `;
     }
 
-    // ২. প্রিমিয়াম iOS স্টাইল পপ-আপ ডিজাইন
     Swal.fire({
         title: `
             <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:5px;">
                 <i class="ri-file-list-3-line text-emerald-600"></i>
-                <span style="font-size:18px; font-weight:900; color:#1e293b; letter-spacing:-0.5px;">কাজের নিয়ম ও শর্ত</span>
+                <span style="font-size:18px; font-weight:900; color:#1e293b;">কাজের নিয়ম ও শর্ত</span>
             </div>`,
         html: `
-            <div class="animate__animated animate__fadeInUp" style="text-align:left; background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); padding:20px; border-radius:25px; border:1px dashed #10b981; margin-top:15px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);">
+            <div class="animate__animated animate__fadeInUp" style="text-align:left; background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%); padding:20px; border-radius:25px; border:1px dashed #10b981; margin-top:15px;">
                 <div style="font-size:13px; color:#334155; line-height:1.6; font-weight:600; font-family: 'Hind Siliguri', sans-serif;">
                     ${finalRulesHTML}
                 </div>
-            </div>
-            <div style="margin-top:15px; display:flex; align-items:center; justify-content:center; gap:5px; color:#ef4444; font-weight:800; font-size:11px; text-transform:uppercase;">
-                <i class="ri-error-warning-fill"></i> ভুল কাজ করলে পেমেন্ট পাবেন না
             </div>
         `,
         showCancelButton: true,
@@ -5894,31 +5883,19 @@ if (currentUserData.isActivated === false) {
         cancelButtonText: 'বাতিল',
         confirmButtonColor: '#059669',
         cancelButtonColor: '#f1f5f9',
-        background: '#ffffff',
         width: '320px',
-        customClass: {
-            popup: 'rounded-[35px] border-none shadow-2xl',
-            confirmButton: 'rounded-xl px-5 py-3 font-bold shadow-lg',
-            cancelButton: 'rounded-xl px-5 py-3 font-bold text-slate-500'
-        }
+        customClass: { popup: 'rounded-[35px]' }
     }).then((result) => {
         if (result.isConfirmed) {
-            // কাজ শুরু
             window.isTaskRunning = true; 
             currentTaskInfo = { taskId, reward, taskType, title, description, link, needsProof };
             
             showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হচ্ছে...', 'info');
             
-            // স্মার্ট ডিলের সাথে লিংক ওপেন এবং কাজের শুরুর সময় রেকর্ড করা
             setTimeout(() => {
-                // 👉 ট্রিক ১: টেলিগ্রামের অফিশিয়াল Native SDK দিয়ে ওভারলে ব্রাউজারে লিংক ওপেন করা (এতে অ্যাপ ফ্রিজ হবে না)
-                if (window.Telegram && window.Telegram.WebApp) {
-                    window.Telegram.WebApp.openLink(link);
-                } else {
-                    window.open(link, '_blank'); 
-                }
+                // ডিফল্ট ব্রাউজারে লিঙ্ক ওপেন
+                window.open(link, '_blank'); 
 
-                // 👉 ট্রিক ২: ব্যাকগ্রাউন্ড স্লিপ বা রিলোড প্রোটেকশনের জন্য LocalStorage-এ ডাটা সেভ করা
                 localStorage.setItem('TAKAWALA_isTaskRunning', 'true');
                 localStorage.setItem('TAKAWALA_taskStartTime', Date.now().toString());
                 localStorage.setItem('TAKAWALA_currentTaskInfo', JSON.stringify(currentTaskInfo));
@@ -5930,10 +5907,81 @@ if (currentUserData.isActivated === false) {
 };
      
     // ==========================================
-// 💸 SIMPLE WEBSITE VISIT CONTROLLER (NO-DELAY & NO-FLICKER FIX)
+// 🛡️ ANTI-CHEAT WEBSITE VISIT CONTROLLER (REBORN & BUG-FREE)
 // ==========================================
 
-// ১. সফলভাবে ফিরে আসলে সরাসরি পেমেন্ট বা প্রুফ সেকশনে নিয়ে যাওয়ার ফাংশন
+// ১. ৩০ সেকেন্ড সময় পূর্ণ না করে ফিরে আসলে টাস্ক ব্লক করার ফাংশন
+window.blockTaskDueToCheating = async (taskId, taskTitle) => {
+    window.isTaskRunning = false;
+    window.taskStartTime = null;
+    localStorage.removeItem('TAKAWALA_isTaskRunning');
+    localStorage.removeItem('TAKAWALA_taskStartTime');
+    localStorage.removeItem('TAKAWALA_currentTaskInfo');
+
+    if(!currentUserId || !taskId) return;
+    
+    showLoading();
+    try {
+        const todayStr = new Date().toLocaleDateString('bn-BD');
+        
+        await db.collection("task_submissions").add({
+            userId: currentUserId,
+            taskId: taskId,
+            taskTitle: taskTitle,
+            reward: 0,
+            userName: currentUserData.name,
+            userPhone: currentUserData.phone,
+            proofText: "চেষ্টা ব্যর্থ (৩০ সেকেন্ডের আগে ফিরে আসা)",
+            screenshotUrl: "N/A",
+            status: "Blocked",
+            date: todayStr,
+            time: new Date().toLocaleTimeString('bn-BD'),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        await db.collection("history").add({
+            userId: currentUserId,
+            type: "ব্যর্থ টাস্ক 🚫",
+            amount: 0,
+            status: "Blocked",
+            details: `অসমাপ্ত কাজ: ${taskTitle} (৩০ সেকেন্ডের আগে ফিরে এসেছেন)`,
+            date: todayStr,
+            time: new Date().toLocaleTimeString('bn-BD'),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        hideLoading();
+        
+        Swal.fire({
+            title: 'কাজটি ব্লক করা হয়েছে! 🚫',
+            html: `
+                <div class="text-center animate__animated animate__shakeX">
+                    <p class="text-5xl mb-3">⚠️</p>
+                    <h3 class="text-lg font-black text-red-600">৩০ সেকেন্ড সময় পূর্ণ করেননি!</h3>
+                    <p class="text-xs text-slate-500 mt-2 leading-relaxed px-4">
+                        মামা, আপনি ওয়েবসাইটটিতে ৩০ সেকেন্ড থাকার আগেই অ্যাপে ফিরে এসেছেন। নিয়মনীতি অমান্য করার কারণে এই কাজটি আজকের জন্য <b>ব্লক/হারিয়ে</b> গেল এবং কোনো টাকা দেওয়া হলো না।
+                    </p>
+                </div>
+            `,
+            confirmButtonText: 'আমি দুঃখিত, ঠিকভাবে করব',
+            confirmButtonColor: '#ef4444',
+            background: '#ffffff',
+            customClass: {
+                popup: 'rounded-[30px] border border-red-100 shadow-2xl',
+                confirmButton: 'rounded-xl px-8 py-3 font-bold'
+            }
+        });
+        
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 100]); 
+        renderTasks(); 
+        
+    } catch(e) {
+        console.error("Block Task Error:", e);
+        hideLoading();
+    }
+};
+
+// ২. সফলভাবে ফিরে আসলে অ্যাড দেখানোর ফাংশন
 function completeTaskSuccessfully() {
     window.isTaskRunning = false;
     window.taskStartTime = null;
@@ -5956,17 +6004,17 @@ function completeTaskSuccessfully() {
         }
     };
 
-    // সরাসরি কোনো ল্যাগ ছাড়া ইনস্ট্যান্ট অ্যাড শো করবে
     showInterstitialAd();
 }
 
-// ২. অটো-চেকার ফাংশন (ইউজার ফিরে আসার প্রথম মিলিসেকেন্ডেই ডেটা ক্লিয়ার করবে রেস কন্ডিশন এড়াতে)
+// ৩. অটো-চেকার ফাংশন (এন্টি-চিট ভ্যালিডেশন লজিক)
 window.checkTaskStatusOnReturn = () => {
     let savedIsRunning = localStorage.getItem('TAKAWALA_isTaskRunning');
     
     if (savedIsRunning === 'true') {
-        // রেস কন্ডিশন ও ঝিলিক মারা বন্ধ করতে সবার আগে লোকাল স্টোরেজ ক্লিয়ার করা হলো
+        // রেস কন্ডিশন ঠেকাতে সবার আগে ফ্ল্যাগ ডিলিট করা হচ্ছে
         localStorage.removeItem('TAKAWALA_isTaskRunning');
+        let savedStartTime = parseInt(localStorage.getItem('TAKAWALA_taskStartTime') || '0');
         localStorage.removeItem('TAKAWALA_taskStartTime');
         
         let savedTaskInfo = JSON.parse(localStorage.getItem('TAKAWALA_currentTaskInfo') || 'null');
@@ -5975,20 +6023,40 @@ window.checkTaskStatusOnReturn = () => {
         window.isTaskRunning = false;
         window.taskStartTime = null;
 
-        if (savedTaskInfo) {
+        if (savedTaskInfo && savedStartTime) {
             currentTaskInfo = savedTaskInfo;
-            completeTaskSuccessfully();
+
+            // সোশ্যাল মিডিয়া বনাম ওয়েবসাইট ভিজিট ভ্যালিডেশন
+            const linkStr = (savedTaskInfo.link || "").toLowerCase();
+            const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|indigo|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
+            const mustSubmitProof = isSocialMedia || savedTaskInfo.needsProof === true;
+
+            if (mustSubmitProof) {
+                // সোশ্যাল মিডিয়ার ক্ষেত্রে কোনো সেকেন্ডের বাধা নেই
+                completeTaskSuccessfully();
+            } else {
+                // ওয়েবসাইট ভিজিট এর ক্ষেত্রে কঠোর ৩০ সেকেন্ডের এন্টি-চিট নিয়ম
+                let secondsElapsed = (Date.now() - savedStartTime) / 1000;
+                
+                if (secondsElapsed < 30) {
+                    window.blockTaskDueToCheating(savedTaskInfo.taskId, savedTaskInfo.title);
+                } else {
+                    completeTaskSuccessfully();
+                }
+            }
         }
     }
 };
 
-// ৩. রিটার্ন ডিটেকশন ইভেন্ট লিসেনার
+// ৪. নির্ভরযোগ্য রিটার্ন ডিটেকশন ইভেন্ট লিসেনারস
 document.addEventListener('visibilitychange', () => {
     if (!document.hidden) window.checkTaskStatusOnReturn();
 });
 window.addEventListener('focus', window.checkTaskStatusOnReturn);
 window.addEventListener('pageshow', window.checkTaskStatusOnReturn);
 
+// রিলোড চেকার ব্যাকআপ
+window.addEventListener('DOMContentLoaded', window.checkTaskStatusOnReturn);
                      // ✅ GORGEOUS PROOF SUBMISSION FORM (WITH 5 MIN TIMER & UPLOAD HELPER)
         function showProofSubmissionForm() {
             const container = document.getElementById('proofFormContainer');
