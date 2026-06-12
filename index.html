@@ -1903,6 +1903,9 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <i class="ri-clipboard-line"></i> পেস্ট
     </button>
 </div>
+
+<!-- 📞 SENDER NUMBER/WALLET INPUT -->
+<input type="text" id="depositSenderNumber" placeholder="যে নাম্বার বা ওয়ালেট থেকে পাঠিয়েছেন (Sender)" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
                     <input type="number" id="depositAmount" placeholder="পরিমাণ" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
                     <div class="text-xs text-red-500 font-bold" id="vatCalculation">ভ্যাট (১০%): ৳0.00 | মোট: ৳0.00</div>
                     <input type="hidden" id="selectedDepositMethod" value="">
@@ -4755,18 +4758,30 @@ isActivated: false,
 function syncUserData(uid) {
     // ১. ইউজারের লাইভ ডাটা সিঙ্ক শুরু
     db.collection("users").doc(uid).onSnapshot((d) => {
-        if(d.exists) {
-            currentUserData = d.data();
-            const userData = currentUserData; 
+    if(d.exists) {
+        window.lastSnapshotTime = Date.now(); // এই নতুন লাইনটি বসাবেন
+        currentUserData = d.data();
+const userData = currentUserData;
 
-// 🛑 ১. ডাটাবেস ফিল্ড চেক (isBanned: true অথবা status: "banned")
-            if (userData.isBanned === true || userData.status === "banned" || userData.status === "Banned") {
-                showBannedScreen(userData.banReason || "দুঃখিত, নিয়মনীতি অমান্য করার কারণে আপনার অ্যাকাউন্টটি স্থায়ীভাবে ব্লক করা হয়েছে।");
-                return;
-            }
+// 🛑 ১. ডাটাবেস ফিল্ড চেক (বুলিয়ান, স্ট্রিং বা অন্য যেকোনো ফরম্যাটে ব্যান করা হলেও ধরবে)
+const isBannedUser = userData.isBanned === true || 
+                     userData.isBanned === "true" || 
+                     userData.banned === true || 
+                     userData.banned === "true" || 
+                     userData.status === "banned" || 
+                     userData.status === "Banned" || 
+                     userData.status === "Banned_User";
+
+if (isBannedUser) {
+    showBannedScreen(userData.banReason || "দুঃখিত, নিয়মনীতি অমান্য করার কারণে আপনার অ্যাকাউন্টটি স্থায়ীভাবে ব্লক করা হয়েছে।");
+    return;
+}
 
             // ব্যান না থাকলে স্ক্রিন হাইড থাকবে
             document.getElementById('bannedScreen').classList.add('hidden');
+
+document.getElementById('mainApp').classList.remove('hidden');
+document.getElementById('bottomNav').classList.remove('hidden');
 
             // ✅ আইডি অ্যাক্টিভেশন চেক লজিক
             const activationCard = document.getElementById('activationCard');
@@ -4946,8 +4961,13 @@ function syncUserData(uid) {
   }, (error) => { 
         hideLoading();
         if (error.code === 'permission-denied') {
-            // ২. ফায়ারবেস সিকিউরিটি রুলস দিয়ে ব্যান করা হলে
-            showBannedScreen("দুঃখিত, নিয়মনীতি অমান্য করার কারণে আপনার অ্যাকাউন্টটি স্থায়ীভাবে ব্লক করা হয়েছে।");
+            // ৩ সেকেন্ড অপেক্ষা করবে গ্লিচ এড়ানোর জন্য, ৩ সেকেন্ড পরও এরর থাকলে (ইউজার আসলেই ব্যানড) ব্যান স্ক্রিন দেখাবে
+            setTimeout(() => {
+                const timeDiff = Date.now() - (window.lastSnapshotTime || 0);
+                if (timeDiff > 3000) {
+                    showBannedScreen("দুঃখিত, নিয়মনীতি অমান্য করার কারণে আপনার অ্যাকাউন্টটি স্থায়ীভাবে ব্লক করা হয়েছে।");
+                }
+            }, 3000);
         }
     });
 
@@ -6436,8 +6456,14 @@ window.submitProof = async () => {
     const trxId = document.getElementById('depositTrxId').value.trim();
     const amount = parseFloat(document.getElementById('depositAmount').value);
     const method = document.getElementById('selectedDepositMethod').value;
+    const senderNumber = document.getElementById('depositSenderNumber').value.trim();
     
     // নির্দিষ্ট মেথড ভ্যালিডেশন
+    if(!senderNumber) {
+    showSmartToast('দয়া করে যে নাম্বার/ওয়ালেট থেকে টাকা পাঠিয়েছেন তা লিখুন', 'error');
+    return;
+}
+    
     if(!method) {
         showSmartToast('দয়া করে প্রথমে টাকা পাঠানোর একটি মেথড সিলেক্ট করুন', 'error');
         return;
@@ -6479,6 +6505,7 @@ await newReqRef.set({
     totalAmount: totalAmount,
     trxId: trxId,
     method: method,
+    senderNumber: senderNumber,
     userName: currentUserData.name,
     userPhone: currentUserData.phone,
     status: "Pending",
@@ -6492,16 +6519,16 @@ await db.collection("history").doc(newReqId).set({
     type: "ডিপোজিট",
     amount: amount,
     status: "Pending",
-    details: `${method} - TrxID: ${trxId}`,
+    details: `${method} - TrxID: ${trxId} (Sender: ${senderNumber})`,
     trxId: trxId,
     method: method,
+    senderNumber: senderNumber,
     date: new Date().toLocaleDateString('bn-BD'),
     time: new Date().toLocaleTimeString('bn-BD'),
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
-});
-                
+});               
                 // Send Telegram notification
-                const telegramMessage = `💰 *নতুন ডিপোজিট রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n💵 *ডিপোজিট পরিমাণ:* ৳${amount.toFixed(2)}\n🧾 *TrxID:* ${trxId}\n📊 *ভ্যাট (${vatPercentage}%):* ৳${vat.toFixed(2)}\n💰 *মোট পরিশোধ:* ৳${totalAmount.toFixed(2)}`;
+                const telegramMessage = `💰 *নতুন ডিপোজিট রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *প্রেরক (Sender):* ${senderNumber}\n💵 *ডিপোজিট পরিমাণ:* ৳${amount.toFixed(2)}\n🧾 *TrxID:* ${trxId}\n📊 *ভ্যাট (${vatPercentage}%):* ৳${vat.toFixed(2)}\n💰 *মোট পরিশোধ:* ৳${totalAmount.toFixed(2)}`;
                 await sendTelegramNotification(telegramMessage);
                 
                 showSmartToast('ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
@@ -6509,7 +6536,7 @@ await db.collection("history").doc(newReqId).set({
                 
                 document.getElementById('depositTrxId').value = '';
                 document.getElementById('depositAmount').value = '';
-                window.calculateDepositVAT();
+               document.getElementById('depositSenderNumber').value = ''; window.calculateDepositVAT();
                 
             } catch (e) {
                 showSmartToast('ডিপোজিট রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
@@ -10999,6 +11026,17 @@ async function checkMyLuckyDrawResult() {
         console.error("Check Draw Result Error:", e);
     }
 }
+
+window.blockTaskDueToCheating = (taskId, title) => {
+    Swal.fire({
+        icon: 'error',
+        title: 'ফাঁকি সনাক্ত হয়েছে! ⚠️',
+        text: 'মামা, আপনি ৩০ সেকেন্ডের আগে ফিরে এসেছেন। কাজ সঠিকভাবে করতে কমপক্ষে ৩০ সেকেন্ড সাইটে থাকতে হবে।',
+        confirmButtonText: 'ঠিক আছে',
+        confirmButtonColor: '#ef4444'
+    });
+    window.isTaskRunning = false;
+};
        
     </script>
     
