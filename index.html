@@ -3297,10 +3297,10 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <h2 id="uReceiptStatus" class="text-2xl font-black text-slate-800 tracking-tight mb-1">Status</h2>
             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-4">অফিসিয়াল পেমেন্ট রিসিট</p>
 
-            <!-- ⏰ লাইভ কাউন্টডাউন টাইমার বক্স (নতুন) -->
-            <div id="uReceiptCountdownBox" class="hidden bg-slate-900 text-white rounded-2xl p-4 mb-4 animate__animated animate__pulse animate__infinite">
-                <p id="uReceiptCountdownLabel" class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1">প্রসেসিং হতে সর্বোচ্চ বাকি</p>
-                <h1 id="uReceiptCountdownTimer" class="text-2xl font-mono font-black text-yellow-400 tracking-widest">00:00:00</h1>
+           <!-- ⏰ লাইভ কাউন্টডাউন টাইমার বক্স (নতুন - অত্যন্ত স্টাইলিশ ও অ্যাবসল্যুট কর্নার ডিজাইন) -->
+            <div id="uReceiptCountdownBox" class="hidden absolute top-5 left-5 z-20 bg-amber-500/10 border border-amber-500/20 text-amber-700 px-3 py-1.5 rounded-full flex items-center gap-1.5 animate__animated animate__pulse animate__infinite">
+                <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping"></span>
+                <span id="uReceiptCountdownTimer" class="text-[11px] font-mono font-black tracking-widest leading-none">00:00:00</span>
             </div>
 
             <!-- Copyable TRX ID Box -->
@@ -5436,10 +5436,31 @@ window.openHistoryReceipt = async (docId) => {
         document.getElementById('uReceiptTime').innerText = data.time || "";
         document.getElementById('uReceiptDate').innerText = data.date || "";
 
-       // ৫. মেথড এবং আইকন লজিক (স্মার্ট ফিল্টার ও সাকসেস নোট হ্যান্ডেলার)
+      // ৫. মেথড এবং আইকন লজিক (স্মার্ট ফিল্টার ও সাকসেস নোট হ্যান্ডেলার - ডাবল ভেরিফাইড)
 let method = (data.method || data.paymentMethod || data.operator || "").toUpperCase();
 
-// ফলব্যাক: যদি মেথড ফিল্ড সরাসরি না থাকে, তবে details (যেমন: bKash - 017...) থেকে আলাদা করে নেবে
+// যদি মেথড ফিল্ড না থাকে বা জেনেরিক লেখা থাকে, তবে details-এর ভেতর থেকে আসল মেথড কি-ওয়ার্ড খুঁজবো
+const checkDetailsForMethod = (text) => {
+    if (!text) return "";
+    const t = text.toUpperCase();
+    if (t.includes('BKASH') || t.includes('বিকাশ')) return 'BKASH';
+    if (t.includes('NAGAD') || t.includes('নগদ')) return 'NAGAD';
+    if (t.includes('ROCKET') || t.includes('রকেট')) return 'ROCKET';
+    if (t.includes('USDT') || t.includes('ইউএসডিটি')) return 'USDT';
+    if (t.includes('GP') || t.includes('গ্রামীণ')) return 'GP';
+    if (t.includes('ROBI') || t.includes('রবি')) return 'ROBI';
+    if (t.includes('AIRTEL') || t.includes('এয়ারটেল')) return 'AIRTEL';
+    if (t.includes('TELETALK') || t.includes('টেলিটক')) return 'TELETALK';
+    if (t.includes('BL') || t.includes('BANGLALINK') || t.includes('বাংলালিংক')) return 'BL';
+    return "";
+};
+
+if (!method || method === 'MOBILE BANKING' || method === 'MOBILE RECHARGE') {
+    const extracted = checkDetailsForMethod(data.details);
+    if (extracted) method = extracted;
+}
+
+// ব্যাকআপ ফলব্যাক (পুরনো স্প্লিট মেথড)
 if (!method && data.details) {
     const parts = data.details.split(" - ");
     if (parts.length > 0) {
@@ -5563,7 +5584,7 @@ document.getElementById('uReceiptMethod').innerText = method;
 
         if (status === 'Pending' && countdownBox && countdownTimer) {
             countdownBox.classList.remove('hidden');
-            countdownLabel.innerText = "প্রসেসিং হতে সর্বোচ্চ বাকি";
+            if (countdownLabel) countdownLabel.innerText = "প্রসেসিং হতে সর্বোচ্চ বাকি";
 
             // ট্রানজেকশনের ধরন অনুযায়ী টাইমিং সেট করা
             const typeStr = (data.type || "").toLowerCase();
