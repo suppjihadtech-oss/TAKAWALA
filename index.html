@@ -739,15 +739,14 @@
         /* 🍎 ULTRA PREMIUM iPHONE STYLE POPUP */
         div:where(.swal2-container) div:where(.swal2-popup) {
             border-radius: 30px !important;
-            background: rgba(255, 255, 255, 0.85) !important;
-            backdrop-filter: blur(25px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2) !important;
+            background: rgba(255, 255, 255, 0.88) !important;
+            backdrop-filter: blur(10px) saturate(150%) !important; /* জিপিইউ ফ্রেন্ডলি আইওএস ব্লার */
+            -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
             padding: 15px !important;
-            width: 320px!important;
-            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            width: 320px !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
         }
-
         div:where(.swal2-title) {
             font-family: 'Hind Siliguri', sans-serif !important;
             font-weight: 700 !important;
@@ -814,13 +813,13 @@
             transform: scale(0.96) !important;
         }
 
-        /* ✅ MODERN iPHONE DOCK BOTTOM NAV */
+       /* ✅ MODERN iPHONE DOCK BOTTOM NAV */
         #bottomNav {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(15px); /* সিগনেচার আইওএস ব্লার */
+            -webkit-backdrop-filter: blur(15px);
             border-top: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.08);
         }
         
               /* ✅ ULTRA PREMIUM 3D CHATBOT DESIGN */
@@ -3856,7 +3855,7 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-       // ✅ ULTRA REVENUE: DOUBLE MONETAG AD SYSTEM
+       // ✅ ULTRA REVENUE: DOUBLE MONETAG AD SYSTEM (স্মুথ লোডিং সিঙ্ক সহ)
 window.showMonetagAd = async (callback) => {
     showLoading(); 
     try {
@@ -3878,9 +3877,15 @@ window.showMonetagAd = async (callback) => {
     } catch (error) {
         console.log("Ad skipped or blocked.");
     } finally {
-        hideLoading();
-        // দুইটা অ্যাড শেষ হওয়ার পর রিওয়ার্ড ফাংশন কাজ করবে
-        if(callback) callback(); 
+        // এখানে সরাসরি hideLoading() না করে, আগে কলব্যাক (ডাটাবেজ কাজ) সম্পূর্ণ করব
+        if(callback) {
+            try {
+                await callback(); // ব্যালেন্স এড হওয়া এবং নোটিফিকেশনের কাজ শেষ হবে
+            } catch(e) {
+                console.error("Callback error:", e);
+            }
+        }
+        hideLoading(); // ডাটাবেজের কাজ শেষে একবারে স্মুথলি লোডিং ওভারলে বন্ধ হবে
     }
 };
 
@@ -3913,9 +3918,8 @@ async function loadSystemSettings() {
                 USDT_BEP20: systemSettings.bep20Address || ""
             };
             
-            updatePaymentMethodStatus();
+            updatePaymentMethodStatus(systemSettings);
         }
-
         // নোটিশ লোড (আলাদা ডক থেকে আসে)
         const settingsDoc = await db.collection("settings").doc("system").get();
         if(settingsDoc.exists) {
@@ -4402,7 +4406,7 @@ function updateDepositAddress(method) {
             </li>
             <li class="flex items-start gap-2 text-xs font-bold leading-relaxed">
                 <span class="text-yellow-300 shrink-0">•</span>
-                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION ID</span> দিন এবং নিচের <span class="text-yellow-300">VERIFY</span> বাটনে ক্লিক করুন।</span>
+                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION ID</span> দিন এবং নিচের <span class="text-yellow-300">নিশ্চিত করুন</span> বাটনে ক্লিক করুন।</span>
             </li>
         `;
     } 
@@ -4442,7 +4446,7 @@ function updateDepositAddress(method) {
             </li>
             <li class="flex items-start gap-2 text-xs font-bold leading-relaxed">
                 <span class="text-yellow-300 shrink-0">•</span>
-                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION ID</span> দিন এবং নিচের <span class="text-yellow-300">VERIFY</span> বাটনে ক্লিক করুন।</span>
+                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION ID</span> দিন এবং নিচের <span class="text-yellow-300">নিশ্চিত করুন</span> বাটনে ক্লিক করুন।</span>
             </li>
         `;
     } 
@@ -4482,7 +4486,7 @@ function updateDepositAddress(method) {
             </li>
             <li class="flex items-start gap-2 text-xs font-bold leading-relaxed">
                 <span class="text-yellow-300 shrink-0">•</span>
-                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION ID</span> দিন এবং নিচের <span class="text-yellow-300">VERIFY</span> বাটনে ক্লিক করুন।</span>
+                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION ID</span> দিন এবং নিচের <span class="text-yellow-300">নিশ্চিত করুন</span> বাটনে ক্লিক করুন।</span>
             </li>
         `;
     } 
@@ -4530,7 +4534,7 @@ function updateDepositAddress(method) {
             </li>
             <li class="flex items-start gap-2 text-xs font-bold leading-relaxed">
                 <span class="text-yellow-300 shrink-0">•</span>
-                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION HASH</span> দিন এবং নিচের <span class="text-yellow-300">VERIFY</span> বাটনে ক্লিক করুন।</span>
+                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION HASH</span> দিন এবং নিচের <span class="text-yellow-300">নিশ্চিত করুন</span> বাটনে ক্লিক করুন।</span>
             </li>
         `;
     }
@@ -4566,7 +4570,7 @@ function updateDepositAddress(method) {
         <!-- ভেরিফাই অ্যাকশন বাটন -->
         <div class="mt-4 pt-4 border-t border-white/10">
             <button onclick="window.submitDeposit()" class="w-full bg-white text-slate-900 hover:bg-slate-100 font-black py-4 rounded-2xl text-sm tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all uppercase flex items-center justify-center gap-2">
-                <i class="ri-shield-check-fill text-lg"></i> VERIFY
+                <i class="ri-shield-check-fill text-lg"></i> নিশ্চিত করুন
             </button>
         </div>
     `;
@@ -4908,9 +4912,9 @@ function syncUserData(uid) {
     // ১. ইউজারের লাইভ ডাটা সিঙ্ক শুরু
     db.collection("users").doc(uid).onSnapshot((d) => {
     if(d.exists) {
-        window.lastSnapshotTime = Date.now(); // এই নতুন লাইনটি বসাবেন
-        currentUserData = d.data();
-const userData = currentUserData;
+        window.lastSnapshotTime = Date.now();
+            currentUserData = d.data();
+            const userData = currentUserData;
 
 // 🛑 ১. ডাটাবেস ফিল্ড চেক (বুলিয়ান, স্ট্রিং বা অন্য যেকোনো ফরম্যাটে ব্যান করা হলেও ধরবে)
 const isBannedUser = userData.isBanned === true || 
@@ -5030,9 +5034,15 @@ document.getElementById('bottomNav').classList.remove('hidden');
             if(document.getElementById('profNameDisplay')) document.getElementById('profNameDisplay').innerText = userData.name || "User";
 
             if(userData.avatar) {
-    if(document.getElementById('currentAvatar')) document.getElementById('currentAvatar').src = userData.avatar;
-    if(document.getElementById('homeAvatar')) document.getElementById('homeAvatar').src = userData.avatar;
-}
+                if(document.getElementById('currentAvatar')) document.getElementById('currentAvatar').src = userData.avatar;
+                if(document.getElementById('homeAvatar')) document.getElementById('homeAvatar').src = userData.avatar;
+            }
+            
+            // সেভ করা অ্যাকাউন্টের তালিকা রিয়েল-টাইমে সিঙ্ক করা হলো
+            if (typeof window.renderSavedAccounts === 'function') {
+                window.renderSavedAccounts();
+            }
+
             if(userData.packageExpiresAt) {
                 const expiryDate = userData.packageExpiresAt.toDate();
                 if(new Date() > expiryDate) {
@@ -6186,12 +6196,7 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
 // 💸 SIMPLE WEBSITE VISIT CONTROLLER (EXTREMELY PLAIN & CLEAN)
 // ==========================================
 
-// ওয়ান-টাইম পুরনো ব্রাউজার জ্যাম পরিষ্কার করা (যাতে আগের কোনো টেস্ট ডেটা লগইনে ডিস্টার্ব না করে)
-localStorage.removeItem('TAKAWALA_isTaskRunning');
-localStorage.removeItem('TAKAWALA_taskStartTime');
-localStorage.removeItem('TAKAWALA_currentTaskInfo');
-
-// ১. সফলভাবে কাজ শেষ করার সাদামাটা ফাংশন
+// ১. সফলভাবে কাজ শেষ করার সাদামাটা ফাংশন (কোনো ট্র্যাকিং বা লোকাল স্টোরেজ জ্যাম ছাড়া)
 function completeTaskSuccessfully() {
     if (!currentTaskInfo) return;
     
@@ -6208,62 +6213,9 @@ function completeTaskSuccessfully() {
         }
     };
 
-    // সরাসরি কোনো জ্যাম ছাড়াই অ্যাড ওপেন হবে
+    // সরাসরি কোনো জটিলতা ছাড়াই অ্যাড ওপেন হবে
     showInterstitialAd();
 }
-
-// [নোট: এখানে সমস্ত focus, visibilitychange, pageshow এবং DOMContentLoaded লিসেনার সম্পূর্ণ মুছে ফেলা হয়েছে]
-
-// ৩. অটো-চেকার ফাংশন (এন্টি-চিট ভ্যালিডেশন লজিক)
-window.checkTaskStatusOnReturn = () => {
-    let savedIsRunning = localStorage.getItem('TAKAWALA_isTaskRunning');
-    
-    if (savedIsRunning === 'true') {
-        // রেস কন্ডিশন ঠেকাতে সবার আগে ফ্ল্যাগ ডিলিট করা হচ্ছে
-        localStorage.removeItem('TAKAWALA_isTaskRunning');
-        let savedStartTime = parseInt(localStorage.getItem('TAKAWALA_taskStartTime') || '0');
-        localStorage.removeItem('TAKAWALA_taskStartTime');
-        
-        let savedTaskInfo = JSON.parse(localStorage.getItem('TAKAWALA_currentTaskInfo') || 'null');
-        localStorage.removeItem('TAKAWALA_currentTaskInfo');
-        
-        window.isTaskRunning = false;
-        window.taskStartTime = null;
-
-        if (savedTaskInfo && savedStartTime) {
-            currentTaskInfo = savedTaskInfo;
-
-            // সোশ্যাল মিডিয়া বনাম ওয়েবসাইট ভিজিট ভ্যালিডেশন
-            const linkStr = (savedTaskInfo.link || "").toLowerCase();
-            const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|indigo|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
-            const mustSubmitProof = isSocialMedia || savedTaskInfo.needsProof === true;
-
-            if (mustSubmitProof) {
-                // সোশ্যাল মিডিয়ার ক্ষেত্রে কোনো সেকেন্ডের বাধা নেই
-                completeTaskSuccessfully();
-            } else {
-                // ওয়েবসাইট ভিজিট এর ক্ষেত্রে কঠোর ৩০ সেকেন্ডের এন্টি-চিট নিয়ম
-                let secondsElapsed = (Date.now() - savedStartTime) / 1000;
-                
-                if (secondsElapsed < 30) {
-                    window.blockTaskDueToCheating(savedTaskInfo.taskId, savedTaskInfo.title);
-                } else {
-                    completeTaskSuccessfully();
-                }
-            }
-        }
-    }
-};
-
-// ৪. নির্ভরযোগ্য রিটার্ন ডিটেকশন ইভেন্ট লিসেনারস
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) window.checkTaskStatusOnReturn();
-});
-window.addEventListener('focus', window.checkTaskStatusOnReturn);
-window.addEventListener('pageshow', window.checkTaskStatusOnReturn);
-
-// রিলোড চেকার ব্যাকআপ
-window.addEventListener('DOMContentLoaded', window.checkTaskStatusOnReturn);
                      // ✅ GORGEOUS PROOF SUBMISSION FORM (WITH 5 MIN TIMER & UPLOAD HELPER)
         function showProofSubmissionForm() {
             const container = document.getElementById('proofFormContainer');
@@ -8563,7 +8515,7 @@ window.toggleWalletTab = (t) => {
             if(window.calculateWithdrawVAT) window.calculateWithdrawVAT();
         }
         
-       if(t === 'withdraw' && typeof window.renderSavedAccount === 'function') window.renderSavedAccount();
+       if(t === 'withdraw' && typeof window.renderSavedAccounts === 'function') window.renderSavedAccounts();
        
      // 🛡️ ইউজার যাতে ফর্ম টাচ করতে না পারে (স্মার্ট লক)
     if(t === 'withdraw' || t === 'recharge' || t === 'deposit') {
@@ -9963,7 +9915,7 @@ window.startWatchAd = async () => {
     // বাটনে ক্লিক করলে অ্যাড কল হবে
     window.showMonetagAd(async () => {
         // অ্যাড দেখা শেষ হলে এই ব্লকটি রান হবে
-        showLoading();
+        
         try {
             const userRef = db.collection("users").doc(currentUserId);
             const now = new Date();
@@ -10033,7 +9985,7 @@ window.startWatchAd = async () => {
             console.error("Watch Earn Error:", e);
             showSmartToast('রিওয়ার্ড যোগ করতে সমস্যা হয়েছে', 'error');
         }
-        hideLoading();
+        
     });
 };
 
