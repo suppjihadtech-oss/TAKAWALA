@@ -1880,37 +1880,35 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     </div>
 
             <div id="depositSection">
-                <div class="grid grid-cols-4 gap-3 mb-6">
-                    <div onclick="window.selectPayment(this, 'bKash')" id="payment_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
-                    <div onclick="window.selectPayment(this, 'Nagad')" id="payment_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
-                    <div onclick="window.selectPayment(this, 'Rocket')" id="payment_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain"></div>
-                    <div onclick="window.selectPayment(this, 'USDT')" id="payment_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
+                <!-- ১. প্রফেশনাল মেথড সিলেক্টর গ্রিড -->
+                <div class="grid grid-cols-4 gap-3 mb-4">
+                    <div onclick="window.selectPayment(this, 'bKash')" id="payment_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-8 object-contain"></div>
+                    <div onclick="window.selectPayment(this, 'Nagad')" id="payment_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-6 object-contain"></div>
+                    <div onclick="window.selectPayment(this, 'Rocket')" id="payment_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-8 object-contain"></div>
+                    <div onclick="window.selectPayment(this, 'USDT')" id="payment_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-8 object-contain"></div>
                 </div>
-                <div class="glass-card p-5 rounded-[25px] space-y-4 text-center">
-                    <div id="depositAddressContainer" class="address-box">
-                        <p class="text-slate-500">লোড হচ্ছে...</p>
-                    </div>
-                    
-                    <!-- 📋 SMART TrxID PASTE BOX -->
-<div class="relative group mt-2 mb-2">
-    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <i class="ri-hashtag text-slate-400"></i>
-    </div>
-    <input type="text" id="depositTrxId" placeholder="TrxID" 
-        class="w-full pl-8 pr-24 py-4 bg-slate-50 rounded-xl border border-slate-200 font-mono font-black tracking-wider outline-none focus:border-green-500 focus:bg-white focus:ring-4 focus:ring-green-500/10 transition-all shadow-inner uppercase text-slate-700">
-    
-    <button onclick="window.smartPasteTrxId()" class="absolute right-1.5 top-1.5 bottom-1.5 bg-gradient-to-r from-slate-800 to-slate-900 hover:from-green-600 hover:to-emerald-600 text-white px-4 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-md active:scale-95 transition-all">
-        <i class="ri-clipboard-line"></i> পেস্ট
-    </button>
-</div>
 
-<!-- 📞 SENDER NUMBER/WALLET INPUT -->
-<input type="text" id="depositSenderNumber" placeholder="যে নাম্বার বা ওয়ালেট থেকে পাঠিয়েছেন (Sender)" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
-                    <input type="number" id="depositAmount" placeholder="পরিমাণ" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
-                    <div class="text-xs text-red-500 font-bold" id="vatCalculation">ভ্যাট (১০%): ৳0.00 | মোট: ৳0.00</div>
-                    <input type="hidden" id="selectedDepositMethod" value="">
-                    <button onclick="window.submitDeposit()" class="w-full bg-green-600 text-white font-bold py-3.5 rounded-xl shadow-lg">নিশ্চিত করুন</button>
+                <!-- ২. অ্যামাউন্ট ও সেন্ডার নম্বর ইনপুট বক্স (রিয়েল-টাইম আপডেট হ্যান্ডেলার সহ) -->
+                <div class="glass-card p-4 rounded-3xl mb-4 space-y-3 border border-slate-100 shadow-sm">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase ml-1 mb-1 block">টাকার পরিমাণ</label>
+                            <input type="number" id="depositAmount" oninput="window.updateDepositInstructionValues()" placeholder="৳১০০" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none text-slate-700 text-sm focus:border-slate-300 transition-all">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black text-slate-400 uppercase ml-1 mb-1 block">যে নম্বর থেকে পাঠিয়েছেন</label>
+                            <input type="text" id="depositSenderNumber" oninput="window.updateDepositInstructionValues()" placeholder="০১৭xxxxxxxx" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none text-slate-700 text-sm focus:border-slate-300 transition-all">
+                        </div>
+                    </div>
+                    <div class="text-[11px] text-red-500 font-black text-center mt-1" id="vatCalculation">ভ্যাট (১০%): ৳০.০০ | মোট: ৳০.০০</div>
                 </div>
+
+                <!-- ৩. ডাইনামিক স্ক্রিনশট-স্টাইল পেমেন্ট ইনস্ট্রাকশন কার্ড -->
+                <div id="screenshotDepositCard" class="hidden rounded-[30px] p-5 text-white shadow-xl animate__animated animate__fadeIn relative overflow-hidden transition-all duration-500">
+                    <!-- নির্দেশনাবলী স্ক্রিনশটের মতো ডাইনামিক ডিজাইন এখানে লোড হবে -->
+                </div>
+
+                <input type="hidden" id="selectedDepositMethod" value="">
             </div>
 
             <div id="withdrawSection" class="hidden">
@@ -3432,24 +3430,33 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             measurementId: "G-ZNZ1D35QLB"
         };
 
-        // ✅ TELEGRAM BOT CONFIGURATION
-        const TG_BOT_TOKEN = "8583588570:AAEKfRe3y_egMXA6n8WxiZA-z-sU4FEgE1M";
-        const TG_ADMIN_CHAT_ID = "6454695072";
+       // ✅ TELEGRAM BOT CONFIGURATION
+const TG_BOT_TOKEN = "8583588570:AAEKfRe3y_egMXA6n8WxiZA-z-sU4FEgE1M";
+const TG_ADMIN_CHAT_ID = "6454695072";
 
-        async function sendTelegramNotification(message) {
-            try {
-                const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`;
-                await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: TG_ADMIN_CHAT_ID,
-                        text: message,
-                        parse_mode: 'Markdown'
-                    })
-                });
-            } catch (error) { console.error("TG Error:", error); }
-        }
+// স্পেশাল ক্যারেক্টার বা লিঙ্কের আন্ডারস্কোরের কারণে মেসেজ ক্র্যাশ হওয়া প্রতিরোধ করার জন্য এস্কেপ ফাংশন
+function escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+async function sendTelegramNotification(message) {
+    try {
+        const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`;
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TG_ADMIN_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML' // Markdown এর বদলে HTML ব্যবহার করলে লিঙ্ক বা টেক্সটের জন্য এপিআই ব্লক হবে না
+            })
+        });
+    } catch (error) { console.error("TG Error:", error); }
+}
 
 // ✅ 40 QUESTIONS DATABASE (UPDATED)
 const twaiResponses = {
@@ -4300,144 +4307,270 @@ window.buyPackage = async (packageId, price, name, days) => {
     }
 };
     
-        // ✅ UPDATED DEPOSIT ADDRESS FUNCTION
-        // ✅ ডিপোজিট মেথড সিলেক্ট এবং কন্ট্রোল
+       // ✅ রিয়েল-টাইমে টাকার মান টাইপ করার সাথে সাথে ডাইনামিক কার্ড আপডেট করার হেল্পার
+window.updateDepositInstructionValues = () => {
+    const amountInput = document.getElementById('depositAmount');
+    if (!amountInput) return;
+
+    // ভ্যাট এবং মোট ব্যালেন্স রিয়েল টাইমে ক্যালকুলেট করা
+    if (window.calculateDepositVAT) {
+        window.calculateDepositVAT();
+    }
+
+    // বর্তমানে নির্বাচিত অপারেটর কার্ডের তথ্য রিয়েল টাইমে আপডেট করা
+    if (selectedMethod) {
+        updateDepositAddress(selectedMethod);
+    }
+};
+
+// ✅ ডিপোজিট মেথড সিলেক্ট এবং কালার থিম কন্ট্রোল (UPPERCASE মেসেজ সহ)
 window.selectPayment = (el, method) => { 
     const toggleKey = method.toLowerCase() + "Active";
     
     // চেক করা হচ্ছে এডমিন প্যানেল থেকে এই মেথড অন আছে কি না
-    if(systemSettings[toggleKey] !== true) {
-        showSmartToast(`${method} ডিপোজিট বর্তমানে বন্ধ আছে`, 'error');
+    if (systemSettings && systemSettings[toggleKey] !== true) {
+        showSmartToast(`${method.toUpperCase()} DEPOSIT IS CURRENTLY CLOSED`, 'error');
         return;
     }
     
-    document.querySelectorAll('#depositSection .grid .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
-    el.classList.add('border-green-500','bg-green-50'); 
+    // সব অপারেটর সিলেক্টর বর্ডার রিসেট করা
+    document.querySelectorAll('#depositSection .grid > div').forEach(d => {
+        d.className = "bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300";
+    }); 
+    
+    // প্রতিটি মেথডের জন্য স্ক্রিনশট ম্যাচিং প্রফেশনাল থিম বর্ডার সক্রিয় করা
+    if (method === 'bKash') el.className = "bg-pink-50/40 p-2 rounded-2xl border-2 border-[#d12053] cursor-pointer h-14 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm";
+    else if (method === 'Nagad') el.className = "bg-orange-50/40 p-2 rounded-2xl border-2 border-[#ea580c] cursor-pointer h-14 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm";
+    else if (method === 'Rocket') el.className = "bg-purple-50/40 p-2 rounded-2xl border-2 border-[#701a75] cursor-pointer h-14 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm";
+    else if (method === 'USDT') el.className = "bg-emerald-50/40 p-2 rounded-2xl border-2 border-[#047857] cursor-pointer h-14 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm";
     
     selectedMethod = method;
     document.getElementById('selectedDepositMethod').value = method;
     
     updateDepositAddress(method);
 };
-        
-                                // ✅ FIXED: DATABASE CONNECTED DEPOSIT FUNCTION (USDT + LOCAL)
-        function updateDepositAddress(method) {
-            const container = document.getElementById('depositAddressContainer');
-            if(!container) return;
-            
-            // 📞 ডাইনামিক প্লেসহোল্ডার ফিক্স (মেথড অনুযায়ী প্লেসহোল্ডার বদল হবে)
-    const senderInput = document.getElementById('depositSenderNumber');
-    if (senderInput) {
-        if (method === 'bKash') {
-            senderInput.placeholder = "যে বিকাশ নম্বর থেকে টাকা পাঠিয়েছেন (১১ ডিজিট)";
-        } else if (method === 'Nagad') {
-            senderInput.placeholder = "যে নগদ নম্বর থেকে টাকা পাঠিয়েছেন (১১ ডিজিট)";
-        } else if (method === 'Rocket') {
-            senderInput.placeholder = "যে রকেট নম্বর থেকে টাকা পাঠিয়েছেন (১২ ডিজিট)";
-        } else if (method === 'USDT') {
-            senderInput.placeholder = "আপনার USDT ওয়ালেট এড্রেসটি দিন (S.W)";
-        } else {
-            senderInput.placeholder = "যে নাম্বার বা ওয়ালেট থেকে পাঠিয়েছেন";
-        }
+
+// ✅ ডাটাবেসের সাথে সংযুক্ত ডাইনামিক এবং স্ক্রিনশট-স্টাইল পেমেন্ট কার্ড (UPPERCASE স্টাইলিং সহ)
+function updateDepositAddress(method) {
+    const card = document.getElementById('screenshotDepositCard');
+    if (!card) return;
+
+    card.classList.remove('hidden');
+
+    // ইনপুট বক্স থেকে টাকার পরিমাণ এবং সেন্ডার নম্বর রিড করা
+    const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
+    const sender = document.getElementById('depositSenderNumber').value || "০১৭xxxxxxxx";
+
+    let themeColor = "bg-[#d12053]"; // Default bKash Pink
+    let ussd = "*247#";
+    let walletNum = paymentNumbers[method] || "NOT SET";
+    let instructionsHTML = "";
+
+    // বিকাশ (গোলাপি থিম)
+    if (method === 'bKash') {
+        themeColor = "bg-[#d12053]";
+        ussd = "*247#";
+        instructionsHTML = `
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>${ussd} ডায়াল করে আপনার BKASH মোবাইল মেনুতে যান অথবা BKASH অ্যাপে যান।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>"SEND MONEY" -এ ক্লিক করুন।</span>
+            </li>
+            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
+                <div class="flex items-start gap-2">
+                    <span class="text-yellow-300 shrink-0">•</span>
+                    <span>প্রাপক নম্বর হিসেবে এই নম্বরটি লিখুন: <b class="underline tracking-wider font-mono">${walletNum}</b></span>
+                </div>
+                <button onclick="window.copyToClipboard('${walletNum}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
+                    <i class="ri-file-copy-line"></i> COPY
+                </button>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>টাকার পরিমাণ: <b class="text-yellow-300 text-sm">৳${amount.toFixed(2)}</b></span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>নিশ্চিত করতে আপনার BKASH পিন নম্বর দিন।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>সবকিছু ঠিক থাকলে, আপনি BKASH থেকে একটি নিশ্চিতকরণ বার্তা পাবেন।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION ID</span> দিন এবং নিচের <span class="text-yellow-300">VERIFY</span> বাটনে ক্লিক করুন।</span>
+            </li>
+        `;
+    } 
+    // নগদ (কমলা/হলুদ থিম)
+    else if (method === 'Nagad') {
+        themeColor = "bg-[#ea580c]"; 
+        ussd = "*167#";
+        instructionsHTML = `
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>${ussd} ডায়াল করে আপনার NAGAD মোবাইল মেনুতে যান অথবা NAGAD অ্যাপে যান।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>"SEND MONEY" -এ ক্লিক করুন।</span>
+            </li>
+            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
+                <div class="flex items-start gap-2">
+                    <span class="text-yellow-300 shrink-0">•</span>
+                    <span>প্রাপক নম্বর হিসেবে এই নম্বরটি লিখুন: <b class="underline tracking-wider font-mono">${walletNum}</b></span>
+                </div>
+                <button onclick="window.copyToClipboard('${walletNum}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
+                    <i class="ri-file-copy-line"></i> COPY
+                </button>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>টাকার পরিমাণ: <b class="text-yellow-300 text-sm">৳${amount.toFixed(2)}</b></span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>নিশ্চিত করতে আপনার NAGAD পিন নম্বর দিন।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>সবকিছু ঠিক থাকলে, আপনি NAGAD থেকে একটি নিশ্চিতকরণ বার্তা পাবেন।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION ID</span> দিন এবং নিচের <span class="text-yellow-300">VERIFY</span> বাটনে ক্লিক করুন।</span>
+            </li>
+        `;
+    } 
+    // রকেট (বেগুনি থিম)
+    else if (method === 'Rocket') {
+        themeColor = "bg-[#701a75]"; 
+        ussd = "*322#";
+        instructionsHTML = `
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>${ussd} ডায়াল করে আপনার ROCKET মোবাইল মেনুতে যান অথবা ROCKET অ্যাপে যান।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>"SEND MONEY" -এ ক্লিক করুন।</span>
+            </li>
+            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
+                <div class="flex items-start gap-2">
+                    <span class="text-yellow-300 shrink-0">•</span>
+                    <span>প্রাপক নম্বর হিসেবে এই নম্বরটি লিখুন: <b class="underline tracking-wider font-mono">${walletNum}</b></span>
+                </div>
+                <button onclick="window.copyToClipboard('${walletNum}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
+                    <i class="ri-file-copy-line"></i> COPY
+                </button>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>টাকার পরিমাণ: <b class="text-yellow-300 text-sm">৳${amount.toFixed(2)}</b></span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>নিশ্চিত করতে আপনার ROCKET পিন নম্বর দিন।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>সবকিছু ঠিক থাকলে, আপনি ROCKET থেকে একটি নিশ্চিতকরণ বার্তা পাবেন।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION ID</span> দিন এবং নিচের <span class="text-yellow-300">VERIFY</span> বাটনে ক্লিক করুন।</span>
+            </li>
+        `;
+    } 
+    // ইউএসডিটি (সবুজ থিম)
+    else if (method === 'USDT') {
+        themeColor = "bg-[#047857]"; 
+        const polygonAddr = paymentNumbers.USDT_Polygon || "NOT SET"; 
+        const bscAddr = paymentNumbers.USDT_BEP20 || "NOT SET";
+        const usdtAmount = amount / 120; // ১ ডলার = ১২০ টাকা হিসাবে
+
+        instructionsHTML = `
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>আপনার ক্রিপ্টো ওয়ালেট (BINANCE/TRUST WALLET) ওপেন করুন।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>"WITHDRAW" সিলেক্ট করে USDT কয়েন নির্বাচন করুন।</span>
+            </li>
+            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
+                <div class="flex items-start gap-2">
+                    <span class="text-yellow-300 shrink-0">•</span>
+                    <span class="text-left">POLYGON নেটওয়ার্ক এড্রেস:<br><b class="underline font-mono text-[9px] break-all">${polygonAddr}</b></span>
+                </div>
+                <button onclick="window.copyToClipboard('${polygonAddr}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
+                    <i class="ri-file-copy-line"></i> COPY
+                </button>
+            </li>
+            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
+                <div class="flex items-start gap-2">
+                    <span class="text-yellow-300 shrink-0">•</span>
+                    <span class="text-left">BSC (BEP20) নেটওয়ার্ক এড্রেস:<br><b class="underline font-mono text-[9px] break-all">${bscAddr}</b></span>
+                </div>
+                <button onclick="window.copyToClipboard('${bscAddr}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
+                    <i class="ri-file-copy-line"></i> COPY
+                </button>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>ডিপোজিট পরিমাণ: <b class="text-yellow-300 text-sm">$${usdtAmount.toFixed(2)} USDT</b> (রেট: ১২০৳)</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>ট্রান্সফার সফল হলে ব্লকচেইন থেকে TXID / HASH কপি করুন।</span>
+            </li>
+            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed">
+                <span class="text-yellow-300 shrink-0">•</span>
+                <span>এখন উপরের বক্সে আপনার <span class="text-yellow-300">TRANSACTION HASH</span> দিন এবং নিচের <span class="text-yellow-300">VERIFY</span> বাটনে ক্লিক করুন।</span>
+            </li>
+        `;
     }
 
-            // ডিফল্ট ভ্যালু
-            let address = "01XXXXXXXXX"; 
-            let title = "সেন্ড মানি নাম্বার";
-            let icon = "ri-smartphone-line";
-            let color = "blue"; 
-            let badge = "অফিসিয়াল";
-            let warning = "টাকা পাঠানোর আগে নাম্বার মিলিয়ে নিন";
+    card.className = `${themeColor} rounded-[30px] p-5 text-white shadow-xl animate__animated animate__fadeIn relative overflow-hidden transition-all duration-500`;
 
-            // 1. USDT LOGIC (DATABASE CONNECTED)
-            if (method === 'USDT') {
-                // 🔥 এখান থেকেই এডমিন প্যানেলের ডাটা আসবে
-                const polygonAddr = paymentNumbers.USDT_Polygon || "ঠিকানা সেট করা নেই"; 
-                const bscAddr = paymentNumbers.USDT_BEP20 || "ঠিকানা সেট করা নেই";
-                
-                container.innerHTML = `
-                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-2.5 relative mb-2 overflow-hidden hover:shadow-sm">
-                        <div class="absolute top-0 right-0 bg-purple-100 px-2 py-0.5 rounded-bl-lg text-[9px] font-bold text-purple-600">
-                            Polygon (Matic)
-                        </div>
-                        <p class="text-[10px] text-purple-600 font-bold mb-1 flex items-center gap-1">
-                            <i class="ri-global-line"></i> Wallet Address:
-                        </p>
-                        <div class="flex items-center justify-between gap-2">
-                            <h2 class="text-[11px] font-mono font-bold text-slate-700 truncate w-48 bg-white px-1 rounded border border-purple-100">
-                                ${polygonAddr}
-                            </h2>
-                            <button onclick="window.copyToClipboard('${polygonAddr}')" 
-                                class="bg-purple-500 hover:bg-purple-600 text-white px-2 py-1 rounded-md text-[10px] font-bold active:scale-95 transition h-6 flex items-center gap-1">
-                                <i class="ri-file-copy-line"></i> কপি
-                            </button>
-                        </div>
-                    </div>
+    card.innerHTML = `
+        <div class="absolute -right-10 -top-10 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+        
+        <div class="text-center mb-4">
+            <h4 class="text-[9px] uppercase tracking-[0.2em] font-black opacity-80">MANUAL DEPOSIT GATEWAY</h4>
+            <p class="text-lg font-black mt-1">ট্রানজেকশন আইডি দিন</p>
+        </div>
 
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-2.5 relative overflow-hidden hover:shadow-sm">
-                        <div class="absolute top-0 right-0 bg-yellow-100 px-2 py-0.5 rounded-bl-lg text-[9px] font-bold text-yellow-700">
-                            BSC (BEP20)
-                        </div>
-                        <p class="text-[10px] text-yellow-700 font-bold mb-1 flex items-center gap-1">
-                            <i class="ri-bit-coin-line"></i> Wallet Address:
-                        </p>
-                        <div class="flex items-center justify-between gap-2">
-                            <h2 class="text-[11px] font-mono font-bold text-slate-700 truncate w-48 bg-white px-1 rounded border border-yellow-100">
-                                ${bscAddr}
-                            </h2>
-                            <button onclick="window.copyToClipboard('${bscAddr}')" 
-                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded-md text-[10px] font-bold active:scale-95 transition h-6 flex items-center gap-1">
-                                <i class="ri-file-copy-line"></i> কপি
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <p class="text-[9px] text-red-400 mt-2 text-center font-bold">
-                        ⚠️ শুধুমাত্র POLYGON বা BEP20 নেটওয়ার্কে পাঠাবেন।
-                    </p>
-                `;
-                return; 
-            }
+        <!-- TrxID ইনপুট বক্স (স্ক্রিনশটের মতো গেটওয়ে ডিজাইনে) -->
+        <div class="relative group mt-2 mb-5">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                <i class="ri-hashtag text-slate-400"></i>
+            </div>
+            <input type="text" id="depositTrxId" placeholder="এখানে ট্রানজেকশন আইডি লিখুন" 
+                class="w-full pl-9 pr-24 py-4 bg-white rounded-2xl text-slate-800 font-mono font-black tracking-wider outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner uppercase text-xs">
+            
+            <button onclick="window.smartPasteTrxId()" class="absolute right-1.5 top-1.5 bottom-1.5 bg-slate-800 hover:bg-slate-900 text-white px-3.5 rounded-xl text-[10px] font-black flex items-center gap-1 shadow-md active:scale-95 transition-all uppercase">
+                <i class="ri-clipboard-line"></i> PASTE
+            </button>
+        </div>
 
-            // 2. LOCAL METHOD LOGIC (BKASH/NAGAD)
-            if (method === 'bKash') {
-                address = paymentNumbers.bKash || "নাম্বার সেট করা নেই";
-                color = "pink";
-            } else if (method === 'Nagad') {
-                address = paymentNumbers.Nagad || "নাম্বার সেট করা নেই";
-                color = "orange";
-            } else if (method === 'Rocket') {
-                address = paymentNumbers.Rocket || "নাম্বার সেট করা নেই";
-                color = "purple";
-            } else if (method === 'Upay') {
-                address = paymentNumbers.Upay || "নাম্বার সেট করা নেই";
-                color = "blue";
-            }
+        <!-- স্ক্রিনশটের মতো লিস্ট নির্দেশনাবলী -->
+        <ul class="space-y-3.5 border-t border-white/20 pt-4 pb-4">
+            ${instructionsHTML}
+        </ul>
 
-            // HTML GENERATION (LOCAL)
-            container.innerHTML = `
-                <div class="bg-${color}-50 border border-${color}-200 rounded-lg p-2.5 relative overflow-hidden transition-all hover:shadow-sm">
-                    <div class="absolute top-0 right-0 bg-${color}-100 px-2 py-0.5 rounded-bl-lg text-[9px] font-bold text-${color}-600">
-                        ${badge}
-                    </div>
-                    <p class="text-[10px] text-${color}-600 font-bold mb-1 flex items-center gap-1">
-                        <i class="${icon}"></i> ${title}:
-                    </p>
-                    <div class="flex items-center justify-between gap-2">
-                        <h2 class="text-lg font-black text-slate-700 tracking-wider font-mono leading-none">
-                            ${address}
-                        </h2>
-                        <button onclick="window.copyToClipboard('${address}')" 
-                            class="bg-${color}-500 hover:bg-${color}-600 text-white px-2.5 py-1 rounded-md text-[10px] font-bold shadow-sm active:scale-95 transition flex items-center gap-1 h-7">
-                            <i class="ri-file-copy-line"></i> কপি
-                        </button>
-                    </div>
-                    <p class="text-[9px] text-slate-400 mt-1.5 flex items-center gap-1 leading-none opacity-80">
-                        <i class="ri-shield-check-line text-${color}-400"></i> ${warning}
-                    </p>
-                </div>
-            `;
-        }
+        <!-- ভেরিফাই অ্যাকশন বাটন -->
+        <div class="mt-4 pt-4 border-t border-white/10">
+            <button onclick="window.submitDeposit()" class="w-full bg-white text-slate-900 hover:bg-slate-100 font-black py-4 rounded-2xl text-sm tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all uppercase flex items-center justify-center gap-2">
+                <i class="ri-shield-check-fill text-lg"></i> VERIFY
+            </button>
+        </div>
+    `;
+}
 
         // ✅ AUTH FUNCTIONS
         document.getElementById('btnRegAction').addEventListener('click', async () => {
@@ -6446,8 +6579,21 @@ window.submitProof = async () => {
             }).catch(e => console.log("Task Update Error", e));
         }
 
-        // ৪. টেলিগ্রাম নোটিফিকেশন
-        const telegramMessage = `📝 *নতুন টাস্ক সাবমিট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📋 *টাস্ক:* ${currentTaskInfo.title}\n💰 *রিওয়ার্ড:* ৳${currentTaskInfo.reward}\n🔗 *প্রুফ লিংক:* ${proof2}\n💬 *ইউজার নোট:* ${proof1}`;
+      // ৪. টেলিগ্রাম নোটিফিকেশন (HTML ফরম্যাটে এবং এস্কেপ করে, যাতে ভুল পাসওয়ার্ড, স্পেশাল ক্যারেক্টার বা লিঙ্কের জন্য মেসেজ আটকে না যায়)
+        const safeName = escapeHTML(currentUserData?.name || "Unknown");
+        const safePhone = escapeHTML(currentUserData?.phone || "N/A");
+        const safeTitle = escapeHTML(currentTaskInfo?.title || "N/A");
+        const safeReward = escapeHTML(currentTaskInfo?.reward || "0");
+        const safeProof1 = escapeHTML(proof1);
+        const safeProof2 = escapeHTML(proof2);
+
+        const telegramMessage = `📝 <b>নতুন টাস্ক সাবমিট</b>\n\n` +
+                                `👤 <b>ইউজার:</b> ${safeName}\n` +
+                                `📱 <b>ফোন:</b> ${safePhone}\n` +
+                                `📋 <b>টাস্ক:</b> ${safeTitle}\n` +
+                                `💰 <b>রিওয়ার্ড:</b> ৳${safeReward}\n` +
+                                `🔗 <b>প্রুফ লিংক:</b> ${safeProof2}\n` +
+                                `💬 <b>ইউজার নোট:</b> ${safeProof1}`;
         await sendTelegramNotification(telegramMessage);
         
         showSmartToast('টাস্ক জমা হয়েছে!', 'success');
@@ -8325,13 +8471,24 @@ window.showPage = (id, defaultTab = null) => {
         loadReferralList();
     } 
     else if(id === 'walletScreen') {
-    updateDepositAddress(selectedMethod || 'bKash');
-    if (defaultTab) {
-        window.toggleWalletTab(defaultTab); // যদি সরাসরি 'withdraw' বা অন্য ট্যাব পাঠানো হয়
-    } else {
-        window.toggleWalletTab('deposit'); // ডিফল্টভাবে ডিপোজিট দেখাবে
+        const defMethod = selectedMethod || 'bKash';
+        const defEl = document.getElementById(`payment_${defMethod}`);
+        
+        if (defaultTab) {
+            window.toggleWalletTab(defaultTab);
+        } else {
+            window.toggleWalletTab('deposit');
+        }
+
+        // ওয়ালেটে ঢোকার সাথে সাথে বিকাশ ডিফল্ট সিলেক্ট হয়ে কালার থিমে আপডেট হবে
+        setTimeout(() => {
+            if(defEl) {
+                window.selectPayment(defEl, defMethod);
+            } else {
+                updateDepositAddress(defMethod);
+            }
+        }, 100);
     }
-}
     else if(id === 'quizScreen') {
         window.switchQuizTab('types');
     }
