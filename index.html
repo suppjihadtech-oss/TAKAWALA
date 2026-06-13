@@ -1428,10 +1428,21 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <button onclick="window.toggleAuthTab('register')" id="btnTabRegister" class="flex-1 py-3 rounded-full text-sm font-bold text-slate-500 transition-all">রেজিস্ট্রেশন</button>
             </div>
 
-                        <div id="loginForm" class="space-y-4 text-left">
-                <input type="email" id="loginEmail" placeholder="ইমেইল এড্রেস" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
+                       <div id="loginForm" class="space-y-4 text-left">
+                <!-- ইমেইল আইকন সহ ইনপুট -->
                 <div class="relative">
-                    <input type="password" id="loginPass" placeholder="পাসওয়ার্ড" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold pr-12">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="ri-mail-line text-lg"></i>
+                    </div>
+                    <input type="email" id="loginEmail" placeholder="ইমেইল এড্রেস" class="w-full pl-11 p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
+                </div>
+
+                <!-- পাসওয়ার্ড আইকন সহ ইনপুট -->
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="ri-lock-2-line text-lg"></i>
+                    </div>
+                    <input type="password" id="loginPass" placeholder="পাসওয়ার্ড" class="w-full pl-11 p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold pr-12">
                     <button type="button" onclick="togglePassword('loginPass', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
                         <i class="ri-eye-off-line text-xl"></i>
                     </button>
@@ -1445,8 +1456,15 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             </div>
 
             <div id="registerForm" class="hidden space-y-3 text-left">
-                <input type="text" id="regName" placeholder="আপনার নাম" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
-                <!-- বাংলাদেশী পতাকাসহ প্রিমিয়াম মোবাইল নাম্বার ইনপুট -->
+                <!-- নাম আইকন সহ ইনপুট -->
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="ri-user-line text-lg"></i>
+                    </div>
+                    <input type="text" id="regName" placeholder="আপনার নাম" class="w-full pl-11 p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
+                </div>
+
+                <!-- বাংলাদেশী পতাকাসহ প্রিমিয়াম মোবাইল নাম্বার ইনপুট (এটি আগের মতোই সুন্দর আছে) -->
                 <div class="relative flex items-center bg-slate-50 border rounded-2xl focus-within:border-green-500 overflow-hidden">
                     <div class="flex items-center gap-1.5 pl-4 pr-2.5 py-4 border-r border-slate-200 select-none bg-slate-100/50 shrink-0">
                         <span class="text-xl leading-none">🇧🇩</span>
@@ -1454,14 +1472,34 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     </div>
                     <input type="tel" id="regPhone" placeholder="০১XXXXXXXXX (১১ ডিজিট)" class="w-full p-4 pl-3 bg-transparent outline-none font-bold text-slate-700">
                 </div>
-                <input type="email" id="regEmail" placeholder="ইমেইল" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
+
+                <!-- ইমেইল আইকন সহ ইনপুট -->
                 <div class="relative">
-                    <input type="password" id="regPass" placeholder="পাসওয়ার্ড (৬+ সংখ্যা)" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold pr-12">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="ri-mail-line text-lg"></i>
+                    </div>
+                    <input type="email" id="regEmail" placeholder="ইমেইল" class="w-full pl-11 p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
+                </div>
+
+                <!-- পাসওয়ার্ড আইকন সহ ইনপুট -->
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="ri-lock-2-line text-lg"></i>
+                    </div>
+                    <input type="password" id="regPass" placeholder="পাসওয়ার্ড (৬+ সংখ্যা)" class="w-full pl-11 p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold pr-12">
                     <button type="button" onclick="togglePassword('regPass', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
                         <i class="ri-eye-off-line text-xl"></i>
                     </button>
                 </div>
-                <input type="text" id="regReferralCode" placeholder="রেফার কোড (অবশ্যই দিন) *" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
+
+                <!-- রেফার কোড গিফট আইকন সহ ইনপুট -->
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="ri-gift-line text-lg"></i>
+                    </div>
+                    <input type="text" id="regReferralCode" placeholder="রেফার কোড (অবশ্যই দিন) *" class="w-full pl-11 p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
+                </div>
+
                 <button id="btnRegAction" class="w-full bg-premium text-white font-bold py-4 rounded-2xl shadow-xl active:scale-95 transition">একাউন্ট খুলুন</button>
             </div>
         </div>
@@ -1917,20 +1955,23 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     <div onclick="window.selectWithdrawMethod(this, 'Rocket')" id="withdraw_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain"></div>
                     <div onclick="window.selectWithdrawMethod(this, 'USDT')" id="withdraw_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
                 </div>
-                 <div class="glass-card p-5 rounded-[25px] space-y-4">
+                 <!-- মডার্ন ডাইনামিক উইথড্র কার্ড -->
+                 <div id="withdrawCard" class="glass-card p-5 rounded-[25px] space-y-4 transition-all duration-500">
                    <!-- 💳 MULTI-ACCOUNT SAVED SLIDER -->
-<div id="savedAccountsContainer" class="mb-5 hidden animate__animated animate__fadeIn">
-    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1"><i class="ri-bookmark-fill text-blue-500"></i> সেভ করা একাউন্ট (সর্বোচ্চ ৫টি)</p>
-    <div id="savedAccountsList" class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide px-1">
-        <!-- কার্ডগুলো এখানে অটো আসবে -->
-    </div>
-</div>
+                    <div id="savedAccountsContainer" class="mb-5 hidden animate__animated animate__fadeIn">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1"><i class="ri-bookmark-fill text-blue-500"></i> সেভ করা একাউন্ট (সর্বোচ্চ ৫টি)</p>
+                        <div id="savedAccountsList" class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide px-1">
+                            <!-- কার্ডগুলো এখানে অটো আসবে -->
+                        </div>
+                    </div>
 
-<input type="number" id="withdrawNumber" placeholder="অ্যাকাউন্ট নাম্বার" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
-
-
+                    <input type="number" id="withdrawNumber" placeholder="অ্যাকউন্ট নাম্বার" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
                     <input type="number" id="withdrawAmount" placeholder="পরিমাণ" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
-                    <div class="text-xs text-red-500 font-bold" id="withdrawVat">ভ্যাট (১০%): ৳0.00 | প্রাপ্ত: ৳0.00</div>
+                    <div class="text-xs text-red-500 font-bold ml-1" id="withdrawVat">ভ্যাট (১০%): ৳0.00 | প্রাপ্ত: ৳0.00</div>
+                    
+                    <!-- ℹ️ ডাইনামিক উইথড্র নির্দেশিকা লোড হওয়ার বক্স -->
+                    <div id="withdrawGuidelines" class="hidden"></div>
+
                     <input type="hidden" id="selectedWithdrawMethod" value="">
                     <button onclick="window.submitWithdraw()" class="w-full bg-red-500 text-white font-bold py-3.5 rounded-xl shadow-lg">উত্তোলন করুন</button>
                 </div>
@@ -4392,9 +4433,12 @@ function updateDepositAddress(method) {
                     <i class="ri-file-copy-line"></i> COPY
                 </button>
             </li>
-            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
-                <span class="text-yellow-300 shrink-0">•</span>
-                <span>টাকার পরিমাণ: <b class="text-yellow-300 text-sm">৳${amount.toFixed(2)}</b></span>
+            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
+                <div class="flex items-start gap-2">
+                    <span class="text-yellow-300 shrink-0">•</span>
+                    <span>টাকার পরিমাণ: <b class="text-yellow-300 text-sm">৳${amount.toFixed(2)}</b></span>
+                </div>
+                <button onclick="window.copyToClipboard('${amount.toFixed(2)}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase"><i class="ri-file-copy-line"></i> COPY</button>
             </li>
             <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
                 <span class="text-yellow-300 shrink-0">•</span>
@@ -4432,9 +4476,12 @@ function updateDepositAddress(method) {
                     <i class="ri-file-copy-line"></i> COPY
                 </button>
             </li>
-            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
-                <span class="text-yellow-300 shrink-0">•</span>
-                <span>টাকার পরিমাণ: <b class="text-yellow-300 text-sm">৳${amount.toFixed(2)}</b></span>
+            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
+                <div class="flex items-start gap-2">
+                    <span class="text-yellow-300 shrink-0">•</span>
+                    <span>টাকার পরিমাণ: <b class="text-yellow-300 text-sm">৳${amount.toFixed(2)}</b></span>
+                </div>
+                <button onclick="window.copyToClipboard('${amount.toFixed(2)}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase"><i class="ri-file-copy-line"></i> COPY</button>
             </li>
             <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
                 <span class="text-yellow-300 shrink-0">•</span>
@@ -4471,10 +4518,12 @@ function updateDepositAddress(method) {
                 <button onclick="window.copyToClipboard('${walletNum}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
                     <i class="ri-file-copy-line"></i> COPY
                 </button>
-            </li>
-            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
-                <span class="text-yellow-300 shrink-0">•</span>
-                <span>টাকার পরিমাণ: <b class="text-yellow-300 text-sm">৳${amount.toFixed(2)}</b></span>
+            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
+                <div class="flex items-start gap-2">
+                    <span class="text-yellow-300 shrink-0">•</span>
+                    <span>টাকার পরিমাণ: <b class="text-yellow-300 text-sm">৳${amount.toFixed(2)}</b></span>
+                </div>
+                <button onclick="window.copyToClipboard('${amount.toFixed(2)}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase"><i class="ri-file-copy-line"></i> COPY</button>
             </li>
             <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
                 <span class="text-yellow-300 shrink-0">•</span>
@@ -4524,9 +4573,12 @@ function updateDepositAddress(method) {
                     <i class="ri-file-copy-line"></i> COPY
                 </button>
             </li>
-            <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
-                <span class="text-yellow-300 shrink-0">•</span>
-                <span>ডিপোজিট পরিমাণ: <b class="text-yellow-300 text-sm">$${usdtAmount.toFixed(2)} USDT</b> (রেট: ১২০৳)</span>
+            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
+                <div class="flex items-start gap-2">
+                    <span class="text-yellow-300 shrink-0">•</span>
+                    <span>ডিপোজিট পরিমাণ: <b class="text-yellow-300 text-sm">$${usdtAmount.toFixed(2)} USDT</b> (রেট: ১২০৳)</span>
+                </div>
+                <button onclick="window.copyToClipboard('${usdtAmount.toFixed(2)}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase"><i class="ri-file-copy-line"></i> COPY</button>
             </li>
             <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
                 <span class="text-yellow-300 shrink-0">•</span>
@@ -4576,7 +4628,7 @@ function updateDepositAddress(method) {
     `;
 }
 
-        // ✅ AUTH FUNCTIONS
+       // ✅ INITIALIZE EVENT LISTENERS
         document.getElementById('btnRegAction').addEventListener('click', async () => {
             const name = document.getElementById('regName').value, 
                   phone = document.getElementById('regPhone').value, 
@@ -4584,41 +4636,49 @@ function updateDepositAddress(method) {
                   pass = document.getElementById('regPass').value,
                   referralCode = document.getElementById('regReferralCode').value.trim();
             
-            if(!name || !phone || !email || !pass || !referralCode) return showSmartToast('সব তথ্য দিন (রেফার কোডসহ)', 'error');
-            
-            if(pass.length < 6) return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');
-          
-          // ১. সব তথ্য খালি আছে কি না চেক
-            if(!name || !phone || !email || !pass || !referralCode) return showSmartToast('সব তথ্য দিন (রেফার কোডসহ)', 'error');
-            
-            // ২. নাম ভ্যালিডেশন (কমপক্ষে ৩ অক্ষরের বাংলা বা ইংরেজি বর্ণ, কোনো সংখ্যা বা প্রতীক গ্রহণযোগ্য নয়)
+            // ১. নাম ভ্যালিডেশন
+            if(!name || name.trim() === "") {
+                return showSmartToast('দয়া করে আপনার সম্পূর্ণ নামটি লিখুন।', 'error');
+            }
             const nameRegex = /^[a-zA-Z\s\u0980-\u09FF]{3,30}$/;
             if (!nameRegex.test(name.trim())) {
-                showSmartToast('দয়া করে আপনার সঠিক নাম লিখুন (৩-৩০ অক্ষরের বাংলা বা ইংরেজি)', 'error');
-                return;
+                return showSmartToast('নামে কোনো সংখ্যা বা প্রতীক ব্যবহার করা যাবে না (কমপক্ষে ৩টি অক্ষর)।', 'error');
             }
 
-            // ৩. বাংলাদেশী মোবাইল নাম্বার চেক (০১X দিয়ে শুরু এবং মোট ১১ ডিজিট হওয়া বাধ্যতামূলক) [2]
+            // ২. মোবাইল নাম্বার ভ্যালিডেশন
+            if(!phone || phone.trim() === "") {
+                return showSmartToast('দয়া করে আপনার সচল মোবাইল নাম্বারটি লিখুন।', 'error');
+            }
             const phoneRegex = /^01[3-9]\d{8}$/;
-            const cleanedPhone = phone.trim().replace(/[\s-+]/g, ''); // বাড়তি স্পেস বা প্লাস সাইন পরিষ্কার করা
+            const cleanedPhone = phone.trim().replace(/[\s-+]/g, ''); 
             if (!phoneRegex.test(cleanedPhone)) {
-                showSmartToast('সঠিক বাংলাদেশী ১১ ডিজিটের মোবাইল নাম্বার দিন (যেমন: 017xxxxxxxx)', 'error');
-                return;
+                return showSmartToast('১১ ডিজিটের সঠিক বাংলাদেশী মোবাইল নাম্বার দিন (যেমন: 017xxxxxxxx)।', 'error');
             }
 
-            // ৪. ইমেইল ভ্যালিডেশন (ফেক ইমেইল বা আজেবাজে লেখা আটকাতে) [3]
+            // ৩. ইমেইল ভ্যালিডেশন
+            if(!email || email.trim() === "") {
+                return showSmartToast('আপনার সক্রিয় ইমেইল এড্রেসটি লিখুন।', 'error');
+            }
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             if (!emailRegex.test(email.trim())) {
-                showSmartToast('দয়া করে একটি সঠিক ও সচল ইমেইল এড্রেস দিন', 'error');
-                return;
+                return showSmartToast('দয়া করে একটি বৈধ ইমেইল এড্রেস দিন (যেমন: example@gmail.com)।', 'error');
             }
 
-            // ৫. পাসওয়ার্ড মিনিমাম ৬ সংখ্যা চেক
-            if(pass.length < 6) return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');  
+            // ৪. পাসওয়ার্ড ভ্যালিডেশন
+            if(!pass || pass.trim() === "") {
+                return showSmartToast('একাউন্টের নিরাপত্তার জন্য একটি পাসওয়ার্ড দিন।', 'error');
+            }
+            if(pass.length < 6) {
+                return showSmartToast('নিরাপত্তার স্বার্থে পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার বা অক্ষরের হতে হবে।', 'error');
+            }
+
+            // ৫. রেফার কোড ভ্যালিডেশন
+            if(!referralCode || referralCode.trim() === "") {
+                return showSmartToast('রেফার কোড দেওয়া বাধ্যতামূলক! আপনার বন্ধু বা এডমিনের কোডটি দিন।', 'error');
+            }
             
             try {
-    showLoading();
-
+                showLoading();
    // ✅ আল্ট্রা স্মার্ট ডিভাইস লক চেক শুরু (With Custom Device Limit)
             let deviceToken = localStorage.getItem('TAKAWALA_device_id');
             if (!deviceToken) {
@@ -4795,7 +4855,22 @@ isActivated: false,
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPass').value;
             
-            if(!email || !pass) return showSmartToast('ইমেইল ও পাসওয়ার্ড দিন', 'error');
+            // ১. ইমেইল ফিল্ড চেক
+            if(!email || email.trim() === "") {
+                return showSmartToast('দয়া করে আপনার রেজিস্ট্রিকৃত ইমেইল এড্রেসটি লিখুন।', 'error');
+            }
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email.trim())) {
+                return showSmartToast('ইমেইল এড্রেসটির সঠিক ফরম্যাট লিখুন।', 'error');
+            }
+
+            // ২. পাসওয়ার্ড ফিল্ড চেক
+            if(!pass || pass.trim() === "") {
+                return showSmartToast('আপনার একাউন্টের পাসওয়ার্ডটি প্রবেশ করুন।', 'error');
+            }
+            if(pass.length < 6) {
+                return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হওয়া আবশ্যক।', 'error');
+            }
             
             try { 
                 showLoading();
@@ -4804,11 +4879,10 @@ isActivated: false,
                 showSmartToast('লগইন সফল!', 'success'); 
                 hideLoading();
             } catch (e) { 
-                showSmartToast('ভুল ইমেইল বা পাসওয়ার্ড', 'error'); 
+                showSmartToast('ভুল ইমেইল বা পাসওয়ার্ড! আবার চেষ্টা করুন।', 'error'); 
                 hideLoading();
             }
         });
-
       // ✅ AUTH STATE LISTENER WITH ALL FEATURES (FIXED)
         auth.onAuthStateChanged((user) => {
             if (user) {
@@ -6767,35 +6841,11 @@ await db.collection("history").doc(newReqId).set({
                 hideLoading();
             }
             
-            // 🔐 পিন ভেরিফিকেশন (উইথড্র)
-            if (!currentUserData.transactionPin) {
-                return Swal.fire({
-                    title: 'পিন সেট করা নেই!',
-                    text: 'নিরাপত্তার জন্য আগে সেটিংস থেকে ৪ ডিজিটের পিন সেট করুন।',
-                    icon: 'info',
-                    confirmButtonText: 'সেটিংসে যান'
-                }).then(() => window.showPage('settingsScreen'));
-            }
-
-            const { value: userPin } = await Swal.fire({
-                title: 'আপনার পিন দিন',
-                input: 'password',
-                inputPlaceholder: '৪ ডিজিটের পিন',
-                inputAttributes: { maxlength: 4, textAlign: 'center' },
-                showCancelButton: true,
-                confirmButtonText: 'নিশ্চিত করুন',
-                cancelButtonText: 'বাতিল'
-            });
-
-            if (!userPin) return; // ইউজার ক্যান্সেল করলে থেমে যাবে
-
-            if (userPin !== currentUserData.transactionPin) {
-                return showSmartToast('ভুল পিন দিয়েছেন!', 'error');
-            }
-            
-         // ⏳ উইথড্র পেন্ডিং চেক (মামা স্পেশাল লক)
-    showLoading();
-    const pendingWithdraw = await db.collection("pending_requests")
+           // 🔐 bKash/Nagad স্টাইল প্রিমিয়াম পিন ভেরিফিকেশন ট্র্রিগার
+            window.verifyTransactionPin(async () => {
+                // ⏳ উইথড্র পেন্ডিং চেক (মামা স্পেশাল লক)
+                showLoading();
+                const pendingWithdraw = await db.collection("pending_requests")
         .where("userId", "==", currentUserId)
         .where("type", "==", "Withdraw")
         .where("status", "==", "Pending")
@@ -6978,6 +7028,7 @@ if(isFreeUser) {
                     hideLoading();
                 }
             }); // <-- Monetag অ্যাড ফাংশন শেষ
+            });
         }; 
             
         
@@ -7069,34 +7120,11 @@ if(isFreeUser) {
                 return;
             }
             
-            // পিন ভেরিফিকেশন
-            if (!currentUserData.transactionPin) {
-                return Swal.fire({
-                    title: 'পিন সেট করা নেই!',
-                    text: 'নিরাপত্তার জন্য আগে সেটিংস থেকে ৪ ডিজিটের পিন সেট করুন।',
-                    icon: 'info',
-                    confirmButtonText: 'সেটিংসে যান'
-                }).then(() => window.showPage('settingsScreen'));
-            }
-
-            const { value: userPin } = await Swal.fire({
-                title: 'আপনার পিন দিন',
-                input: 'password',
-                inputPlaceholder: '৪ ডিজিটের পিন',
-                inputAttributes: { maxlength: 4, textAlign: 'center' },
-                showCancelButton: true,
-                confirmButtonText: 'নিশ্চিত করুন',
-                cancelButtonText: 'বাতিল'
-            });
-
-            if (!userPin) return; 
-
-            if (userPin !== currentUserData.transactionPin) {
-                return showSmartToast('ভুল পিন দিয়েছেন!', 'error');
-            }
-            // ⏳ রিচার্জ পেন্ডিং চেক (মামা স্পেশাল লক)
-    showLoading();
-    const pendingRecharge = await db.collection("pending_requests")
+            // 🔐 bKash/Nagad স্টাইল প্রিমিয়াম পিন ভেরিফিকেশন ট্র্রিগার
+            window.verifyTransactionPin(async () => {
+                // ⏳ রিচার্জ পেন্ডিং চেক (মামা স্পেশাল লক)
+                showLoading();
+                const pendingRecharge = await db.collection("pending_requests")
         .where("userId", "==", currentUserId)
         .where("type", "==", "Recharge")
         .where("status", "==", "Pending")
@@ -7235,6 +7263,7 @@ if(isFreeUser) {
                     showSmartToast('রিচার্জ রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
                     hideLoading();
                 }
+            });
             });
         };
         
@@ -8600,28 +8629,130 @@ window.switchTaskTab = (type) => {
             document.getElementById('selectedOperator').value = operator;
         };
         
-        // ✅ উইথড্র মেথড সিলেক্ট এবং কন্ট্রোল
+        // ✅ উইথড্র মেথড সিলেক্ট এবং ডাইনামিক প্রিমিয়াম থিমিং কন্ট্রোল (রিয়েল-টাইম নির্দেশনা সহ)
 window.selectWithdrawMethod = (el, method) => { 
     const toggleKey = method.toLowerCase() + "Active";
     
-    // চেক করা হচ্ছে এডমিন প্যানেল থেকে এই মেথড অন আছে কি না
-    if(systemSettings[toggleKey] !== true) {
-        showSmartToast(`${method} উত্তোলন বর্তমানে বন্ধ আছে`, 'error');
+    // ১. চেক করা হচ্ছে এডমিন প্যানেল থেকে এই মেথড অন আছে কি না
+    if (systemSettings && systemSettings[toggleKey] !== true) {
+        showSmartToast(`${method.toUpperCase()} WITHDRAW IS CURRENTLY CLOSED`, 'error');
         return;
     }
     
-    document.querySelectorAll('#withdrawSection .grid .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
-    el.classList.add('border-green-500','bg-green-50'); 
+    // ২. সব উইথড্র মেথড সিলেক্টর বর্ডার রিসেট করা
+    document.querySelectorAll('#withdrawSection .grid > div').forEach(d => {
+        d.className = "bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300";
+    }); 
+    
+    // ৩. মেথড অনুযায়ী সিলেক্টর কার্ড বর্ডার স্টাইল আপডেট
+    if (method === 'bKash') el.className = "bg-pink-50/40 p-2 rounded-2xl border-2 border-[#d12053] cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm";
+    else if (method === 'Nagad') el.className = "bg-orange-50/40 p-2 rounded-2xl border-2 border-[#ea580c] cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm";
+    else if (method === 'Rocket') el.className = "bg-purple-50/40 p-2 rounded-2xl border-2 border-[#701a75] cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm";
+    else if (method === 'USDT') el.className = "bg-emerald-50/40 p-2 rounded-2xl border-2 border-[#047857] cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm";
     
     selectedMethod = method;
     document.getElementById('selectedWithdrawMethod').value = method;
 
-    // যদি মেথড USDT হয়, তবে ইনপুট বক্সের নাম পাল্টে যাবে
+    // ৪. মেইন উইথড্র কার্ড থিম আপডেট করা
+    const card = document.getElementById('withdrawCard');
     const numInput = document.getElementById('withdrawNumber');
-    if(method === 'USDT') {
-        numInput.placeholder = "আপনার USDT WALLET ADDRESS দিন";
+    const amtInput = document.getElementById('withdrawAmount');
+    const vatText = document.getElementById('withdrawVat');
+    const btn = document.querySelector('#withdrawCard button');
+    const guidelines = document.getElementById('withdrawGuidelines');
+
+    if (!card) return;
+
+    // ইনপুট বক্সের প্লেসহোল্ডার এবং টাইপ সেটআপ
+    if (method === 'USDT') {
+        numInput.placeholder = "আপনার USDT ওয়ালেট এড্রেস দিন";
+        numInput.type = "text";
     } else {
-        numInput.placeholder = "অ্যাকাউন্ট নাম্বার দিন";
+        numInput.placeholder = "মোবাইল অ্যাকাউন্ট নাম্বার দিন";
+        numInput.type = "number";
+    }
+
+    // ডাইনামিক থিম ও টেক্সট পরিবর্তন
+    let cardBg = "bg-gradient-to-br from-[#d12053] to-[#a3103c] text-white border-0"; // bKash default
+    let btnClass = "w-full bg-white text-[#d12053] font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+    let guidelineHTML = "";
+
+    if (method === 'bKash') {
+        cardBg = "bg-gradient-to-br from-[#d12053] to-[#a3103c] text-white border-0";
+        btnClass = "w-full bg-white text-[#d12053] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+        guidelineHTML = `
+            <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> BKASH উত্তোলন নির্দেশনা:</h4>
+            <ul class="space-y-1 list-disc pl-4 font-bold text-pink-100 text-[10px]">
+                <li>বিকাশ পার্সোনাল নাম্বারে সেন্ড মানি পেমেন্ট পাঠানো হবে।</li>
+                <li>উত্তোলন চার্জ ১০% কেটে নেওয়া হবে।</li>
+                <li>নম্বরটি সঠিক কিনা সাবমিট করার আগে ২ বার চেক করুন।</li>
+            </ul>
+        `;
+    } 
+    else if (method === 'Nagad') {
+        cardBg = "bg-gradient-to-br from-[#ea580c] to-[#c2410c] text-white border-0";
+        btnClass = "w-full bg-white text-[#ea580c] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+        guidelineHTML = `
+            <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> NAGAD উত্তোলন নির্দেশনা:</h4>
+            <ul class="space-y-1 list-disc pl-4 font-bold text-orange-100 text-[10px]">
+                <li>নগদ পার্সোনাল নাম্বারে সেন্ড মানি পেমেন্ট পাঠানো হবে।</li>
+                <li>উত্তোলন চার্জ ১০% কেটে নেওয়া হবে।</li>
+                <li>ভুল নাম্বারে পেমেন্ট চলে গেলে টাকা পুনরুদ্ধার করা অসম্ভব।</li>
+            </ul>
+        `;
+    } 
+    else if (method === 'Rocket') {
+        cardBg = "bg-gradient-to-br from-[#701a75] to-[#4d1052] text-white border-0";
+        btnClass = "w-full bg-white text-[#701a75] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+        guidelineHTML = `
+            <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> ROCKET উত্তোলন নির্দেশনা:</h4>
+            <ul class="space-y-1 list-disc pl-4 font-bold text-purple-100 text-[10px]">
+                <li>রকেট পার্সোনাল নাম্বারে সেন্ড মানি পেমেন্ট পাঠানো হবে।</li>
+                <li>রকেটের ১২ ডিজিটের নম্বরটি সঠিক আছে কিনা তা নিশ্চিত করুন।</li>
+                <li>উত্তোলন চার্জ ১০% কেটে নেওয়া হবে।</li>
+            </ul>
+        `;
+    } 
+    else if (method === 'USDT') {
+        cardBg = "bg-gradient-to-br from-[#047857] to-[#065f46] text-white border-0";
+        btnClass = "w-full bg-white text-[#047857] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+        guidelineHTML = `
+            <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> USDT উত্তোলন নির্দেশনা:</h4>
+            <ul class="space-y-1 list-disc pl-4 font-bold text-emerald-100 text-[10px]">
+                <li>Polygon অথবা BEP20 নেটওয়ার্কের USDT ওয়ালেটে ডলার পাঠানো হবে।</li>
+                <li>ডলারের রূপান্তর হার: ১ ডলার = ১২০ টাকা হিসেবে কনভার্ট হবে।</li>
+                <li>ভুল ওয়ালেট অ্যাড্রেস দিলে ব্লকচেইনের কারণে ফান্ড চিরতরে হারাবে।</li>
+            </ul>
+        `;
+    }
+
+    // ক্লাসের রিয়েল-টাইম রেন্ডারিং ও অ্যানিমেশন
+    card.className = `${cardBg} p-5 rounded-[25px] space-y-4 transition-all duration-500 shadow-xl animate__animated animate__fadeIn`;
+    
+    // গাইডলাইন বক্স রেন্ডার করা
+    if (guidelines) {
+        guidelines.innerHTML = guidelineHTML;
+        guidelines.classList.remove('hidden');
+        if (method === 'bKash') guidelines.className = "p-3.5 rounded-xl border border-dashed border-pink-300/40 text-[10px] leading-relaxed block";
+        else if (method === 'Nagad') guidelines.className = "p-3.5 rounded-xl border border-dashed border-orange-300/40 text-[10px] leading-relaxed block";
+        else if (method === 'Rocket') guidelines.className = "p-3.5 rounded-xl border border-dashed border-purple-300/40 text-[10px] leading-relaxed block";
+        else if (method === 'USDT') guidelines.className = "p-3.5 rounded-xl border border-dashed border-emerald-300/40 text-[10px] leading-relaxed block";
+    }
+
+    // ইনপুট বক্স ও ভ্যাট টেক্সটের কালার পরিবর্তন
+    [numInput, amtInput].forEach(inp => {
+        if (inp) {
+            inp.className = "w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm";
+        }
+    });
+
+    if (vatText) {
+        vatText.className = "text-xs text-yellow-300 font-bold block ml-1";
+    }
+
+    if (btn) {
+        btn.className = btnClass;
+        btn.innerHTML = `<i class="ri-wallet-3-line"></i> উত্তোলন করুন`;
     }
 };
         // ✅ SUBSCRIPTION FUNCTIONS        
@@ -10304,9 +10435,7 @@ window.shareToTelegramStory = async () => {
 };
        
 
-// ==========================================
-        // 📋 SMART TrxID CLIPBOARD DETECTOR
-        // ==========================================
+// 📋 SMART TrxID CLIPBOARD DETECTOR (স্মার্ট ইউজার গাইডেন্স সহ)
         window.smartPasteTrxId = async () => {
             try {
                 // ইউজারের ক্লিপবোর্ড থেকে টেক্সট পড়া
@@ -10326,11 +10455,26 @@ window.shareToTelegramStory = async () => {
                     showSmartToast('ক্লিপবোর্ডে কোনো ভ্যালিড TrxID পাওয়া যায়নি!', 'warning');
                 }
             } catch (err) {
-                showSmartToast('আপনার ক্লিপবোর্ড পড়ার পারমিশন নেই। ম্যানুয়ালি পেস্ট করুন।', 'error');
+                // ফিক্স: অটোমেটিক পেস্ট ব্লক হলে চমৎকার আইওএস গাইডেন্স পপ-আপ দেখাবে
+                Swal.fire({
+                    title: 'ম্যানুয়ালি পেস্ট করুন 📋',
+                    html: `
+                        <div class="text-left text-xs text-slate-500 leading-relaxed font-semibold">
+                            টেলিগ্রামের কঠোর নিরাপত্তা পলিসির কারণে আপনার ফোনে অটোমেটিক পেস্ট বাটনটি সাময়িকভাবে ব্লক রয়েছে।<br><br>
+                            👉 <b>সহজ সমাধান:</b><br>
+                            ইনপুট বক্সটির ওপর <b>১ সেকেন্ড চেপে ধরে রাখুন (LONG PRESS)</b> এবং <b>Paste</b> সিলেক্ট করে আপনার ট্রানজেকশন আইডিটি বসিয়ে দিন।
+                        </div>
+                    `,
+                    confirmButtonText: 'ঠিক আছে, বুঝেছি',
+                    confirmButtonColor: '#3b82f6',
+                    background: '#ffffff',
+                    customClass: {
+                        popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                        confirmButton: 'rounded-xl px-8 py-3 font-bold text-sm'
+                    }
+                });
             }
         };
-
-// ==========================================
                       
         // ✅ ৫টি সেভ করা নাম্বার রেন্ডার করার ফিক্সড ফাংশন (লোগোসহ)
 window.renderSavedAccounts = () => {
@@ -11183,6 +11327,73 @@ window.blockTaskDueToCheating = (taskId, title) => {
     });
     window.isTaskRunning = false;
 };
+
+// ✅ bKash/Nagad Style Secure PIN Verification Module
+let activePinCallback = null;
+
+window.verifyTransactionPin = (callback) => {
+    if (!currentUserData) return;
+    
+    // ১. পিন সেট করা না থাকলে সেটিংসে পাঠাবে
+    if (!currentUserData.transactionPin) {
+        Swal.fire({
+            title: 'পিন সেট করা নেই!',
+            text: 'নিরাপত্তার জন্য আগে সেটিংস থেকে ৪ ডিজিটের পিন সেট করুন।',
+            icon: 'info',
+            confirmButtonText: 'সেটিংসে যান',
+            confirmButtonColor: '#3b82f6',
+            customClass: { popup: 'rounded-[25px]' }
+        }).then(() => window.showPage('settingsScreen'));
+        return;
+    }
+
+    activePinCallback = callback;
+    
+    // ২. মোডাল শো এবং অটো-ফোকাস করা
+    const modal = document.getElementById('pinVerifyModal');
+    const pinInput = document.getElementById('modalPinInput');
+    if (modal && pinInput) {
+        pinInput.value = '';
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        setTimeout(() => pinInput.focus(), 300); // পপ-আপ ওঠার পর ইনপুটে অটো ফোকাস হবে
+    }
+};
+
+window.closePinVerifyModal = () => {
+    const modal = document.getElementById('pinVerifyModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+    activePinCallback = null;
+};
+
+// ৩. নিশ্চিত বাটন হ্যান্ডলার লজিক
+document.getElementById('modalPinConfirmBtn')?.addEventListener('click', async () => {
+    const pinInput = document.getElementById('modalPinInput');
+    const pin = pinInput ? pinInput.value.trim() : '';
+
+    if (pin.length !== 4 || isNaN(pin)) {
+        showSmartToast('৪ সংখ্যার সঠিক পিন দিন!', 'error');
+        return;
+    }
+
+    if (pin !== currentUserData.transactionPin) {
+        showSmartToast('ভুল পিন দিয়েছেন! আবার চেষ্টা করুন।', 'error');
+        return;
+    }
+
+    // পিন সঠিক হলে
+    const callback = activePinCallback;
+    window.closePinVerifyModal(); // মোডাল বন্ধ
+
+    if (callback) {
+        setTimeout(() => {
+            callback(); // রিচার্জ বা উইথড্র-এর মূল ডাটাবেজ কাজ শুরু হবে
+        }, 300);
+    }
+});
        
     </script>
     
@@ -11225,6 +11436,57 @@ window.blockTaskDueToCheating = (taskId, title) => {
             <button onclick="closeInbox()" class="w-full py-4 text-slate-400 text-xs font-bold border-t border-slate-100 bg-white/50">বন্ধ করুন</button>
         </div>
     </div>
+    
+    <!-- 🔐 BKASH/NAGAD STYLE SECURE PIN VERIFICATION MODAL -->
+<div id="pinVerifyModal" class="hidden fixed inset-0 z-[999999] flex flex-col items-center justify-end">
+    <!-- Backdrop with premium blur -->
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="window.closePinVerifyModal()"></div>
+    
+    <!-- Sliding Sheet -->
+    <div class="bg-white w-full max-w-md rounded-t-[35px] shadow-2xl p-6 relative z-10 animate__animated animate__slideInUp duration-300">
+        <!-- Top Indicator Bar -->
+        <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
+        
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-gradient-to-tr from-pink-500 to-rose-600 rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-3 shadow-lg border-2 border-white">
+                <i class="ri-lock-password-fill"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-800">নিরাপত্তা পিন দিন</h3>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[2px] mt-1">Transaction Security PIN</p>
+        </div>
+        
+        <!-- PIN Input Box -->
+        <div class="space-y-4 mb-6">
+            <div class="relative w-48 mx-auto">
+                <input type="password" id="modalPinInput" maxlength="4" placeholder="••••" 
+                    class="w-full text-center text-2xl font-black tracking-[0.5em] p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-rose-500 focus:bg-white transition-all text-slate-800 shadow-inner">
+            </div>
+            
+            <!-- ℹ️ Secure Notes -->
+            <div class="bg-rose-50/50 border border-rose-100 p-4 rounded-2xl text-left">
+                <h4 class="text-xs font-black text-rose-800 mb-1 flex items-center gap-1">
+                    <i class="ri-shield-user-fill"></i> নিরাপত্তা নির্দেশিকা:
+                </h4>
+                <ul class="text-[10px] text-rose-700 space-y-1 ml-4 list-disc font-bold leading-normal">
+                    <li>লেনদেন সম্পন্ন করতে আপনার ৪ ডিজিটের গোপন পিনটি দিন।</li>
+                    <li>আপনার পিনটি সম্পূর্ণ গোপন রাখুন, কাউকে শেয়ার করবেন না।</li>
+                    <li>টাকাওয়ালা এডমিন বা অন্য কেউ কখনই আপনার পিন জানতে চাইবে না।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="space-y-2">
+            <button id="modalPinConfirmBtn" class="w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                <i class="ri-checkbox-circle-line text-lg"></i> নিশ্চিত করুন
+            </button>
+            <button onclick="window.closePinVerifyModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3.5 rounded-2xl text-xs transition-all">
+                বাতিল করুন
+            </button>
+        </div>
+    </div>
+</div>
     
 </body>
 </html>
