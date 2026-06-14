@@ -1562,14 +1562,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 </div>
             </div>
             
-            <div id="notificationIcon" onclick="openInbox()" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 relative cursor-pointer active:scale-90 shadow-sm">
-                <img src="https://i.postimg.cc/c1nSnFz4/notofication.png" class="w-5 h-5 invert opacity-90">
-                <div id="notifDot" class="hidden">
-                    <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping"></span>
-                    <span class="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
-                </div>
-            </div>
-        </div>
+            
 
         <!-- ব্যালেন্স এবং অ্যাড মানি মেইন কন্টেইনার -->
 <div class="bg-white/10 backdrop-blur-md rounded-full p-1.5 border border-white/20 shadow-lg relative">
@@ -1856,7 +1849,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md">
                 <i class="ri-arrow-left-line text-xl"></i>
             </button>
-            <h2 class="text-2xl font-bold text-slate-800">ডেইলি টাস্ক</h2>
+            <h2 id="titleTask" class="text-2xl font-bold text-slate-800">ডেইলি টাস্ক</h2>
         </div>
         <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('টাস্ক')" class="w-8 cursor-pointer">
     </div>
@@ -1880,7 +1873,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
                 <i class="ri-arrow-left-line text-xl"></i>
             </button>
-            <h2 class="text-2xl font-bold text-slate-800">ওয়ালেট</h2>
+            <h2 id="titleWallet" class="text-2xl font-bold text-slate-800">ওয়ালেট</h2>
         </div>
         <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules(document.getElementById('tabDeposit').classList.contains('bg-slate-800') ? 'ডিপোজিট' : 'উত্তোলন')" class="w-8 cursor-pointer active:scale-95 transition">
     </div>
@@ -1973,7 +1966,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     <div id="withdrawGuidelines" class="hidden"></div>
 
                     <input type="hidden" id="selectedWithdrawMethod" value="">
-                    <button onclick="window.submitWithdraw()" class="w-full bg-red-500 text-white font-bold py-3.5 rounded-xl shadow-lg">উত্তোলন করুন</button>
+                    <button id="mainWithdrawBtn" onclick="window.submitWithdraw()" class="w-full bg-red-500 text-white font-bold py-3.5 rounded-xl shadow-lg">উত্তোলন করুন</button>
                 </div>
             </div>
 
@@ -1992,7 +1985,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <!-- RECHARGE SCREEN -->
         <div id="rechargeScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
             <div class="flex justify-between items-center mb-6">
-                <div class="flex items-center gap-3"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">রিচার্জ</h2></div>
+                <div class="flex items-center gap-3"><button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 id="titleRecharge" class="text-2xl font-bold text-slate-800">রিচার্জ</h2></div>
                 <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('রিচার্জ')" class="w-8 cursor-pointer">
             </div>
             
@@ -2289,7 +2282,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
 
      <!-- PROFILE SCREEN -->
         <div id="profileScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-            <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">প্রোফাইল</h2></div>
+            <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 id="titleProfile" class="text-2xl font-bold text-slate-800">প্রোফাইল</h2></div>
             <div class="glass-card p-6 rounded-[25px] space-y-4">
                 <div class="text-center mb-6">
                     <div class="relative inline-block">
@@ -2398,7 +2391,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     <button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
                         <i class="ri-arrow-left-line text-xl text-slate-700"></i>
                     </button>
-                    <h2 class="text-2xl font-black text-slate-800 tracking-tight">রেফার ও আয়</h2>
+                    <h2 id="titleReferral" class="text-2xl font-black text-slate-800 tracking-tight">রেফার ও আয়</h2>
                 </div>
                 <!-- 📢 রেফার নিয়মাবলী বাটন -->
                 <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('রেফার')" class="w-8 cursor-pointer active:scale-90 transition">
@@ -2628,17 +2621,25 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
 
         <!-- ✅ UPDATED SETTINGS SCREEN -->
         <div id="settingsScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-            <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 class="text-2xl font-bold text-slate-800">সেটিংস</h2></div>
+            <div class="flex items-center gap-3 mb-6"><button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md"><i class="ri-arrow-left-line text-xl"></i></button><h2 id="titleSettings" class="text-2xl font-bold text-slate-800">সেটিংস</h2></div>
             <div class="glass-card p-6 rounded-[25px] space-y-4">
-                <h3 class="text-lg font-bold mb-4">সেটিংস</h3>
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span>নোটিফিকেশন</span>
-                        <label class="toggle">
-                            <input type="checkbox" id="notificationToggle" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
+            <h3 id="lblSettingsTitle" class="text-lg font-bold mb-4">সেটিংস</h3>
+            <div class="space-y-3">
+                <!-- 🌐 ভাষা টগল বাটন (আনচেক = বাংলা, চেক = ইংরেজি) -->
+                <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                    <span id="lblLang" class="font-bold">ভাষা / LANGUAGE</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="langToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span id="lblNotif">নোটিফিকেশন</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="notificationToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
                     <div class="flex justify-between items-center">
                         <span>ডার্ক মোড</span>
                         <label class="toggle">
@@ -2664,22 +2665,76 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 
                 <div class="mt-6">
                     <h4 class="font-bold mb-2">প্রোফাইল সেটিংস</h4>
-                    <button onclick="window.showPage('profileScreen')" class="w-full bg-slate-100 text-slate-800 py-2.5 rounded-lg font-bold text-sm mb-2">প্রোফাইল এডিট করুন</button>
-                    <button onclick="window.showChangePassword()" class="w-full bg-slate-100 text-slate-800 py-2.5 rounded-lg font-bold text-sm mb-2">পাসওয়ার্ড পরিবর্তন</button>
+                    <button onclick="window.showPage('profileScreen')" class="w-full bg-slate-100 text-slate-800 py-3 rounded-2xl font-bold text-sm mb-4 transition-all active:scale-95 shadow-sm">প্রোফাইল এডিট করুন <i class="ri-arrow-right-s-line"></i></button>
+                    
+                    <!-- 🔐 bKash/Nagad Style Secure Password Change Card -->
+                    <div class="bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-5 rounded-3xl text-white relative overflow-hidden shadow-xl border border-slate-700 animate__animated animate__fadeIn">
+                        <!-- Background Glowing Orbs -->
+                        <div class="absolute -right-4 -top-4 bg-blue-500/10 w-16 h-16 rounded-full blur-xl animate-pulse"></div>
+                        
+                        <div class="flex items-center gap-2 mb-4 relative z-10">
+                            <div class="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/30">
+                                <i class="ri-lock-password-line text-blue-400"></i>
+                            </div>
+                            <h3 class="font-black text-white text-sm">নতুন পাসওয়ার্ড সেট করুন</h3>
+                        </div>
+                        
+                        <!-- Secured Password Input Fields -->
+                        <div class="grid grid-cols-2 gap-3 relative z-10 mb-4">
+                            <div>
+                                <label class="text-[9px] font-black text-slate-300 uppercase ml-1 mb-1 block">নতুন পাসওয়ার্ড</label>
+                                <input type="password" id="settingsNewPass" placeholder="••••" class="w-full text-center text-xl font-black tracking-[0.2em] p-3 bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner">
+                            </div>
+                            <div>
+                                <label class="text-[9px] font-black text-slate-300 uppercase ml-1 mb-1 block">পাসওয়ার্ড নিশ্চিত করুন</label>
+                                <input type="password" id="settingsConfirmPass" placeholder="••••" class="w-full text-center text-xl font-black tracking-[0.2em] p-3 bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner">
+                            </div>
+                        </div>
+                        
+                        <!-- Save Action Button -->
+                        <button onclick="window.setNewPasswordFromSettings()" class="w-full bg-white text-slate-800 hover:bg-slate-50 font-black py-3.5 rounded-xl shadow-lg active:scale-95 transition-all text-xs uppercase tracking-wider relative z-10 flex items-center justify-center gap-1.5">
+                            <i class="ri-checkbox-circle-fill text-sm"></i> পাসওয়ার্ড আপডেট করুন
+                        </button>
+                    </div>
                 </div>
              
-                         <div class="glass-card p-5 mt-4 border-t-4 border-slate-800">
-                <div class="flex items-center gap-2 mb-4">
-                    <img src="https://img.icons8.com/fluency/48/password-check.png" class="w-6">
-                    <h3 class="font-bold text-slate-800">ট্রানজেকশন পিন সেট করুন</h3>
+                         <!-- 🔐 bKash/Nagad Style Secure PIN Setup Card -->
+        <div class="bg-gradient-to-br from-slate-900 via-rose-950 to-slate-900 p-5 rounded-3xl text-white mt-5 relative overflow-hidden shadow-xl border border-rose-500/30 animate__animated animate__fadeIn">
+            <!-- Background Glowing Orbs -->
+            <div class="absolute -right-4 -top-4 bg-rose-500/10 w-16 h-16 rounded-full blur-xl animate-pulse"></div>
+            
+            <div class="flex items-center gap-2 mb-4 relative z-10">
+                <div class="w-8 h-8 bg-rose-500/20 rounded-full flex items-center justify-center border border-rose-500/30">
+                    <i class="ri-lock-password-fill text-rose-400"></i>
                 </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <input type="password" id="newPin" maxlength="4" placeholder="নতুন পিন (৪ সংখ্যা)" class="w-full p-3 border rounded-xl text-center font-bold">
-                    <input type="password" id="confirmPin" maxlength="4" placeholder="পিন নিশ্চিত করুন" class="w-full p-3 border rounded-xl text-center font-bold">
-                </div>
-                <button onclick="window.setTransactionPin()" class="w-full mt-3 bg-slate-800 text-white py-3 rounded-xl font-bold active:scale-95 transition">পিন সেভ করুন</button>
-                <p class="text-[10px] text-slate-400 mt-2 text-center">*লেনদেন করার সময় এই পিনটি প্রয়োজন হবে।</p>
+                <h3 class="font-black text-white text-sm">ট্রানজেকশন পিন সেট করুন</h3>
             </div>
+            
+            <!-- Secured Password Input Fields -->
+            <div class="grid grid-cols-2 gap-3 relative z-10 mb-4">
+                <div>
+                    <label class="text-[9px] font-black text-rose-300 uppercase ml-1 mb-1 block">নতুন পিন</label>
+                    <input type="password" id="newPin" maxlength="4" placeholder="••••" class="w-full text-center text-xl font-black tracking-[0.3em] p-3 bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner">
+                </div>
+                <div>
+                    <label class="text-[9px] font-black text-rose-300 uppercase ml-1 mb-1 block">পিন নিশ্চিত করুন</label>
+                    <input type="password" id="confirmPin" maxlength="4" placeholder="••••" class="w-full text-center text-xl font-black tracking-[0.3em] p-3 bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner">
+                </div>
+            </div>
+            
+            <!-- Save Action Button -->
+            <button onclick="window.setTransactionPin()" class="w-full bg-white text-rose-700 hover:bg-slate-50 font-black py-3.5 rounded-xl shadow-lg active:scale-95 transition-all text-xs uppercase tracking-wider relative z-10 flex items-center justify-center gap-1.5">
+                <i class="ri-checkbox-circle-fill text-sm"></i> পিন সেভ করুন
+            </button>
+            
+            <!-- Note Guidelines Box -->
+            <div class="mt-4 p-3 bg-white/5 border border-white/10 rounded-xl text-left relative z-10">
+                <p class="text-[9px] text-rose-200 font-bold leading-relaxed flex items-start gap-1">
+                    <i class="ri-error-warning-fill text-xs shrink-0"></i>
+                    * এই ৪ ডিজিটের গোপন পিনটি আপনার উইথড্র এবং মোবাইল রিচার্জ করার সময় ভেরিফাই করতে প্রয়োজন হবে।
+                </p>
+            </div>
+        </div>
 
                 
                 <div class="mt-6">
@@ -2729,7 +2784,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md">
                     <i class="ri-arrow-left-line text-xl"></i>
                 </button>
-                <h2 class="text-2xl font-bold text-slate-800">লেনদেন হিস্ট্রি</h2>
+                <h2 id="titleHistory" class="text-2xl font-bold text-slate-800">লেনদেন হিস্ট্রি</h2>
             </div>
             
             <!-- ✅ HISTORY FILTER -->
@@ -3253,7 +3308,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     <h4 class="font-black text-slate-800 text-base mb-3 ml-2">সেল দেওয়া জিমেইল সমূহ</h4>
     <div id="myGmailList" class="space-y-3 pb-10"></div>
 </div>
-    <!-- ✅ MODERN iPHONE DOCK BOTTOM NAV -->
+   <!-- ✅ MODERN iPHONE DOCK BOTTOM NAV -->
     <div id="bottomNav" class="hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl shadow-[0_-5px_30px_rgba(0,0,0,0.1)] rounded-t-[30px] flex justify-around items-end pb-4 pt-2 z-50 border-t border-white/50">
         
         <div onclick="window.showPage('homeScreen')" class="group text-center cursor-pointer w-14 transition-transform active:scale-90">
@@ -3261,12 +3316,12 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <i class="ri-home-5-fill text-xl text-green-600 mb-0.5 block group-hover:-translate-y-1 transition-transform"></i>
                 <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-green-600 rounded-full opacity-100"></span>
             </div>
-            <p class="text-[9px] font-bold text-slate-600">হোম</p>
+            <p id="navTextHome" class="text-[9px] font-bold text-slate-600">হোম</p>
         </div>
 
         <div onclick="window.showPage('walletScreen')" class="group text-center cursor-pointer w-14 transition-transform active:scale-90">
             <i class="ri-wallet-3-line text-xl text-slate-400 mb-0.5 block group-hover:text-green-600 group-hover:-translate-y-1 transition-all"></i>
-            <p class="text-[9px] font-bold text-slate-400 group-hover:text-green-600 transition-colors">ওয়ালেট</p>
+            <p id="navTextWallet" class="text-[9px] font-bold text-slate-400 group-hover:text-green-600 transition-colors">ওয়ালেট</p>
         </div>
 
         <div onclick="window.showPage('taskScreen')" class="text-center cursor-pointer -mt-10 relative active:scale-95 transition-transform">
@@ -3274,20 +3329,19 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <div class="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
                 <img src="https://i.postimg.cc/d1sXyCb6/clipboard.png" class="w-6 h-6 invert brightness-0 relative z-20">
             </div>
-            <p class="text-[9px] font-bold mt-1.5 text-slate-600">টাস্ক</p>
+            <p id="navTextTask" class="text-[9px] font-bold mt-1.5 text-slate-600">টাস্ক</p>
         </div>
 
         <div onclick="window.loadHistory()" class="group text-center cursor-pointer w-14 transition-transform active:scale-90">
             <i class="ri-history-line text-xl text-slate-400 mb-0.5 block group-hover:text-green-600 group-hover:-translate-y-1 transition-all"></i>
-            <p class="text-[9px] font-bold text-slate-400 group-hover:text-green-600 transition-colors">হিস্ট্রি</p>
+            <p id="navTextHistory" class="text-[9px] font-bold text-slate-400 group-hover:text-green-600 transition-colors">হিস্ট্রি</p>
         </div>
 
         <div onclick="window.showPage('moreScreen')" class="group text-center cursor-pointer w-14 transition-transform active:scale-90">
             <i class="ri-menu-4-line text-xl text-slate-400 mb-0.5 block group-hover:text-green-600 group-hover:-translate-y-1 transition-all"></i>
-            <p class="text-[9px] font-bold text-slate-400 group-hover:text-green-600 transition-colors">প্রোফাইল</p>
+            <p id="navTextProfile" class="text-[9px] font-bold text-slate-400 group-hover:text-green-600 transition-colors">প্রোফাইল</p>
         </div>
     </div>
-
     <!-- ✅ UPDATED PROOF SUBMISSION MODAL -->
     <div id="proofModal" class="proof-modal hidden">
         <div class="proof-content">
@@ -8284,23 +8338,26 @@ window.buySpins = async (count, price) => {
         };
       
 
-       // ✅ ৩টি কাজ একসাথে: সেটিংস লোড, ডার্ক মোড অ্যাক্টিভেশন এবং রিয়েল-টাইম সুইচিং
+       // ✅ ৪টি কাজ একসাথে: সেটিংস লোড, ডার্ক মোড ও ভাষা অ্যাক্টিভেশন এবং রিয়েল-টাইম সুইচিং
 function loadSettingsFromLocalStorage() {
     const notificationToggle = document.getElementById('notificationToggle');
     const darkModeToggle = document.getElementById('darkModeToggle');
     const soundToggle = document.getElementById('soundToggle');
     const vibrationToggle = document.getElementById('vibrationToggle');
+    const langToggle = document.getElementById('langToggle');
 
     // ১. লোকাল স্টোরেজ থেকে আগের সেটিংস চেক করা (ডিফল্ট ভ্যালুসহ)
     const isNotification = localStorage.getItem('notificationEnabled') !== 'false'; // ডিফল্ট অন
     const isDark = localStorage.getItem('darkModeEnabled') === 'true'; // ডিফল্ট অফ
     const isSound = localStorage.getItem('soundEnabled') !== 'false'; // ডিফল্ট অন
     const isVibration = localStorage.getItem('vibrationEnabled') !== 'false'; // ডিফল্ট অন
+    const isEnglish = localStorage.getItem('appLanguage') === 'en'; // ডিফল্ট অফ (বাংলা)
 
     // ২. টগল বাটনগুলোর পজিশন সেট করা
     if(notificationToggle) notificationToggle.checked = isNotification;
     if(soundToggle) soundToggle.checked = isSound;
     if(vibrationToggle) vibrationToggle.checked = isVibration;
+    if(langToggle) langToggle.checked = isEnglish;
     
     // ৩. ডার্ক মোড চেক এবং বডিতে ক্লাস যোগ করা
     if(darkModeToggle) {
@@ -8322,7 +8379,7 @@ function loadSettingsFromLocalStorage() {
         };
     }
 
-    // 🌙 ডার্ক মোড সুইচ (সবচেয়ে গুরুত্বপূর্ণ)
+    // 🌙 ডার্ক মোড সুইচ
     if(darkModeToggle) {
         darkModeToggle.onchange = function() {
             localStorage.setItem('darkModeEnabled', this.checked);
@@ -8351,8 +8408,19 @@ function loadSettingsFromLocalStorage() {
             showSmartToast(`ভাইব্রেশন ${this.checked ? 'চালু' : 'বন্ধ'} হয়েছে`, 'info');
         };
     }
-}
 
+    // 🌐 ভাষা/Language সুইচ ইভেন্ট লিসেনার
+    if(langToggle) {
+        langToggle.onchange = function() {
+            const selectedLang = this.checked ? 'en' : 'bn';
+            window.applyLanguage(selectedLang);
+            showSmartToast(selectedLang === 'en' ? 'LANGUAGE CHANGED TO ENGLISH' : 'ভাষা পরিবর্তন করে বাংলা করা হয়েছে', 'success');
+        };
+    }
+
+    // পেজ ওপেন হওয়ার সাথে সাথেই ভাষা লোড হবে
+    window.applyLanguage(isEnglish ? 'en' : 'bn');
+}
         // ✅ bKash STYLE BALANCE TOGGLE (Auto Hide + Animation + Sound)
         let balanceTimeout;
         window.toggleBalance = () => {
@@ -8537,14 +8605,23 @@ window.toggleWalletTab = (t) => {
         }
     } 
     else if(t === 'withdraw') {
-        const withAmtInput = document.getElementById('withdrawAmount');
-        if(withAmtInput) {
-            withAmtInput.removeEventListener('input', window.calculateWithdrawVAT);
-            withAmtInput.addEventListener('input', window.calculateWithdrawVAT);
-            if(window.calculateWithdrawVAT) window.calculateWithdrawVAT();
-        }
-        
-       if(t === 'withdraw' && typeof window.renderSavedAccounts === 'function') window.renderSavedAccounts();
+            const withAmtInput = document.getElementById('withdrawAmount');
+            if(withAmtInput) {
+                withAmtInput.removeEventListener('input', window.calculateWithdrawVAT);
+                withAmtInput.addEventListener('input', window.calculateWithdrawVAT);
+                if(window.calculateWithdrawVAT) window.calculateWithdrawVAT();
+            }
+            
+           if(t === 'withdraw' && typeof window.renderSavedAccounts === 'function') window.renderSavedAccounts();
+
+           // 🔥 অটোমেটিক প্রথম মেথড (বিকাশ) সিলেক্ট করে মডার্ন থিম সক্রিয় করার ফিক্স
+           setTimeout(() => {
+               const defWithMethod = 'bKash';
+               const defWithEl = document.getElementById(`withdraw_${defWithMethod}`);
+               if(defWithEl && typeof window.selectWithdrawMethod === 'function') {
+                   window.selectWithdrawMethod(defWithEl, defWithMethod);
+               }
+           }, 50);
        
      // 🛡️ ইউজার যাতে ফর্ম টাচ করতে না পারে (স্মার্ট লক)
     if(t === 'withdraw' || t === 'recharge' || t === 'deposit') {
@@ -8658,7 +8735,7 @@ window.selectWithdrawMethod = (el, method) => {
     const numInput = document.getElementById('withdrawNumber');
     const amtInput = document.getElementById('withdrawAmount');
     const vatText = document.getElementById('withdrawVat');
-    const btn = document.querySelector('#withdrawCard button');
+    const btn = document.getElementById('mainWithdrawBtn');
     const guidelines = document.getElementById('withdrawGuidelines');
 
     if (!card) return;
@@ -11369,8 +11446,8 @@ window.closePinVerifyModal = () => {
     activePinCallback = null;
 };
 
-// ৩. নিশ্চিত বাটন হ্যান্ডলার লজিক
-document.getElementById('modalPinConfirmBtn')?.addEventListener('click', async () => {
+// ৩. নিশ্চিত বাটন হ্যান্ডলার লজিক (গ্লোবাল ফাংশন ফিক্স)
+window.confirmTransactionPin = async () => {
     const pinInput = document.getElementById('modalPinInput');
     const pin = pinInput ? pinInput.value.trim() : '';
 
@@ -11393,8 +11470,86 @@ document.getElementById('modalPinConfirmBtn')?.addEventListener('click', async (
             callback(); // রিচার্জ বা উইথড্র-এর মূল ডাটাবেজ কাজ শুরু হবে
         }, 300);
     }
-});
+};
        
+       // ✅ bKash/Nagad Style Secure Settings Password Change Function
+window.setNewPasswordFromSettings = async () => {
+    const newPass = document.getElementById('settingsNewPass').value;
+    const confirmPass = document.getElementById('settingsConfirmPass').value;
+
+    if(!newPass || newPass.length < 6) {
+        return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');
+    }
+    if(newPass !== confirmPass) {
+        return showSmartToast('পাসওয়ার্ড মিলেনি!', 'error');
+    }
+
+    showLoading();
+    try {
+        const user = auth.currentUser;
+        await user.updatePassword(newPass);
+        showSmartToast('পাসওয়ার্ড পরিবর্তন সফল হয়েছে ✅', 'success');
+        window.playSound('snd_success');
+        document.getElementById('settingsNewPass').value = "";
+        document.getElementById('settingsConfirmPass').value = "";
+    } catch (error) {
+        console.error(error);
+        showSmartToast('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে', 'error');
+    }
+    hideLoading();
+};
+
+// ✅ ULTRA SMART AUTOMATED MULTI-LANGUAGE TRANSLATOR
+window.applyLanguage = (lang) => {
+    localStorage.setItem('appLanguage', lang);
+    const currentLang = lang || 'bn';
+    
+    // ১. ট্রান্সলেশন ডাটাবেস ডিকশনারি
+    const transMap = {
+        // Bottom Nav
+        'navTextHome': { bn: 'হোম', en: 'Home' },
+        'navTextWallet': { bn: 'ওয়ালেট', en: 'Wallet' },
+        'navTextTask': { bn: 'টাস্ক', en: 'Task' },
+        'navTextHistory': { bn: 'হিস্ট্রি', en: 'History' },
+        'navTextProfile': { bn: 'প্রোফাইল', en: 'Profile' },
+        
+        // Screen Headers
+        'titleWallet': { bn: 'ওয়ালেট', en: 'Wallet' },
+        'titleTask': { bn: 'ডেইলি টাস্ক', en: 'Daily Task' },
+        'titleRecharge': { bn: 'রিচার্জ', en: 'Recharge' },
+        'titleHistory': { bn: 'লেনদেন হিস্ট্রি', en: 'Transaction History' },
+        'titleProfile': { bn: 'প্রোফাইল', en: 'Profile' },
+        'titleReferral': { bn: 'রেফার ও আয়', en: 'Refer & Earn' },
+        'titleSettings': { bn: 'সেটিংস', en: 'Settings' },
+        
+        // Dynamic Balance Pill & Header
+        'balanceText': { bn: 'ব্যালেন্স দেখুন', en: 'View Balance' },
+        
+        // Settings Page Labels
+        'lblSettingsTitle': { bn: 'সেটিংস', en: 'Settings' },
+        'lblLang': { bn: 'ভাষা / LANGUAGE', en: 'Language' },
+        'lblNotif': { bn: 'নোটিফিকেশন', en: 'Notification' },
+        'lblDark': { bn: 'ডার্ক মোড', en: 'Dark Mode' },
+        'lblSound': { bn: 'সাউন্ড', en: 'Sound' },
+        'lblVib': { bn: 'ভাইব্রেশন', en: 'Vibration' }
+    };
+
+    // ২. অটোমেটিক ডম এলিমেন্ট রেন্ডারিং ও আপারকেস কনভার্সন লজিক
+    Object.keys(transMap).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            let translatedText = transMap[id][currentLang];
+            
+            // মামা সিকিউরিটি ফিক্স: ইংরেজি সিলেক্ট করলে সকল লেখা বড় হাতের (UPPERCASE) হবে
+            if (currentLang === 'en') {
+                translatedText = translatedText.toUpperCase();
+            }
+            
+            el.innerText = translatedText;
+        }
+    });
+};
+
     </script>
     
         <audio id="snd_click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
@@ -11478,7 +11633,7 @@ document.getElementById('modalPinConfirmBtn')?.addEventListener('click', async (
         
         <!-- Action Buttons -->
         <div class="space-y-2">
-            <button id="modalPinConfirmBtn" class="w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+            <button id="modalPinConfirmBtn" onclick="window.confirmTransactionPin()" class="w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
                 <i class="ri-checkbox-circle-line text-lg"></i> নিশ্চিত করুন
             </button>
             <button onclick="window.closePinVerifyModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3.5 rounded-2xl text-xs transition-all">
