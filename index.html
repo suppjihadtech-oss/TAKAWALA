@@ -1950,30 +1950,38 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
 
             <div id="withdrawSection" class="hidden">
                  <div class="grid grid-cols-4 gap-3 mb-6">
-                    <div onclick="window.selectWithdrawMethod(this, 'bKash')" id="withdraw_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'Nagad')" id="withdraw_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'Rocket')" id="withdraw_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'USDT')" id="withdraw_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
+                    <!-- প্রথম থেকেই বিকাশ বাটনটি সিলেক্টেড স্টাইলে থাকবে -->
+                    <div onclick="window.selectWithdrawMethod(this, 'bKash')" id="withdraw_bKash" class="bg-pink-50/40 p-2 rounded-2xl border-2 border-[#d12053] cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
+                    <div onclick="window.selectWithdrawMethod(this, 'Nagad')" id="withdraw_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
+                    <div onclick="window.selectWithdrawMethod(this, 'Rocket')" id="withdraw_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain"></div>
+                    <div onclick="window.selectWithdrawMethod(this, 'USDT')" id="withdraw_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
                 </div>
-                 <!-- মডার্ন ডাইনামিক উইথড্র কার্ড -->
-                 <div id="withdrawCard" class="glass-card p-5 rounded-[25px] space-y-4 transition-all duration-500">
+                 <!-- মডার্ন উইথড্র কার্ড (ডিফল্ট বিকাশ গ্রেডিয়েন্ট থিম ও মডার্ন ইনপুট দিয়ে ডিজাইন করা) -->
+                 <div id="withdrawCard" class="bg-gradient-to-br from-[#d12053] to-[#a3103c] text-white border-0 p-5 rounded-[25px] space-y-4 transition-all duration-500 shadow-xl">
                    <!-- 💳 MULTI-ACCOUNT SAVED SLIDER -->
                     <div id="savedAccountsContainer" class="mb-5 hidden animate__animated animate__fadeIn">
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1"><i class="ri-bookmark-fill text-blue-500"></i> সেভ করা একাউন্ট (সর্বোচ্চ ৫টি)</p>
+                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 ml-1"><i class="ri-bookmark-fill text-blue-500"></i> সেভ করা একাউন্ট (সর্বোচ্চ ৫টি)</p>
                         <div id="savedAccountsList" class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide px-1">
                             <!-- কার্ডগুলো এখানে অটো আসবে -->
                         </div>
                     </div>
 
-                    <input type="number" id="withdrawNumber" placeholder="অ্যাকউন্ট নাম্বার" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
-                    <input type="number" id="withdrawAmount" placeholder="পরিমাণ" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none">
-                    <div class="text-xs text-red-500 font-bold ml-1" id="withdrawVat">ভ্যাট (১০%): ৳0.00 | প্রাপ্ত: ৳0.00</div>
+                    <input type="number" id="withdrawNumber" placeholder="মোবাইল অ্যাকাউন্ট নাম্বার দিন" class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+                    <input type="number" id="withdrawAmount" placeholder="পরিমাণ" class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+                    <div class="text-xs text-yellow-300 font-bold block ml-1" id="withdrawVat">চার্জ (১০%): ৳0.00 | প্রাপ্ত: ৳0.00</div>
                     
-                    <!-- ℹ️ ডাইনামিক উইথড্র নির্দেশিকা লোড হওয়ার বক্স -->
-                    <div id="withdrawGuidelines" class="hidden"></div>
+                    <!-- ℹ️ ডাইনামিক উইথড্র নির্দেশিকা (ডিফল্ট বিকাশ নির্দেশিকা লোড করা থাকবে) -->
+                    <div id="withdrawGuidelines" class="p-3.5 rounded-xl border border-dashed border-pink-300/40 text-[10px] leading-relaxed block">
+                        <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> BKASH উত্তোলন নির্দেশনা:</h4>
+                        <ul class="space-y-1 list-disc pl-4 font-bold text-pink-100 text-[10px]">
+                            <li>বিকাশ পার্সোনাল নাম্বারে সেন্ড মানি পেমেন্ট পাঠানো হবে।</li>
+                            <li>উত্তোলন চার্জ ১০% কেটে নেওয়া হবে।</li>
+                            <li>নম্বরটি সঠিক কিনা সাবমিট করার আগে ২ বার চেক করুন।</li>
+                        </ul>
+                    </div>
 
-                    <input type="hidden" id="selectedWithdrawMethod" value="">
-                    <button id="mainWithdrawBtn" onclick="window.submitWithdraw()" class="w-full bg-red-500 text-white font-bold py-3.5 rounded-xl shadow-lg">উত্তোলন করুন</button>
+                    <input type="hidden" id="selectedWithdrawMethod" value="bKash">
+                    <button id="mainWithdrawBtn" onclick="window.submitWithdraw()" class="w-full bg-white text-[#d12053] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider"><i class="ri-wallet-3-line"></i> উত্তোলন করুন</button>
                 </div>
             </div>
 
@@ -2001,20 +2009,32 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <img src="https://i.postimg.cc/jjdpNH5b/payment-method.png" class="w-10">
             </div>
 
-            <div class="grid grid-cols-5 gap-3 mb-6">
-                <div onclick="window.selectOperator(this, 'GP')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/65w1n62J/FB-IMG-1769495932877.jpg" class="h-full object-contain rounded-lg"></div>
-                <div onclick="window.selectOperator(this, 'BL')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg" class="h-full object-contain rounded-lg"></div>
-                <div onclick="window.selectOperator(this, 'Robi')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg" class="h-full object-contain rounded-lg"></div>
-                <div onclick="window.selectOperator(this, 'Airtel')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/Wz0CjhdX/FB-IMG-1769496019329.jpg" class="h-full object-contain rounded-lg"></div>
-                <div onclick="window.selectOperator(this, 'Teletalk')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center"><img src="https://i.postimg.cc/TYCQbVvT/FB-IMG-1769496047333.jpg" class="h-full object-contain rounded-lg"></div>
+            <!-- অপারেটর গ্রিড (ডিফল্ট জিপি বাটন সিলেক্টেড স্টাইলে থাকবে) -->
+            <div class="grid grid-cols-5 gap-2 mb-6">
+                <div onclick="window.selectOperator(this, 'GP')" class="p-2 rounded-2xl border-2 border-[#005cbb] bg-blue-50/50 cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm"><img src="https://i.postimg.cc/65w1n62J/FB-IMG-1769495932877.jpg" class="h-full object-contain rounded-lg"></div>
+                <div onclick="window.selectOperator(this, 'BL')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg" class="h-full object-contain rounded-lg"></div>
+                <div onclick="window.selectOperator(this, 'Robi')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg" class="h-full object-contain rounded-lg"></div>
+                <div onclick="window.selectOperator(this, 'Airtel')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/Wz0CjhdX/FB-IMG-1769496019329.jpg" class="h-full object-contain rounded-lg"></div>
+                <div onclick="window.selectOperator(this, 'Teletalk')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/TYCQbVvT/FB-IMG-1769496047333.jpg" class="h-full object-contain rounded-lg"></div>
             </div>
 
-            <div class="glass-card p-6 rounded-[25px] space-y-4">
-                 <input type="number" id="rechPhone" placeholder="নাম্বার" class="w-full bg-slate-50 p-3 rounded-xl border font-bold outline-none">
-                 <input type="number" id="rechAmount" placeholder="পরিমাণ" class="w-full bg-slate-50 p-3 rounded-xl border font-bold outline-none">
-                 <div class="text-xs text-red-500 font-bold" id="rechargeFee">সার্ভিস চার্জ: ৳5 | মোট: ৳5</div>
+            <!-- মডার্ন ডাইনামিক রিচার্জ কার্ড (ডিফল্ট জিপি এর নীল গ্রেডিয়েন্টে প্রি-স্টাইলড করা) -->
+            <div id="rechargeCard" class="bg-gradient-to-br from-[#005cbb] to-[#003882] text-white border-0 p-6 rounded-[25px] space-y-4 shadow-xl transition-all duration-500">
+                 <input type="number" id="rechPhone" placeholder="মোবাইল রিচার্জ নাম্বার দিন" class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+                 <input type="number" id="rechAmount" placeholder="পরিমাণ" class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+                 <div class="text-xs text-yellow-300 font-bold block ml-1" id="rechargeFee">সার্ভিস চার্জ: ৳5.00 | মোট: ৳5.00</div>
+                 
+                 <!-- ℹ️ ডাইনামিক রিচার্জ গাইডলাইন্স বক্স -->
+                 <div id="rechargeGuidelines" class="p-3.5 rounded-xl border border-dashed border-blue-300/40 text-[10px] leading-relaxed block">
+                     <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> GP রিচার্জ নির্দেশনা:</h4>
+                     <ul class="space-y-1 list-disc pl-4 font-bold text-blue-100 text-[10px]">
+                         <li>গ্রামীণফোন প্রিপেইড এবং পোস্টপেইড নম্বরে ইনস্ট্যান্ট রিচার্জ পাঠানো হবে।</li>
+                         <li>রিচার্জ সফলভাবে সম্পন্ন করতে আপনার পিন নম্বর প্রদান করতে হবে।</li>
+                     </ul>
+                 </div>
+
                  <input type="hidden" id="selectedOperator" value="GP">
-                 <button onclick="window.submitRecharge()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg">রিচার্জ করুন</button>
+                 <button id="rechargeBtn" onclick="window.submitRecharge()" class="w-full bg-white text-[#005cbb] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider"><i class="ri-phone-find-fill"></i> রিচার্জ করুন</button>
             </div>
         </div>
         
@@ -2097,19 +2117,33 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     <i class="ri-arrow-left-line text-xl text-slate-700"></i>
                 </button>
                 <h2 class="text-2xl font-black text-slate-800 tracking-tight">অ্যাড দেখে আয় 🎬</h2>
+                <!-- ৳ ভাসমান ইনকাম ব্যালেন্স পিল -->
+                <div class="bg-rose-50 text-rose-600 px-3.5 py-2 rounded-full text-xs font-black border border-rose-100 flex items-center gap-1 ml-auto shrink-0 shadow-sm animate__animated animate__zoomIn">
+                    আজকের আয়: ৳<span id="watchEarnDisplay">0.00</span>
+                </div>
             </div>
 
-            <!-- Stats Card -->
-            <div class="bg-gradient-to-br from-rose-500 to-pink-600 p-6 rounded-[30px] text-white shadow-lg shadow-pink-200 mb-6 relative overflow-hidden flex justify-between items-center">
-                <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/20 rounded-full blur-xl"></div>
-                
-                <div>
-                    <p class="text-[11px] font-bold opacity-80 uppercase tracking-widest mb-1">আজকের টাস্ক</p>
-                    <h3 class="text-3xl font-black"><span id="watchCountDisplay">0</span><span class="text-lg opacity-70">/১০০</span></h3>
+            <!-- 📊 ৩টি রঙিন কাউন্টার কার্ডের চমৎকার গ্রিড -->
+            <div class="grid grid-cols-3 gap-2.5 mb-6">
+                <!-- ১. মোট অ্যাড কার্ড (Indigo থিম) -->
+                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-3.5 rounded-2xl text-white text-center shadow-lg border border-white/10 relative overflow-hidden">
+                    <div class="absolute -right-3 -top-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                    <p class="text-[9px] font-bold opacity-80 uppercase leading-none mb-1">মোট অ্যাড</p>
+                    <h3 class="text-xl font-black leading-none">১০০</h3>
                 </div>
-                <div class="text-right z-10">
-                    <p class="text-[11px] font-bold opacity-80 uppercase tracking-widest mb-1">আজকের আয়</p>
-                    <h3 class="text-xl font-bold">৳<span id="watchEarnDisplay">0.00</span></h3>
+
+                <!-- ২. আজকে দেখা কার্ড (Emerald থিম) -->
+                <div class="bg-gradient-to-br from-[#10b981] to-[#059669] p-3.5 rounded-2xl text-white text-center shadow-lg border border-white/10 relative overflow-hidden">
+                    <div class="absolute -right-3 -top-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                    <p class="text-[9px] font-bold opacity-80 uppercase leading-none mb-1">আজকে দেখা</p>
+                    <h3 class="text-xl font-black leading-none"><span id="watchCountDisplay">0</span></h3>
+                </div>
+
+                <!-- ৩. বাকি অ্যাড কার্ড (Rose/Orange থিম) -->
+                <div class="bg-gradient-to-br from-[#f43f5e] to-[#f43f5e] p-3.5 rounded-2xl text-white text-center shadow-lg border border-white/10 relative overflow-hidden">
+                    <div class="absolute -right-3 -top-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                    <p class="text-[9px] font-bold opacity-80 uppercase leading-none mb-1">বাকি অ্যাড</p>
+                    <h3 class="text-xl font-black leading-none"><span id="watchRemainingDisplay">100</span></h3>
                 </div>
             </div>
 
@@ -2126,20 +2160,23 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     </div>
 </div>
 
-            <!-- Action Area -->
+            <!-- Action Area (আড়াআড়ি মডার্ন বাটন সহ নতুন সংস্করণ) -->
             <div class="bg-white p-6 rounded-[30px] shadow-sm border border-slate-100 text-center">
-                <div class="relative w-32 h-32 mx-auto mb-6 flex items-center justify-center">
-                    <button id="btnWatchAd" onclick="window.startWatchAd()" class="w-24 h-24 bg-gradient-to-tr from-pink-500 to-rose-500 rounded-full shadow-xl flex items-center justify-center transform transition-all active:scale-95 hover:scale-105 group relative z-10">
-                        <div class="absolute inset-0 bg-white/30 rounded-full animate-ping opacity-0 group-hover:opacity-100"></div>
-                        <i class="ri-play-fill text-5xl text-white ml-2 drop-shadow-md"></i>
-                    </button>
+                <!-- বাটন কেটে বসানো থিম ডেকোরেশন আইকন -->
+                <div class="w-20 h-20 bg-rose-50 border border-rose-100 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                    <i class="ri-video-fill text-4xl text-rose-500 animate-pulse"></i>
                 </div>
                 
-                <h4 class="font-bold text-slate-800 text-lg mb-2" id="watchStatusTitle">ভিডিও দেখতে ক্লিক করুন</h4>
-                <p class="text-xs text-slate-500 mb-4" id="watchStatusText">প্রতিটি অ্যাড দেখার জন্য পাবেন ৳০.১০</p>
+                <h4 class="font-black text-slate-800 text-lg mb-1" id="watchStatusTitle">ভিডিও দেখতে ক্লিক করুন</h4>
+                <p class="text-xs text-slate-500 mb-6" id="watchStatusText">প্রতিটি অ্যাড দেখার জন্য পাবেন ৳০.১০</p>
+
+                <!-- প্রিমিয়াম আড়াআড়ি মডার্ন অ্যাড বাটন -->
+                <button id="btnWatchAd" onclick="window.startWatchAd()" class="w-full bg-gradient-to-r from-rose-500 via-pink-600 to-rose-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 border-b-4 border-rose-800 text-base uppercase tracking-wider">
+                    <i class="ri-play-circle-fill text-xl"></i> অ্যাড দেখুন
+                </button>
                 
                 <!-- Cooldown Timer (Hidden by default) -->
-                <div id="cooldownBox" class="hidden bg-orange-50 border border-orange-200 rounded-xl p-3 text-orange-700 animate__animated animate__fadeIn">
+                <div id="cooldownBox" class="hidden bg-orange-50 border border-orange-200 rounded-xl p-3 text-orange-700 animate__animated animate__fadeIn mt-4">
                     <p class="text-[11px] font-bold flex items-center justify-center gap-1.5">
                         <i class="ri-timer-flash-line text-lg animate-pulse"></i> 
                         পরবর্তী অ্যাড দেখতে অপেক্ষা করুন: <span id="cooldownTimer" class="font-black text-sm">০০:০০</span>
@@ -2673,36 +2710,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <div class="mt-6">
                     <h4 class="font-bold mb-2">প্রোফাইল সেটিংস</h4>
                     <button onclick="window.showPage('profileScreen')" class="w-full bg-slate-100 text-slate-800 py-3 rounded-2xl font-bold text-sm mb-4 transition-all active:scale-95 shadow-sm">প্রোফাইল এডিট করুন <i class="ri-arrow-right-s-line"></i></button>
-                    
-                    <!-- 🔐 bKash/Nagad Style Secure Password Change Card -->
-                    <div class="bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-5 rounded-3xl text-white relative overflow-hidden shadow-xl border border-slate-700 animate__animated animate__fadeIn">
-                        <!-- Background Glowing Orbs -->
-                        <div class="absolute -right-4 -top-4 bg-blue-500/10 w-16 h-16 rounded-full blur-xl animate-pulse"></div>
-                        
-                        <div class="flex items-center gap-2 mb-4 relative z-10">
-                            <div class="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/30">
-                                <i class="ri-lock-password-line text-blue-400"></i>
-                            </div>
-                            <h3 class="font-black text-white text-sm">নতুন পাসওয়ার্ড সেট করুন</h3>
-                        </div>
-                        
-                        <!-- Secured Password Input Fields -->
-                        <div class="grid grid-cols-2 gap-3 relative z-10 mb-4">
-                            <div>
-                                <label class="text-[9px] font-black text-slate-300 uppercase ml-1 mb-1 block">নতুন পাসওয়ার্ড</label>
-                                <input type="password" id="settingsNewPass" placeholder="••••" class="w-full text-center text-xl font-black tracking-[0.2em] p-3 bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner">
-                            </div>
-                            <div>
-                                <label class="text-[9px] font-black text-slate-300 uppercase ml-1 mb-1 block">পাসওয়ার্ড নিশ্চিত করুন</label>
-                                <input type="password" id="settingsConfirmPass" placeholder="••••" class="w-full text-center text-xl font-black tracking-[0.2em] p-3 bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner">
-                            </div>
-                        </div>
-                        
-                        <!-- Save Action Button -->
-                        <button onclick="window.setNewPasswordFromSettings()" class="w-full bg-white text-slate-800 hover:bg-slate-50 font-black py-3.5 rounded-xl shadow-lg active:scale-95 transition-all text-xs uppercase tracking-wider relative z-10 flex items-center justify-center gap-1.5">
-                            <i class="ri-checkbox-circle-fill text-sm"></i> পাসওয়ার্ড আপডেট করুন
-                        </button>
-                    </div>
+                                     
                 </div>
              
                          <!-- 🔐 bKash/Nagad Style Secure PIN Setup Card -->
@@ -6221,36 +6229,53 @@ totalReward += rewardAmt;
             }
         };
         
-        window.showChangePassword = async () => {
-            const { value: newPassword } = await Swal.fire({
-                title: 'নতুন পাসওয়ার্ড দিন',
-                input: 'password',
-                inputLabel: 'নতুন পাসওয়ার্ড (৬+ সংখ্যা)',
-                inputPlaceholder: 'নতুন পাসওয়ার্ড দিন',
-                showCancelButton: true,
-                confirmButtonText: 'পরিবর্তন করুন',
-                cancelButtonText: 'বাতিল',
-                inputValidator: (value) => {
-                    if (!value || value.length < 6) {
-                        return 'পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে';
-                    }
-                }
-            });
-            
-            if (newPassword) {
-                try {
-                    showLoading();
-                    const user = auth.currentUser;
-                    await user.updatePassword(newPassword);
-                    showSmartToast('পাসওয়ার্ড পরিবর্তন সফল', 'success');
-                    hideLoading();
-                } catch (error) {
-                    showSmartToast('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে', 'error');
-                    hideLoading();
-                }
-            }
-        };
+        // 🔐 স্লাইডিং পাসওয়ার্ড মোডাল ওপেন করার ফাংশন (প্রোফাইলের বাটনের সাথে সরাসরি সংযুক্ত)
+window.showChangePassword = () => {
+    const modal = document.getElementById('passwordChangeModal');
+    if (modal) {
+        document.getElementById('modalNewPass').value = '';
+        document.getElementById('modalConfirmPass').value = '';
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+    }
+};
 
+// 🔐 পাসওয়ার্ড মোডাল বন্ধ করার ফাংশন
+window.closePasswordChangeModal = () => {
+    const modal = document.getElementById('passwordChangeModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+};
+
+// 🔐 নতুন পাসওয়ার্ড সাবমিট এবং ফায়ারবেসে সেভ করার ফাংশন
+window.submitNewPassword = async () => {
+    const newPass = document.getElementById('modalNewPass').value;
+    const confirmPass = document.getElementById('modalConfirmPass').value;
+
+    if(!newPass || newPass.length < 6) {
+        return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');
+    }
+    if(newPass !== confirmPass) {
+        return showSmartToast('পাসওয়ার্ড মিলেনি!', 'error');
+    }
+
+    showLoading();
+    try {
+        const user = auth.currentUser;
+        await user.updatePassword(newPass);
+        
+        showSmartToast('পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে ✅', 'success');
+        window.playSound('snd_success');
+        window.closePasswordChangeModal(); // কাজ শেষে মোডাল অটো বন্ধ হবে
+    } catch (error) {
+        console.error(error);
+        showSmartToast('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে', 'error');
+    }
+    hideLoading();
+};
+        
      // ✅ স্মার্ট টাস্ক কনফার্মেশন সিস্টেম (অটো নিয়ম ও লাইন বাই লাইন ভিউ)
 window.isTaskRunning = false;
 
@@ -8707,11 +8732,122 @@ window.switchTaskTab = (type) => {
     renderTasks();
 };
  
+        // 🔄 অপারেটর সিলেকশন লজিক (রিয়েল-টাইম কালার থিমিং ও ডাইনামিক গাইডলাইন সহ)
         window.selectOperator = (el, operator) => { 
-            document.querySelectorAll('#rechargeScreen .bg-white').forEach(d=>d.classList.remove('border-green-500','bg-green-50')); 
-            el.classList.add('border-green-500','bg-green-50'); 
+            // ১. সকল অপারেটর গ্রিড বাটন রিসেট করা
+            document.querySelectorAll('#rechargeScreen .grid > div').forEach(d => {
+                d.className = "bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300";
+            }); 
+            
+            // ২. অপারেটর অনুযায়ী সিলেকশন বর্ডারের কালার দেওয়া
+            const borderColors = {
+                GP: 'border-[#005cbb] bg-blue-50/50',
+                BL: 'border-[#f25c05] bg-orange-50/50',
+                Robi: 'border-[#e60012] bg-red-50/50',
+                Airtel: 'border-[#ff0000] bg-red-50/50',
+                Teletalk: 'border-[#008c45] bg-green-50/50'
+            };
+            el.className = `p-2 rounded-2xl border-2 ${borderColors[operator]} cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm`;
+
             selectedOperator = operator;
             document.getElementById('selectedOperator').value = operator;
+
+            // ৩. এলিমেন্টগুলো সিলেক্ট করা
+            const card = document.getElementById('rechargeCard');
+            const phoneInput = document.getElementById('rechPhone');
+            const amountInput = document.getElementById('rechAmount');
+            const feeText = document.getElementById('rechargeFee');
+            const btn = document.getElementById('rechargeBtn');
+            const guidelines = document.getElementById('rechargeGuidelines');
+
+            if (!card) return;
+
+            let cardBg = "bg-gradient-to-br from-[#005cbb] to-[#003882] text-white border-0";
+            let btnClass = "w-full bg-white text-[#005cbb] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+            let guideBorder = "border-blue-300/40";
+            let guidelineHTML = "";
+
+            // ৪. অপারেটর অনুযায়ী ব্র্যান্ড থিম এবং কালার কনফিগার করা
+            if (operator === 'GP') {
+                cardBg = "bg-gradient-to-br from-[#005cbb] to-[#003882] text-white border-0";
+                btnClass = "w-full bg-white text-[#005cbb] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+                guideBorder = "border-blue-300/40";
+                guidelineHTML = `
+                    <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> GP রিচার্জ নির্দেশনা:</h4>
+                    <ul class="space-y-1 list-disc pl-4 font-bold text-blue-100 text-[10px]">
+                        <li>গ্রামীণফোন প্রিপেইড এবং পোস্টপেইড নম্বরে ইনস্ট্যান্ট রিচার্জ পাঠানো হবে।</li>
+                        <li>রিচার্জ সফলভাবে সম্পন্ন করতে আপনার পিন নম্বর প্রদান করতে হবে।</li>
+                    </ul>
+                `;
+            } 
+            else if (operator === 'BL') {
+                cardBg = "bg-gradient-to-br from-[#f25c05] to-[#c2410c] text-white border-0";
+                btnClass = "w-full bg-white text-[#f25c05] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+                guideBorder = "border-orange-300/40";
+                guidelineHTML = `
+                    <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> BANGLALINK রিচার্জ নির্দেশনা:</h4>
+                    <ul class="space-y-1 list-disc pl-4 font-bold text-orange-100 text-[10px]">
+                        <li>বাংলালিংক নম্বরে রিচার্জ সফল হতে সাধারণত ১-৫ মিনিট সময় লাগতে পারে।</li>
+                        <li>অতিরিক্ত সাবধানতার জন্য দয়া করে আপনার ১১ ডিজিটের নাম্বারটি পুনরায় মিলিয়ে নিন।</li>
+                    </ul>
+                `;
+            }
+            else if (operator === 'Robi') {
+                cardBg = "bg-gradient-to-br from-[#e60012] to-[#b3000c] text-white border-0";
+                btnClass = "w-full bg-white text-[#e60012] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+                guideBorder = "border-red-300/40";
+                guidelineHTML = `
+                    <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> ROBI রিচার্জ নির্দেশনা:</h4>
+                    <ul class="space-y-1 list-disc pl-4 font-bold text-red-100 text-[10px]">
+                        <li>রবি নম্বরে রিচার্জ রিকোয়েস্ট সরাসরি সার্ভারে পাঠানো হবে।</li>
+                        <li>সার্ভার জ্যাম থাকলে সর্বোচ্চ ১০ মিনিট পর্যন্ত সময় লাগতে পারে।</li>
+                    </ul>
+                `;
+            }
+            else if (operator === 'Airtel') {
+                cardBg = "bg-gradient-to-br from-[#ff0000] to-[#cc0000] text-white border-0";
+                btnClass = "w-full bg-white text-[#ff0000] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+                guideBorder = "border-red-400/40";
+                guidelineHTML = `
+                    <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> AIRTEL রিচার্জ নির্দেশনা:</h4>
+                    <ul class="space-y-1 list-disc pl-4 font-bold text-red-100 text-[10px]">
+                        <li>এয়ারটেল নম্বরে অত্যন্ত দ্রুততার সাথে রিচার্জ প্রসেস করা হবে।</li>
+                        <li>সার্ভার চার্জ যুক্ত অবস্থায় আপনার পিন কোড দিয়ে রিচার্জ সফল করুন।</li>
+                    </ul>
+                `;
+            }
+            else if (operator === 'Teletalk') {
+                cardBg = "bg-gradient-to-br from-[#008c45] to-[#005a2e] text-white border-0";
+                btnClass = "w-full bg-white text-[#008c45] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider";
+                guideBorder = "border-green-300/40";
+                guidelineHTML = `
+                    <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> TELETALK রিচার্জ নির্দেশনা:</h4>
+                    <ul class="space-y-1 list-disc pl-4 font-bold text-green-100 text-[10px]">
+                        <li>টেলিটক রাষ্ট্রায়ত্ত নম্বরে রিচার্জ রিকোয়েস্ট অটোমেটিক এপ্রুভ হবে।</li>
+                        <li>সঠিক নাম্বার দিয়েছেন তা নিশ্চিত হতে আবার চেক করুন।</li>
+                    </ul>
+                `;
+            }
+
+            // ৫. থ্রি-ডি অ্যানিমেশন ট্রানজিশন নিয়ে কার্ডের ব্যাকগ্রাউন্ড আপডেট করা
+            card.className = `${cardBg} p-6 rounded-[25px] space-y-4 shadow-xl transition-all duration-500 animate__animated animate__fadeIn`;
+
+            // ৬. ইনপুট বক্স ও ভাট টেক্সট স্টাইলিং রিফ্রেশ করা
+            [phoneInput, amountInput].forEach(inp => {
+                if(inp) inp.className = "w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm";
+            });
+
+            if(feeText) feeText.className = "text-xs text-yellow-300 font-bold block ml-1";
+            
+            if(btn) {
+                btn.className = btnClass;
+                btn.innerHTML = `<i class="ri-phone-find-fill"></i> রিচার্জ করুন`;
+            }
+
+            if(guidelines) {
+                guidelines.innerHTML = guidelineHTML;
+                guidelines.className = `p-3.5 rounded-xl border border-dashed ${guideBorder} text-[10px] leading-relaxed block`;
+            }
         };
         
         // ✅ উইথড্র মেথড সিলেক্ট এবং ডাইনামিক প্রিমিয়াম থিমিং কন্ট্রোল (রিয়েল-টাইম নির্দেশনা সহ)
@@ -10078,43 +10214,49 @@ const WATCH_REWARD = 0.10; // ১০ পয়সা
 const DAILY_LIMIT = 100; // দৈনিক ২০টি অ্যাড
 const COOLDOWN_SECONDS = 30; // ১ মিনিট
 
-// ১. স্ট্যাটাস লোড করা
-window.loadWatchEarnStats = async () => {
-    if(!currentUserData) return;
-   
-    // 🚀 এখানে এই লজিকটুকু পেস্ট করো 👇
-    const warningBox = document.getElementById('watchEarnActivationWarning');
-    if (warningBox) {
-        if (currentUserData.isActivated === false) {
-            warningBox.classList.remove('hidden');
-        } else {
-            warningBox.classList.add('hidden');
-        }
-    }
-    
-    const todayStr = new Date().toLocaleDateString('bn-BD');
-    let watchCount = 0;
-    let todayEarning = 0;
-    
-    // ডাটাবেস চেক করা
-    if(currentUserData.lastWatchDate === todayStr) {
-        watchCount = currentUserData.watchEarnCount || 0;
-        todayEarning = currentUserData.watchEarnToday || 0;
-    } else {
-        // নতুন দিন হলে সব জিরো করে দেওয়া
-        db.collection("users").doc(currentUserId).update({
-            watchEarnCount: 0,
-            watchEarnToday: 0,
-            lastWatchDate: todayStr
-        });
-    }
+// WATCH & EARN SCREEN (বাকি অ্যাডের কাউন্টার হিসাব সহ নতুন সংস্করণ)
+        window.loadWatchEarnStats = async () => {
+            if(!currentUserData) return;
+           
+            const warningBox = document.getElementById('watchEarnActivationWarning');
+            if (warningBox) {
+                if (currentUserData.isActivated === false) {
+                    warningBox.classList.remove('hidden');
+                } else {
+                    warningBox.classList.add('hidden');
+                }
+            }
+            
+            const todayStr = new Date().toLocaleDateString('bn-BD');
+            let watchCount = 0;
+            let todayEarning = 0;
+            
+            // ডাটাবেস চেক করা
+            if(currentUserData.lastWatchDate === todayStr) {
+                watchCount = currentUserData.watchEarnCount || 0;
+                todayEarning = currentUserData.watchEarnToday || 0;
+            } else {
+                // নতুন দিন হলে সব জিরো করে দেওয়া
+                db.collection("users").doc(currentUserId).update({
+                    watchEarnCount: 0,
+                    watchEarnToday: 0,
+                    lastWatchDate: todayStr
+                });
+            }
 
-    document.getElementById('watchCountDisplay').innerText = watchCount;
-    document.getElementById('watchEarnDisplay').innerText = todayEarning.toFixed(2);
+            document.getElementById('watchCountDisplay').innerText = watchCount;
+            document.getElementById('watchEarnDisplay').innerText = todayEarning.toFixed(2);
 
-    // ২. কুলডাউন বা লিমিট চেক করা
-    checkWatchStatus(watchCount, currentUserData.lastWatchTime);
-};
+            // 🎯 বাকি অ্যাড হিসাব করে রিয়েল টাইমে ৩ নম্বর কার্ডে আপডেট করার লজিক
+            const remainingAds = Math.max(0, 100 - watchCount);
+            const remainingEl = document.getElementById('watchRemainingDisplay');
+            if (remainingEl) {
+                remainingEl.innerText = remainingAds;
+            }
+
+            // ২. কুলডাউন বা লিমিট চেক করা
+            checkWatchStatus(watchCount, currentUserData.lastWatchTime);
+        };
 
 // ২. অ্যাড শুরু করার ফাংশন
 window.startWatchAd = async () => {
@@ -11480,32 +11622,7 @@ window.confirmTransactionPin = async () => {
     }
 };
        
-       // ✅ bKash/Nagad Style Secure Settings Password Change Function
-window.setNewPasswordFromSettings = async () => {
-    const newPass = document.getElementById('settingsNewPass').value;
-    const confirmPass = document.getElementById('settingsConfirmPass').value;
-
-    if(!newPass || newPass.length < 6) {
-        return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হতে হবে', 'error');
-    }
-    if(newPass !== confirmPass) {
-        return showSmartToast('পাসওয়ার্ড মিলেনি!', 'error');
-    }
-
-    showLoading();
-    try {
-        const user = auth.currentUser;
-        await user.updatePassword(newPass);
-        showSmartToast('পাসওয়ার্ড পরিবর্তন সফল হয়েছে ✅', 'success');
-        window.playSound('snd_success');
-        document.getElementById('settingsNewPass').value = "";
-        document.getElementById('settingsConfirmPass').value = "";
-    } catch (error) {
-        console.error(error);
-        showSmartToast('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে', 'error');
-    }
-    hideLoading();
-};
+    
 
 // ✅ ULTRA SMART AUTOMATED MULTI-LANGUAGE TRANSLATOR
 window.applyLanguage = (lang) => {
@@ -11645,6 +11762,55 @@ window.applyLanguage = (lang) => {
                 <i class="ri-checkbox-circle-line text-lg"></i> নিশ্চিত করুন
             </button>
             <button onclick="window.closePinVerifyModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3.5 rounded-2xl text-xs transition-all">
+                বাতিল করুন
+            </button>
+        </div>
+    </div>
+</div>
+   
+   <!-- 🔐 PASSWORD CHANGE SLIDING MODAL (প্রোফাইলে ক্লিক করলে নিচ থেকে স্লাইড হয়ে উঠবে) -->
+<div id="passwordChangeModal" class="hidden fixed inset-0 z-[999999] flex flex-col items-center justify-end">
+    <!-- ব্লার ব্যাকড্রপ ওভারলে (বাইরে ক্লিক করলে বন্ধ হবে) -->
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="window.closePasswordChangeModal()"></div>
+    
+    <!-- স্লাইডিং শিট কন্টেইনার -->
+    <div class="bg-white w-full max-w-md rounded-t-[35px] shadow-2xl p-6 relative z-10 animate__animated animate__slideInUp duration-300">
+        <!-- Top Indicator Bar -->
+        <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
+        
+        <!-- হেডার ও আইকন -->
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-3 shadow-lg border-2 border-white">
+                <i class="ri-lock-password-fill"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-800">পাসওয়ার্ড পরিবর্তন করুন</h3>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[2px] mt-1">Change Account Password</p>
+        </div>
+        
+        <!-- পাসওয়ার্ড ইনপুট এরিয়া -->
+        <div class="space-y-4 mb-6">
+            <div>
+                <label class="block text-xs font-bold text-slate-500 mb-1.5 ml-1">নতুন পাসওয়ার্ড</label>
+                <div class="relative">
+                    <input type="password" id="modalNewPass" placeholder="কমপক্ষে ৬ সংখ্যার পাসওয়ার্ড দিন" 
+                        class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 font-bold text-sm">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-500 mb-1.5 ml-1">পাসওয়ার্ড নিশ্চিত করুন</label>
+                <div class="relative">
+                    <input type="password" id="modalConfirmPass" placeholder="আবার পাসওয়ার্ডটি টাইপ করুন" 
+                        class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 font-bold text-sm">
+                </div>
+            </div>
+        </div>
+        
+        <!-- অ্যাকশন বাটনসমূহ -->
+        <div class="space-y-2">
+            <button onclick="window.submitNewPassword()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                <i class="ri-checkbox-circle-line text-lg"></i> পাসওয়ার্ড নিশ্চিত করুন
+            </button>
+            <button onclick="window.closePasswordChangeModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3.5 rounded-2xl text-xs transition-all">
                 বাতিল করুন
             </button>
         </div>
