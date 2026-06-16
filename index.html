@@ -2189,7 +2189,9 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 </div>
                 
                 <h4 class="font-black text-slate-800 text-lg mb-1" id="watchStatusTitle">ভিডিও দেখতে ক্লিক করুন</h4>
-                <p class="text-xs text-slate-500 mb-6" id="watchStatusText">প্রতিটি অ্যাড দেখার জন্য পাবেন ৳০.১০</p>
+                <div class="border-y-2 border-dashed border-rose-300 py-3 my-6 bg-rose-50/50 rounded-xl">
+    <p class="text-sm font-black text-rose-600 tracking-wide" id="watchStatusText">প্রতিটি অ্যাড দেখার জন্য পাবেন ৳০.১০</p>
+</div>
 
                 <!-- প্রিমিয়াম আড়াআড়ি মডার্ন অ্যাড বাটন -->
                 <button id="btnWatchAd" onclick="window.startWatchAd()" class="w-full bg-gradient-to-r from-rose-500 via-pink-600 to-rose-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 border-b-4 border-rose-800 text-base uppercase tracking-wider">
@@ -3987,24 +3989,42 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-       // ✅ ULTRA REVENUE: DOUBLE MONETAG AD SYSTEM (স্মুথ লোডিং সিঙ্ক সহ)
+       // ✅ ULTRA REVENUE: DOUBLE MONETAG AD SYSTEM (ঝিলিক মুক্ত ও নিরাপদ সংস্করণ)
 window.showMonetagAd = async (callback) => {
-    // অ্যাড দেখানোর আগে মেইন অ্যাপ যাতে হারিয়ে না যায় তাই লোডিং দিচ্ছি না সরাসরি
+    showLoading(); // শুরুতেই লোডিং দেখাবে
     try {
+        // ১. প্রথম অ্যাড কল করা
         if (typeof window['show_10531082'] === 'function') {
+            showSmartToast('১ম অ্যাড লোড হচ্ছে, এরপর আরও একটি আসবে...', 'info');
             await window['show_10531082'](); 
         }
-    } catch (error) { console.log("Ad error"); }
-    
-    // অ্যাড থেকে ফিরে আসার পর ডাটা প্রসেসিংয়ের সময় লোডিং দেখাবে
-    if(callback) {
-        showLoading(); // এখানে লোডিং শুরু
-        setTimeout(async () => {
-            try {
-                await callback();
-            } catch(e) { console.error(e); }
-            hideLoading(); // কাজ শেষ হলে বন্ধ
-        }, 1000); // ১ সেকেন্ড ডিলে যাতে ঝিলিক না মারে
+
+        // ২. ২ সেকেন্ডের একটি বিরতি (যাতে ফোন হ্যাং বা ঝিলিক না মারে)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // ৩. দ্বিতীয় অ্যাড কল করা (ডাবল ইনকাম শুরু)
+        if (typeof window['show_10531082'] === 'function') {
+            showSmartToast('২য় অ্যাড শুরু হচ্ছে, বোনাস পেতে অপেক্ষা করুন!', 'warning');
+            await window['show_10531082'](); 
+        }
+
+    } catch (error) {
+        console.log("Ad interaction error or skipped.");
+    } finally {
+        // সব অ্যাড দেখা শেষ হলে ডাটাবেজ আপডেট হবে
+        if(callback) {
+            showLoading(); // প্রসেসিং এর জন্য আবার লোডিং
+            setTimeout(async () => {
+                try {
+                    await callback(); // রিওয়ার্ড যোগ হবে
+                } catch(e) {
+                    console.error("Reward Callback error:", e);
+                }
+                hideLoading(); // কাজ শেষ হলে একবারে লোডিং বন্ধ
+            }, 1500); // ১.৫ সেকেন্ড সময় দিচ্ছি যাতে ফায়ারবেস কানেকশন ঠিক হতে পারে
+        } else {
+            hideLoading();
+        }
     }
 };
 
