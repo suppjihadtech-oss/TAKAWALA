@@ -35,11 +35,20 @@
     <style>
         
                 /* ✅ EMERGENCY FIX: FORCE HIDE */
-        .hidden { 
-            display: none !important; 
-            visibility: hidden !important;
-            pointer-events: none !important;
-        }
+        /* মেইন অ্যাপকে জোর করে ঝিলিক মারা থেকে আটকানোর জন্য */
+#mainApp.hidden { 
+    display: none !important; 
+}
+
+/* অন্য সাধারণ জিনিসের জন্য হিডেন ক্লাস */
+.hidden:not(#mainApp):not(#authScreen) { 
+    display: none !important; 
+}
+
+/* লোডিং ওভারলে যাতে স্মুথ থাকে */
+#loadingOverlay {
+    transition: opacity 0.3s ease-in-out;
+}
 
         
                 /* ✅ iOS STYLE POPUP DESIGN */
@@ -286,19 +295,7 @@
             position: relative;
         }
         
-        .disabled-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: bold;
-        }
-
+       
         /* ✅ FIXED TEXT CONTAINERS */
         .text-container {
             word-wrap: break-word;
@@ -1434,7 +1431,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <i class="ri-mail-line text-lg"></i>
                     </div>
-                    <input type="email" id="loginEmail" placeholder="ইমেইল এড্রেস" class="w-full pl-11 p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
+                    <input type="text" id="loginEmail" placeholder="ইমেইল অথবা মোবাইল নম্বর" class="w-full pl-11 p-4 bg-slate-50 border rounded-2xl outline-none focus:border-green-500 font-bold">
                 </div>
 
                 <!-- পাসওয়ার্ড আইকন সহ ইনপুট -->
@@ -1465,13 +1462,23 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 </div>
 
                 <!-- বাংলাদেশী পতাকাসহ প্রিমিয়াম মোবাইল নাম্বার ইনপুট (এটি আগের মতোই সুন্দর আছে) -->
-                <div class="relative flex items-center bg-slate-50 border rounded-2xl focus-within:border-green-500 overflow-hidden">
-                    <div class="flex items-center gap-1.5 pl-4 pr-2.5 py-4 border-r border-slate-200 select-none bg-slate-100/50 shrink-0">
-                        <span class="text-xl leading-none">🇧🇩</span>
-                        <span class="text-xs font-black text-slate-500">+৮৮</span>
-                    </div>
-                    <input type="tel" id="regPhone" placeholder="০১XXXXXXXXX (১১ ডিজিট)" class="w-full p-4 pl-3 bg-transparent outline-none font-bold text-slate-700">
-                </div>
+               <!-- 📱 MODERN iOS STYLE PHONE INPUT -->
+<div class="group relative flex items-center bg-white border border-slate-200 rounded-[22px] focus-within:border-green-500 focus-within:ring-4 focus-within:ring-green-500/10 transition-all duration-300 shadow-sm overflow-hidden">
+    <!-- Flag Section -->
+    <div class="flex items-center gap-2 pl-4 pr-3 py-4 bg-slate-50/80 border-r border-slate-100 select-none shrink-0 group-focus-within:bg-white transition-colors">
+        <div class="w-7 h-5 rounded-md overflow-hidden shadow-sm border border-slate-200 flex items-center justify-center">
+            <img src="https://flagcdn.com/w40/bd.png" class="w-full h-full object-cover">
+        </div>
+        <span class="text-xs font-black text-slate-400 tracking-tighter">+88</span>
+    </div>
+    
+    <!-- Input Section -->
+    <input type="tel" id="regPhone" placeholder="01XXXXXXXXX" 
+        class="w-full p-4 pl-3 bg-transparent outline-none font-black text-slate-700 placeholder:text-slate-300 placeholder:font-bold tracking-widest">
+        
+    <!-- Tiny Glow Effect -->
+    <div class="absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-green-500/20 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity"></div>
+</div>
 
                 <!-- ইমেইল আইকন সহ ইনপুট -->
                 <div class="relative">
@@ -2009,15 +2016,29 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <img src="https://i.postimg.cc/jjdpNH5b/payment-method.png" class="w-10">
             </div>
 
-            <!-- অপারেটর গ্রিড (ডিফল্ট জিপি বাটন সিলেক্টেড স্টাইলে থাকবে) -->
+         <!-- অপারেটর গ্রিড (সঠিক আইকন ও আইডি ম্যাপ করা হয়েছে) -->
             <div class="grid grid-cols-5 gap-2 mb-6">
-                <div onclick="window.selectOperator(this, 'GP')" class="p-2 rounded-2xl border-2 border-[#005cbb] bg-blue-50/50 cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm"><img src="https://i.postimg.cc/65w1n62J/FB-IMG-1769495932877.jpg" class="h-full object-contain rounded-lg"></div>
-                <div onclick="window.selectOperator(this, 'BL')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg" class="h-full object-contain rounded-lg"></div>
-                <div onclick="window.selectOperator(this, 'Robi')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg" class="h-full object-contain rounded-lg"></div>
-                <div onclick="window.selectOperator(this, 'Airtel')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/Wz0CjhdX/FB-IMG-1769496019329.jpg" class="h-full object-contain rounded-lg"></div>
-                <div onclick="window.selectOperator(this, 'Teletalk')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/TYCQbVvT/FB-IMG-1769496047333.jpg" class="h-full object-contain rounded-lg"></div>
+                <!-- ১. গ্রামীণফোন (GP) -->
+                <div onclick="window.selectOperator(this, 'GP')" class="p-2 rounded-2xl border-2 border-[#005cbb] bg-blue-50/50 cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm">
+                    <img src="https://i.postimg.cc/65w1n62J/FB-IMG-1769495932877.jpg" class="h-full object-contain rounded-lg">
+                </div>
+                <!-- ২. বাংলালিংক (BL) - এখানে আগে রবির ছবি ছিল, এখন ঠিক করা হয়েছে -->
+                <div onclick="window.selectOperator(this, 'BL')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300">
+                    <img src="https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg" class="h-full object-contain rounded-lg">
+                </div>
+                <!-- ৩. রবি (Robi) - এখানে আগে বাংলালিংকের ছবি ছিল, এখন ঠিক করা হয়েছে -->
+                <div onclick="window.selectOperator(this, 'Robi')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300">
+                    <img src="https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg" class="h-full object-contain rounded-lg">
+                </div>
+                <!-- ৪. এয়ারটেল (Airtel) -->
+                <div onclick="window.selectOperator(this, 'Airtel')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300">
+                    <img src="https://i.postimg.cc/Wz0CjhdX/FB-IMG-1769496019329.jpg" class="h-full object-contain rounded-lg">
+                </div>
+                <!-- ৫. টেলিটক (Teletalk) -->
+                <div onclick="window.selectOperator(this, 'Teletalk')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300">
+                    <img src="https://i.postimg.cc/TYCQbVvT/FB-IMG-1769496047333.jpg" class="h-full object-contain rounded-lg">
+                </div>
             </div>
-
             <!-- মডার্ন ডাইনামিক রিচার্জ কার্ড (ডিফল্ট জিপি এর নীল গ্রেডিয়েন্টে প্রি-স্টাইলড করা) -->
             <div id="rechargeCard" class="bg-gradient-to-br from-[#005cbb] to-[#003882] text-white border-0 p-6 rounded-[25px] space-y-4 shadow-xl transition-all duration-500">
                  <input type="number" id="rechPhone" placeholder="মোবাইল রিচার্জ নাম্বার দিন" class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
@@ -3968,35 +3989,22 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
         
        // ✅ ULTRA REVENUE: DOUBLE MONETAG AD SYSTEM (স্মুথ লোডিং সিঙ্ক সহ)
 window.showMonetagAd = async (callback) => {
-    showLoading(); 
+    // অ্যাড দেখানোর আগে মেইন অ্যাপ যাতে হারিয়ে না যায় তাই লোডিং দিচ্ছি না সরাসরি
     try {
-        // ১. প্রথম অ্যাড দেখানো
         if (typeof window['show_10531082'] === 'function') {
-            showSmartToast('১ম অ্যাড লোড হচ্ছে, এরপর আরও একটি অ্যাড আসবে...', 'info');
             await window['show_10531082'](); 
         }
-
-        // ২. একটু বিরতি (২ সেকেন্ড) যাতে ইউজার বুঝতে পারে ২য় অ্যাড আসছে
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // ৩. দ্বিতীয় অ্যাড দেখানো (ডাবল ইনকাম)
-        if (typeof window['show_10531082'] === 'function') {
-            showSmartToast('২য় অ্যাড শুরু হচ্ছে, বোনাস পেতে অপেক্ষা করুন!', 'warning');
-            await window['show_10531082'](); 
-        }
-
-    } catch (error) {
-        console.log("Ad skipped or blocked.");
-    } finally {
-        // এখানে সরাসরি hideLoading() না করে, আগে কলব্যাক (ডাটাবেজ কাজ) সম্পূর্ণ করব
-        if(callback) {
+    } catch (error) { console.log("Ad error"); }
+    
+    // অ্যাড থেকে ফিরে আসার পর ডাটা প্রসেসিংয়ের সময় লোডিং দেখাবে
+    if(callback) {
+        showLoading(); // এখানে লোডিং শুরু
+        setTimeout(async () => {
             try {
-                await callback(); // ব্যালেন্স এড হওয়া এবং নোটিফিকেশনের কাজ শেষ হবে
-            } catch(e) {
-                console.error("Callback error:", e);
-            }
-        }
-        hideLoading(); // ডাটাবেজের কাজ শেষে একবারে স্মুথলি লোডিং ওভারলে বন্ধ হবে
+                await callback();
+            } catch(e) { console.error(e); }
+            hideLoading(); // কাজ শেষ হলে বন্ধ
+        }, 1000); // ১ সেকেন্ড ডিলে যাতে ঝিলিক না মারে
     }
 };
 
@@ -4077,7 +4085,8 @@ async function loadSystemSettings() {
             }
         }
         
- // ✅ সব পেমেন্ট মেথড (বিকাশ, নগদ, রকেট, ইউএসডিটি) ডাইনামিক কন্ট্রোল
+
+ // ✅ সব পেমেন্ট মেথড (বিকাশ, নগদ, রকেট, ইউএসডিটি) কন্ট্রোল - ফিক্সড (বন্ধ লেখা রিমুভড)
 function updatePaymentMethodStatus(data) {
     const methods = ['bKash', 'Nagad', 'Rocket', 'USDT'];
     
@@ -4085,7 +4094,6 @@ function updatePaymentMethodStatus(data) {
         const depEl = document.getElementById(`payment_${method}`);
         const withEl = document.getElementById(`withdraw_${method}`);
         
-        // ফায়ারবেস থেকে কী (Key) চেক করা (যেমন: bkashActive, usdtActive)
         const toggleKey = method.toLowerCase() + "Active"; 
         const isMethodActive = data[toggleKey] === true;
 
@@ -4093,17 +4101,12 @@ function updatePaymentMethodStatus(data) {
         if(depEl) {
             if(!isMethodActive) {
                 depEl.classList.add('disabled-option');
-                depEl.style.opacity = "0.5";
+                depEl.style.opacity = "0.4"; // পেমেন্ট বন্ধ থাকলে আইকন আবছা দেখাবে
                 depEl.onclick = () => showSmartToast(`${method} ডিপোজিট বর্তমানে বন্ধ আছে`, 'error');
-                if(!depEl.querySelector('.disabled-text')) {
-                    depEl.innerHTML += `<div class="disabled-text">বন্ধ</div>`;
-                }
             } else {
                 depEl.classList.remove('disabled-option');
                 depEl.style.opacity = "1";
                 depEl.onclick = () => window.selectPayment(depEl, method);
-                const badge = depEl.querySelector('.disabled-text');
-                if(badge) badge.remove();
             }
         }
         
@@ -4111,17 +4114,12 @@ function updatePaymentMethodStatus(data) {
         if(withEl) {
             if(!isMethodActive) {
                 withEl.classList.add('disabled-option');
-                withEl.style.opacity = "0.5";
+                withEl.style.opacity = "0.4"; // পেমেন্ট বন্ধ থাকলে আইকন আবছা দেখাবে
                 withEl.onclick = () => showSmartToast(`${method} উত্তোলন বর্তমানে বন্ধ আছে`, 'error');
-                if(!withEl.querySelector('.disabled-text')) {
-                    withEl.innerHTML += `<div class="disabled-text">বন্ধ</div>`;
-                }
             } else {
                 withEl.classList.remove('disabled-option');
                 withEl.style.opacity = "1";
                 withEl.onclick = () => window.selectWithdrawMethod(withEl, method);
-                const badge = withEl.querySelector('.disabled-text');
-                if(badge) badge.remove();
             }
         }
     });
@@ -4921,38 +4919,55 @@ isActivated: false,
             }
         });
 
-        document.getElementById('btnLoginAction').addEventListener('click', async () => {
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPass').value;
-            
-            // ১. ইমেইল ফিল্ড চেক
-            if(!email || email.trim() === "") {
-                return showSmartToast('দয়া করে আপনার রেজিস্ট্রিকৃত ইমেইল এড্রেসটি লিখুন।', 'error');
-            }
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            if (!emailRegex.test(email.trim())) {
-                return showSmartToast('ইমেইল এড্রেসটির সঠিক ফরম্যাট লিখুন।', 'error');
-            }
+        // ✅ স্মার্ট লগইন সিস্টেম (ইমেইল অথবা ফোন নম্বর)
+document.getElementById('btnLoginAction').addEventListener('click', async () => {
+    let userInput = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    
+    if(!userInput || !pass) {
+        return showSmartToast('ইমেইল/ফোন এবং পাসওয়ার্ড—দুটিই দিন', 'error');
+    }
 
-            // ২. পাসওয়ার্ড ফিল্ড চেক
-            if(!pass || pass.trim() === "") {
-                return showSmartToast('আপনার একাউন্টের পাসওয়ার্ডটি প্রবেশ করুন।', 'error');
-            }
-            if(pass.length < 6) {
-                return showSmartToast('পাসওয়ার্ড কমপক্ষে ৬ সংখ্যার হওয়া আবশ্যক।', 'error');
+    showLoading();
+    showSmartToast('ভেরিফাই হচ্ছে...', 'info');
+
+    try {
+        let finalEmail = userInput;
+
+        // ১. চেক করা হচ্ছে ইনপুটটি কি ফোন নম্বর? (১১ ডিজিটের নম্বর কি না)
+        const isPhone = /^01[3-9]\d{8}$/.test(userInput);
+
+        if (isPhone) {
+            // ২. ফোন নম্বর হলে ডাটাবেস থেকে ওই ফোনের ইমেইল খুঁজে বের করা
+            const userSnap = await db.collection("users")
+                .where("phone", "==", userInput)
+                .limit(1)
+                .get();
+
+            if (userSnap.empty) {
+                hideLoading();
+                return showSmartToast('এই মোবাইল নম্বর দিয়ে কোনো একাউন্ট নেই!', 'error');
             }
             
-            try { 
-                showLoading();
-                showSmartToast('লগইন হচ্ছে...', 'info'); 
-                await auth.signInWithEmailAndPassword(email, pass); 
-                showSmartToast('লগইন সফল!', 'success'); 
-                hideLoading();
-            } catch (e) { 
-                showSmartToast('ভুল ইমেইল বা পাসওয়ার্ড! আবার চেষ্টা করুন।', 'error'); 
-                hideLoading();
-            }
-        });
+            // ফোন নম্বরের বিপরীতে থাকা ইমেইলটি নেওয়া হলো
+            finalEmail = userSnap.docs[0].data().email;
+        }
+
+        // ৩. এবার প্রাপ্ত ইমেইল (বা ইউজার যদি সরাসরি ইমেইল দেয়) দিয়ে লগইন
+        await auth.signInWithEmailAndPassword(finalEmail, pass); 
+        showSmartToast('লগইন সফল!', 'success'); 
+        // hideLoading() অলরেডি auth.onAuthStateChanged এর ভেতর আছে, তাই এখানে দরকার নেই।
+
+    } catch (e) { 
+        console.error("Login Error:", e);
+        let errorMsg = 'ভুল ইমেইল/ফোন অথবা পাসওয়ার্ড!';
+        if(e.code === 'auth/user-not-found') errorMsg = 'এই তথ্য দিয়ে কোনো একাউন্ট পাওয়া যায়নি!';
+        if(e.code === 'auth/wrong-password') errorMsg = 'ভুল পাসওয়ার্ড দিয়েছেন!';
+        
+        showSmartToast(errorMsg, 'error'); 
+        hideLoading();
+    }
+});
       // ✅ AUTH STATE LISTENER WITH ALL FEATURES (FIXED)
         auth.onAuthStateChanged((user) => {
             if (user) {
@@ -5262,19 +5277,7 @@ document.getElementById('bottomNav').classList.remove('hidden');
 
         }
   }, (error) => { 
-        hideLoading();
-        if (error.code === 'permission-denied') {
-            // ১. এরর আসার নিখুঁত সময়টি লিখে রাখি
-            window.lastErrorTime = Date.now();
-            
-            // ২. ৩ সেকেন্ড অপেক্ষা করব রিকানেক্ট হওয়ার জন্য
-            setTimeout(() => {
-                // ৩. ৩ সেকেন্ড পরও যদি নতুন কোনো সাকসেস ডাটা না আসে (অর্থাৎ শেষ সাকসেস টাইম যদি এরর টাইমের চেয়ে ছোট থাকে)
-                if ((window.lastSnapshotTime || 0) < window.lastErrorTime) {
-                    showBannedScreen("দুঃখিত, নিয়মনীতি অমান্য করার কারণে আপনার অ্যাকাউন্টটি স্থায়ীভাবে ব্লক করা হয়েছে।");
-                }
-            }, 3000);
-        }
+        console.log("Snapshot connection flickering, ignoring for stability.");
     });
 // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক (FIXED)
     db.collection("settings").doc("appConfig").onSnapshot((d) => { 
@@ -6249,7 +6252,7 @@ window.closePasswordChangeModal = () => {
     }
 };
 
-// 🔐 নতুন পাসওয়ার্ড সাবমিট এবং ফায়ারবেসে সেভ করার ফাংশন
+// 🔐 নতুন পাসওয়ার্ড সাবমিট ফাংশন (সিকিউরিটি ফিক্সড)
 window.submitNewPassword = async () => {
     const newPass = document.getElementById('modalNewPass').value;
     const confirmPass = document.getElementById('modalConfirmPass').value;
@@ -6264,14 +6267,28 @@ window.submitNewPassword = async () => {
     showLoading();
     try {
         const user = auth.currentUser;
+        if (!user) throw new Error("No User");
+
         await user.updatePassword(newPass);
         
-        showSmartToast('পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে ✅', 'success');
+        showSmartToast('পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে ', 'success');
         window.playSound('snd_success');
-        window.closePasswordChangeModal(); // কাজ শেষে মোডাল অটো বন্ধ হবে
+        window.closePasswordChangeModal();
     } catch (error) {
-        console.error(error);
-        showSmartToast('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে', 'error');
+        console.error("Pass Change Error:", error);
+        
+        // ফায়ারবেস সিকিউরিটি এরর হ্যান্ডেলিং
+        if (error.code === 'auth/requires-recent-login') {
+            Swal.fire({
+                title: 'নিরাপত্তা সতর্কতা! ⚠️',
+                text: 'পাসওয়ার্ড বদলাতে হলে আপনাকে আবার লগইন করতে হবে। দয়া করে লগআউট করে পুনরায় লগইন করুন এবং চেষ্টা করুন।',
+                icon: 'warning',
+                confirmButtonText: 'বুঝেছি',
+                confirmButtonColor: '#3b82f6'
+            });
+        } else {
+            showSmartToast('পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
+        }
     }
     hideLoading();
 };
@@ -8532,7 +8549,8 @@ window.showPage = (id, defaultTab = null) => {
         // ২. এরপর টার্গেট পেজ এবং বটম ন্যাভ বাদে বাকি অন্য সব পেজ হাইড করা
         const allPages = document.querySelectorAll('#mainApp > div');
         allPages.forEach(div => { 
-            if(div.id !== 'bottomNav' && div.id !== id) { // 👈 টার্গেট পেজ বাদে বাকিগুলো হাইড হবে
+            // bottomNav এবং বর্তমানে যে পেজে আছি সেটা ছাড়া বাকি সব হাইড হবে
+            if(div.id !== 'bottomNav' && div.id !== id && !div.id.includes('Icon')) { 
                 div.classList.add('hidden');
                 div.classList.remove('animate__animated', 'animate__fadeIn'); 
             }
