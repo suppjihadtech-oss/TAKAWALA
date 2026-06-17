@@ -3938,31 +3938,39 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             }, 1000);
         }
         
- function closeInterstitialAd() {
+ // ✅ ফিক্সড: অ্যাড বন্ধের পর মেইন অ্যাপ ফোর্স দেখানো
+function closeInterstitialAd() {
     const interstitial = document.getElementById('monitagInterstitial');
     
-    // টাইমার বন্ধ করা
-    if(window.adInterval) clearInterval(window.adInterval);
+    // টাইমার ক্লিয়ার
+    if (window.adInterval) clearInterval(window.adInterval);
     
-    // অ্যাড হাইড করা
-    interstitial.classList.add('hidden'); 
+    // অ্যাড হাইড
+    interstitial.classList.add('hidden');
     
-    // বোনাস লজিক কল (স্মুথ ফিক্স)
+    // কলব্যাক কল করার আগে মেইন অ্যাপ ভিজিবল নিশ্চিত
+    ensureMainAppVisible();
+    
     if (onAdCompleted) {
         const callback = onAdCompleted;
-        onAdCompleted = null; // লুপ ঠেকানোর জন্য আগেই নাল করো
+        onAdCompleted = null;
         
-        // 🔥 ফিক্স: অ্যাড বন্ধ হওয়ার পর একটু সময় নিয়ে লোডিং শুরু হবে
-        // এতে সাদা ঝিলিক বা ল্যাগ মনে হবে না
         setTimeout(() => {
             try {
-                callback(); 
+                callback();
             } catch (e) {
-                console.error("Reward Error:", e);
-                // যদি কোনো এরর হয়, তবুও যেন লোডিং বন্ধ হয়ে যায়
-                if(typeof hideLoading === 'function') hideLoading();
+                console.error("Interstitial Reward Error:", e);
+                showSmartToast('রিওয়ার্ড পেতে সমস্যা হয়েছে', 'error');
+                hideLoading();
+                ensureMainAppVisible();
+            } finally {
+                // নিরাপত্তা: লোডিং সরানো ও অ্যাপ দেখানো
+                hideLoading();
+                ensureMainAppVisible();
             }
-        }, 200); // ২০০ মিলি সেকেন্ড ডিলে (চোখের আরামের জন্য)
+        }, 200);
+    } else {
+        hideLoading();
     }
 }
         // ✅ ✅ FIXED: UPDATED AD LINK FUNCTION
@@ -3991,33 +3999,61 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-      // ✅ SAFE DOUBLE AD SYSTEM (ক্রাশ প্রোটেকশন সহ)
+      // ✅ ফিক্সড: সিঙ্গেল লোডিং + স্টেবল কলব্যাক
 window.showMonetagAd = async (callback) => {
+    // ১. শুধুমাত্র একবার লোডিং দেখানো
+    showLoading();
+    
     try {
-        // ১. প্রথম অ্যাড কল
+        // ২. প্রথম অ্যাড
+        showSmartToast('প্রথম অ্যাড লোড হচ্ছে, দয়া করে অপেক্ষা করুন...', 'info');
         if (typeof window['show_10531082'] === 'function') {
-            await window['show_10531082'](); 
+            await window['show_10531082']();
         }
-        // ২. একটু গ্যাপ (ফোনের র‍্যাম ফ্রেশ হওয়ার জন্য)
+        
+        // ৩. ছোট বিরতি
         await new Promise(r => setTimeout(r, 2000));
         
-        // ৩. দ্বিতীয় অ্যাড কল
+        // ৪. দ্বিতীয় অ্যাড
+        showSmartToast('প্রথম অ্যাড সফল! দ্বিতীয় অ্যাড লোড হচ্ছে, দয়া করে অপেক্ষা করুন...', 'warning');
         if (typeof window['show_10531082'] === 'function') {
-            await window['show_10531082'](); 
+            await window['show_10531082']();
         }
-    } catch (e) { console.log("Ad Error Ignored"); }
+    } catch (e) {
+        console.log("Ad error (ignored):", e);
+    }
     
-    // ৪. অ্যাড থেকে ফেরার পর ৩ সেকেন্ড অপেক্ষা করে ব্যালেন্স আপডেট হবে
-    if(callback) {
-        showLoading(); // শুধু লোডিং দেখাবে, অ্যাপ হাইড হবে না
+    // ৫. কলব্যাক নিরাপদে কল করা
+    if (callback) {
+        showSmartToast('ব্যালেন্স আপডেট হচ্ছে, একটু ধৈর্য ধরুন...', 'info');
+        
         setTimeout(async () => {
             try {
                 await callback();
-            } catch(e) { console.error("Reward Error:", e); }
-            hideLoading();
-        }, 3000); 
+            } catch (e) {
+                console.error("Reward Error:", e);
+                // এরর হলে টোস্ট দেখানো
+                showSmartToast('রিওয়ার্ড পেতে সমস্যা হয়েছে, আবার চেষ্টা করুন', 'error');
+            } finally {
+                // ⚡ সর্বদা লোডিং বন্ধ ও মেইন অ্যাপ দেখানো
+                hideLoading();
+                ensureMainAppVisible();
+            }
+        }, 3000);
+    } else {
+        hideLoading();
     }
 };
+
+// ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল
+function ensureMainAppVisible() {
+    const mainApp = document.getElementById('mainApp');
+    const bottomNav = document.getElementById('bottomNav');
+    if (mainApp) mainApp.classList.remove('hidden');
+    if (bottomNav) bottomNav.classList.remove('hidden');
+    // যেকোনো লোডিং ওভারলে সরানো
+    document.getElementById('loadingOverlay')?.classList.add('hidden');
+}
 
         // ✅ LOAD SYSTEM SETTINGS (এডমিন প্যানেলের appConfig এর সাথে সিঙ্ক)
 async function loadSystemSettings() {
@@ -11700,6 +11736,7 @@ window.applyLanguage = (lang) => {
         }
     });
 };
+
 
     </script>
     
