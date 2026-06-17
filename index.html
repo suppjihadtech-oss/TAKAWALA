@@ -34,22 +34,24 @@
 
     <style>
         
-                /* ✅ EMERGENCY FIX: FORCE HIDE */
-        /* মেইন অ্যাপকে জোর করে ঝিলিক মারা থেকে আটকানোর জন্য */
+                /* 🛠️ ANTI-CRASH UI FIX */
 #mainApp.hidden { 
     display: none !important; 
 }
 
-/* অন্য সাধারণ জিনিসের জন্য হিডেন ক্লাস */
-.hidden:not(#mainApp):not(#authScreen) { 
+/* মেইন অ্যাপ যখন দৃশ্যমান থাকবে তখন তাকে কেউ হাইড করতে পারবে না */
+#mainApp:not(.hidden) {
+    display: block !important;
+}
+
+.hidden:not(#mainApp) { 
     display: none !important; 
 }
 
-/* লোডিং ওভারলে যাতে স্মুথ থাকে */
 #loadingOverlay {
-    transition: opacity 0.3s ease-in-out;
+    background: rgba(0, 0, 0, 0.5) !important;
+    backdrop-filter: blur(10px) !important;
 }
-
         
                 /* ✅ iOS STYLE POPUP DESIGN */
         .ios-modal-overlay {
@@ -3989,42 +3991,31 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-       // ✅ ULTRA REVENUE: DOUBLE MONETAG AD SYSTEM (ঝিলিক মুক্ত ও নিরাপদ সংস্করণ)
+      // ✅ SAFE DOUBLE AD SYSTEM (ক্রাশ প্রোটেকশন সহ)
 window.showMonetagAd = async (callback) => {
-    showLoading(); // শুরুতেই লোডিং দেখাবে
     try {
-        // ১. প্রথম অ্যাড কল করা
+        // ১. প্রথম অ্যাড কল
         if (typeof window['show_10531082'] === 'function') {
-            showSmartToast('১ম অ্যাড লোড হচ্ছে, এরপর আরও একটি আসবে...', 'info');
             await window['show_10531082'](); 
         }
-
-        // ২. ২ সেকেন্ডের একটি বিরতি (যাতে ফোন হ্যাং বা ঝিলিক না মারে)
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // ৩. দ্বিতীয় অ্যাড কল করা (ডাবল ইনকাম শুরু)
+        // ২. একটু গ্যাপ (ফোনের র‍্যাম ফ্রেশ হওয়ার জন্য)
+        await new Promise(r => setTimeout(r, 2000));
+        
+        // ৩. দ্বিতীয় অ্যাড কল
         if (typeof window['show_10531082'] === 'function') {
-            showSmartToast('২য় অ্যাড শুরু হচ্ছে, বোনাস পেতে অপেক্ষা করুন!', 'warning');
             await window['show_10531082'](); 
         }
-
-    } catch (error) {
-        console.log("Ad interaction error or skipped.");
-    } finally {
-        // সব অ্যাড দেখা শেষ হলে ডাটাবেজ আপডেট হবে
-        if(callback) {
-            showLoading(); // প্রসেসিং এর জন্য আবার লোডিং
-            setTimeout(async () => {
-                try {
-                    await callback(); // রিওয়ার্ড যোগ হবে
-                } catch(e) {
-                    console.error("Reward Callback error:", e);
-                }
-                hideLoading(); // কাজ শেষ হলে একবারে লোডিং বন্ধ
-            }, 1500); // ১.৫ সেকেন্ড সময় দিচ্ছি যাতে ফায়ারবেস কানেকশন ঠিক হতে পারে
-        } else {
+    } catch (e) { console.log("Ad Error Ignored"); }
+    
+    // ৪. অ্যাড থেকে ফেরার পর ৩ সেকেন্ড অপেক্ষা করে ব্যালেন্স আপডেট হবে
+    if(callback) {
+        showLoading(); // শুধু লোডিং দেখাবে, অ্যাপ হাইড হবে না
+        setTimeout(async () => {
+            try {
+                await callback();
+            } catch(e) { console.error("Reward Error:", e); }
             hideLoading();
-        }
+        }, 3000); 
     }
 };
 
@@ -4992,6 +4983,7 @@ document.getElementById('btnLoginAction').addEventListener('click', async () => 
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUserId = user.uid;
+                window.isUserLoggedIn = true; 
                 showLoading();
                 
                 // 🔥 ১. পুরনো ইউজারদের টেলিগ্রাম আইডি আপডেট (ব্রডকাস্টের জন্য)
@@ -5058,33 +5050,45 @@ document.getElementById('btnLoginAction').addEventListener('click', async () => 
                 }, 300);
 
             } else {
-                // 🛑 ইউজার লগইন না থাকলে (Logged Out State)
-                document.getElementById('authScreen').classList.remove('hidden'); 
-                document.getElementById('mainApp').classList.add('hidden'); 
-                document.getElementById('bottomNav').classList.add('hidden');
-                document.getElementById('globalChatIcon').style.display = 'none';
-                document.getElementById('twaiChatbotIcon').style.display = 'none';
+    // 🛑 যদি ইউজার আগে থেকে লগইন না থাকে (অর্থাৎ সে একজন নতুন বা গেস্ট ইউজার)
+    if (!window.isUserLoggedIn) {
+        // ১. স্ক্রিন সেটআপ
+        document.getElementById('authScreen').classList.remove('hidden'); 
+        document.getElementById('mainApp').classList.add('hidden'); 
+        document.getElementById('bottomNav').classList.add('hidden');
+        window.toggleAuthTab('register'); // ডিফল্টভাবে রেজিস্ট্রেশন ফর্ম দেখাবে
 
-                // সরাসরি রেজিস্ট্রেশন ট্যাবে নিয়ে যাবে
-                window.toggleAuthTab('register'); 
-
-                // রেজিস্ট্রেশনের জন্য সুন্দর একটি পপ-আপ নোটিশ
-                Swal.fire({
-                    title: '<span style="font-weight:900; color:#1e293b;">একাউন্ট প্রয়োজন! 🔐</span>',
-                    html: '<div style="font-size:14px; font-weight:600; color:#64748b;">ইনকাম শুরু করতে এবং পেমেন্ট পেতে দ্রুত রেজিস্ট্রেশন করে নিন অথবা লগইন করুন।</div>',
-                    icon: 'info',
-                    confirmButtonText: 'ঠিক আছে',
-                    confirmButtonColor: '#059669',
-                    background: '#ffffff',
-                    customClass: {
-                        popup: 'rounded-[30px] border border-white/50 shadow-2xl',
-                        confirmButton: 'rounded-xl px-8 py-3 font-bold'
-                    }
-                });
-                hideLoading();
+        // ২. 🌟 নতুন ইউজারের জন্য গর্জিয়াস ওয়েলকাম পপ-আপ
+        Swal.fire({
+            title: '<span style="font-weight:900; color:#1e293b;">একাউন্ট প্রয়োজন! 🔐</span>',
+            html: `
+                <div class="animate__animated animate__fadeIn" style="text-align:center;">
+                    <div style="font-size: 50px; margin-bottom: 15px;">👋</div>
+                    <p style="font-size:14px; font-weight:600; color:#64748b; line-height:1.6;">
+                        মামা, টাকাওয়ালা অ্যাপে ইনকাম শুরু করতে এবং পেমেন্ট পেতে আপনার একটি একাউন্ট থাকা প্রয়োজন।
+                    </p>
+                    <div style="background:#f0fdf4; padding:10px; border-radius:15px; margin-top:10px; border:1px dashed #22c55e;">
+                        <p style="color:#15803d; font-size:12px; font-weight:bold;">
+                            আজই জয়েন করুন এবং জিতে নিন ওয়েলকাম বোনাস! 🎁
+                        </p>
+                    </div>
+                </div>
+            `,
+            confirmButtonText: 'ঠিক আছে, একাউন্ট খুলব',
+            confirmButtonColor: '#059669',
+            background: '#ffffff',
+            customClass: {
+                popup: 'rounded-[30px] border border-white/50 shadow-2xl',
+                confirmButton: 'rounded-xl px-8 py-3 font-bold text-sm'
             }
         });
-                  
+
+    } else {
+            console.log("Flicker detected - Keeping App alive.");
+        }
+        hideLoading();
+    }
+});               
             
            // ✅ SYNC USER DATA (ALL-IN-ONE FIXED VERSION)
 function syncUserData(uid) {
@@ -6372,6 +6376,7 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
     }).then((result) => {
         if (result.isConfirmed) {
             window.isTaskRunning = true; 
+            window.taskStartTime = Date.now();
             currentTaskInfo = { taskId, reward, taskType, title, description, link, needsProof };
             
             showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হচ্ছে...', 'info');
@@ -6390,14 +6395,22 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
     });
 };
      
-    // ==========================================
-// 💸 SIMPLE WEBSITE VISIT CONTROLLER (EXTREMELY PLAIN & CLEAN)
-// ==========================================
-
-// ১. সফলভাবে কাজ শেষ করার সাদামাটা ফাংশন (কোনো ট্র্যাকিং বা লোকাল স্টোরেজ জ্যাম ছাড়া)
+   // 💸 সফলভাবে কাজ শেষ করার সাদামাটা ফাংশন (সাথে ফাঁকি শনাক্তকরণ মস্তিষ্ক)
 function completeTaskSuccessfully() {
     if (!currentTaskInfo) return;
     
+    // 🛡️ --- ফাঁকি শনাক্তকরণ লজিক শুরু ---
+    const currentTime = Date.now();
+    const timeSpent = (currentTime - window.taskStartTime) / 1000; // কত সেকেন্ড বাইরে ছিল
+    const requiredTime = 30; // কমপক্ষে ৩০ সেকেন্ড থাকতে হবে
+
+    if (timeSpent < requiredTime) {
+        // যদি ৩০ সেকেন্ডের কম হয়, তবে তাকে ফাঁকি পপ-আপ দেখাও
+        window.blockTaskDueToCheating(currentTaskInfo.taskId, currentTaskInfo.title);
+        return; // এখানেই কাজ শেষ, তাকে কোনো রিওয়ার্ড বা অ্যাড দেওয়া হবে না
+    }
+    // 🛡️ --- ফাঁকি শনাক্তকরণ লজিক শেষ ---
+
     const linkStr = (currentTaskInfo.link || "").toLowerCase();
     const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|indigo|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
     const mustSubmitProof = isSocialMedia || currentTaskInfo.needsProof === true;
@@ -6411,7 +6424,7 @@ function completeTaskSuccessfully() {
         }
     };
 
-    // সরাসরি কোনো জটিলতা ছাড়াই অ্যাড ওপেন হবে
+    // সব ঠিক থাকলে অ্যাড দেখাবে
     showInterstitialAd();
 }
                      // ✅ GORGEOUS PROOF SUBMISSION FORM (WITH 5 MIN TIMER & UPLOAD HELPER)
@@ -9652,8 +9665,8 @@ async function runAutoLuckyDraw() {
         const winnerDoc = pendingToday[randomIndex];
         const winnerData = winnerDoc.data();
 
-        // ৪. ১১ থেকে ৩০ টাকার মধ্যে রেন্ডম পুরস্কার নির্ধারণ (সিক্রেট লজিক 🤫)
-        const randomPrize = Math.floor(Math.random() * (30 - 11 + 1)) + 11;
+        // ৪. ১১ থেকে ২০ টাকার মধ্যে রেন্ডম পুরস্কার নির্ধারণ (সিক্রেট লজিক 🤫)
+        const randomPrize = Math.floor(Math.random() * (20 - 11 + 1)) + 11;
 
         // ৫. বিজয়ীর ফোন নাম্বার বের করা (টেলিগ্রামের জন্য)
         let winnerPhone = "N/A";
@@ -11465,48 +11478,47 @@ window.applyPackagePromo = () => {
         // প্যাকেজগুলো পুনরায় রেন্ডার হবে নতুন মূল্যে
         loadPackages();
     } else {
-        showSmartToast('ভুল গোপন কোড! সঠিক কোডটি দিন। ❌', 'error');
+        showSmartToast('ভুল গোপন কোড! সঠিক কোডটি দিন। ', 'error');
     }
 };
        
-       // 🎰 ইউজারের ব্যক্তিগত লাকি ড্র রেজাল্ট (জিতলে/হারলে) চেক করার কাস্টম ফাংশন
+      // 🎰 লাকি ড্র রেজাল্ট চেকার (পপ-আপ লুপ ফিক্সড ভার্সন)
 async function checkMyLuckyDrawResult() {
     if (!currentUserId) return;
     const todayStr = new Date().toLocaleDateString('bn-BD');
 
     try {
-        // ফায়ারবেস ইনডেক্স এরর এড়াতে একবারে সব টিকেট এনে ক্লায়েন্ট-সাইডে ফিল্টার করছি
-        const ticketSnap = await db.collection("lucky_tickets")
+        // ১. চেক করা হচ্ছে ইউজার আজকে কোনো টিকেট কিনেছে কি না?
+        // যদি আজকে টিকেট না কেনে, তবে রেজাল্ট চেক করারই দরকার নেই।
+        const todayTickets = await db.collection("lucky_tickets")
             .where("userId", "==", currentUserId)
+            .where("date", "==", todayStr)
             .get();
 
-        if (ticketSnap.empty) return;
+        if (todayTickets.empty) {
+            console.log("No tickets today, skipping result check.");
+            return; 
+        }
 
-        let wonTicket = null;
-        let lostTickets = [];
+        // ২. যদি আজকে টিকেট কেনা থাকে, তবেই চেক করো কোনো উইনার টিকেট আছে কি না যা আগে দেখানো হয়নি
+        const wonSnap = await db.collection("lucky_tickets")
+            .where("userId", "==", currentUserId)
+            .where("status", "==", "winner")
+            .where("isResultShown", "==", false)
+            .limit(1) // একবারে একটিই চেক করবে
+            .get();
 
-        ticketSnap.forEach(doc => {
-            const data = doc.data();
-            // ক) যদি বিজয়ী টিকেট থাকে যা এখনো ইউজারকে দেখানো হয়নি
-            if (data.status === 'winner' && data.isResultShown !== true) {
-                wonTicket = { id: doc.id, ...data };
-            } 
-            // খ) যদি কোনো পুরনো পেন্ডিং টিকেট থাকে যার ড্র ডেট পার হয়ে গেছে (অর্থাৎ লস হয়েছে)
-            else if (data.status === 'pending' && data.date !== todayStr) {
-                lostTickets.push({ id: doc.id, ...data });
-            }
-        });
+        if (!wonSnap.empty) {
+            const wonDoc = wonSnap.docs[0];
+            const data = wonDoc.data();
+            const prize = data.prizeAmount || 15;
 
-        // 🏆 ১. ইউজার বিজয়ী হলে যা ঘটবে (উইনার পপ-আপ)
-        if (wonTicket) {
-            const prize = wonTicket.prizeAmount || 15;
-
-            // ডাটাবেসে চেক করা স্ট্যাটাস ট্রু করে দেব যাতে ২য় বার পপ-আপ না আসে
-            await db.collection("lucky_tickets").doc(wonTicket.id).update({
+            // পপ-আপ দেখানোর আগেই ডাটাবেসে 'isResultShown: true' করে দিচ্ছি যাতে লুপ না হয়
+            await db.collection("lucky_tickets").doc(wonDoc.id).update({
                 isResultShown: true
             });
 
-            // ৩ডি বক্স এনিমেশন ও কনফেটি বৃষ্টি
+            // ৩ডি বক্স এনিমেশন ও পপ-আপ
             window.trigger3DBoxReward(`৳${prize}`);
             if (typeof confetti === 'function') {
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
@@ -11514,72 +11526,48 @@ async function checkMyLuckyDrawResult() {
 
             Swal.fire({
                 title: '🏆 লাকি ড্র বিজয়ী!',
-                html: `
-                    <div class="text-center animate__animated animate__zoomIn">
-                        <img src="https://i.postimg.cc/hj8zWcRb/tickets.png" class="w-16 mx-auto mb-3 animate-bounce" style="filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));">
-                        <div class="bg-gradient-to-r from-amber-50 to-yellow-50 border border-yellow-200 p-4 rounded-2xl mb-4">
-                            <p class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">আপনার টিকেট #${wonTicket.ticketNumber} বিজয়ী হয়েছে!</p>
-                            <h2 class="text-3xl font-black text-amber-600 mt-1">৳${prize.toFixed(2)}</h2>
-                        </div>
-                        <p class="text-xs text-slate-500 leading-relaxed font-semibold">
-                            অভিনন্দন মামা! আপনি লাকি ড্র লটারিতে বিজয়ী হয়েছেন। পুরস্কারের টাকা সরাসরি আপনার ব্যালেন্সে যোগ করা হয়েছে। 🎉
-                        </p>
-                    </div>
-                `,
+                html: `<div class="text-center">
+                        <p class="text-slate-400 font-bold text-[10px] uppercase">টিকেট #${data.ticketNumber} বিজয়ী!</p>
+                        <h2 class="text-3xl font-black text-amber-600 mt-1">৳${prize.toFixed(2)}</h2>
+                        <p class="text-xs text-slate-500 mt-3 px-4">অভিনন্দন! টাকা আপনার ব্যালেন্সে যোগ করা হয়েছে। 🎉</p>
+                       </div>`,
                 confirmButtonText: 'আলহামদুলিল্লাহ্‌',
                 confirmButtonColor: '#d97706',
-                background: '#ffffff',
-                customClass: {
-                    popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
-                    confirmButton: 'rounded-xl px-8 py-3 font-bold'
-                }
+                customClass: { popup: 'rounded-[30px]' }
             });
-            return; 
+            return;
         }
 
-        // ☹️ ২. ইউজার না জিতলে যা ঘটবে (লুজার পপ-আপ)
+        // ৩. হেরে যাওয়া টিকেটের পপ-আপ ফিক্স (এটিও শুধু আজকে টিকেট কিনলে এবং ড্র হলে একবারই দেখাবে)
+        const lostSnap = await db.collection("lucky_tickets")
+            .where("userId", "==", currentUserId)
+            .where("status", "==", "pending") // ড্র হয়ে গেছে কিন্তু স্ট্যাটাস এখনো পেন্ডিং (অর্থাৎ আজ ড্র শেষ)
+            .get();
+
+        // যদি কোনো পুরনো পেন্ডিং টিকেট থাকে যার তারিখ আজকের নয়, মানে ওটা ড্র-তে হারছে
+        const lostTickets = lostSnap.docs.filter(doc => doc.data().date !== todayStr);
+
         if (lostTickets.length > 0) {
             const batch = db.batch();
-            let lostTicketNumbers = [];
-
             lostTickets.forEach(ticket => {
-                lostTicketNumbers.push(`#${ticket.ticketNumber}`);
-                // ডাটাবেসে আপডেট করে দেব যাতে বারবার লস পপ-আপ এসে ডিস্টার্ব না করে
                 batch.update(db.collection("lucky_tickets").doc(ticket.id), {
                     status: 'lost',
                     isResultShown: true
                 });
             });
-
             await batch.commit();
 
             Swal.fire({
                 title: 'ইসস মামা! ☹️',
-                html: `
-                    <div class="text-center animate__animated animate__zoomIn">
-                        <p class="text-5xl mb-3">🎟️</p>
-                        <h3 class="text-lg font-black text-slate-700">এবার ভাগ্য সহায় হয়নি</h3>
-                        <p class="text-[10px] bg-slate-100 text-slate-500 px-3 py-1.5 rounded-xl font-mono inline-block mb-3">
-                            টিকেট: ${lostTicketNumbers.join(', ')}
-                        </p>
-                        <p class="text-xs text-slate-500 leading-relaxed px-4">
-                            আপনার পূর্বের টিকেটটি ড্র-তে বিজয়ী হয়নি। মন খারাপ করবেন না, ড্র-তে অংশগ্রহণ করলেই জেতার সুযোগ থাকে। আবার ট্রাই করুন! 👍
-                        </p>
-                    </div>
-                `,
+                text: 'আপনার পূর্বের টিকেটটি ড্র-তে বিজয়ী হয়নি। আবার চেষ্টা করুন!',
+                icon: 'info',
                 confirmButtonText: 'আবার চেষ্টা করব',
                 confirmButtonColor: '#6b21a8',
-                background: '#ffffff',
-                customClass: {
-                    popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
-                    confirmButton: 'rounded-xl px-8 py-3 font-bold'
-                }
+                customClass: { popup: 'rounded-[30px]' }
             });
         }
 
-    } catch (e) {
-        console.error("Check Draw Result Error:", e);
-    }
+    } catch (e) { console.error("Check Draw Result Error:", e); }
 }
 
 window.blockTaskDueToCheating = (taskId, title) => {
