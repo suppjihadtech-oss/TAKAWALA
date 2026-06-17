@@ -49,8 +49,9 @@
 }
 
 #loadingOverlay {
-    background: rgba(0, 0, 0, 0.5) !important;
-    backdrop-filter: blur(10px) !important;
+    background: rgba(15, 23, 42, 0.7) !important; /* প্রিমিয়াম ডার্ক স্লেট কালার */
+    backdrop-filter: blur(12px) saturate(150%) !important; /* আইওএস স্টাইল গ্লাসি ব্লার */
+    -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
 }
         
                 /* ✅ iOS STYLE POPUP DESIGN */
@@ -5015,12 +5016,24 @@ document.getElementById('btnLoginAction').addEventListener('click', async () => 
         hideLoading();
     }
 });
-      // ✅ AUTH STATE LISTENER WITH ALL FEATURES (FIXED)
+     // ✅ ফিক্স: অ্যাপ একবার চালু হলে তা মনে রাখার ভেরিয়েবল
+        window.isAppInitialized = false;
+
+        // ✅ AUTH STATE LISTENER WITH ALL FEATURES (FIXED)
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUserId = user.uid;
                 window.isUserLoggedIn = true; 
+                
+                // 🚀 মেগা ফিক্স: অ্যাপ একবার চালু হয়ে গেলে অ্যাড থেকে ফেরার পর আর রিস্টার্ট নেবে না!
+                if (window.isAppInitialized) {
+                    return; // ফাংশন এখানেই থেমে যাবে, সাদা স্ক্রিন হবে না
+                }
+                window.isAppInitialized = true;
+
                 showLoading();
+                
+                // 🔥 ১. পুরনো ইউজারদের টেলিগ্রাম আইডি আপডেট (ব্রডকাস্টের জন্য)
                 
                 // 🔥 ১. পুরনো ইউজারদের টেলিগ্রাম আইডি আপডেট (ব্রডকাস্টের জন্য)
                 if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
@@ -5126,10 +5139,20 @@ document.getElementById('btnLoginAction').addEventListener('click', async () => 
     }
 });               
             
-           // ✅ SYNC USER DATA (ALL-IN-ONE FIXED VERSION)
+           // ✅ রিয়েল-টাইম লিসেনার ক্লিয়ার করার গ্লোবাল ভেরিয়েবল
+let userUnsub = null;
+let configUnsub = null;
+let systemUnsub = null;
+
+// ✅ SYNC USER DATA (ALL-IN-ONE FIXED VERSION)
 function syncUserData(uid) {
+    // 🚀 মেগা ফিক্স: আগের লিসেনার থাকলে তা বন্ধ করে ডাবল ঝিলিক মারা ঠেকানো
+    if (userUnsub) userUnsub();
+    if (configUnsub) configUnsub();
+    if (systemUnsub) systemUnsub();
+
     // ১. ইউজারের লাইভ ডাটা সিঙ্ক শুরু
-    db.collection("users").doc(uid).onSnapshot((d) => {
+    userUnsub = db.collection("users").doc(uid).onSnapshot((d) => {
     if(d.exists) {
         window.lastSnapshotTime = Date.now();
             currentUserData = d.data();
@@ -5340,7 +5363,7 @@ document.getElementById('bottomNav').classList.remove('hidden');
         console.log("Snapshot connection flickering, ignoring for stability.");
     });
 // ২. এডমিন প্যানেল কনফিগারেশন সিঙ্ক (FIXED)
-    db.collection("settings").doc("appConfig").onSnapshot((d) => { 
+    configUnsub = db.collection("settings").doc("appConfig").onSnapshot((d) => { 
         if(d.exists) {
             systemSettings = d.data();
             
@@ -5361,7 +5384,7 @@ document.getElementById('bottomNav').classList.remove('hidden');
     });
     
     // ৩. নোটিশ সিঙ্ক
-    db.collection("settings").doc("system").onSnapshot((d) => { 
+    systemUnsub = db.collection("settings").doc("system").onSnapshot((d) => {
         if(d.exists) {
             const noticeElement = document.getElementById('noticeText');
             if (noticeElement) noticeElement.innerHTML = d.data().noticeText || "স্বাগতম!";
