@@ -1341,31 +1341,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         </div>
     </div>
 
-    <!-- INTERSTITIAL AD (HIDDEN INITIALLY) -->
-    <div id="monitagInterstitial" class="interstitial-ad hidden">
-        <div id="interstitialContent" class="text-center bg-white p-5 md:p-8 rounded-2xl w-[95%] max-w-md relative overflow-hidden max-h-[85vh] overflow-y-auto mx-auto my-auto shadow-2xl border-4 border-white/50">
-            <h3 class="font-bold text-xl mb-2 text-red-600">⚠️ অ্যাকশন প্রয়োজন</h3>
-            
-            <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200 mb-6">
-                <p class="text-sm font-bold text-slate-700 mb-2">বোনাস পেতে হলে:</p>
-                <ul class="text-xs text-left text-slate-600 list-disc pl-4 space-y-1">
-                    <li>নিচের বাটনে ক্লিক করুন</li>
-                    <li>অ্যাডটি ওপেন করে ২০ সেকেন্ড দেখুন</li>
-                    <li>তারপর ফিরে এসে "বন্ধ করুন" চাপুন</li>
-                </ul>
-            </div>
-
-            <button onclick="window.openAdLink()" class="w-full bg-blue-600 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition animate-pulse">
-                👉 ক্লিক করে অ্যাড দেখুন
-            </button>
-            
-            <div id="adTimer" class="mt-4 text-slate-400 font-bold text-sm">অপেক্ষা করুন: ১০</div>
-            
-            <button onclick="closeInterstitialAd()" class="mt-4 w-full bg-slate-200 text-slate-800 px-6 py-3 rounded-xl font-bold hidden">
-                বন্ধ করুন
-            </button>
-        </div>
-    </div>
+   
 
     <!-- ✅ ULTRA PREMIUM CHATBOT HTML -->
 <div id="twaiModal" class="chatbot-modal hidden">
@@ -2025,13 +2001,13 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <div onclick="window.selectOperator(this, 'GP')" class="p-2 rounded-2xl border-2 border-[#005cbb] bg-blue-50/50 cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm">
                     <img src="https://i.postimg.cc/65w1n62J/FB-IMG-1769495932877.jpg" class="h-full object-contain rounded-lg">
                 </div>
-                <!-- ২. বাংলালিংক (BL) - এখানে আগে রবির ছবি ছিল, এখন ঠিক করা হয়েছে -->
+               <!-- ২. বাংলালিংক (BL) -->
                 <div onclick="window.selectOperator(this, 'BL')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300">
-                    <img src="https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg" class="h-full object-contain rounded-lg">
-                </div>
-                <!-- ৩. রবি (Robi) - এখানে আগে বাংলালিংকের ছবি ছিল, এখন ঠিক করা হয়েছে -->
-                <div onclick="window.selectOperator(this, 'Robi')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300">
                     <img src="https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg" class="h-full object-contain rounded-lg">
+                </div>
+                <!-- ৩. রবি (Robi) -->
+                <div onclick="window.selectOperator(this, 'Robi')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300">
+                    <img src="https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg" class="h-full object-contain rounded-lg">
                 </div>
                 <!-- ৪. এয়ারটেল (Airtel) -->
                 <div onclick="window.selectOperator(this, 'Airtel')" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300">
@@ -2261,9 +2237,9 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     <p class="text-xs font-bold">স্পিন</p>
                  </div>
 
-                 <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.showPage('subscriptionScreen')">
-                     <img src="https://i.postimg.cc/Z5JxMx1z/subscription-active.png" class="w-12 mx-auto mb-2">
-                     <p class="text-xs font-bold">সাবস্ক্রিপশন</p>
+                 <div class="glass-card p-4 rounded-2xl cursor-pointer hover:border-blue-400 transition-all group" onclick="window.showPage('jobPostScreen')">
+                     <img src="https://i.postimg.cc/HWqb6PxQ/add.png" class="w-12 mx-auto mb-2 group-hover:scale-110 transition-transform">
+                     <p class="text-xs font-bold text-slate-700">অ্যাড দিন</p>
                  </div>
                  
                  <div class="glass-card p-4 rounded-2xl cursor-pointer" onclick="window.openSupport()">
@@ -3114,85 +3090,45 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             </p>
         </div>
 
-        <!-- SUBSCRIPTION SCREEN -->
-                 <div id="subscriptionScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
-            <div class="flex items-center gap-3 mb-6">
-                <button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md">
-                    <i class="ri-arrow-left-line text-xl"></i>
+      <!-- ✅ JOB POST / ADVERTISER SCREEN (COMING SOON) -->
+        <div id="jobPostScreen" class="hidden min-h-screen bg-slate-50 animate__animated animate__fadeInRight pb-24">
+            <!-- Header -->
+            <div class="flex items-center gap-3 p-5 pt-8 mb-4">
+                <button onclick="window.showPage('moreScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
+                    <i class="ri-arrow-left-line text-xl text-slate-700"></i>
                 </button>
-                <h2 class="text-2xl font-bold text-slate-800">সাবস্ক্রিপশন</h2>
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight">প্রোমোশন দিন 🚀</h2>
             </div>
-            
-            <div class="flex overflow-x-auto gap-2 mb-6 pb-2 scrollbar-hide" id="subTabsContainer">
-                <button onclick="window.switchSubscriptionTab('stars')" id="tabStars" class="whitespace-nowrap px-6 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow transition-all">
-                    স্টার কিনুন
-                </button>
-                
-                </div>
-            
-            <div id="starsSection">
-                <div class="glass-card p-6 rounded-[25px] text-center space-y-6">
-                    <div class="flex items-center justify-center gap-2 mb-4">
-                        <img src="https://i.postimg.cc/Z5JxMx1z/subscription-active.png" class="w-8">
-                        <h3 class="text-xl font-bold text-yellow-700">স্টার কিনুন</h3>
-                    </div>
+
+            <!-- Coming Soon Premium Card -->
+            <div class="px-5">
+                <div class="glass-card p-8 rounded-[35px] text-center relative overflow-hidden border border-blue-100 shadow-2xl">
+                    <!-- Background Glow -->
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+                    <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
                     
-                    <p class="text-sm text-slate-600 mb-2">স্টারের মূল্য: প্রতি স্টার ৳<span id="starPrice">2.90</span></p>
-                    
-                    <div class="grid grid-cols-3 gap-3">
-                        <div onclick="window.selectStarPackage(100)" class="bg-white p-4 rounded-2xl border cursor-pointer text-center hover:border-yellow-500">
-                            <div class="star-count mx-auto mb-2">100 ⭐</div>
-                            <p class="text-lg font-bold text-slate-800">৳<span id="price100">290</span></p>
+                    <div class="relative z-10">
+                        <!-- Animated Icon -->
+                        <div class="w-24 h-24 bg-gradient-to-tr from-blue-50 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border-2 border-white">
+                            <img src="https://i.postimg.cc/6p7RQSVx/megaphone.png" class="w-14 h-14 animate-pulse drop-shadow-md">
                         </div>
-                        <div onclick="window.selectStarPackage(250)" class="bg-white p-4 rounded-2xl border cursor-pointer text-center hover:border-yellow-500 relative">
-                            <div class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] px-2 py-0.5 rounded-full">১০% ছাড়</div>
-                            <div class="star-count mx-auto mb-2">250 ⭐</div>
-                            <p class="text-lg font-bold text-green-600">৳<span id="price250">652.5</span></p>
+                        
+                        <h3 class="text-2xl font-black text-slate-800 mb-2">কাজ চলছে... 🛠️</h3>
+                        
+                        <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-6">
+                            <p class="text-xs text-slate-600 font-bold leading-relaxed">
+                                খুব শীঘ্রই আপনি এখানে বিকাশ/নগদ দিয়ে পেমেন্ট করে আপনার নিজস্ব <span class="text-blue-600">টেলিগ্রাম চ্যানেল, ইউটিউব ভিডিও বা ওয়েবসাইট</span> আমাদের হাজার হাজার রিয়েল ইউজারদের দিয়ে প্রমোট করাতে পারবেন!
+                            </p>
                         </div>
-                        <div onclick="window.selectStarPackage(500)" class="bg-white p-4 rounded-2xl border cursor-pointer text-center hover:border-yellow-500 relative">
-                            <div class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] px-2 py-0.5 rounded-full">১০% ছাড়</div>
-                            <div class="star-count mx-auto mb-2">500 ⭐</div>
-                            <p class="text-lg font-bold text-green-600">৳<span id="price500">1305</span></p>
+                        
+                        <div class="inline-flex items-center gap-2 bg-slate-800 text-white px-5 py-2.5 rounded-full shadow-lg">
+                            <span class="relative flex h-3 w-3">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                            </span>
+                            <span class="text-xs font-bold uppercase tracking-widest">COMING SOON..</span>
                         </div>
                     </div>
-                    
-                    <div class="bg-yellow-50 p-4 rounded-xl mt-4">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-bold text-slate-700">সিলেক্ট করা স্টার:</span>
-                            <span class="font-bold text-yellow-700"><span id="selectedStars">0</span> ⭐</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-slate-700">মোট মূল্য:</span>
-                            <span class="text-xl font-bold text-green-600">৳<span id="totalStarPrice">0</span></span>
-                        </div>
-                    </div>
-                    
-                    <button onclick="window.buyStars()" class="w-full bg-yellow-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-yellow-600 mt-4">কিনুন</button>
-                </div>
-            </div>
-            
-            <div id="dynamicServiceSection" class="hidden">
-                <div class="glass-card p-6 rounded-[25px] text-center space-y-6">
-                    <div class="flex items-center justify-center gap-2 mb-4">
-                        <img id="dynamicServiceIcon" src="" class="w-8 rounded-full">
-                        <h3 id="dynamicServiceTitle" class="text-xl font-bold text-blue-700">Service Name</h3>
-                    </div>
-                    
-                    <div id="dynamicPackagesList" class="space-y-4">
-                        </div>
-                    
-                    <div class="bg-blue-50 p-4 rounded-xl mt-4">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-bold text-slate-700">প্যাকেজ:</span>
-                            <span class="font-bold text-blue-700" id="selectedDynamicPlanName">কোনোটিই না</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-slate-700">মোট মূল্য:</span>
-                            <span class="text-xl font-bold text-green-600">৳<span id="selectedDynamicPlanPrice">0</span></span>
-                        </div>
-                    </div>
-                    
-                    <button onclick="window.buyDynamicSubscription()" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg hover:scale-105 transition">কিনুন</button>
                 </div>
             </div>
         </div>
@@ -3770,18 +3706,7 @@ window.sendTWAI = () => {
     input.value = ''; // ইনপুট খালি করা
 };
               
-        // ✅ ADSTERRA ADS LINKS
-        const adsterraLinks = [
-            'https://www.effectivegatecpm.com/t24spqed1?key=7dead7af0eb6b2081051d790a9f95d1b',
-            'https://www.effectivegatecpm.com/dt5xiqg93?key=69751766d294f4706935c6d1f690ea51',
-            'https://www.effectivegatecpm.com/c6dvsywif5?key=91b430d7c920d751eaf19bfc7106e45d',
-            'https://www.effectivegatecpm.com/q0cc46jma?key=8131e64ae71dd95e34995b8326d2ab81',
-            'https://www.effectivegatecpm.com/skjxxk20uj?key=5c7946889852184605cd841244ecaf8d',
-            'https://www.effectivegatecpm.com/qy6201wn?key=a1b1d956fe60158f669f837297a01895',
-            'https://www.effectivegatecpm.com/f97068jz?key=afdd10b69fab899952ebc24c6c4a2898',
-            'https://www.effectivegatecpm.com/cvcrrrps?key=5058530abbd00c92c632cc0ad8b71c58'
-        ];
-
+        
         // ✅ WITHDRAW/RECHARGE SCHEDULE
         const withdrawalSchedule = {
             friday: { start: 8, end: 21.5 }, // 8:00 AM to 9:30 PM
@@ -3899,97 +3824,7 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             document.getElementById('loadingOverlay').classList.add('hidden');
         }
 
-        // ✅ UPDATED INTERSTITIAL AD SHOW FUNCTION
-            function showInterstitialAd() {
-            const interstitial = document.getElementById('monitagInterstitial');
-            interstitial.classList.remove('hidden');
-            
-            let timeLeft = Math.floor(Math.random() * (25 - 20 + 1)) + 20; 
-            const timerElement = document.getElementById('adTimer');
-            const closeBtn = document.getElementById('adCloseBtn') || interstitial.querySelector('button.bg-slate-200');
-
-            if(closeBtn) {
-                if(!closeBtn.id) closeBtn.id = 'adCloseBtn';
-                closeBtn.style.display = 'none'; // শুরুতে লুকানো
-                closeBtn.disabled = true;
-            }
-
-            if(window.adInterval) clearInterval(window.adInterval);
-
-            window.adInterval = setInterval(() => {
-                if (!document.hidden) {
-                    timeLeft--;
-                    if(timerElement) timerElement.innerHTML = `অপেক্ষা করুন: <span class="text-red-600 font-bold">${timeLeft}</span> সেকেন্ড`;
-                    
-                    if(timeLeft <= 0) {
-                        clearInterval(window.adInterval);
-                        if(timerElement) timerElement.innerHTML = "✅ এখন আপনি অ্যাডটি বন্ধ করতে পারেন";
-                        if(closeBtn) {
-                            // 🔥 এখানে মেইন ম্যাজিক: বাটন অটোমেটিক ভেসে উঠবে এবং লেখা চেঞ্জ হবে
-                            closeBtn.innerHTML = "বন্ধ করুন"; 
-                            closeBtn.style.display = "block";
-                            closeBtn.classList.remove('hidden');
-                            closeBtn.disabled = false;
-                            closeBtn.style.opacity = "1";
-                        }
-                    }
-                } else { 
-                    if(timerElement) timerElement.innerHTML = `<span class="text-orange-500 animate-pulse">⚠️ টাইমার পজ! অ্যাডে ফিরে আসুন</span>`;
-                }
-            }, 1000);
-        }
-        
- // ✅ ফিক্সড: অ্যাড বন্ধের পর মেইন অ্যাপ ফোর্স দেখানো
-function closeInterstitialAd() {
-    const interstitial = document.getElementById('monitagInterstitial');
-    
-    // টাইমার ক্লিয়ার
-    if (window.adInterval) clearInterval(window.adInterval);
-    
-    // অ্যাড হাইড
-    interstitial.classList.add('hidden');
-    
-    // কলব্যাক কল করার আগে মেইন অ্যাপ ভিজিবল নিশ্চিত
-    ensureMainAppVisible();
-    
-    if (onAdCompleted) {
-        const callback = onAdCompleted;
-        onAdCompleted = null;
-        
-        setTimeout(() => {
-            try {
-                callback();
-            } catch (e) {
-                console.error("Interstitial Reward Error:", e);
-                showSmartToast('রিওয়ার্ড পেতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-                ensureMainAppVisible();
-            } finally {
-                // নিরাপত্তা: লোডিং সরানো ও অ্যাপ দেখানো
-                hideLoading();
-                ensureMainAppVisible();
-            }
-        }, 200);
-    } else {
-        hideLoading();
-    }
-}
-        // ✅ ✅ FIXED: UPDATED AD LINK FUNCTION
-        window.openAdLink = () => {
-            const randomLink = adsterraLinks[Math.floor(Math.random() * adsterraLinks.length)];
-            window.open(randomLink, '_blank');
-            showSmartToast('অ্যাড ওপেন হয়েছে, টাইমার শেষ হওয়া পর্যন্ত অপেক্ষা করুন', 'info');
-
-            const closeBtn = document.getElementById('adCloseBtn');
-            if(closeBtn) {
-                // ইউজার ক্লিক করার পর বাটনটা দেখাবে কিন্তু বলবে অপেক্ষা করতে
-                closeBtn.innerHTML = "অপেক্ষা করুন..."; 
-                closeBtn.style.display = "block";
-                closeBtn.disabled = true;
-                closeBtn.style.opacity = "0.5";
-            }
-        };
-        
+               
         
         // ✅ COPY TO CLIPBOARD
         window.copyToClipboard = (text) => {
@@ -4000,23 +3835,13 @@ function closeInterstitialAd() {
             });
         };
         
-      // ✅ ফিক্সড: সিঙ্গেল লোডিং + স্টেবল কলব্যাক
+      // ✅ ফিক্সড: আল্ট্রা-স্মুথ সিঙ্গেল অ্যাড সিস্টেম (No Flickering & High CPM)
 window.showMonetagAd = async (callback) => {
-    // ১. শুধুমাত্র একবার লোডিং দেখানো
     showLoading();
+    showSmartToast('অ্যাড লোড হচ্ছে, দয়া করে অপেক্ষা করুন...', 'info');
     
     try {
-        // ২. প্রথম অ্যাড
-        showSmartToast('প্রথম অ্যাড লোড হচ্ছে, দয়া করে অপেক্ষা করুন...', 'info');
-        if (typeof window['show_10531082'] === 'function') {
-            await window['show_10531082']();
-        }
-        
-        // ৩. ছোট বিরতি
-        await new Promise(r => setTimeout(r, 2000));
-        
-        // ৪. দ্বিতীয় অ্যাড
-        showSmartToast('প্রথম অ্যাড সফল! দ্বিতীয় অ্যাড লোড হচ্ছে, দয়া করে অপেক্ষা করুন...', 'warning');
+        // সিঙ্গেল অ্যাড কল (নিরাপদ এবং হাই CPM)
         if (typeof window['show_10531082'] === 'function') {
             await window['show_10531082']();
         }
@@ -4024,28 +3849,27 @@ window.showMonetagAd = async (callback) => {
         console.log("Ad error (ignored):", e);
     }
     
-    // ৫. কলব্যাক নিরাপদে কল করা
+    // অ্যাড থেকে ফেরার পর DOM শান্ত হওয়ার জন্য ২.৫ সেকেন্ড সময় দেওয়া হলো
     if (callback) {
-        showSmartToast('ব্যালেন্স আপডেট হচ্ছে, একটু ধৈর্য ধরুন...', 'info');
-        
         setTimeout(async () => {
             try {
                 await callback();
             } catch (e) {
                 console.error("Reward Error:", e);
-                // এরর হলে টোস্ট দেখানো
                 showSmartToast('রিওয়ার্ড পেতে সমস্যা হয়েছে, আবার চেষ্টা করুন', 'error');
             } finally {
                 // ⚡ সর্বদা লোডিং বন্ধ ও মেইন অ্যাপ দেখানো
                 hideLoading();
                 ensureMainAppVisible();
             }
-        }, 3000);
+        }, 2500); // 2.5 seconds delay
     } else {
-        hideLoading();
+        setTimeout(() => {
+            hideLoading();
+            ensureMainAppVisible();
+        }, 1500);
     }
 };
-
 // ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল
 function ensureMainAppVisible() {
     const mainApp = document.getElementById('mainApp');
@@ -5871,9 +5695,9 @@ document.getElementById('uReceiptMethod').innerText = method;
         else if(method.includes('NAGAD')) methodIcon = "https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png";
         else if(method.includes('ROCKET')) methodIcon = "https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png";
         else if(method.includes('GP')) methodIcon = "https://i.postimg.cc/65w1n62J/FB-IMG-1769495932877.jpg";
-        else if(method.includes('ROBI')) methodIcon = "https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg";
+        else if(method.includes('ROBI')) methodIcon = "https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg";
         else if(method.includes('AIRTEL')) methodIcon = "https://i.postimg.cc/Wz0CjhdX/FB-IMG-1769496019329.jpg";
-        else if(method.includes('BL') || method.includes('BANGLALINK')) methodIcon = "https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg";
+        else if(method.includes('BL') || method.includes('BANGLALINK')) methodIcon = "https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg";
         else if(method.includes('TELETALK')) methodIcon = "https://i.postimg.cc/TYCQbVvT/FB-IMG-1769496047333.jpg";
 
         if(methodIcon) {
@@ -6433,9 +6257,9 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
         width: '320px',
         customClass: { popup: 'rounded-[35px]' }
     }).then((result) => {
+        
         if (result.isConfirmed) {
             window.isTaskRunning = true; 
-            window.taskStartTime = Date.now();
             currentTaskInfo = { taskId, reward, taskType, title, description, link, needsProof };
             
             showSmartToast('টাস্ক লিংকে নিয়ে যাওয়া হচ্ছে...', 'info');
@@ -6454,21 +6278,9 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
     });
 };
      
-   // 💸 সফলভাবে কাজ শেষ করার সাদামাটা ফাংশন (সাথে ফাঁকি শনাক্তকরণ মস্তিষ্ক)
+ // 💸 সফলভাবে কাজ শেষ করার সাদামাটা ফাংশন (টাইমার ক্র্যাশ ফিক্সড)
 function completeTaskSuccessfully() {
     if (!currentTaskInfo) return;
-    
-    // 🛡️ --- ফাঁকি শনাক্তকরণ লজিক শুরু ---
-    const currentTime = Date.now();
-    const timeSpent = (currentTime - window.taskStartTime) / 1000; // কত সেকেন্ড বাইরে ছিল
-    const requiredTime = 30; // কমপক্ষে ৩০ সেকেন্ড থাকতে হবে
-
-    if (timeSpent < requiredTime) {
-        // যদি ৩০ সেকেন্ডের কম হয়, তবে তাকে ফাঁকি পপ-আপ দেখাও
-        window.blockTaskDueToCheating(currentTaskInfo.taskId, currentTaskInfo.title);
-        return; // এখানেই কাজ শেষ, তাকে কোনো রিওয়ার্ড বা অ্যাড দেওয়া হবে না
-    }
-    // 🛡️ --- ফাঁকি শনাক্তকরণ লজিক শেষ ---
 
     const linkStr = (currentTaskInfo.link || "").toLowerCase();
     const isSocialMedia = linkStr.match(/youtube|youtu\.be|facebook|fb\.watch|fb\.me|t\.me|telegram|tiktok|indigo|instagram|twitter|x\.com|play\.google|linkedin|pinterest|reddit|whatsapp|wa\.me|discord|github|spotify/i);
@@ -6483,9 +6295,11 @@ function completeTaskSuccessfully() {
         }
     };
 
-    // সব ঠিক থাকলে অ্যাড দেখাবে
-    showInterstitialAd();
+    // সব ঠিক থাকলে স্মুথ Monetag অ্যাড দেখাবে
+    window.showMonetagAd(onAdCompleted);
 }
+
+    
                      // ✅ GORGEOUS PROOF SUBMISSION FORM (WITH 5 MIN TIMER & UPLOAD HELPER)
         function showProofSubmissionForm() {
             const container = document.getElementById('proofFormContainer');
@@ -7611,244 +7425,165 @@ window.loadSummary = () => window.loadFilteredSummary('all');
             }
         }
 
-                                     // ✅ PROFESSIONAL DAILY BONUS (FIXED SIZE & VISIBILITY)
-        window.showDailyBonus = async () => {
-            if(!currentUserId) return;
+                                     // ==========================================
+// 🎁 DIRECT 3D MYSTERY DAILY BONUS (UPDATED ECONOMY)
+// ==========================================
+window.showDailyBonus = async () => {
+    if (!currentUserId || !currentUserData) return;
 
-            // ১. আজকের বার এবং তারিখ
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const banglaDays = {
-                'Saturday': 'শনি', 'Sunday': 'রবি', 'Monday': 'সোম', 
-                'Tuesday': 'মঙ্গল', 'Wednesday': 'বুধ', 'Thursday': 'বৃহঃ', 'Friday': 'শুক্র'
-            };
-            const today = new Date();
-            const todayName = days[today.getDay()];
-            const todayDateStr = today.toDateString();
+    const today = new Date();
+    const todayDateStr = today.toDateString();
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const todayName = days[today.getDay()];
 
-          // ২. বোনাস অ্যামাউন্ট (ইউজারের বোনাস প্রফিট কমানো হলো)
-                let bonusAmounts = {
-                    'Saturday': 1, 'Sunday': 1, 'Monday': 1.5, 
-                    'Tuesday': 1.5, 'Wednesday': 2, 'Thursday': 2, 
-                    'Friday': 0 
-                };
+    // ১. চেক করা যে আজ বোনাস নেওয়া হয়েছে কিনা
+    if (currentUserData.lastDailyBonus) {
+        const lastBonusDate = new Date(currentUserData.lastDailyBonus.toDate()).toDateString();
+        if (lastBonusDate === todayDateStr) {
+            showSmartToast('আপনি আজকের বোনাস ইতিমধ্যে সংগ্রহ করেছেন! আগামীকাল আবার আসুন।', 'warning');
+            return;
+        }
+    }
 
+  // ২. নতুন ইকোনমি অনুযায়ী বোনাস সেটআপ (০.৫০ থেকে শুরু)
+    let bonusAmounts = {
+        'Saturday': 0.50, 'Sunday': 0.60, 'Monday': 0.70, 
+        'Tuesday': 0.80, 'Wednesday': 1.00, 'Thursday': 1.20, 
+        'Friday': 0 // শুক্রবারেরটা নিচে রেন্ডম হবে
+    };
+
+    // এডমিন প্যানেল থেকে ডাটা নেওয়ার ফলব্যাক
+    try {
+        const settingsDoc = await db.collection("settings").doc("daily_bonus").get();
+        if(settingsDoc.exists) {
+            bonusAmounts = { ...bonusAmounts, ...settingsDoc.data() };
+        }
+    } catch(e) { console.log("Default bonus economy used"); }
+
+    let finalAmount = bonusAmounts[todayName];
+    let msg = "ডেইলি বোনাস";
+
+    // ৩. শুক্রবার স্পেশাল মিস্ট্রি বক্স লজিক (১.৫০ থেকে ৫.০০ টাকার মধ্যে)
+    if (todayName === 'Friday') {
+        let luck = Math.floor(Math.random() * 100) + 1;
+        
+        if (luck <= 5) {
+            finalAmount = 5.00; // মাত্র ৫% ভাগ্যের জোড়ে ৫ টাকা জ্যাকপট!
+        } else if (luck <= 20) {
+            finalAmount = 3.00; // ১৫% ভাগ্যের জোড়ে ৩ টাকা!
+        } else {
+            // বাকি ৮০% সাধারণ ইউজার রেন্ডমলি ১.৫০ থেকে ২.৫০ টাকা পাবে
+            finalAmount = Math.floor(Math.random() * (250 - 150 + 1) + 150) / 100;
+        }
+        msg = "জুম্মা মোবারক মিস্ট্রি বোনাস";
+    }
+
+    // ৪. গর্জিয়াস সারপ্রাইজ কনফার্মেশন পপ-আপ
+    const result = await Swal.fire({
+        title: '🎁 আজকের স্পেশাল বোনাস!',
+        html: `<div class="text-center">
+                <img src="https://i.postimg.cc/Ghdg5VfP/1778991755480-removebg-preview.png" class="w-24 mx-auto mb-3 animate-pulse drop-shadow-2xl hover:scale-110 transition-transform">
+                <p class="text-slate-700 font-black text-sm">আপনার আজকের মিস্ট্রি বক্স প্রস্তুত!</p>
+                <p class="text-[11px] text-slate-500 font-medium mt-1 leading-relaxed px-2">বক্সটি খুলে আপনার সারপ্রাইজ বোনাসটি দেখতে নিচের বাটনে ক্লিক করুন।</p>
+               </div>`,
+        showCancelButton: true,
+        confirmButtonText: '<i class="ri-video-fill"></i> বক্সটি খুলুন',
+        cancelButtonText: 'পরে আসব',
+        confirmButtonColor: '#8b5cf6',
+        cancelButtonColor: '#e2e8f0',
+        customClass: { 
+            popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+            cancelButton: 'text-slate-700 font-bold'
+        }
+    });
+
+    if (result.isConfirmed) {
+        // ৫. অ্যাড দেখা শুরু
+        window.showMonetagAd(async () => {
+            showLoading();
             try {
-                const settingsDoc = await db.collection("settings").doc("daily_bonus").get();
-                if(settingsDoc.exists) {
-                    bonusAmounts = { ...bonusAmounts, ...settingsDoc.data() };
+                const userRef = db.collection("users").doc(currentUserId);
+                
+                // ডাটাবেস আপডেট
+                await userRef.update({
+                    mainBalance: firebase.firestore.FieldValue.increment(finalAmount),
+                    totalEarnings: firebase.firestore.FieldValue.increment(finalAmount),
+                    todayEarnings: firebase.firestore.FieldValue.increment(finalAmount),
+                    lastDailyBonus: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // হিস্ট্রিতে রেকর্ড
+                await db.collection("history").add({
+                    userId: currentUserId,
+                    type: "ডেইলি বোনাস",
+                    amount: finalAmount,
+                    status: "Success",
+                    details: `${todayName} - ${msg}`,
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                if(typeof todayEarnings !== 'undefined') {
+                    todayEarnings += finalAmount;
+                    const teEl = document.getElementById('todayEarnings');
+                    if (teEl) teEl.textContent = todayEarnings.toFixed(2);
                 }
-            } catch(e) { console.log("Default bonus used"); }
-
-            // ৩. ক্লেইম চেক
-            let hasClaimedToday = false;
-            if(currentUserData && currentUserData.lastDailyBonus) {
-                const lastBonusDate = new Date(currentUserData.lastDailyBonus.toDate()).toDateString();
-                if(lastBonusDate === todayDateStr) hasClaimedToday = true;
-            }
-
-            // ৪. HTML জেনারেট
-            let boxesHtml = '';
-            const weekOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-            
-            const giftIconUrl = "https://i.postimg.cc/dtj5JQqK/gift-box.png"; 
-
-            weekOrder.forEach(dayName => {
-                const isToday = (dayName === todayName);
-                const isFriday = (dayName === 'Friday');
-                const amount = bonusAmounts[dayName];
                 
-                // ডিফল্ট স্টাইল
-                let boxClass = "bg-slate-50 border-slate-200 opacity-80"; 
-                // ইমেজ সাইজ পারফেক্ট করা হয়েছে
-                let content = `<img src="${giftIconUrl}" class="w-8 h-8 mb-1 grayscale opacity-60">`; 
-                let textClass = "text-slate-500";
-                let text = `৳${amount}`;
-                
-                if (isToday) {
-                    if (hasClaimedToday) {
-                        boxClass = "bg-green-50 border-green-200";
-                        content = `<i class="ri-checkbox-circle-fill text-3xl mb-1 text-green-500"></i>`;
-                        textClass = "text-green-600";
-                        text = "সম্পন্ন";
-                    } else {
-                        // আজকের বক্স একটু হাইলাইট করা
-                        boxClass = "bg-white border-blue-500 shadow-md ring-2 ring-blue-100 cursor-pointer transform hover:scale-105 transition-all";
-                        content = `<img src="${giftIconUrl}" class="w-10 h-10 mb-1 animate-bounce drop-shadow-md">`; 
-                        textClass = "text-blue-600";
-                        
-                        if(isFriday) {
-                             boxClass = "bg-gradient-to-br from-purple-600 to-indigo-600 border-none shadow-xl ring-4 ring-purple-200 cursor-pointer transform hover:scale-105";
-                             content = `<img src="${giftIconUrl}" class="w-12 h-12 mb-1 animate-tada drop-shadow-lg filter brightness-125">`;
-                             textClass = "text-yellow-300";
-                             text = "মিস্ট্রি";
-                        }
-                    }
-                } else if (isFriday) {
-                    boxClass = "bg-purple-50 border-purple-200";
-                    content = `<img src="${giftIconUrl}" class="w-9 h-9 mb-1">`;
-                    textClass = "text-purple-600";
-                    text = "বিগ অফার";
-                } else {
-                    content = `<img src="${giftIconUrl}" class="w-8 h-8 mb-1">`;
-                    textClass = "text-slate-600";
+                // সামারি পেজ আপডেট করার ট্র্রিগার
+                if(typeof checkDailyBonus === 'function') checkDailyBonus(currentUserId);
+
+                hideLoading();
+
+                // ৬. অ্যাড শেষ হওয়ার পর ডাইরেক্ট ৩ডি বক্স এনিমেশন শুরু
+                window.trigger3DBoxReward(`৳${finalAmount.toFixed(2)}`);
+
+                // রঙিন কাগজ উড়ানো (কনফেটি)
+                if(typeof confetti === 'function') {
+                    var duration = 3000;
+                    var end = Date.now() + duration;
+                    (function frame() {
+                        confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'] });
+                        confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'] });
+                        if (Date.now() < end) requestAnimationFrame(frame);
+                    }());
                 }
 
-                // 🔥 হাইট ফিক্সড করে দিয়েছি (h-24) যাতে সব কন্টেন্ট ধরে
-                boxesHtml += `
-                    <div class="flex flex-col items-center justify-center h-24 p-1 rounded-2xl border ${boxClass} relative overflow-hidden transition-all" 
-                        ${(isToday && !hasClaimedToday) ? `onclick="claimBonus('${dayName}', ${amount})"` : ''}>
-                        
-                        ${isToday && !hasClaimedToday ? '<span class="absolute top-0 right-0 bg-red-500 w-2.5 h-2.5 rounded-full m-1.5 animate-ping"></span>' : ''}
-                        
-                        ${content}
-                        <span class="text-[11px] font-bold ${isFriday && isToday ? 'text-white' : 'text-slate-500'} mb-0.5">${banglaDays[dayName]}</span>
-                        <span class="text-xs font-black ${textClass}">${text}</span>
-                    </div>
-                `;
-            });
-
-            Swal.fire({
-                title: '🎁 ডেইলি বোনাস',
-                html: `
-                    <p class="text-sm text-slate-500 mb-5">প্রতিদিন অ্যাপে ঢুকে বোনাস সংগ্রহ করুন!</p>
-                    <div class="grid grid-cols-4 gap-3 mb-2 px-1">
-                        ${boxesHtml}
-                    </div>
-                `,
-                showConfirmButton: false,
-                showCloseButton: true,
-                background: '#f8fafc',
-                customClass: {
-                    popup: 'rounded-[30px] w-full max-w-md border border-slate-200',
-                    title: 'text-slate-800 font-bold text-xl'
-                }
-            });
-        };
-
-        // ৬. বোনাস ক্লেইম ফাংশন (Birthday Confetti 🎉)
-        window.claimBonus = async (dayName, baseAmount) => {
-            Swal.close(); 
-
-            let finalAmount = baseAmount;
-            let message = `আজকের বোনাস ৳${baseAmount}`;
-
-            // শুক্রবার মিস্ট্রি বক্স লজিক (সর্বোচ্চ ৬ থেকে ৮ টাকা করার জন্য নতুন কম রেট)
-                if (dayName === 'Friday') {
-                    // ১ থেকে ১০০ এর মধ্যে একটি লটারি নাম্বার জেনারেট হবে
-                    let luck = Math.floor(Math.random() * 100) + 1;
-                
-                    if (luck <= 5) {
-                        // মাত্র ৫% ভাগ্যের জোড়ে সর্বোচ্চ ৮ টাকা পাবে
-                        finalAmount = 8; 
-                    } else if (luck <= 15) {
-                        // ১০% ভাগ্যের জোড়ে ৭ টাকা পাবে
-                        finalAmount = 7;
-                    } else {
-                        // বাকি ৮৫% সাধারণ ইউজার রেন্ডমলি ৪, ৫ অথবা ৬ টাকা পাবে
-                        finalAmount = Math.floor(Math.random() * (6 - 4 + 1)) + 4; 
-                    }
-                
-                    message = `🎉 জুম্মা মোবারক! মিস্ট্রি বক্সে পেয়েছেন ৳${finalAmount}`;
-                }
-            const result = await Swal.fire({
-                title: '🎁 বোনাস নিন',
-                html: `<div class="text-center">
-                        <img src="https://i.postimg.cc/dtj5JQqK/gift-box.png" class="w-20 mx-auto mb-3 animate-bounce">
-                        <p class="text-slate-600 font-bold">বোনাস পেতে একটি ভিডিও অ্যাড দেখুন</p>
-                       </div>`,
-                showCancelButton: true,
-                confirmButtonText: 'ভিডিও দেখুন',
-                cancelButtonText: 'না, থাক',
-                confirmButtonColor: '#8b5cf6'
-            });
-
-            if (result.isConfirmed) {
-                onAdCompleted = async () => {
-                    showLoading();
-                    try {
-                        const userRef = db.collection("users").doc(currentUserId);
-                        
-                        await userRef.update({
-                            mainBalance: firebase.firestore.FieldValue.increment(finalAmount),
-                            totalEarnings: firebase.firestore.FieldValue.increment(finalAmount),
-                            todayEarnings: firebase.firestore.FieldValue.increment(finalAmount),
-                            lastDailyBonus: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-
-                        await db.collection("history").add({
-                            userId: currentUserId,
-                            type: "ডেইলি বোনাস",
-                            amount: finalAmount,
-                            status: "Success",
-                            details: `${dayName} - চেক ইন বোনাস`,
-                            date: new Date().toLocaleDateString('bn-BD'),
-                            time: new Date().toLocaleTimeString('bn-BD'),
-                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                        
-                        if(typeof todayEarnings !== 'undefined') {
-                            todayEarnings += finalAmount;
-                            document.getElementById('todayEarnings').textContent = todayEarnings.toFixed(2);
-                        }
-
-                      // ১. ৩ডি বক্স এনিমেশন চালু (মামা স্পেশাল)
-                        window.trigger3DBoxReward(`৳${finalAmount}`);
-
-                        // ২. দুই পাশ থেকে বার্থডে স্টাইল কনফেটি বৃষ্টি (৩ সেকেন্ড ধরে চলবে)
-                        if(typeof confetti === 'function') {
-                            var duration = 3000;
-                            var end = Date.now() + duration;
-                            (function frame() {
-                                confetti({
-                                    particleCount: 3, angle: 60, spread: 55, origin: { x: 0 },
-                                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
-                                });
-                                confetti({
-                                    particleCount: 3, angle: 120, spread: 55, origin: { x: 1 },
-                                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
-                                });
-                                if (Date.now() < end) { requestAnimationFrame(frame); }
-                            }());
-                        }
-
-                       // ৩. মেসেজ এবং সাউন্ড (গর্জিয়াস সুইট অ্যালার্ট পপ-আপ)
-                        Swal.fire({
-                            title: '🎉 বোনাস ক্লেইম সফল!',
-                            html: `
-                                <div class="text-center animate__animated animate__zoomIn">
-                                    <img src="https://i.postimg.cc/dtj5JQqK/gift-box.png" class="w-16 mx-auto mb-3 animate-bounce" style="filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));">
-                                    <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100 p-4 rounded-2xl mb-4">
-                                        <p class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">আপনি ক্লেইম করেছেন</p>
-                                        <h2 class="text-3xl font-black text-purple-600 mt-1">৳${finalAmount.toFixed(2)}</h2>
-                                    </div>
-                                    <p class="text-xs text-slate-500 leading-relaxed font-semibold">
-                                        আজকের ডেইলি বোনাসের টাকা সরাসরি আপনার মেইন ব্যালেন্সে জমা করে দেওয়া হয়েছে। অ্যাপে সক্রিয় থাকুন এবং প্রতিদিন আপনার ফ্রি বোনাসটি বুঝে নিতে ভুলবেন না! 🚀
-                                    </p>
+                // ৭. ৩ডি এনিমেশনের সাথে সিনক্রোনাইজ করে ২ সেকেন্ড পর সাকসেস পপ-আপ
+                setTimeout(() => {
+                    Swal.fire({
+                        title: '🎉 ক্লেইম সফল!',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100 p-4 rounded-2xl mb-4 mt-2 shadow-sm">
+                                    <p class="text-slate-400 font-bold text-[10px] uppercase tracking-wider">আপনি পেয়েছেন</p>
+                                    <h2 class="text-4xl font-black text-purple-600 mt-1 drop-shadow-sm">৳${finalAmount.toFixed(2)}</h2>
                                 </div>
-                            `,
-                            confirmButtonText: 'ধন্যবাদ, বুঝেছি',
-                            confirmButtonColor: '#8b5cf6',
-                            background: '#ffffff',
-                            customClass: {
-                                popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
-                                confirmButton: 'rounded-xl px-8 py-3 font-bold'
-                            }
-                        });
+                                <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+                                    বোনাসের টাকা সরাসরি আপনার মেইন ব্যালেন্সে জমা করা হয়েছে। আগামীকাল আবার নতুন সারপ্রাইজ পেতে ফিরে আসুন! 🚀
+                                </p>
+                            </div>
+                        `,
+                        confirmButtonText: 'ধন্যবাদ',
+                        confirmButtonColor: '#8b5cf6',
+                        background: '#ffffff',
+                        customClass: { 
+                            popup: 'rounded-[30px] border border-slate-100 shadow-2xl', 
+                            confirmButton: 'rounded-xl px-8 py-3 font-bold shadow-lg' 
+                        }
+                    });
+                }, 2000);
 
-                        window.playSound('snd_success');
-                        hideLoading();
-                        
-                    } catch (e) {
-                        console.error(e);
-                        showSmartToast("সমস্যা হয়েছে", "error");
-                        hideLoading();
-                    }
-                };
-                window.showMonetagAd(onAdCompleted);
+                window.playSound('snd_success');
+
+            } catch (e) {
+                console.error(e);
+                showSmartToast("সমস্যা হয়েছে, আবার চেষ্টা করুন", "error");
+                hideLoading();
             }
-        };
-
-
+        });
+    }
+};
 
         // ✅ OTHER FUNCTIONS
         window.copyReferralLink = () => {
@@ -8692,9 +8427,8 @@ window.showPage = (id, defaultTab = null) => {
             loadSummary(currentUserId);
         }
     }
-    else if(id === 'subscriptionScreen') {
-        window.switchSubscriptionTab('stars');
-        loadSubscriptions();
+    else if(id === 'jobPostScreen') {
+        // এখানে পরবর্তীতে জব পোস্টের ডাটা লোড করার কোড বসবে
     }
     
     // 👇👇 ঠিক এইখানটাতে আমাদের নতুন কোড বসবে 👇👇
@@ -9086,31 +8820,6 @@ window.selectWithdrawMethod = (el, method) => {
         btn.innerHTML = `<i class="ri-wallet-3-line"></i> উত্তোলন করুন`;
     }
 };
-        // ✅ SUBSCRIPTION FUNCTIONS        
-     
-        window.selectStarPackage = (stars) => {
-            selectedStarPackage = stars;
-            document.getElementById('selectedStars').textContent = stars;
-            
-            let price = 0;
-            if(stars === 100) price = 290;
-            else if(stars === 250) price = 652.5;
-            else if(stars === 500) price = 1305;
-            
-            document.getElementById('totalStarPrice').textContent = price;
-        };
-                
-        
-        window.buyStars = () => {
-            if(selectedStarPackage === 0) {
-                showSmartToast('দয়া করে স্টার প্যাকেজ সিলেক্ট করুন', 'error');
-                return;
-            }
-            const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})। আমি ${selectedStarPackage} স্টার - ৳${document.getElementById('totalStarPrice').textContent} প্যাকেজটি কিনতে চাই।`);
-            window.open(`https://t.me/TAKA_WALA_ADMIN?text=${message}`, '_blank'); 
-            showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
-        };
-        
         
                 // ✅ GLOBAL VARS FOR SUBSCRIPTION
         let subscriptionData = [];
@@ -9389,94 +9098,113 @@ window.playSound = (id) => {
             });
         };
       
-        // ✅ REAL-TIME LIVE PAYMENT PROOF
-        const startLivePayoutNotifications = () => {
-            // শুধু আজকের সাকসেস হওয়া পেমেন্টগুলো চেক করবে
-            db.collection("history")
-                .where("status", "==", "Success")
-                .orderBy("date", "desc")
-                .limit(1)
-                .onSnapshot(snapshot => {
-                    snapshot.docChanges().forEach(change => {
-                        if (change.type === "added") {
-                            const data = change.doc.data();
-                            // যদি ট্রানজেকশনটি ১ মিনিটের মধ্যে হয়ে থাকে তবেই দেখাবে
-                            showLiveToast(data.name || "একজন ইউজার", data.amount, data.type);
-                        }
-                    });
-                });
-        };
-
-        const showLiveToast = (name, amount, type) => {
-            const toast = document.createElement('div');
-            toast.className = 'fixed bottom-24 left-4 right-4 z-[1000] animate__animated animate__fadeInUp';
-            toast.innerHTML = `
-                <div class="bg-slate-900/90 backdrop-blur-md border border-white/10 p-3 rounded-2xl flex items-center gap-3 shadow-2xl">
-                    <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white shrink-0">
-                        <i class="ri-check-double-line text-xl"></i>
-                    </div>
-                    <div class="flex-1">
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">পেমেন্ট সাকসেসফুল! 🎉</p>
-                        <p class="text-xs text-white"><b>${name}</b> মাত্র <b>৳${amount}</b> ${type === 'Withdraw' ? 'উইথড্র' : 'পেমেন্ট'} পেয়েছেন।</p>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(toast);
-            
-            // ৩ সেকেন্ড পর মুছে যাবে
-            setTimeout(() => {
-                toast.classList.replace('animate__fadeInUp', 'animate__fadeOutDown');
-                setTimeout(() => toast.remove(), 1000);
-            }, 4000);
-        };
-
-        // ফাংশনটি কল করা
-        setTimeout(startLivePayoutNotifications, 5000); // অ্যাপ খোলার ৫ সেকেন্ড পর শুরু হবে       
-   
-   // ==========================================
-// 💸 FAKE LIVE WITHDRAWAL POPUP (FOMO HACK)
+       // ==========================================
+// 🚀 REAL-TIME GLOBAL ACTIVITY POPUP (100% REAL)
 // ==========================================
-const fomoNames =["রাকিব*****", "সুমাইয়া****", "Hasan***", "Niloy**", "Farhan***", "Mim****", "Raju*****", "তানিয়া***", "Jahid**", "Sonia***"];
-const fomoMethods = ["bKash", "Nagad"];
+let isInitialFomoLoad = true;
 
-// প্রতি ২৫ সেকেন্ড পর পর একটি ফেক পেমেন্ট প্রুফ ভাসবে
-setInterval(() => {
-    // শুধুমাত্র হোম পেজে থাকলে দেখাবে (যাতে কাজ করার সময় ডিস্টার্ব না হয়)
-    if (!document.getElementById('homeScreen').classList.contains('hidden')) {
-        
-        // রেন্ডম ডেটা তৈরি
-        const randomName = fomoNames[Math.floor(Math.random() * fomoNames.length)];
-        const randomAmount = Math.floor(Math.random() * (450 - 50 + 1)) + 50; // ৫০ থেকে ৫০০ টাকার মধ্যে
-        const randomMethod = fomoMethods[Math.floor(Math.random() * fomoMethods.length)];
-        const methodIcon = randomMethod === 'bKash' 
-            ? 'https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png' 
-            : 'https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png';
-        
-        // নোটিফিকেশন এলিমেন্ট তৈরি
-        const toast = document.createElement('div');
-        toast.className = 'fixed top-28 left-0 right-0 z-[99] flex justify-center pointer-events-none animate__animated animate__bounceInDown';
-        
-        // ডিজাইন: ডার্ক গ্লাস ইফেক্ট (আইফোনের মতো)
-        toast.innerHTML = `
-            <div class="bg-slate-900/85 backdrop-blur-xl border border-white/20 p-2 pr-4 rounded-full flex items-center gap-2 shadow-2xl">
-                <div class="bg-white p-1 rounded-full">
-                    <img src="${methodIcon}" class="w-4 h-4 object-contain">
-                </div>
-                <p class="text-[11px] text-slate-200 font-medium">
-                    <b class="text-white">${randomName}</b> এইমাত্র <b class="text-green-400">৳${randomAmount}</b> পেমেন্ট পেলেন!
+const startLiveGlobalNotifications = () => {
+    // ডাটাবেসের হিস্ট্রি কালেকশনে রিয়েল-টাইম নজরদারি
+    db.collection("history")
+        .where("status", "==", "Success")
+        .orderBy("timestamp", "desc")
+        .limit(1)
+        .onSnapshot(snapshot => {
+            // অ্যাপ ওপেন হওয়ার সাথে সাথে পুরনো ডাটা যাতে না দেখায়, তাই প্রথম লোডটা ইগনোর করছি
+            if (isInitialFomoLoad) {
+                isInitialFomoLoad = false;
+                return;
+            }
+
+            snapshot.docChanges().forEach(change => {
+                if (change.type === "added") {
+                    const data = change.doc.data();
+                    processGlobalActivity(data);
+                }
+            });
+        });
+};
+
+// ডাটা প্রসেস করে মেসেজ ও ডিজাইন তৈরি করা
+const processGlobalActivity = (data) => {
+    const type = (data.type || "").toLowerCase();
+    const amount = Math.abs(parseFloat(data.amount) || 0);
+    
+    // প্রাইভেসির জন্য ইউজারের নামের শুধু প্রথম অংশ দেখাবো (যেমন: Rakib***)
+    let rawName = data.name || data.userName || "একজন মেম্বার";
+    let shortName = rawName.split(" ")[0] + "***";
+
+    let title = "";
+    let message = "";
+    let icon = "";
+    let bgStyle = "";
+
+    // ১. উইথড্র / পেমেন্ট এপ্রুভ হলে
+    if (type.includes('উত্তোলন') || type.includes('withdraw')) {
+        title = "পেমেন্ট প্রুফ! 💸";
+        message = `<b class="text-white">${shortName}</b> এইমাত্র <b class="text-emerald-300">৳${amount}</b> পেমেন্ট পেয়েছেন!`;
+        icon = "ri-bank-card-fill text-emerald-400";
+        bgStyle = "bg-emerald-950/90 border-emerald-500/30";
+    } 
+    // ২. টাস্ক বা কুইজ কমপ্লিট করলে
+    else if (type.includes('টাস্ক') || type.includes('ভিজিট') || type.includes('কুইজ')) {
+        title = "টাস্ক কমপ্লিট! ✅";
+        message = `<b class="text-white">${shortName}</b> কাজ সম্পন্ন করে <b class="text-blue-300">৳${amount}</b> আয় করেছেন।`;
+        icon = "ri-checkbox-circle-fill text-blue-400";
+        bgStyle = "bg-blue-950/90 border-blue-500/30";
+    } 
+    // ৩. রেফার বা একাউন্ট অ্যাক্টিভেশন হলে
+    else if (type.includes('রেফার')) {
+        title = "রেফার বোনাস! 👥";
+        message = `<b class="text-white">${shortName}</b> সফল রেফারের মাধ্যমে <b class="text-purple-300">৳${amount}</b> পেয়েছেন।`;
+        icon = "ri-user-add-fill text-purple-400";
+        bgStyle = "bg-purple-950/90 border-purple-500/30";
+    } 
+    else {
+        return; // অন্য কোনো ট্রানজেকশন হলে পপ-আপ দেখাবে না
+    }
+
+    showPremiumFOMOToast(title, message, icon, bgStyle);
+};
+
+// গর্জিয়াস ফ্লোটিং পপ-আপ ডিজাইন
+const showPremiumFOMOToast = (title, message, iconClass, bgStyle) => {
+    // আগের কোনো পপ-আপ থাকলে রিমুভ করে দেওয়া
+    const existingToast = document.getElementById('globalFomoToast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'globalFomoToast';
+    // ন্যাভবারের ঠিক উপরে ভাসবে
+    toast.className = 'fixed bottom-24 left-4 right-4 z-[99999] flex justify-center pointer-events-none animate__animated animate__slideInUp';
+    
+    toast.innerHTML = `
+        <div class="${bgStyle} backdrop-blur-xl border p-3 pr-5 rounded-2xl flex items-center gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.3)] max-w-sm w-full">
+            <div class="bg-white/10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-white/10">
+                <i class="${iconClass} text-xl animate-pulse"></i>
+            </div>
+            <div class="flex-1 text-left">
+                <p class="text-[10px] text-slate-300 font-bold uppercase tracking-wider mb-0.5">${title}</p>
+                <p class="text-xs text-slate-100 font-medium leading-tight shadow-sm">
+                    ${message}
                 </p>
             </div>
-        `;
-        
-        document.body.appendChild(toast);
-        
-        // ৩.৫ সেকেন্ড পর নোটিফিকেশন উপরে উঠে মিলিয়ে যাবে
-        setTimeout(() => {
-            toast.classList.replace('animate__bounceInDown', 'animate__fadeOutUp');
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // ৪ সেকেন্ড পর আস্তে করে নিচে নেমে মিলিয়ে যাবে
+    setTimeout(() => {
+        if(toast) {
+            toast.classList.replace('animate__slideInUp', 'animate__fadeOutDown');
             setTimeout(() => toast.remove(), 1000);
-        }, 3500);
-    }
-}, 25000); // 25000 মানে ২৫ সেকেন্ড
+        }
+    }, 4000);
+};
+
+// অ্যাপ পুরোপুরি রেডি হওয়ার পর লিসেনার চালু হবে
+setTimeout(startLiveGlobalNotifications, 3000);
    
    // 🛡️ ANTI-SPAM SYSTEM (বারবার ক্লিক ঠেকানো)
 let clickTracker = 0;
@@ -11629,16 +11357,6 @@ async function checkMyLuckyDrawResult() {
     } catch (e) { console.error("Check Draw Result Error:", e); }
 }
 
-window.blockTaskDueToCheating = (taskId, title) => {
-    Swal.fire({
-        icon: 'error',
-        title: 'ফাঁকি সনাক্ত হয়েছে! ⚠️',
-        text: 'মামা, আপনি ৩০ সেকেন্ডের আগে ফিরে এসেছেন। কাজ সঠিকভাবে করতে কমপক্ষে ৩০ সেকেন্ড সাইটে থাকতে হবে।',
-        confirmButtonText: 'ঠিক আছে',
-        confirmButtonColor: '#ef4444'
-    });
-    window.isTaskRunning = false;
-};
 
 // ✅ bKash/Nagad Style Secure PIN Verification Module
 let activePinCallback = null;
