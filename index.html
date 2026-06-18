@@ -260,19 +260,20 @@
             to { top: -100px; opacity: 0; transform: translateX(-50%) scale(0.9); visibility: hidden; }
         }
 
-        /* 🚀 ULTRA PREMIUM GLASSY LOADING OVERLAY */
+        /* 🚀 ULTRA PREMIUM GLASSY LOADING OVERLAY (DARK GLASS FIX) */
 #loadingOverlay, .loading-overlay {
     position: fixed !important;
     top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
-    background: rgba(15, 23, 42, 0.35) !important; /* হালকা ডার্ক এবং স্বচ্ছ টোন */
-    backdrop-filter: blur(14px) saturate(180%) !important; /* আসল কাঁচের মতো গ্লাসি ব্লার */
-    -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+    background: rgba(0, 0, 0, 0.5) !important; /* পারফেক্ট ডার্ক টোন, সাদাটে ভাব থাকবে না */
+    backdrop-filter: blur(12px) !important; /* স্মুথ গ্লাসি ব্লার */
+    -webkit-backdrop-filter: blur(12px) !important; /* আইফোনের জন্য সাপোর্ট */
     z-index: 999999 !important;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: opacity 0.3s ease-in-out !important;
 }
+
         
         .loading-logo {
             width: 100px;
@@ -3955,22 +3956,21 @@ window.showMonetagAd = async (callback) => {
         ensureMainAppVisible();
     }
 };
+
 // ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ফিক্সড)
 function ensureMainAppVisible() {
     const mainApp = document.getElementById('mainApp');
     const bottomNav = document.getElementById('bottomNav');
-    
     if (mainApp) mainApp.classList.remove('hidden');
     if (bottomNav) bottomNav.classList.remove('hidden');
     
     // যেকোনো লোডিং ওভারলে সরানো
     document.getElementById('loadingOverlay')?.classList.add('hidden');
-
-    // 🔥 ব্রাউজারের ক্রাশ বা সাদা স্ক্রিন ঠেকানোর জন্য বডি স্টাইল ফোর্স রিসেট
-    document.body.style.display = 'block';
-    document.body.style.visibility = 'visible';
-    document.body.style.overflow = 'auto';
-    document.body.classList.remove('swal2-shown', 'swal2-height-auto'); // SweetAlert এর বাগ ফিক্স
+    
+    // 🔥 SweetAlert পপ-আপ ক্রাশ এবং সাদা স্ক্রিন হয়ে ঝিলিক মারা (Flickering) বন্ধ করার সঠিক ফিক্স
+    document.body.style.display = '';
+    document.body.style.visibility = '';
+    document.body.style.overflow = '';
 }
 
         // ✅ LOAD SYSTEM SETTINGS (এডমিন প্যানেলের appConfig এর সাথে সিঙ্ক)
