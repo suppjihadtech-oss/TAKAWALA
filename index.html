@@ -3892,114 +3892,102 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
         };
         
       // ✅ আল্ট্রা-স্মুথ ডাবল অ্যাড সিস্টেম (১ সেকেন্ড লোডিং + ১টা মনিট্যাগ + ১টা অ্যাডসগ্রাম) 🤑
+// ✅ আল্ট্রা-স্মুথ ডাবল অ্যাড সিস্টেম (Monetag + Adsgram) - ফিক্সড ভার্সন
 window.showMonetagAd = async (callback) => {
     
-    // ⏳ অ্যাড আসার আগে ১ সেকেন্ডের জন্য তোর গ্লাসি লোডিং ওভারলে দেখাবে
+    // ১. শুরুতে লোডিং দেখানো
     showLoading();
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    hideLoading(); // ১ সেকেন্ড পর লোডিং সরিয়ে অ্যাড প্লে শুরু করবে
+    await new Promise(resolve => setTimeout(resolve, 800));
+    hideLoading(); 
 
-    // 🎬 ১. মনিট্যাগ অ্যাড প্লে করার হেল্পার
+    // 🎬 ১. মনিট্যাগ অ্যাড প্লে করার ক্লিন হেল্পার
     const playMonetagAd = () => {
         return new Promise(async (resolve) => {
             try {
                 if (typeof window['show_10531082'] === 'function') {
                     await window['show_10531082']();
                 }
-            } catch (e) {
-                console.log("Monetag Ad error:", e);
-            }
+            } catch (e) { console.log("Monetag Ad error:", e); }
 
-            // ব্রাউজারকে নতুন ট্যাব খোলার জন্য সামান্য সময় দেওয়া
-            setTimeout(() => {
-                if (document.hidden) {
-                    const onReturn = () => {
-                        if (!document.hidden) {
-                            document.removeEventListener('visibilitychange', onReturn);
-                            setTimeout(resolve, 1000); 
-                        }
-                    };
-                    document.addEventListener('visibilitychange', onReturn);
-                } else {
-                    setTimeout(resolve, 1500);
-                }
-            }, 500);
+            // অ্যাড থেকে ফেরার পর ২ সেকেন্ড অপেক্ষা করবে পরের অ্যাডের জন্য
+            setTimeout(resolve, 2000);
         });
     };
 
-    // 🎬 ২. অ্যাডসগ্রাম অ্যাড প্লে করার হেল্পার
+    // 🎬 ২. অ্যাডসগ্রাম অ্যাড প্লে করার ক্লিন হেল্পার
     const playAdsgramAd = () => {
         return new Promise((resolve) => {
             try {
-                // তোর আসল ব্লক আইডি
-                const AdController = window.Adsgram.init({ blockId: "Int-35547" });
-                
-                AdController.show().then((result) => {
-                    // ইউজার পুরো অ্যাড দেখলে এখানে আসবে
-                    resolve();
-                }).catch((result) => {
-                    // ইউজার অ্যাড কেটে দিলে বা এরর হলে এখানে আসবে, তবুও প্রসেস যেন না আটকায় তাই resolve দিলাম
-                    resolve(); 
-                });
-            } catch (e) {
-                console.log("Adsgram Ad error:", e);
-                resolve();
-            }
+                const AdController = window.Adsgram.init({ blockId: "int-35547" });
+                AdController.show().then(() => resolve()).catch(() => resolve());
+            } catch (e) { resolve(); }
         });
     };
 
-    // 🚀 স্টেপ ১: প্রথম অ্যাড প্লে (মনিট্যাগ)
-    showSmartToast('প্রথম অ্যাড লোড হচ্ছে, অপেক্ষা করুন...', 'info');
+    // 🚀 অ্যাড প্লে শুরু
+    showSmartToast('প্রথম অ্যাড লোড হচ্ছে...', 'info');
     await playMonetagAd();
 
-    // 🚀 স্টেপ ২: দ্বিতীয় অ্যাড প্লে (অ্যাডসগ্রাম)
-    showSmartToast('দ্বিতীয় অ্যাড লোড হচ্ছে, অপেক্ষা করুন...', 'info');
+    showSmartToast('দ্বিতীয় অ্যাড লোড হচ্ছে...', 'info');
     await playAdsgramAd();
 
-    // 🎁 স্টেপ ৩: রিওয়ার্ড প্রসেসিং (উভয় অ্যাড দেখা শেষ হলে SweetAlert আসবে)
-    if (callback) {
-        const processReward = async () => {
-            try {
-                await callback(); // এখানে তোর SweetAlert রেওয়ার্ড পপ-আপ কল হবে
-            } catch (e) {
-                console.error("Reward Error:", e);
-                showSmartToast('রিওয়ার্ড পেতে সমস্যা হয়েছে, আবার চেষ্টা করুন', 'error');
-            } finally {
-                ensureMainAppVisible();
+    // 🎁 ৩. রিওয়ার্ড দেওয়ার মেইন লজিক (ঝিলিক মুক্ত)
+    const triggerReward = async () => {
+        // ১. আগে জোর করে অ্যাপ দৃশ্যমান করা (যাতে সাদা স্ক্রিন না থাকে)
+        ensureMainAppVisible(); 
+        
+        if (callback) {
+            // ২. সামান্য ডিলে (৫০০ms) যাতে SweetAlert পপ-আপ রেন্ডার হতে পারে
+            setTimeout(async () => {
+                await callback(); 
+            }, 500); 
+        }
+    };
+
+    // ৪. ইউজার কি অ্যাপের ভেতরে আছে নাকি অন্য ট্যাবে?
+    if (document.hidden) {
+        const onReturn = () => {
+            if (!document.hidden) {
+                document.removeEventListener('visibilitychange', onReturn);
+                // ফিরে আসার ১ সেকেন্ডের মধ্যে অ্যাপ এক্টিভ করে রিওয়ার্ড দিবে
+                setTimeout(triggerReward, 500); 
             }
         };
-
-        if (document.hidden) {
-            document.addEventListener('visibilitychange', function finalReturn() {
-                if (!document.hidden) {
-                    document.removeEventListener('visibilitychange', finalReturn);
-                    setTimeout(processReward, 1000); 
-                }
-            });
-        } else {
-            processReward();
-        }
+        document.addEventListener('visibilitychange', onReturn);
     } else {
-        ensureMainAppVisible();
+        // যদি অলরেডি অ্যাপেই থাকে
+        triggerReward();
     }
 };
 
 
 // ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ফিক্সড)
+// এই কোডটি আগের সবটুকু মুছে দিয়ে নতুন করে বসাও
 function ensureMainAppVisible() {
     const mainApp = document.getElementById('mainApp');
     const bottomNav = document.getElementById('bottomNav');
-    if (mainApp) mainApp.classList.remove('hidden');
-    if (bottomNav) bottomNav.classList.remove('hidden');
-    
-    // যেকোনো লোডিং ওভারলে সরানো
-    document.getElementById('loadingOverlay')?.classList.add('hidden');
-    
-    // 🔥 SweetAlert পপ-আপ ক্রাশ এবং সাদা স্ক্রিন হয়ে ঝিলিক মারা (Flickering) বন্ধ করার সঠিক ফিক্স
-    document.body.style.display = '';
-    document.body.style.visibility = '';
-    document.body.style.overflow = '';
-}
+    const loader = document.getElementById('loadingOverlay');
+
+    if (mainApp) {
+        mainApp.classList.remove('hidden');
+        mainApp.style.setProperty('display', 'block', 'important');
+    }
+    if (bottomNav) {
+        bottomNav.classList.remove('hidden');
+        bottomNav.style.setProperty('display', 'flex', 'important');
+    }
+    if (loader) {
+        loader.classList.add('hidden');
+        loader.style.display = 'none';
+    }
+
+    // SweetAlert পপ-আপ ক্রাশ এবং সাদা স্ক্রিন হয়ে ঝিলিক মারা বন্ধ করার ফিক্স
+    document.body.style.backgroundColor = ""; 
+    document.body.style.display = 'block';
+    document.body.style.visibility = 'visible';
+    document.body.style.overflow = 'auto';
+} 
+// এরপর আর কোনো বাড়তি } থাকবে না। সরাসরি পরের কমেন্ট বা ফাংশন শুরু হবে।
 
         // ✅ LOAD SYSTEM SETTINGS (এডমিন প্যানেলের appConfig এর সাথে সিঙ্ক)
 async function loadSystemSettings() {
@@ -4976,126 +4964,107 @@ document.getElementById('btnLoginAction').addEventListener('click', async () => 
      // ✅ ফিক্স: অ্যাপ একবার চালু হলে তা মনে রাখার ভেরিয়েবল
         window.isAppInitialized = false;
 
-        // ✅ AUTH STATE LISTENER WITH ALL FEATURES (FIXED)
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                currentUserId = user.uid;
-                window.isUserLoggedIn = true; 
-                
-                // 🚀 মেগা ফিক্স: অ্যাপ একবার চালু হয়ে গেলে অ্যাড থেকে ফেরার পর আর রিস্টার্ট নেবে না!
-                if (window.isAppInitialized) {
-                    return; // ফাংশন এখানেই থেমে যাবে, সাদা স্ক্রিন হবে না
-                }
-                window.isAppInitialized = true;
+       // ✅ AUTH STATE LISTENER WITH ALL FEATURES (FIXED & UNITIFIED)
+// ✅ AUTH STATE LISTENER (সব ফিচারসহ নিখুঁত সংস্করণ)
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        currentUserId = user.uid;
+        window.isUserLoggedIn = true; 
+        
+        // 🚀 অ্যাড থেকে ফেরার সময় সাদা স্ক্রিন ঠেকানোর মেইন লক
+        if (window.isAppInitialized) {
+            ensureMainAppVisible();
+            return; 
+        }
+        window.isAppInitialized = true;
+        showLoading();
+        
+        // 🆔 টেলিগ্রাম আইডি আপডেট (ব্রডকাস্টের জন্য)
+        if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
+            const tId = window.Telegram.WebApp.initDataUnsafe.user.id;
+            db.collection("users").doc(user.uid).update({ tgId: tId }).catch(e => {});
+        }
+        
+        // 📱 অটো ডিভাইস টোকেন আপডেট (ম্যাজিক ট্রিক)
+        let dToken = localStorage.getItem('TAKAWALA_device_id') || ('ID-' + Math.random().toString(36).substr(2, 9));
+        localStorage.setItem('TAKAWALA_device_id', dToken);
+        db.collection("users").doc(user.uid).update({ deviceToken: dToken }).catch(e => {});
 
-                showLoading();
-                
-                // 🔥 ১. পুরনো ইউজারদের টেলিগ্রাম আইডি আপডেট (ব্রডকাস্টের জন্য)
-                
-                // 🔥 ১. পুরনো ইউজারদের টেলিগ্রাম আইডি আপডেট (ব্রডকাস্টের জন্য)
-                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-                    const tId = window.Telegram.WebApp.initDataUnsafe.user.id;
-                    db.collection("users").doc(user.uid).update({ tgId: tId }).catch(e => console.log("TG ID update error"));
-                }
-                
-                // ✅ ২. OLD USER AUTO DEVICE TOKEN UPDATE (ম্যাজিক ট্রিক)
-                let dToken = localStorage.getItem('TAKAWALA_device_id');
-                if (!dToken) {
-                    dToken = 'ID-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
-                    localStorage.setItem('TAKAWALA_device_id', dToken);
-                }
-                db.collection("users").doc(user.uid).get().then(doc => {
-                    if(doc.exists && !doc.data().deviceToken) {
-                        db.collection("users").doc(user.uid).update({ deviceToken: dToken });
-                    }
-                });
-                
-                setTimeout(async () => {
-                    await loadSystemSettings();
-                    
-                    if(maintenanceMode) {
-                        hideLoading();
-                        return;
-                    }
-                    
-                    // ৩. UI পরিবর্তন
-                    document.getElementById('authScreen').classList.add('hidden'); 
-                    document.getElementById('mainApp').classList.remove('hidden'); 
-                    document.getElementById('bottomNav').classList.remove('hidden');
-                    window.showPage('homeScreen');            
+        setTimeout(async () => {
+            await loadSystemSettings();
+            if(maintenanceMode) { hideLoading(); return; }
+            
+            // 🖥️ UI দৃশ্যমান করা
+            document.getElementById('authScreen').classList.add('hidden'); 
+            document.getElementById('mainApp').classList.remove('hidden'); 
+            document.getElementById('bottomNav').classList.remove('hidden');
+            window.showPage('homeScreen');            
 
-                    // 🔊 ৪. আপনার ওয়েলকাম ভয়েস প্লে করার ম্যাজিক কোড
-                    setTimeout(() => {
-                        if(typeof window.playSound === 'function') window.playSound('snd_welcome');
-                    }, 800);
-                    
-                    // ৫. সব ডেটা এবং সেটিংস লোড করা
-                    syncUserData(user.uid); 
-           runGmailAutoProcessor();         initInboxListener();                  
-                    renderTasks();
-                    loadSummary(user.uid);
-                    checkDailyBonus(user.uid);
-                    loadTodayEarnings(user.uid);
+            // 🔊 তোমার সেই ওয়েলকাম ভয়েস টিউন
+            setTimeout(() => { 
+                if(typeof window.playSound === 'function') window.playSound('snd_welcome'); 
+            }, 800);
+            
+            // 📊 সব ডেটা এবং সেটিংস লোড করা (সবগুলো এখানে আছে)
+            syncUserData(user.uid); 
+            runGmailAutoProcessor();         
+            initInboxListener();                  
+            renderTasks();
+            loadSummary(user.uid);
+            checkDailyBonus(user.uid);
+            loadTodayEarnings(user.uid);
 
-                    // ডার্ক মোড এবং সেটিংস চেক
-                    if(localStorage.getItem('darkModeEnabled') === 'true') {
-                        document.body.classList.add('dark-mode');
-                    } 
-                    loadSettingsFromLocalStorage(); 
-                    
-                    // আইকনগুলো দেখানো
-                    document.getElementById('globalChatIcon').style.display = 'flex';
-                    document.getElementById('twaiChatbotIcon').style.display = 'flex';
+            // 🌙 ডার্ক মোড এবং সেটিংস চেক
+            if(localStorage.getItem('darkModeEnabled') === 'true') document.body.classList.add('dark-mode');
+            loadSettingsFromLocalStorage(); 
+            
+            // 💬 আইকনগুলো দেখানো
+            document.getElementById('globalChatIcon').style.display = 'flex';
+            document.getElementById('twaiChatbotIcon').style.display = 'flex';
 
-                    // ৬. লগইন নোটিশ পপ-আপ (দেড় সেকেন্ড পর)
-                    setTimeout(async () => {
-                        await showLoginNotice();
-                    }, 1500);
-                    
-                    hideLoading();
-                }, 300);
-
-            } else {
-    // 🛑 যদি ইউজার আগে থেকে লগইন না থাকে (অর্থাৎ সে একজন নতুন বা গেস্ট ইউজার)
-    if (!window.isUserLoggedIn) {
-        // ১. স্ক্রিন সেটআপ
-        document.getElementById('authScreen').classList.remove('hidden'); 
-        document.getElementById('mainApp').classList.add('hidden'); 
-        document.getElementById('bottomNav').classList.add('hidden');
-        window.toggleAuthTab('register'); // ডিফল্টভাবে রেজিস্ট্রেশন ফর্ম দেখাবে
-
-        // ২. 🌟 নতুন ইউজারের জন্য গর্জিয়াস ওয়েলকাম পপ-আপ
-        Swal.fire({
-            title: '<span style="font-weight:900; color:#1e293b;">একাউন্ট প্রয়োজন! 🔐</span>',
-            html: `
-                <div class="animate__animated animate__fadeIn" style="text-align:center;">
-                    <div style="font-size: 50px; margin-bottom: 15px;">👋</div>
-                    <p style="font-size:14px; font-weight:600; color:#64748b; line-height:1.6;">
-                        মামা, টাকাওয়ালা অ্যাপে ইনকাম শুরু করতে এবং পেমেন্ট পেতে আপনার একটি একাউন্ট থাকা প্রয়োজন।
-                    </p>
-                    <div style="background:#f0fdf4; padding:10px; border-radius:15px; margin-top:10px; border:1px dashed #22c55e;">
-                        <p style="color:#15803d; font-size:12px; font-weight:bold;">
-                            আজই জয়েন করুন এবং জিতে নিন ওয়েলকাম বোনাস! 🎁
-                        </p>
-                    </div>
-                </div>
-            `,
-            confirmButtonText: 'ঠিক আছে, একাউন্ট খুলব',
-            confirmButtonColor: '#059669',
-            background: '#ffffff',
-            customClass: {
-                popup: 'rounded-[30px] border border-white/50 shadow-2xl',
-                confirmButton: 'rounded-xl px-8 py-3 font-bold text-sm'
-            }
-        });
+            // 📢 লগইন নোটিশ
+            setTimeout(async () => { await showLoginNotice(); }, 1500);
+            
+            hideLoading();
+        }, 300);
 
     } else {
-            console.log("Flicker detected - Keeping App alive.");
+        // 🛑 ইউজার লগইন না থাকলে যা হবে
+        if (window.isUserLoggedIn) {
+            // যদি অ্যাড থেকে ফেরার সময় ভুল করে এখানে আসে, তবে অ্যাপ হাইড হবে না
+            ensureMainAppVisible();
+        } else {
+            // একদম নতুন ইউজার হলে রেজিস্ট্রেশন ও ওয়েলকাম পপ-আপ
+            document.getElementById('authScreen').classList.remove('hidden'); 
+            document.getElementById('mainApp').classList.add('hidden'); 
+            document.getElementById('bottomNav').classList.add('hidden');
+            window.toggleAuthTab('register'); 
+
+            Swal.fire({
+                title: '<span style="font-weight:900; color:#1e293b;">একাউন্ট প্রয়োজন! 🔐</span>',
+                html: `
+                    <div style="text-align:center;">
+                        <div style="font-size: 50px; margin-bottom: 15px;">👋</div>
+                        <p style="font-size:14px; font-weight:600; color:#64748b; line-height:1.6;">
+                            মামা, টাকাওয়ালা অ্যাপে ইনকাম শুরু করতে এবং পেমেন্ট পেতে আপনার একটি একাউন্ট থাকা প্রয়োজন।
+                        </p>
+                        <div style="background:#f0fdf4; padding:10px; border-radius:15px; margin-top:10px; border:1px dashed #22c55e;">
+                            <p style="color:#15803d; font-size:12px; font-weight:bold;">আজই জয়েন করুন এবং বোনাস নিন! 🎁</p>
+                        </div>
+                    </div>`,
+                confirmButtonText: 'ঠিক আছে, একাউন্ট খুলব',
+                confirmButtonColor: '#059669',
+                background: '#ffffff',
+                customClass: { 
+                    popup: 'rounded-[30px] border border-white/50 shadow-2xl', 
+                    confirmButton: 'rounded-xl px-8 py-3 font-bold text-sm' 
+                }
+            });
         }
         hideLoading();
     }
-});               
-            
+});
+             
            // ✅ রিয়েল-টাইম লিসেনার ক্লিয়ার করার গ্লোবাল ভেরিয়েবল
 let userUnsub = null;
 let configUnsub = null;
@@ -8226,28 +8195,24 @@ window.buySpins = async (count, price) => {
         hideLoading();
     }
 };
-        // ✅ iOS Style Premium Logout Confirmation
+        // ✅ iOS Style Premium Logout Confirmation (FIXED)
         window.logout = async () => {
             window.playSound('snd_click');
             
             const result = await Swal.fire({
                 title: 'লগআউট করবেন? 🚪',
                 html: `<div class="text-slate-500 text-sm font-medium leading-relaxed">
-                          আপনি কি নিশ্চিত যে আপনার একাউন্ট থেকে লগআউট করতে চান? <br> 
-                          <span class="text-blue-500 font-bold">পরবর্তীতে যেকোনো সময় আবার লগইন করতে পারবেন।</span>
+                          আপনি কি নিশ্চিত যে আপনার একাউন্ট থেকে লগআউট করতে চান?
                        </div>`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'হ্যাঁ, লগআউট করুন',
                 cancelButtonText: 'না, ফিরে যাই',
-                confirmButtonColor: '#ef4444', // লাল কালার
-                cancelButtonColor: '#f1f5f9', // হালকা সাদা/গ্রে কালার
-                reverseButtons: true, // আইফোনের মতো বাটন পজিশন
-                background: 'rgba(255, 255, 255, 0.9)',
-                backdrop: `rgba(15, 23, 42, 0.4) blur(8px)`, // ব্যাকগ্রাউন্ড ব্লার ইফেক্ট
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#f1f5f9',
+                reverseButtons: true,
                 customClass: {
-                    popup: 'rounded-[30px] border border-white/50 shadow-2xl',
-                    title: 'text-xl font-black text-slate-800',
+                    popup: 'rounded-[30px]',
                     confirmButton: 'rounded-xl px-6 py-3 text-sm font-bold',
                     cancelButton: 'rounded-xl px-5 py-3 font-bold text-slate-800'
                 }
@@ -8256,13 +8221,18 @@ window.buySpins = async (count, price) => {
             if (result.isConfirmed) {
                 showLoading();
                 try {
+                    // 🚀 মেইন ফিক্স: লগআউট করার আগে সিকিউরিটি লকগুলো খুলে দিতে হবে
+                    window.isUserLoggedIn = false; 
+                    window.isAppInitialized = false;
+                    
                     await auth.signOut();
+                    
                     showSmartToast('লগআউট সফল হয়েছে! 👋', 'success');
+                    
                     // আইকনগুলো লুকিয়ে ফেলা
-                    const chatIcon = document.getElementById('globalChatIcon');
-                    const twaiIcon = document.getElementById('twaiChatbotIcon');
-                    if(chatIcon) chatIcon.style.display = 'none';
-                    if(twaiIcon) twaiIcon.style.display = 'none';
+                    if(document.getElementById('globalChatIcon')) document.getElementById('globalChatIcon').style.display = 'none';
+                    if(document.getElementById('twaiChatbotIcon')) document.getElementById('twaiChatbotIcon').style.display = 'none';
+                    
                 } catch (e) {
                     showSmartToast('লগআউট করতে সমস্যা হয়েছে', 'error');
                 }
