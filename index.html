@@ -48,11 +48,7 @@
     display: none !important; 
 }
 
-#loadingOverlay {
-    background: rgba(15, 23, 42, 0.7) !important; /* প্রিমিয়াম ডার্ক স্লেট কালার */
-    backdrop-filter: blur(12px) saturate(150%) !important; /* আইওএস স্টাইল গ্লাসি ব্লার */
-    -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
-}
+
         
                 /* ✅ iOS STYLE POPUP DESIGN */
         .ios-modal-overlay {
@@ -264,22 +260,19 @@
             to { top: -100px; opacity: 0; transform: translateX(-50%) scale(0.9); visibility: hidden; }
         }
 
-        /* LOADING ANIMATION */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, 0.65); /* ডার্ক স্লিম ব্যাকগ্রাউন্ড */
-            backdrop-filter: blur(8px); /* প্রিমিয়াম ব্লার ইফেক্ট */
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 99999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
+        /* 🚀 PREMIUM DARK GLASSY LOADING OVERLAY */
+#loadingOverlay, .loading-overlay {
+    position: fixed !important;
+    top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.75) !important; /* ডিপ ব্ল্যাক গ্লাসি টোন */
+    backdrop-filter: blur(16px) saturate(180%) !important; /* হাই কোয়ালিটি ডার্ক আইওএস ব্লার */
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    z-index: 999999 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
         
         .loading-logo {
             width: 100px;
@@ -1333,11 +1326,14 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 </div>
             </div>
             
-            <div class="ios-modal-actions">
-                <button onclick="closeLoginNoticeWithConfetti()" class="ios-btn text-blue-600 font-bold" style="font-size: 17px;">
-                    ওকে, বুঝেছি
-                </button>
-            </div>
+            <div class="ios-modal-actions flex-col">
+    <button onclick="closeLoginNoticeWithConfetti()" class="ios-btn text-blue-600 font-bold border-b border-slate-200" style="font-size: 17px;">
+        ওকে, বুঝেছি
+    </button>
+    <button onclick="window.hideNoticeForToday()" class="ios-btn text-slate-500 font-medium" style="font-size: 14px;">
+        আজ আর দেখাবেন না
+    </button>
+</div>
         </div>
     </div>
 
@@ -1425,7 +1421,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 </div>
                 
                 <div class="text-right">
-                    <button onclick="window.resetPassword()" class="text-xs font-bold text-slate-500 hover:text-green-600 transition">পাসওয়ার্ড ভুলে গেছেন?</button>
+                    <button type="button" onclick="window.showForgotPasswordScreen()" class="text-xs font-bold text-slate-500 hover:text-green-600 transition">পাসওয়ার্ড ভুলে গেছেন?</button>
                 </div>
 
                 <button id="btnLoginAction" class="w-full bg-premium text-white font-bold py-4 rounded-2xl shadow-xl active:scale-95 transition mt-1">লগইন করুন</button>
@@ -1490,6 +1486,60 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             </div>
         </div>
     </div>
+    
+    <!-- ✅ GORGEOUS FORGOT PASSWORD SCREEN -->
+<div id="forgotPasswordScreen" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] animate__animated animate__fadeIn">
+    <div class="glass-card w-full max-w-md p-8 rounded-[35px] text-center shadow-2xl relative overflow-hidden">
+        
+        <!-- Background Decoration -->
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl"></div>
+        
+        <div class="relative z-10">
+            <!-- Animated Icon -->
+            <div class="w-20 h-20 bg-gradient-to-tr from-emerald-100 to-blue-50 rounded-3xl flex items-center justify-center mx-auto mb-5 shadow-inner border border-white">
+                <i class="ri-lock-unlock-fill text-4xl text-emerald-500 animate-pulse"></i>
+            </div>
+            
+            <h2 class="text-2xl font-black text-slate-800 mb-1">পাসওয়ার্ড রিসেট</h2>
+            <p class="text-xs text-slate-500 mb-6 font-medium leading-relaxed">
+                আপনার রেজিস্টার্ড ইমেইল এড্রেসটি দিন। আমরা পাসওয়ার্ড পরিবর্তনের একটি সুরক্ষিত লিংক পাঠিয়ে দেবো।
+            </p>
+
+            <div class="space-y-4 text-left">
+                <!-- Email Input -->
+                <div class="relative">
+                    <label class="text-[11px] font-black text-slate-400 uppercase ml-2 mb-1 block">আপনার ইমেইল</label>
+                    <div class="absolute inset-y-0 left-0 top-6 pl-4 flex items-center pointer-events-none text-slate-400">
+                        <i class="ri-mail-send-line text-lg"></i>
+                    </div>
+                    <input type="email" id="resetEmailInput" placeholder="যেমন: mr.rakib@gmail.com" 
+                        class="w-full pl-11 p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-emerald-500 font-bold text-slate-700 shadow-sm transition-all">
+                </div>
+
+                <!-- Guidelines Box -->
+                <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-100 mt-2">
+                    <h4 class="text-[10px] font-black text-blue-800 uppercase mb-1 flex items-center gap-1">
+                        <i class="ri-information-fill"></i> নির্দেশনা:
+                    </h4>
+                    <ul class="text-[10px] font-bold text-blue-600 ml-4 list-disc space-y-1">
+                        <li>লিংকটি আপনার ইমেইলের <span class="text-rose-500">INBOX</span> অথবা <span class="text-rose-500">SPAM</span> ফোল্ডারে চেক করুন।</li>
+                        <li>লিংকে ক্লিক করে নতুন পাসওয়ার্ড সেট করুন।</li>
+                    </ul>
+                </div>
+
+                <!-- Action Buttons -->
+                <button onclick="window.processPasswordReset()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                    <i class="ri-send-plane-fill text-lg"></i> রিসেট লিংক পাঠান
+                </button>
+                
+                <button onclick="window.hideForgotPasswordScreen()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3.5 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 mt-2">
+                    <i class="ri-arrow-left-line"></i> লগইন পেজে ফিরে যান
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- MAIN APP -->
     <div id="mainApp" class="hidden pb-24 max-w-md mx-auto min-h-screen relative bg-white">
@@ -3835,23 +3885,51 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-      // ✅ ফিক্সড: আল্ট্রা-স্মুথ সিঙ্গেল অ্যাড সিস্টেম (No Flickering & High CPM)
+      // ✅ আল্ট্রা-স্মুথ ডাবল অ্যাড সিস্টেম (সাদা স্ক্রিন ও ক্রাশ সম্পূর্ণ ফিক্সড)
 window.showMonetagAd = async (callback) => {
     showLoading();
-    showSmartToast('অ্যাড লোড হচ্ছে, দয়া করে অপেক্ষা করুন...', 'info');
     
-    try {
-        // সিঙ্গেল অ্যাড কল (নিরাপদ এবং হাই CPM)
-        if (typeof window['show_10531082'] === 'function') {
-            await window['show_10531082']();
-        }
-    } catch (e) {
-        console.log("Ad error (ignored):", e);
-    }
-    
-    // অ্যাড থেকে ফেরার পর DOM শান্ত হওয়ার জন্য ২.৫ সেকেন্ড সময় দেওয়া হলো
+    // 🎬 অ্যাড প্লে করার এবং ফিরে আসা পর্যন্ত অপেক্ষা করার হেল্পার ফাংশন
+    const playSingleAd = () => {
+        return new Promise(async (resolve) => {
+            try {
+                if (typeof window['show_10531082'] === 'function') {
+                    await window['show_10531082']();
+                }
+            } catch (e) {
+                console.log("Ad error (ignored):", e);
+            }
+
+            // ব্রাউজারকে নতুন ট্যাব খোলার জন্য সামান্য সময় দেওয়া (৫০০ মিলি-সেকেন্ড)
+            setTimeout(() => {
+                if (document.hidden) {
+                    // ইউজার যদি অ্যাডের ট্যাবে চলে যায়, তবে ফিরে আসা পর্যন্ত অপেক্ষা করবে
+                    const onReturn = () => {
+                        if (!document.hidden) {
+                            document.removeEventListener('visibilitychange', onReturn);
+                            setTimeout(resolve, 1000); // ফিরে আসার পর ১ সেকেন্ড রেস্ট নিবে (ক্রাশ ঠেকাতে)
+                        }
+                    };
+                    document.addEventListener('visibilitychange', onReturn);
+                } else {
+                    // যদি ইউজার পেজেই থাকে (অ্যাড পপ-আপ না হলে)
+                    setTimeout(resolve, 1500);
+                }
+            }, 500);
+        });
+    };
+
+    // 🚀 স্টেপ ১: প্রথম অ্যাড প্লে
+    showSmartToast('প্রথম অ্যাড লোড হচ্ছে, অপেক্ষা করুন...', 'info');
+    await playSingleAd();
+
+    // 🚀 স্টেপ ২: ইউজার ফিরে আসার পর দ্বিতীয় অ্যাড প্লে
+    showSmartToast('দ্বিতীয় অ্যাড লোড হচ্ছে, অপেক্ষা করুন...', 'info');
+    await playSingleAd();
+
+    // 🎁 স্টেপ ৩: রিওয়ার্ড প্রসেসিং (উভয় অ্যাড দেখা শেষ হলে)
     if (callback) {
-        setTimeout(async () => {
+        const processReward = async () => {
             try {
                 await callback();
             } catch (e) {
@@ -3862,22 +3940,40 @@ window.showMonetagAd = async (callback) => {
                 hideLoading();
                 ensureMainAppVisible();
             }
-        }, 2500); // 2.5 seconds delay
+        };
+
+        // এক্সট্রা সিকিউরিটি: যদি এখনো পেজ হিডেন থাকে, তবে ফিরে আসা পর্যন্ত অপেক্ষা করবে
+        if (document.hidden) {
+            document.addEventListener('visibilitychange', function finalReturn() {
+                if (!document.hidden) {
+                    document.removeEventListener('visibilitychange', finalReturn);
+                    setTimeout(processReward, 1000); // স্মুথ 3D এনিমেশনের জন্য ১ সেকেন্ড গ্যাপ
+                }
+            });
+        } else {
+            processReward();
+        }
     } else {
-        setTimeout(() => {
-            hideLoading();
-            ensureMainAppVisible();
-        }, 1500);
+        hideLoading();
+        ensureMainAppVisible();
     }
 };
-// ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল
+// ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ফিক্সড)
 function ensureMainAppVisible() {
     const mainApp = document.getElementById('mainApp');
     const bottomNav = document.getElementById('bottomNav');
+    
     if (mainApp) mainApp.classList.remove('hidden');
     if (bottomNav) bottomNav.classList.remove('hidden');
+    
     // যেকোনো লোডিং ওভারলে সরানো
     document.getElementById('loadingOverlay')?.classList.add('hidden');
+
+    // 🔥 ব্রাউজারের ক্রাশ বা সাদা স্ক্রিন ঠেকানোর জন্য বডি স্টাইল ফোর্স রিসেট
+    document.body.style.display = 'block';
+    document.body.style.visibility = 'visible';
+    document.body.style.overflow = 'auto';
+    document.body.classList.remove('swal2-shown', 'swal2-height-auto'); // SweetAlert এর বাগ ফিক্স
 }
 
         // ✅ LOAD SYSTEM SETTINGS (এডমিন প্যানেলের appConfig এর সাথে সিঙ্ক)
@@ -4007,8 +4103,14 @@ function updatePaymentMethodStatus(data) {
             document.getElementById('twaiChatbotIcon').style.display = 'none';
         }
 
-        // ✅ SHOW NOTICE (CLEAN VERSION)
+        // ✅ SHOW NOTICE (SMART DAILY LIMIT VERSION)
         async function showLoginNotice() {
+            // ১. চেক করা হচ্ছে ইউজার "আজ আর দেখাবেন না" তে ক্লিক করেছিল কি না
+            const todayStr = new Date().toLocaleDateString('bn-BD');
+            if (localStorage.getItem('hideNoticeDate') === todayStr) {
+                return; // আজকের দিন মিলে গেলে নোটিশ আর দেখাবে না
+            }
+
             try {
                 let title = "স্বাগতম 👋";
                 let msg = "আমাদের অ্যাপে আপনাকে স্বাগতম!";
@@ -4025,7 +4127,6 @@ function updatePaymentMethodStatus(data) {
                 document.getElementById('noticeTitle').innerText = title;
                 document.getElementById('noticeMessage').innerHTML = msg;
                 
-                // শুধু ওপেন হবে (কনফেটি এখন ক্লোজ বাটনে)
                 document.getElementById('loginNoticeModal').classList.remove('hidden');
 
             } catch (error) { console.error(error); }
@@ -4035,31 +4136,22 @@ function updatePaymentMethodStatus(data) {
             document.getElementById('loginNoticeModal').classList.add('hidden');
             if(typeof confetti === 'function') {
                 confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-            }
-        
-            // ২. কালারিং কাগজ ফুটানো (Birthday Style)
-            if(typeof confetti === 'function') {
-                // বাম পাশ থেকে
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { x: 0.1, y: 0.6 },
-                    zIndex: 99999999
-                });
-                // ডান পাশ থেকে
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { x: 0.9, y: 0.6 },
-                    zIndex: 99999999
-                });
+                confetti({ particleCount: 100, spread: 70, origin: { x: 0.1, y: 0.6 }, zIndex: 99999999 });
+                confetti({ particleCount: 100, spread: 70, origin: { x: 0.9, y: 0.6 }, zIndex: 99999999 });
             }
         }
 
-        // ✅ NEW FUNCTION: CLOSE LOGIN NOTICE
         function closeLoginNotice() {
             document.getElementById('loginNoticeModal').classList.add('hidden');
         }
+
+        // ✅ আজ আর দেখাবেন না - ফাংশন
+        window.hideNoticeForToday = () => {
+            const todayStr = new Date().toLocaleDateString('bn-BD');
+            localStorage.setItem('hideNoticeDate', todayStr); // আজকের তারিখ সেভ
+            document.getElementById('loginNoticeModal').classList.add('hidden'); // পপ-আপ বন্ধ
+            showSmartToast('আজকে আর এই নোটিশটি দেখাবে না!', 'success');
+        };
 
         // ✅ আপডেটেড প্যাকেজ লোড ফাংশন (ফিক্সড)
 async function loadPackages() {
@@ -4364,15 +4456,18 @@ function updateDepositAddress(method) {
                 <span class="text-yellow-300 shrink-0">•</span>
                 <span>"SEND MONEY" -এ ক্লিক করুন।</span>
             </li>
-            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
-                <div class="flex items-start gap-2">
-                    <span class="text-yellow-300 shrink-0">•</span>
-                    <span>প্রাপক নম্বর হিসেবে এই নম্বরটি লিখুন: <b class="underline tracking-wider font-mono">${walletNum}</b></span>
-                </div>
-                <button onclick="window.copyToClipboard('${walletNum}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
-                    <i class="ri-file-copy-line"></i> COPY
-                </button>
-            </li>
+           <li class="border-b border-white/10 pb-3">
+    <div class="flex items-start gap-2 text-xs font-bold leading-relaxed mb-2">
+        <span class="text-yellow-300 shrink-0">•</span>
+        <span>নিচের নাম্বারে টাকা সেন্ড মানি করুন:</span>
+    </div>
+    <div class="flex items-center justify-between bg-black/30 border border-white/30 rounded-xl p-2.5 pl-4 shadow-inner">
+        <span class="font-mono font-black text-yellow-400 text-lg tracking-[0.1em] drop-shadow-md">${walletNum}</span>
+        <button onclick="window.copyToClipboard('${walletNum}')" class="bg-white text-slate-900 hover:bg-slate-200 px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1 active:scale-95 transition-all uppercase shadow-md">
+            <i class="ri-file-copy-line"></i> COPY
+        </button>
+    </div>
+</li>
             <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
                 <div class="flex items-start gap-2">
                     <span class="text-yellow-300 shrink-0">•</span>
@@ -4407,15 +4502,18 @@ function updateDepositAddress(method) {
                 <span class="text-yellow-300 shrink-0">•</span>
                 <span>"SEND MONEY" -এ ক্লিক করুন।</span>
             </li>
-            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
-                <div class="flex items-start gap-2">
-                    <span class="text-yellow-300 shrink-0">•</span>
-                    <span>প্রাপক নম্বর হিসেবে এই নম্বরটি লিখুন: <b class="underline tracking-wider font-mono">${walletNum}</b></span>
-                </div>
-                <button onclick="window.copyToClipboard('${walletNum}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
-                    <i class="ri-file-copy-line"></i> COPY
-                </button>
-            </li>
+           <li class="border-b border-white/10 pb-3">
+    <div class="flex items-start gap-2 text-xs font-bold leading-relaxed mb-2">
+        <span class="text-yellow-300 shrink-0">•</span>
+        <span>নিচের নাম্বারে টাকা সেন্ড মানি করুন:</span>
+    </div>
+    <div class="flex items-center justify-between bg-black/30 border border-white/30 rounded-xl p-2.5 pl-4 shadow-inner">
+        <span class="font-mono font-black text-yellow-400 text-lg tracking-[0.1em] drop-shadow-md">${walletNum}</span>
+        <button onclick="window.copyToClipboard('${walletNum}')" class="bg-white text-slate-900 hover:bg-slate-200 px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1 active:scale-95 transition-all uppercase shadow-md">
+            <i class="ri-file-copy-line"></i> COPY
+        </button>
+    </div>
+</li>
             <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
                 <div class="flex items-start gap-2">
                     <span class="text-yellow-300 shrink-0">•</span>
@@ -4450,14 +4548,18 @@ function updateDepositAddress(method) {
                 <span class="text-yellow-300 shrink-0">•</span>
                 <span>"SEND MONEY" -এ ক্লিক করুন।</span>
             </li>
-            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
-                <div class="flex items-start gap-2">
-                    <span class="text-yellow-300 shrink-0">•</span>
-                    <span>প্রাপক নম্বর হিসেবে এই নম্বরটি লিখুন: <b class="underline tracking-wider font-mono">${walletNum}</b></span>
-                </div>
-                <button onclick="window.copyToClipboard('${walletNum}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
-                    <i class="ri-file-copy-line"></i> COPY
-                </button>
+           <li class="border-b border-white/10 pb-3">
+    <div class="flex items-start gap-2 text-xs font-bold leading-relaxed mb-2">
+        <span class="text-yellow-300 shrink-0">•</span>
+        <span>নিচের নাম্বারে টাকা সেন্ড মানি করুন:</span>
+    </div>
+    <div class="flex items-center justify-between bg-black/30 border border-white/30 rounded-xl p-2.5 pl-4 shadow-inner">
+        <span class="font-mono font-black text-yellow-400 text-lg tracking-[0.1em] drop-shadow-md">${walletNum}</span>
+        <button onclick="window.copyToClipboard('${walletNum}')" class="bg-white text-slate-900 hover:bg-slate-200 px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1 active:scale-95 transition-all uppercase shadow-md">
+            <i class="ri-file-copy-line"></i> COPY
+        </button>
+    </div>
+</li>
             <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
                 <div class="flex items-start gap-2">
                     <span class="text-yellow-300 shrink-0">•</span>
@@ -4495,24 +4597,30 @@ function updateDepositAddress(method) {
                 <span class="text-yellow-300 shrink-0">•</span>
                 <span>"WITHDRAW" সিলেক্ট করে USDT কয়েন নির্বাচন করুন।</span>
             </li>
-            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
-                <div class="flex items-start gap-2">
-                    <span class="text-yellow-300 shrink-0">•</span>
-                    <span class="text-left">POLYGON নেটওয়ার্ক এড্রেস:<br><b class="underline font-mono text-[9px] break-all">${polygonAddr}</b></span>
-                </div>
-                <button onclick="window.copyToClipboard('${polygonAddr}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
-                    <i class="ri-file-copy-line"></i> COPY
-                </button>
-            </li>
-            <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
-                <div class="flex items-start gap-2">
-                    <span class="text-yellow-300 shrink-0">•</span>
-                    <span class="text-left">BSC (BEP20) নেটওয়ার্ক এড্রেস:<br><b class="underline font-mono text-[9px] break-all">${bscAddr}</b></span>
-                </div>
-                <button onclick="window.copyToClipboard('${bscAddr}')" class="bg-white/20 hover:bg-white/30 text-white px-2 py-1 rounded-md text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase">
-                    <i class="ri-file-copy-line"></i> COPY
-                </button>
-            </li>
+            <li class="border-b border-white/10 pb-3">
+    <div class="flex items-start gap-2 text-xs font-bold leading-relaxed mb-2">
+        <span class="text-yellow-300 shrink-0">•</span>
+        <span>POLYGON নেটওয়ার্ক এড্রেস:</span>
+    </div>
+    <div class="flex items-center justify-between bg-black/30 border border-white/30 rounded-xl p-2 pl-3 shadow-inner">
+        <span class="font-mono font-bold text-yellow-400 text-[10px] break-all leading-tight mr-2">${polygonAddr}</span>
+        <button onclick="window.copyToClipboard('${polygonAddr}')" class="bg-white text-slate-900 hover:bg-slate-200 px-2 py-1.5 rounded-lg text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase shadow-md">
+            <i class="ri-file-copy-line"></i> COPY
+        </button>
+    </div>
+</li>
+<li class="border-b border-white/10 pb-3">
+    <div class="flex items-start gap-2 text-xs font-bold leading-relaxed mb-2">
+        <span class="text-yellow-300 shrink-0">•</span>
+        <span>BSC (BEP20) নেটওয়ার্ক এড্রেস:</span>
+    </div>
+    <div class="flex items-center justify-between bg-black/30 border border-white/30 rounded-xl p-2 pl-3 shadow-inner">
+        <span class="font-mono font-bold text-yellow-400 text-[10px] break-all leading-tight mr-2">${bscAddr}</span>
+        <button onclick="window.copyToClipboard('${bscAddr}')" class="bg-white text-slate-900 hover:bg-slate-200 px-2 py-1.5 rounded-lg text-[10px] font-black flex items-center gap-1 active:scale-95 transition-all shrink-0 uppercase shadow-md">
+            <i class="ri-file-copy-line"></i> COPY
+        </button>
+    </div>
+</li>
             <li class="flex items-center justify-between gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2 flex-wrap">
                 <div class="flex items-start gap-2">
                     <span class="text-yellow-300 shrink-0">•</span>
@@ -5359,7 +5467,7 @@ function renderTasks() {
                                 const safeDesc = (t.description || '').replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, " ");
                                 const safeLink = (t.link || '#').replace(/'/g, "\\'");
                                 const safeTaskType = (t.taskType || 'daily').replace(/'/g, "\\'");
-
+const safeGuideImage = (t.guideImage || '').replace(/'/g, "\\'"); // নতুন যোগ করা হলো
                                 let planBadges = '';
                                 t.allowedPlans.forEach(p => {
                                     let pName = p.toUpperCase();
@@ -5411,8 +5519,8 @@ function renderTasks() {
                                         <p class="text-[10px] font-bold text-slate-500 flex items-center gap-1">${randomProof}</p>
                                     </div>
 
-                                    <button onclick="window.completeTask('${taskId}', ${t.reward}, '${safeTaskType}', '${safeTitle}', '${safeDesc}', '${safeLink}', ${t.needsProof || false})" 
-                                        class="w-full h-10 bg-slate-900 text-white rounded-xl text-[11px] font-bold active:scale-95 transition-all shadow-md flex justify-center items-center gap-1">
+                                    <button onclick="window.completeTask('${taskId}', ${t.reward}, '${safeTaskType}', '${safeTitle}', '${safeDesc}', '${safeLink}', ${t.needsProof || false}, '${safeGuideImage}')" 
+    class="w-full h-10 bg-slate-900 text-white rounded-xl text-[11px] font-bold active:scale-95 transition-all shadow-md flex justify-center items-center gap-1">
                                         কাজ শুরু করুন <i class="ri-arrow-right-line"></i>
                                     </button>
                                 </div>`;
@@ -6200,10 +6308,10 @@ window.submitNewPassword = async () => {
     hideLoading();
 };
         
-     // ✅ স্মার্ট টাস্ক কনফার্মেশন সিস্টেম (অটো নিয়ম ও লাইন বাই লাইন ভিউ)
+    // ✅ স্মার্ট টাস্ক কনফার্মেশন সিস্টেম (অটো নিয়ম, লাইন বাই লাইন ভিউ এবং ইমেজ গাইডেন্স)
 window.isTaskRunning = false;
 
-window.completeTask = async (taskId, reward, taskType, title, description, link, needsProof) => {
+window.completeTask = async (taskId, reward, taskType, title, description, link, needsProof, guideImage) => {
     if (currentUserData.isActivated === false) {
         return window.handleActivation();
     }
@@ -6236,6 +6344,24 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
         `;
     }
 
+    // 📸 স্ক্রিনশট দেখানোর লজিক (ইমেজ থাকলে ছবি, না থাকলে টেক্সট)
+    let imageHTML = "";
+    if (guideImage && guideImage.trim() !== "" && guideImage !== "undefined" && guideImage !== "null") {
+        imageHTML = `
+            <div style="margin-top:15px; text-align:center;">
+                <p style="font-size:11px; color:#ef4444; margin-bottom:5px; font-weight:900; text-transform:uppercase;">👇 কাজের নমুনা ছবি 👇</p>
+                <img src="${guideImage}" style="max-width:100%; border-radius:15px; border:2px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);">
+            </div>
+        `;
+    } else {
+        // ইমেজ না থাকলে এই সুন্দর বক্সটা দেখাবে
+        imageHTML = `
+            <div style="margin-top:15px; text-align:center; padding: 10px; background: rgba(255,255,255,0.6); border-radius: 12px; border: 1px dashed #94a3b8;">
+                <p style="font-size:11px; color:#64748b; font-weight:bold;"><i class="ri-image-line"></i> এই টাস্কের জন্য কোনো নমুনার প্রয়োজন নেই</p>
+            </div>
+        `;
+    }
+
     Swal.fire({
         title: `
             <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-top:5px;">
@@ -6247,6 +6373,7 @@ window.completeTask = async (taskId, reward, taskType, title, description, link,
                 <div style="font-size:13px; color:#334155; line-height:1.6; font-weight:600; font-family: 'Hind Siliguri', sans-serif;">
                     ${finalRulesHTML}
                 </div>
+                ${imageHTML}
             </div>
         `,
         showCancelButton: true,
@@ -8118,48 +8245,72 @@ window.buySpins = async (count, price) => {
             }
         };
         
-                // ✅ PASSWORD RESET FUNCTION
-        window.resetPassword = async () => {
-            const { value: email } = await Swal.fire({
-                title: 'পাসওয়ার্ড রিসেট',
-                input: 'email',
-                inputLabel: 'আপনার একাউন্ট ইমেইল দিন',
-                inputPlaceholder: 'example@mail.com',
-                confirmButtonText: 'লিংক পাঠান',
-                confirmButtonColor: '#059669',
-                showCancelButton: true,
-                cancelButtonText: 'বাতিল',
-                customClass: {
-                    popup: 'rounded-[25px]'
-                }
-            });
+                // ✅ NEW SMART PASSWORD RESET SYSTEM (UI + DATABASE VERIFICATION)
+window.showForgotPasswordScreen = () => {
+    document.getElementById('authScreen').classList.add('hidden');
+    document.getElementById('forgotPasswordScreen').classList.remove('hidden');
+};
 
-            if (email) {
-                showLoading();
-                try {
-                    await auth.sendPasswordResetEmail(email);
-                    showSmartToast('আপনার ইমেইলে রিসেট লিংক পাঠানো হয়েছে। স্প্যাম ফোল্ডার চেক করুন।', 'success');
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'ইমেইল পাঠানো হয়েছে',
-                        text: 'দয়া করে আপনার ইমেইল চেক করুন এবং লিংকে ক্লিক করে নতুন পাসওয়ার্ড সেট করুন।',
-                        confirmButtonText: 'ঠিক আছে',
-                        confirmButtonColor: '#059669',
-                        customClass: { popup: 'rounded-[25px]' }
-                    });
-                    
-                } catch (error) {
-                    console.error(error);
-                    if(error.code === 'auth/user-not-found') {
-                        showSmartToast('এই ইমেইলে কোনো একাউন্ট নেই', 'error');
-                    } else {
-                        showSmartToast('সমস্যা হয়েছে, ইমেইল সঠিক কিনা দেখুন', 'error');
-                    }
-                }
-                hideLoading();
-            }
-        };
+window.hideForgotPasswordScreen = () => {
+    document.getElementById('forgotPasswordScreen').classList.add('hidden');
+    document.getElementById('authScreen').classList.remove('hidden');
+    document.getElementById('resetEmailInput').value = ''; // ইনপুট ক্লিয়ার করে দিলাম
+};
+
+window.processPasswordReset = async () => {
+    const emailInput = document.getElementById('resetEmailInput').value.trim();
+
+    if (!emailInput) {
+        return showSmartToast('দয়া করে আপনার ইমেইল এড্রেসটি লিখুন!', 'error');
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(emailInput)) {
+        return showSmartToast('সঠিক ইমেইল ফরম্যাট দিন (যেমন: mail@gmail.com)', 'error');
+    }
+
+    showLoading();
+    
+    try {
+        // 🔥 স্মার্ট ট্রিক: আগে ফায়ারবেস ডাটাবেসে চেক করব ইমেইলটি আসলেই আছে কি না!
+        const userCheckSnap = await db.collection("users").where("email", "==", emailInput).get();
+        
+        if (userCheckSnap.empty) {
+            // যদি ডাটাবেজে ইমেইল না থাকে, তবে এখানেই আটকে দেব!
+            hideLoading();
+            Swal.fire({
+                icon: 'error',
+                title: 'একাউন্ট পাওয়া যায়নি! ❌',
+                html: `<b>${emailInput}</b> - এই ইমেইল দিয়ে আমাদের অ্যাপে কোনো একাউন্ট খোলা নেই। দয়া করে সঠিক ইমেইল দিন অথবা নতুন একাউন্ট খুলুন।`,
+                confirmButtonText: 'ঠিক আছে',
+                confirmButtonColor: '#ef4444',
+                customClass: { popup: 'rounded-[25px]' }
+            });
+            return;
+        }
+
+        // যদি ডাটাবেজে ইমেইল থাকে, তবেই রিসেট লিংক পাঠাব
+        await auth.sendPasswordResetEmail(emailInput);
+        
+        hideLoading();
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'লিংক পাঠানো হয়েছে! 🎉',
+            html: `আপনার <b>${emailInput}</b> ইমেইলে একটি পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে।<br><br><span class="text-rose-500 font-bold text-sm">অবশ্যই ইমেইলের Spam ফোল্ডার চেক করবেন!</span>`,
+            confirmButtonText: 'লগইন পেজে যান',
+            confirmButtonColor: '#059669',
+            customClass: { popup: 'rounded-[25px]' }
+        }).then(() => {
+            window.hideForgotPasswordScreen();
+        });
+        
+    } catch (error) {
+        console.error("Reset Error:", error);
+        hideLoading();
+        showSmartToast('ইমেইল পাঠাতে সার্ভারে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
+    }
+};
 
         
     // ✅ ফিক্সড রুলস ইঞ্জিন (একদম আলাদা আলাদা ক্যাটাগরি)
@@ -9678,26 +9829,98 @@ function startPackageCountdown() {
     }, 1000);
 }
    
-   // ১. রেফারাল লিংক শেয়ারিং ফাংশন (Smart Message সহ)
+   // ✅ SMART SOCIAL MEDIA SHARING MODAL (PRO VERSION)
 window.shareReferralLink = async () => {
     const link = document.getElementById('referralLink').innerText;
     if(link === "লোড হচ্ছে...") return;
 
+    // আপনার অ্যাপের প্রমোশনাল মেসেজ (যা সোশ্যাল মিডিয়ায় শেয়ার হবে)
+    const rawMessage = `আসসালামু আলাইকুম! 👋\n\nঘরে বসে মোবাইল দিয়ে প্রতিদিন ৫০০-১০০০ টাকা আয় করতে চান? আজই জয়েন করুন "টাকাওয়ালা" অ্যাপে।\n\n✅ ১০০% বিশ্বস্ত\n✅ দ্রুত পেমেন্ট\n✅ রেফার বোনাস\n\nনিচের লিংকে ক্লিক করে এখনই জয়েন করুন:\n${link}`;
+    
+    const encodedMessage = encodeURIComponent(rawMessage);
+    const encodedLink = encodeURIComponent(link);
+
+    // মডার্ন সোশ্যাল আইকন গ্রিড ডিজাইন
+    const shareHTML = `
+        <div class="grid grid-cols-4 gap-3 mt-4 mb-2">
+            <!-- WhatsApp -->
+            <a href="https://wa.me/?text=${encodedMessage}" target="_blank" class="flex flex-col items-center gap-2 transition active:scale-95" style="text-decoration: none;">
+                <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl shadow-lg shadow-green-200">
+                    <i class="ri-whatsapp-fill"></i>
+                </div>
+                <span class="text-[10px] font-bold text-slate-600">WhatsApp</span>
+            </a>
+            
+            <!-- Messenger (Deep Link Fallback) -->
+            <a href="fb-messenger://share/?link=${encodedLink}" target="_blank" onclick="setTimeout(() => { window.open('https://www.messenger.com/t/', '_blank'); }, 500);" class="flex flex-col items-center gap-2 transition active:scale-95" style="text-decoration: none;">
+                <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-200">
+                    <i class="ri-messenger-fill"></i>
+                </div>
+                <span class="text-[10px] font-bold text-slate-600">Messenger</span>
+            </a>
+            
+            <!-- Telegram -->
+            <a href="https://t.me/share/url?url=${encodedLink}&text=${encodeURIComponent('আসসালামু আলাইকুম! ঘরে বসে আয় করতে জয়েন করুন:\n')}" target="_blank" class="flex flex-col items-center gap-2 transition active:scale-95" style="text-decoration: none;">
+                <div class="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white text-2xl shadow-lg shadow-sky-200">
+                    <i class="ri-telegram-fill"></i>
+                </div>
+                <span class="text-[10px] font-bold text-slate-600">Telegram</span>
+            </a>
+
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedLink}" target="_blank" class="flex flex-col items-center gap-2 transition active:scale-95" style="text-decoration: none;">
+                <div class="w-12 h-12 bg-blue-700 rounded-full flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-300">
+                    <i class="ri-facebook-circle-fill"></i>
+                </div>
+                <span class="text-[10px] font-bold text-slate-600">Facebook</span>
+            </a>
+        </div>
+        
+        <div class="mt-6 pt-4 border-t border-slate-100 space-y-2">
+            <!-- Native Share / Instagram Fallback -->
+            <button onclick="window.triggerNativeShare()" class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all border border-indigo-100">
+                <i class="ri-share-forward-fill text-lg"></i> অন্যান্য অপশন (Instagram / Share)
+            </button>
+
+            <!-- Copy Link -->
+            <button onclick="window.copyReferralLink(); Swal.close();" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all">
+                <i class="ri-file-copy-line text-lg"></i> শুধু লিংক কপি করুন
+            </button>
+        </div>
+    `;
+
+    // SweetAlert দিয়ে প্রিমিয়াম পপ-আপ শো করানো
+    window.playSound('snd_click');
+    Swal.fire({
+        title: '<span style="font-weight:900; color:#1e293b; font-size: 22px;">শেয়ার করুন 🚀</span>',
+        html: shareHTML,
+        showConfirmButton: false,
+        showCloseButton: true,
+        background: '#ffffff',
+        customClass: {
+            popup: 'rounded-[35px] border border-slate-100 shadow-2xl pb-4',
+            closeButton: 'bg-slate-100 text-slate-500 rounded-full hover:bg-red-100 hover:text-red-500 m-3 transition-colors'
+        }
+    });
+};
+
+// নেটিভ শেয়ার ফাংশন (Instagram ও অন্যান্য অ্যাপের জন্য)
+window.triggerNativeShare = async () => {
+    const link = document.getElementById('referralLink').innerText;
     const shareData = {
         title: 'টাকাওয়ালা - ঘরে বসে আয়',
         text: `আসসালামু আলাইকুম! 👋\n\nঘরে বসে মোবাইল দিয়ে প্রতিদিন ৫০০-১০০০ টাকা আয় করতে চান? আজই জয়েন করুন "টাকাওয়ালা" অ্যাপে।\n\n✅ ১০০% বিশ্বস্ত\n✅ দ্রুত পেমেন্ট\n✅ রেফার বোনাস\n\nনিচের লিংকে ক্লিক করে এখনই জয়েন করুন:\n`,
         url: link
     };
-
+    
     try {
         if (navigator.share) {
             await navigator.share(shareData);
+            Swal.close();
         } else {
-            // যদি ব্রাউজার শেয়ার সাপোর্ট না করে তবে সরাসরি কপি হবে
-            window.copyReferralLink();
-            showSmartToast('লিংক কপি হয়েছে! এখন যে কাউকে পাঠান।', 'success');
+            showSmartToast('আপনার ব্রাউজারটি এই অপশন সাপোর্ট করে না। দয়া করে লিংক কপি করুন।', 'warning');
         }
-    } catch (err) { console.log(err); }
+    } catch (err) { console.log("Share cancelled or failed:", err); }
 };
 
 // ২. রেফারাল লিস্ট লোড করার উন্নত ফাংশন
