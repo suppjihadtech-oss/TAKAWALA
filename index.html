@@ -1087,9 +1087,7 @@
         <!-- Monetag Ad Script -->
     <script src='//libtl.com/sdk.js' data-zone='10531082' data-sdk='show_10531082'></script>
     
-    <!-- AdsGram Ad Script -->
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-
+   
     <!-- Swiper CSS & JS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
@@ -3891,75 +3889,78 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-      // ✅ আল্ট্রা-স্মুথ ডাবল অ্যাড সিস্টেম (১ সেকেন্ড লোডিং + ১টা মনিট্যাগ + ১টা অ্যাডসগ্রাম) 🤑
-// ✅ আল্ট্রা-স্মুথ ডাবল অ্যাড সিস্টেম (Monetag + Adsgram) - ফিক্সড ভার্সন
+     // ✅ ডাবল অ্যাড + অ্যান্টি-ফ্লিকারিং (Fast Return Protection)
 window.showMonetagAd = async (callback) => {
     
-    // ১. শুরুতে লোডিং দেখানো
     showLoading();
-    await new Promise(resolve => setTimeout(resolve, 800));
+    // অ্যাড আসার আগে ব্রাউজারকে রেডি হওয়ার সময় দেওয়া
+    await new Promise(resolve => setTimeout(resolve, 1000));
     hideLoading(); 
 
-    // 🎬 ১. মনিট্যাগ অ্যাড প্লে করার ক্লিন হেল্পার
-    const playMonetagAd = () => {
-        return new Promise(async (resolve) => {
+    const playSingleAd = () => {
+        return new Promise((resolve) => {
             try {
                 if (typeof window['show_10531082'] === 'function') {
-                    await window['show_10531082']();
+                    window['show_10531082']();
                 }
-            } catch (e) { console.log("Monetag Ad error:", e); }
-
-            // অ্যাড থেকে ফেরার পর ২ সেকেন্ড অপেক্ষা করবে পরের অ্যাডের জন্য
+            } catch (e) { console.log("Ad Blocked or Error"); }
+            
+            // ইউজার যতই দ্রুত ফিরে আসুক, আমরা ২ সেকেন্ড গ্যাপ রাখবই
             setTimeout(resolve, 2000);
         });
     };
 
-    // 🎬 ২. অ্যাডসগ্রাম অ্যাড প্লে করার ক্লিন হেল্পার
-    const playAdsgramAd = () => {
-        return new Promise((resolve) => {
-            try {
-                const AdController = window.Adsgram.init({ blockId: "int-35547" });
-                AdController.show().then(() => resolve()).catch(() => resolve());
-            } catch (e) { resolve(); }
-        });
-    };
-
-    // 🚀 অ্যাড প্লে শুরু
+    // 🚀 প্রথম অ্যাড
     showSmartToast('প্রথম অ্যাড লোড হচ্ছে...', 'info');
-    await playMonetagAd();
+    await playSingleAd();
 
+    // ⏳ দুই অ্যাডের মাঝে ১.৫ সেকেন্ডের "সেফটি বাফার"
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // 🚀 দ্বিতীয় অ্যাড
     showSmartToast('দ্বিতীয় অ্যাড লোড হচ্ছে...', 'info');
-    await playAdsgramAd();
+    await playSingleAd();
 
-    // 🎁 ৩. রিওয়ার্ড দেওয়ার মেইন লজিক (ঝিলিক মুক্ত)
+    // 🎁 ৩. রিওয়ার্ড ট্রিগার (যেখানে মেইন ফিক্স)
     const triggerReward = async () => {
-        // ১. আগে জোর করে অ্যাপ দৃশ্যমান করা (যাতে সাদা স্ক্রিন না থাকে)
-        ensureMainAppVisible(); 
+        // ১. আগে সব রকমের ইনলাইন স্টাইল রিসেট করে মেইন অ্যাপ দৃশ্যমান করা
+        const mainApp = document.getElementById('mainApp');
+        if(mainApp) {
+            mainApp.style.display = 'block';
+            mainApp.classList.remove('hidden');
+        }
+        
+        // ২. ঝিলিক মারা বন্ধ করতে জোর করে ২ সেকেন্ডের একটি "ক্লিন-আপ" ডিলে
+        // এতে ইউজার ফাস্ট ফিরে আসলেও অ্যাপ রেন্ডার হওয়ার সময় পাবে
+        showLoading(); 
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        hideLoading();
+
+        ensureMainAppVisible(); // মেইন অ্যাপ ফোর্স শো
         
         if (callback) {
-            // ২. সামান্য ডিলে (৫০০ms) যাতে SweetAlert পপ-আপ রেন্ডার হতে পারে
+            // পপ-আপ দেওয়ার আগে শেষ ১ সেকেন্ড ডিলে (টেলিগ্রাম ওয়েবভিউ ফিক্স)
             setTimeout(async () => {
                 await callback(); 
-            }, 500); 
+            }, 1000); 
         }
     };
 
-    // ৪. ইউজার কি অ্যাপের ভেতরে আছে নাকি অন্য ট্যাবে?
+    // ৪. ইউজার যদি দ্রুত ফিরে এসে "টেলিগ্রাম মিনি অ্যাপ" ডি-ফোকাস করে ফেলে
     if (document.hidden) {
         const onReturn = () => {
             if (!document.hidden) {
                 document.removeEventListener('visibilitychange', onReturn);
-                // ফিরে আসার ১ সেকেন্ডের মধ্যে অ্যাপ এক্টিভ করে রিওয়ার্ড দিবে
-                setTimeout(triggerReward, 500); 
+                // ফিরে আসার পর ১.৫ সেকেন্ড গ্যাপ দিয়ে রিওয়ার্ড দিবে (সাদা স্ক্রিন ঠেকাবে)
+                setTimeout(triggerReward, 1500); 
             }
         };
         document.addEventListener('visibilitychange', onReturn);
     } else {
-        // যদি অলরেডি অ্যাপেই থাকে
-        triggerReward();
+        // যদি ইউজার অ্যাপেই থাকে
+        setTimeout(triggerReward, 1000);
     }
 };
-
 
 // ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ফিক্সড)
 // এই কোডটি আগের সবটুকু মুছে দিয়ে নতুন করে বসাও
