@@ -1592,6 +1592,12 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <img src="https://i.postimg.cc/hj8zWcRb/tickets.png" class="animate-bounce">
         <span style="color: #7c3aed;">লাকি<br>ড্র</span>
     </div>
+
+    <!-- ৫. দৈনিক মিস্ট্রি গিফট (নতুন) -->
+    <div id="sideMysteryGift" onclick="window.claimMysteryGift()" class="side-btn hidden animate__animated animate__bounceInRight" style="animation-delay: 0.2s; border-color: #8b5cf6;">
+        <img src="https://i.postimg.cc/dtj5JQqK/gift-box.png" class="animate-pulse">
+        <span style="color: #8b5cf6;">মিস্ট্রি<br>গিফট</span>
+    </div>
 </div>
 <!-- ✅ উইজেট শেষ -->
             
@@ -1969,37 +1975,69 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <button onclick="window.toggleWalletTab('transfer')" id="tabTransfer" class="flex-1 py-3 font-bold text-sm rounded-xl text-slate-500">ট্রান্সফার</button>
     </div>
 
-            <div id="depositSection">
-                <!-- ১. প্রফেশনাল মেথড সিলেক্টর গ্রিড -->
-                <div class="grid grid-cols-4 gap-3 mb-4">
-                    <div onclick="window.selectPayment(this, 'bKash')" id="payment_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-8 object-contain"></div>
-                    <div onclick="window.selectPayment(this, 'Nagad')" id="payment_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-6 object-contain"></div>
-                    <div onclick="window.selectPayment(this, 'Rocket')" id="payment_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-8 object-contain"></div>
-                    <div onclick="window.selectPayment(this, 'USDT')" id="payment_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-8 object-contain"></div>
-                </div>
+            <!-- ✅ আপডেটেড ইন্টিগ্রেটেড ডিপোজিট সেকশন -->
+<div id="depositSection">
+    <!-- ১. প্রফেশনাল মেথড সিলেক্টর গ্রিড -->
+    <div class="grid grid-cols-4 gap-3 mb-4">
+        <div onclick="window.selectPayment(this, 'bKash')" id="payment_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-8 object-contain"></div>
+        <div onclick="window.selectPayment(this, 'Nagad')" id="payment_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-6 object-contain"></div>
+        <div onclick="window.selectPayment(this, 'Rocket')" id="payment_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-8 object-contain"></div>
+        <div onclick="window.selectPayment(this, 'USDT')" id="payment_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-8 object-contain"></div>
+    </div>
 
-                <!-- ২. অ্যামাউন্ট ও সেন্ডার নম্বর ইনপুট বক্স (রিয়েল-টাইম আপডেট হ্যান্ডেলার সহ) -->
-                <div class="glass-card p-4 rounded-3xl mb-4 space-y-3 border border-slate-100 shadow-sm">
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase ml-1 mb-1 block">টাকার পরিমাণ</label>
-                            <input type="number" id="depositAmount" oninput="window.updateDepositInstructionValues()" placeholder="৳১০০" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none text-slate-700 text-sm focus:border-slate-300 transition-all">
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-black text-slate-400 uppercase ml-1 mb-1 block">যে নম্বর থেকে পাঠিয়েছেন</label>
-                            <input type="text" id="depositSenderNumber" oninput="window.updateDepositInstructionValues()" placeholder="০১৭xxxxxxxx" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none text-slate-700 text-sm focus:border-slate-300 transition-all">
-                        </div>
-                    </div>
-                    <div class="text-[11px] text-red-500 font-black text-center mt-1" id="vatCalculation">ভ্যাট (১০%): ৳০.০০ | মোট: ৳০.০০</div>
-                </div>
+    <!-- ২. উত্তোলন পেজের মতো ডাইনামিক ও ইন্টিগ্রেটেড কার্ড -->
+    <div id="screenshotDepositCard" class="hidden rounded-[30px] p-5 text-white shadow-xl animate__animated animate__fadeIn relative overflow-hidden transition-all duration-500">
+        
+        <div class="absolute -right-10 -top-10 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+        
+        <div class="text-center mb-4">
+            <h4 class="text-[9px] uppercase tracking-[0.2em] font-black opacity-80">MANUAL DEPOSIT GATEWAY</h4>
+            <p class="text-base font-black mt-1">পেমেন্ট ও ডিপোজিট তথ্য</p>
+        </div>
 
-                <!-- ৩. ডাইনামিক স্ক্রিনশট-স্টাইল পেমেন্ট ইনস্ট্রাকশন কার্ড -->
-                <div id="screenshotDepositCard" class="hidden rounded-[30px] p-5 text-white shadow-xl animate__animated animate__fadeIn relative overflow-hidden transition-all duration-500">
-                    <!-- নির্দেশনাবলী স্ক্রিনশটের মতো ডাইনামিক ডিজাইন এখানে লোড হবে -->
-                </div>
-
-                <input type="hidden" id="selectedDepositMethod" value="">
+        <!-- 💳 গর্জিয়াস ইনপুট গ্রুপ (সরাসরি রঙিন কার্ডের ভেতরে) -->
+        <div class="grid grid-cols-2 gap-3 mb-3 relative z-10">
+            <div>
+                <label class="text-[10px] font-black text-white/70 uppercase ml-1 mb-1 block">টাকার পরিমাণ</label>
+                <input type="number" id="depositAmount" oninput="window.updateDepositInstructionValues()" placeholder="৳১০০" 
+                    class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
             </div>
+            <div>
+                <label class="text-[10px] font-black text-white/70 uppercase ml-1 mb-1 block">যে নম্বর থেকে পাঠিয়েছেন</label>
+                <input type="text" id="depositSenderNumber" oninput="window.updateDepositInstructionValues()" placeholder="০১৭xxxxxxxx" 
+                    class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+            </div>
+        </div>
+        <div class="text-[11px] text-yellow-300 font-black text-center mb-4" id="vatCalculation">ভ্যাট (১০%): ৳০.০০ | মোট: ৳০.০০</div>
+
+        <!-- ৩. ডাইনামিক পেমেন্ট নির্দেশনাবলী লিস্ট -->
+        <ul id="depositInstructionsList" class="space-y-3.5 border-t border-white/20 pt-4 pb-4">
+            <!-- Instructions will load here dynamically -->
+        </ul>
+
+        <!-- ৪. ট্রানজেকশন আইডি ইনপুট -->
+        <div class="relative group mt-2 mb-5 z-10">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                <i class="ri-hashtag text-slate-400"></i>
+            </div>
+            <input type="text" id="depositTrxId" placeholder="এখানে ট্রানজেকশন আইডি লিখুন" 
+                class="w-full pl-9 pr-24 py-4 bg-white rounded-2xl text-slate-800 font-mono font-black tracking-wider outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner uppercase text-xs">
+            
+            <button onclick="window.smartPasteTrxId()" class="absolute right-1.5 top-1.5 bottom-1.5 bg-slate-800 hover:bg-slate-900 text-white px-3.5 rounded-xl text-[10px] font-black flex items-center gap-1 shadow-md active:scale-95 transition-all uppercase">
+                <i class="ri-clipboard-line"></i> PASTE
+            </button>
+        </div>
+
+        <!-- ৫. ভেরিফাই বাটন -->
+        <div class="mt-4 pt-4 border-t border-white/10 relative z-10">
+            <button onclick="window.submitDeposit()" id="depositSubmitBtn" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl text-sm tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all uppercase flex items-center justify-center gap-2">
+                <i class="ri-shield-check-fill text-lg"></i> নিশ্চিত করুন
+            </button>
+        </div>
+    </div>
+
+    <input type="hidden" id="selectedDepositMethod" value="">
+</div>
 
             <div id="withdrawSection" class="hidden">
                  <div class="grid grid-cols-4 gap-3 mb-6">
@@ -2899,7 +2937,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
          </div>
      </div>
 <!-- 🎁 ADMIN SECRET PROMO CARD -->
-<div class="bg-gradient-to-r from-slate-950 via-purple-950 to-slate-950 p-5 rounded-3xl text-white mb-6 relative overflow-hidden shadow-xl border border-purple-500/30 animate__animated animate__pulse animate__infinite animate__slower">
+<div id="adminSecretPromoCard" class="bg-gradient-to-r from-slate-950 via-purple-950 to-slate-950 p-5 rounded-3xl text-white mb-6 relative overflow-hidden shadow-xl border border-purple-500/30 animate__animated animate__pulse animate__infinite animate__slower">
     <div class="absolute -right-6 -top-6 bg-purple-500/10 w-24 h-24 rounded-full blur-xl animate-pulse"></div>
     <div class="absolute -left-6 -bottom-6 bg-indigo-500/10 w-24 h-24 rounded-full blur-xl animate-pulse"></div>
     
@@ -3454,6 +3492,18 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <!-- Full Details List -->
             <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 space-y-3">
                 
+               <!-- Order ID -->
+    <div class="flex justify-between items-center border-b border-dashed border-slate-200 pb-2">
+        <span class="text-slate-500 font-bold text-xs">অর্ডার আইডি</span>
+        <div class="flex items-center gap-2">
+            <span id="uReceiptOrderId" class="font-mono font-bold text-blue-600 text-sm">...</span>
+            <!-- ছোট কপি বাটন -->
+            <button onclick="window.copyOrderId()" class="text-slate-400 hover:text-blue-600 active:scale-90 transition-all">
+                <i class="ri-file-copy-line text-sm"></i>
+            </button>
+        </div>
+    </div>
+                
                 <!-- User Info -->
                 <div class="flex justify-between items-center border-b border-dashed border-slate-200 pb-2">
                     <span class="text-slate-500 font-bold text-xs">ইউজার নেম</span>
@@ -3798,6 +3848,35 @@ window.sendTWAI = () => {
         const auth = firebase.auth();
         const db = firebase.firestore();
         
+        // 🛡️ ULTRA SMART COLLECTION INTERCEPTOR FOR AUTOMATIC 12-DIGIT ORDER ID
+const originalCollection = db.collection;
+db.collection = function(name) {
+    const colRef = originalCollection.apply(this, arguments);
+    if (name === 'history' || name === 'pending_requests' || name === 'gmail_tasks') {
+        const originalAdd = colRef.add;
+        colRef.add = function(data) {
+            if (data && typeof data === 'object' && !data.orderId) {
+                data.orderId = String(Math.floor(100000000000 + Math.random() * 900000000000));
+            }
+            return originalAdd.apply(this, arguments);
+        };
+        
+        const originalDoc = colRef.doc;
+        colRef.doc = function(docId) {
+            const docRef = originalDoc.apply(this, arguments);
+            const originalSet = docRef.set;
+            docRef.set = function(data, options) {
+                if (data && typeof data === 'object' && !data.orderId) {
+                    data.orderId = String(Math.floor(100000000000 + Math.random() * 900000000000));
+                }
+                return originalSet.apply(this, arguments);
+            };
+            return docRef;
+        };
+    }
+    return colRef;
+};
+        
         // ✅ GLOBAL VARIABLES
         let currentUserData = null;
         let appliedPromoPercent = 0; 
@@ -3902,8 +3981,7 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-     // ✅ ডাবল অ্যাড + অ্যান্টি-ফ্লিকারিং (Fast Return Protection)
-// ✅ ডাবল অ্যাড + হাই-স্পিড অ্যান্টি-ফ্লিকারিং (Optimized Delay)
+    // ✅ ডাবল অ্যাড + হাই-স্পিড অ্যান্টি-ফ্লিকারিং (সঠিকভাবে ২য় অ্যাড লোড ফিক্সড)
 window.showMonetagAd = async (callback) => {
     showLoading();
     // ১. অ্যাড আসার আগে সেফটি বাফার (কমিয়ে ৩০০মি.সে. করা হলো)
@@ -3912,24 +3990,32 @@ window.showMonetagAd = async (callback) => {
 
     const playSingleAd = () => {
         return new Promise((resolve) => {
-            try {
-                if (typeof window['show_10531082'] === 'function') {
-                    window['show_10531082']();
-                }
-            } catch (e) { console.log("Ad Error"); }
-            // ২. অ্যাড এক্সিকিউশন বাফার (কমিয়ে ১ সেকেন্ড করা হলো)
-            setTimeout(resolve, 1000); 
+            if (typeof window['show_10531082'] === 'function') {
+                window['show_10531082']()
+                    .then(() => {
+                        // অ্যাড দেখা সফল হয়েছে (ইউজার অ্যাড ক্লোজ করার পর এটি ট্রিগার হবে)
+                        resolve(true);
+                    })
+                    .catch((err) => {
+                        console.log("Ad Error or Skipped:", err);
+                        // কোনো কারণে অ্যাড লোড না হলে বা কেটে দিলে অ্যাপ আটকে থাকবে না, পরের ধাপে যাবে
+                        resolve(false); 
+                    });
+            } else {
+                // যদি কোনো কারণে SDK লোড না থাকে
+                setTimeout(() => resolve(false), 1000);
+            }
         });
     };
 
     showSmartToast('১ম অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
-    await playSingleAd();
+    await playSingleAd(); // এটি এখন সম্পূর্ণ অ্যাড শেষ হওয়া পর্যন্ত অপেক্ষা করবে
     
-    // ৩. দুই অ্যাডের মাঝের বিরতি (কমিয়ে ৪০০মি.সে. করা হলো)
-    await new Promise(resolve => setTimeout(resolve, 400));
+    // ৩. দুই অ্যাডের মাঝের বিরতি (কমিয়ে ৮০০মি.সে. করা হলো যেন ২য় অ্যাড প্রস্তুতির সময় পায়)
+    await new Promise(resolve => setTimeout(resolve, 800));
 
     showSmartToast('২য় অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
-    await playSingleAd();
+    await playSingleAd(); // ২য় অ্যাড দেখাবে এবং এটিও শেষ হওয়া পর্যন্ত অপেক্ষা করবে
 
     // 🎁 পুরস্কার দেওয়ার মেইন ফিক্স
     const triggerReward = async () => {
@@ -4359,14 +4445,19 @@ window.buyPackage = async (packageId, price, name, days) => {
             expiryDate.setDate(expiryDate.getDate() + parseInt(days));
             
             // 🔥 ১. ইউজারের ডাটা আপডেট (টাকা শুধু depositBalance থেকে কাটবে)
-            await userRef.update({
+            const updateFields = {
                 depositBalance: firebase.firestore.FieldValue.increment(-price), // ফিক্সড: ডিপোজিট থেকে মাইনাস
                 plan: name,
                 isActivated: true,
                 packageExpiresAt: expiryDate,
                 packageId: packageId,
                 totalSpent: firebase.firestore.FieldValue.increment(price)
-            });
+            };
+            // যদি ইউজার কোডটি দিয়ে ডিসকাউন্ট নিয়ে প্যাকেজ কেনেন
+            if (appliedPromoPercent === 8) {
+                updateFields.isSecretPromoUsed = true;
+            }
+            await userRef.update(updateFields);
             
             // ২. হিস্ট্রি লগ
             await db.collection("history").add({
@@ -4448,14 +4539,13 @@ window.selectPayment = (el, method) => {
     updateDepositAddress(method);
 };
 
-// ✅ ডাটাবেসের সাথে সংযুক্ত ডাইনামিক এবং স্ক্রিনশট-স্টাইল পেমেন্ট কার্ড (UPPERCASE স্টাইলিং সহ)
+// ✅ ডাইনামিক ডিপোজিট থিম ও নির্দেশিকা আপডেট (ইনপুট ফোকাস নিরাপদ রেখে)
 function updateDepositAddress(method) {
     const card = document.getElementById('screenshotDepositCard');
     if (!card) return;
 
     card.classList.remove('hidden');
 
-    // ইনপুট বক্স থেকে টাকার পরিমাণ এবং সেন্ডার নম্বর রিড করা
     const amount = parseFloat(document.getElementById('depositAmount').value) || 0;
     const sender = document.getElementById('depositSenderNumber').value || "০১৭xxxxxxxx";
 
@@ -4651,7 +4741,7 @@ function updateDepositAddress(method) {
             </li>
             <li class="flex items-start gap-2 text-xs font-bold leading-relaxed border-b border-white/10 pb-2">
                 <span class="text-yellow-300 shrink-0">•</span>
-                <span>ট্রান্সফার সফল হলে ব্লকচেইন থেকে TXID / HASH কপি করুন।</span>
+                <span>ট্রান্সফার সফল হলে ব্লকচেইন থেকে TXID / HASH kopi করুন।</span>
             </li>
             <li class="flex items-start gap-2 text-xs font-bold leading-relaxed">
                 <span class="text-yellow-300 shrink-0">•</span>
@@ -4660,41 +4750,26 @@ function updateDepositAddress(method) {
         `;
     }
 
+    // চাকার অ্যানিমেশন ক্লাসসহ থিম কালার অ্যাসাইন
     card.className = `${themeColor} rounded-[30px] p-5 text-white shadow-xl animate__animated animate__fadeIn relative overflow-hidden transition-all duration-500`;
 
-    card.innerHTML = `
-        <div class="absolute -right-10 -top-10 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
-        
-        <div class="text-center mb-4">
-            <h4 class="text-[9px] uppercase tracking-[0.2em] font-black opacity-80">MANUAL DEPOSIT GATEWAY</h4>
-            <p class="text-lg font-black mt-1">ট্রানজেকশন আইডি দিন</p>
-        </div>
+    // ডাইনামিক গাইডলাইন লিস্টে ইনজেক্ট করা (পুরো কার্ড রি-রেন্ডার না করে)
+    const instructionsList = document.getElementById('depositInstructionsList');
+    if (instructionsList) {
+        instructionsList.innerHTML = instructionsHTML;
+    }
 
-        <!-- TrxID ইনপুট বক্স (স্ক্রিনশটের মতো গেটওয়ে ডিজাইনে) -->
-        <div class="relative group mt-2 mb-5">
-            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <i class="ri-hashtag text-slate-400"></i>
-            </div>
-            <input type="text" id="depositTrxId" placeholder="এখানে ট্রানজেকশন আইডি লিখুন" 
-                class="w-full pl-9 pr-24 py-4 bg-white rounded-2xl text-slate-800 font-mono font-black tracking-wider outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner uppercase text-xs">
-            
-            <button onclick="window.smartPasteTrxId()" class="absolute right-1.5 top-1.5 bottom-1.5 bg-slate-800 hover:bg-slate-900 text-white px-3.5 rounded-xl text-[10px] font-black flex items-center gap-1 shadow-md active:scale-95 transition-all uppercase">
-                <i class="ri-clipboard-line"></i> PASTE
-            </button>
-        </div>
+    // বাটন টেক্সটের কালার অপারেটর থিম অনুযায়ী মডিফাই
+    let btnTextClass = "text-[#d12053]";
+    if (method === 'bKash') btnTextClass = "text-[#d12053]";
+    else if (method === 'Nagad') btnTextClass = "text-[#ea580c]";
+    else if (method === 'Rocket') btnTextClass = "text-[#701a75]";
+    else if (method === 'USDT') btnTextClass = "text-[#047857]";
 
-        <!-- স্ক্রিনশটের মতো লিস্ট নির্দেশনাবলী -->
-        <ul class="space-y-3.5 border-t border-white/20 pt-4 pb-4">
-            ${instructionsHTML}
-        </ul>
-
-        <!-- ভেরিফাই অ্যাকশন বাটন -->
-        <div class="mt-4 pt-4 border-t border-white/10">
-            <button onclick="window.submitDeposit()" class="w-full bg-white text-slate-900 hover:bg-slate-100 font-black py-4 rounded-2xl text-sm tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all uppercase flex items-center justify-center gap-2">
-                <i class="ri-shield-check-fill text-lg"></i> নিশ্চিত করুন
-            </button>
-        </div>
-    `;
+    const submitBtn = document.getElementById('depositSubmitBtn');
+    if (submitBtn) {
+        submitBtn.className = `w-full bg-white ${btnTextClass} hover:bg-slate-50 font-black py-4 rounded-2xl text-sm tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all uppercase flex items-center justify-center gap-2`;
+    }
 }
 
        // ✅ INITIALIZE EVENT LISTENERS
@@ -5091,6 +5166,33 @@ function syncUserData(uid) {
             currentUserData = d.data();
             const userData = currentUserData;
 
+// 🎁 সিক্রেট প্রমো কার্ড হাইড/শো রিয়েল-টাইম কন্ট্রোল (প্যাকেজ একটিভ ও ব্যবহৃত থাকলে হাইড হবে)
+            const secretPromoCard = document.getElementById('adminSecretPromoCard');
+            if (secretPromoCard) {
+                if (userData.isSecretPromoUsed === true && userData.plan !== "Free Member") {
+                    secretPromoCard.classList.add('hidden');
+                } else {
+                    secretPromoCard.classList.remove('hidden');
+                }
+            }
+            
+            // 🎁 মিস্ট্রি গিফট বক্স ডাইনামিক ভিজিবিলিটি কন্ট্রোল (বোনাস বা ১টি ওয়াচ অ্যাড দেখলে এবং আগে ক্লেইম না করলে দৃশ্যমান হবে)
+            const mysteryGiftBtn = document.getElementById('sideMysteryGift');
+            if (mysteryGiftBtn) {
+                const todayStr = new Date().toLocaleDateString('bn-BD');
+                const isDailyBonusTaken = userData.lastDailyBonus && (new Date(userData.lastDailyBonus.toDate()).toLocaleDateString('bn-BD') === todayStr);
+                const isWatchEarnAdSeen = userData.lastWatchDate === todayStr && (userData.watchEarnCount || 0) > 0;
+                const isGiftAlreadyClaimed = userData.lastMysteryGiftDate === todayStr;
+
+                if ((isDailyBonusTaken || isWatchEarnAdSeen) && !isGiftAlreadyClaimed) {
+                    mysteryGiftBtn.classList.remove('hidden');
+                    mysteryGiftBtn.style.display = "flex";
+                } else {
+                    mysteryGiftBtn.classList.add('hidden');
+                    mysteryGiftBtn.style.display = "none";
+                }
+            }
+            
 // 🛑 ১. ডাটাবেস ফিল্ড চেক (বুলিয়ান, স্ট্রিং বা অন্য যেকোনো ফরম্যাটে ব্যান করা হলেও ধরবে)
 const isBannedUser = userData.isBanned === true || 
                      userData.isBanned === "true" || 
@@ -5736,6 +5838,9 @@ window.openHistoryReceipt = async (docId) => {
         trxEl.innerText = fullTrx; 
         trxEl.dataset.fullTrx = fullTrx;
 
+// অর্ডার আইডি সেটআপ (পুরনো লেনদেনের ক্ষেত্রে ডকুমেন্ট আইডির প্রথম ১২ সংখ্যা দেখাবে)
+        document.getElementById('uReceiptOrderId').innerText = data.orderId || docId.substring(0, 12).toUpperCase();
+
         // ৩. বেসিক লেনদেন তথ্য
         document.getElementById('uReceiptType').innerText = data.type || "লেনদেন";
         document.getElementById('uReceiptAmount').innerText = `৳${Math.abs(parseFloat(data.amount || 0)).toFixed(2)}`;
@@ -5948,6 +6053,16 @@ window.copyReceiptTrx = () => {
         window.copyToClipboard(trxId);
     } else {
         showSmartToast("কপি করার মতো আইডি নেই", "error");
+    }
+};
+
+// ✅ অর্ডার আইডি কপি করার ফাংশন
+window.copyOrderId = () => {
+    const orderId = document.getElementById('uReceiptOrderId').innerText;
+    if(orderId && orderId !== "...") {
+        window.copyToClipboard(orderId);
+    } else {
+        showSmartToast("কপি করার মতো অর্ডার আইডি নেই", "error");
     }
 };
 
@@ -9831,83 +9946,61 @@ function startPackageCountdown() {
     }, 1000);
 }
    
-   // ✅ SMART SOCIAL MEDIA SHARING MODAL (PRO VERSION)
-window.shareReferralLink = async () => {
+   // ✅ PREMIUM iOS STYLE SHARE MODAL SUITE
+window.shareReferralLink = () => {
     const link = document.getElementById('referralLink').innerText;
-    if(link === "লোড হচ্ছে...") return;
+    if(link === "লোড হচ্ছে...") {
+        showSmartToast("রেফারেল লিংক লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন", "warning");
+        return;
+    }
+    
+    const modal = document.getElementById('shareModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        window.playSound('snd_click');
+    }
+};
 
-    // আপনার অ্যাপের প্রমোশনাল মেসেজ (যা সোশ্যাল মিডিয়ায় শেয়ার হবে)
+window.closeShareModal = () => {
+    const modal = document.getElementById('shareModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+};
+
+window.shareToSocial = (platform) => {
+    const link = document.getElementById('referralLink').innerText;
     const rawMessage = `আসসালামু আলাইকুম! 👋\n\nঘরে বসে মোবাইল দিয়ে প্রতিদিন ৫০০-১০০০ টাকা আয় করতে চান? আজই জয়েন করুন "টাকাওয়ালা" অ্যাপে।\n\n✅ ১০০% বিশ্বস্ত\n✅ দ্রুত পেমেন্ট\n✅ রেফার বোনাস\n\nনিচের লিংকে ক্লিক করে এখনই জয়েন করুন:\n${link}`;
     
     const encodedMessage = encodeURIComponent(rawMessage);
     const encodedLink = encodeURIComponent(link);
-
-    // মডার্ন সোশ্যাল আইকন গ্রিড ডিজাইন
-    const shareHTML = `
-        <div class="grid grid-cols-4 gap-3 mt-4 mb-2">
-            <!-- WhatsApp -->
-            <a href="https://wa.me/?text=${encodedMessage}" target="_blank" class="flex flex-col items-center gap-2 transition active:scale-95" style="text-decoration: none;">
-                <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl shadow-lg shadow-green-200">
-                    <i class="ri-whatsapp-fill"></i>
-                </div>
-                <span class="text-[10px] font-bold text-slate-600">WHATSAPP</span>
-            </a>
-            
-            <!-- Messenger (Deep Link Fallback) -->
-            <a href="fb-messenger://share/?link=${encodedLink}" target="_blank" onclick="setTimeout(() => { window.open('https://www.messenger.com/t/', '_blank'); }, 500);" class="flex flex-col items-center gap-2 transition active:scale-95" style="text-decoration: none;">
-                <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-200">
-                    <i class="ri-messenger-fill"></i>
-                </div>
-                <span class="text-[10px] font-bold text-slate-600">MESSENGER</span>
-            </a>
-            
-            <!-- Telegram -->
-            <a href="https://t.me/share/url?url=${encodedLink}&text=${encodeURIComponent('আসসালামু আলাইকুম! ঘরে বসে আয় করতে জয়েন করুন:\n')}" target="_blank" class="flex flex-col items-center gap-2 transition active:scale-95" style="text-decoration: none;">
-                <div class="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white text-2xl shadow-lg shadow-sky-200">
-                    <i class="ri-telegram-fill"></i>
-                </div>
-                <span class="text-[10px] font-bold text-slate-600">TELEGRAM</span>
-            </a>
-
-            <!-- Facebook -->
-            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodedLink}" target="_blank" class="flex flex-col items-center gap-2 transition active:scale-95" style="text-decoration: none;">
-                <div class="w-12 h-12 bg-blue-700 rounded-full flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-300">
-                    <i class="ri-facebook-circle-fill"></i>
-                </div>
-                <span class="text-[10px] font-bold text-slate-600">FACEBOOK</span>
-            </a>
-        </div>
-        
-        <div class="mt-6 pt-4 border-t border-slate-100 space-y-2">
-            <!-- Native Share / Instagram Fallback -->
-            <button onclick="window.triggerNativeShare()" class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all border border-indigo-100">
-                <i class="ri-share-forward-fill text-lg"></i> অন্যান্য অপশন (INSTAGRAM / SHARE)
-            </button>
-
-            <!-- Copy Link -->
-            <button onclick="window.copyReferralLink(); Swal.close();" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all">
-                <i class="ri-file-copy-line text-lg"></i> শুধু লিংক কপি করুন
-            </button>
-        </div>
-    `;
-
-    // SweetAlert দিয়ে প্রিমিয়াম পপ-আপ শো করানো
-    window.playSound('snd_click');
-    Swal.fire({
-        title: '<span style="font-weight:900; color:#1e293b; font-size: 22px;">শেয়ার করুন 🚀</span>',
-        html: shareHTML,
-        showConfirmButton: false,
-        showCloseButton: true,
-        background: '#ffffff',
-        customClass: {
-            popup: 'rounded-[35px] border border-slate-100 shadow-2xl pb-4',
-            closeButton: 'bg-slate-100 text-slate-500 rounded-full hover:bg-red-100 hover:text-red-500 m-3 transition-colors'
-        }
-    });
+    
+    let url = "";
+    if (platform === 'whatsapp') {
+        url = `https://wa.me/?text=${encodedMessage}`;
+    } else if (platform === 'messenger') {
+        url = `fb-messenger://share/?link=${encodedLink}`;
+        // Messenger fallback
+        setTimeout(() => {
+            if (!document.hidden) {
+                window.open('https://www.messenger.com/t/', '_blank');
+            }
+        }, 500);
+    } else if (platform === 'telegram') {
+        url = `https://t.me/share/url?url=${encodedLink}&text=${encodeURIComponent('আসসালামু আলাইকুম! ঘরে বসে আয় করতে জয়েন করুন:\n')}`;
+    } else if (platform === 'facebook') {
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodedLink}`;
+    }
+    
+    if (url) {
+        window.open(url, '_blank');
+        window.closeShareModal();
+    }
 };
 
-// নেটিভ শেয়ার ফাংশন (Instagram ও অন্যান্য অ্যাপের জন্য)
-window.triggerNativeShare = async () => {
+window.triggerNativeShareSheet = async () => {
     const link = document.getElementById('referralLink').innerText;
     const shareData = {
         title: 'টাকাওয়ালা - ঘরে বসে আয়',
@@ -9918,11 +10011,11 @@ window.triggerNativeShare = async () => {
     try {
         if (navigator.share) {
             await navigator.share(shareData);
-            Swal.close();
+            window.closeShareModal();
         } else {
-            showSmartToast('আপনার ব্রাউজারটি এই অপশন সাপোর্ট করে না। দয়া করে লিংক কপি করুন।', 'warning');
+            showSmartToast('অন্যান্য অপশন আপনার ব্রাউজারে সাপোর্ট করছে না। কপি বাটন ব্যবহার করুন।', 'warning');
         }
-    } catch (err) { console.log("Share cancelled or failed:", err); }
+    } catch (err) { console.log("Share failed:", err); }
 };
 
 // ২. রেফারাল লিস্ট লোড করার উন্নত ফাংশন
@@ -11478,8 +11571,13 @@ window.applyPackagePromo = () => {
 
     const code = input.value.trim().toUpperCase();
 
-    // সিক্রেট কোড TWSECRETGIFT ভ্যালিডেশন
+   // সিক্রেট কোড TWSECRETGIFT ভ্যালিডেশন
     if (code === 'TWSECRETGIFT') {
+        // লাইফটাইম সিঙ্গেল ইউজ সিকিউরিটি চেক
+        if (currentUserData && currentUserData.isSecretPromoUsed === true) {
+            showSmartToast('দুঃখিত! আপনি এই লাইফটাইম সিক্রেট কোডটি ইতিমধ্যে একবার ব্যবহার করে ফেলেছেন। এটি আর ব্যবহার করা যাবে না। 🚫', 'error');
+            return;
+        }
         appliedPromoPercent = 8; // ৮% ডিসকাউন্ট সেট হলো
         showSmartToast('অভিনন্দন! গোপন কুপন কোড সফল হয়েছে। প্রতিটি প্যাকেজে ৮% ডিসকাউন্ট সচল! 🎁', 'success');
         
@@ -11703,6 +11801,116 @@ window.applyLanguage = (lang) => {
     });
 };
 
+// ✅ দৈনিক মিস্ট্রি গিফট ক্লেইম করার মেইন ফাংশন
+window.claimMysteryGift = async () => {
+    if (currentUserData.isActivated === false) {
+        return window.handleActivation();
+    }
+    if (!currentUserId || !currentUserData) return;
+
+    const todayStr = new Date().toLocaleDateString('bn-BD');
+    if (currentUserData.lastMysteryGiftDate === todayStr) {
+        showSmartToast('আপনি আজকের মিস্ট্রি গিফট ইতিমধ্যে সংগ্রহ করেছেন!', 'warning');
+        return;
+    }
+
+    const result = await Swal.fire({
+        title: '🎁 মিস্ট্রি গিফট বক্স!',
+        html: `<div class="text-center animate__animated animate__zoomIn">
+                <img src="https://i.postimg.cc/dtj5JQqK/gift-box.png" class="w-20 mx-auto mb-3 animate-pulse" style="filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15));">
+                <p class="text-slate-700 font-black text-sm">আপনার মিস্ট্রি গিফটটি আনলক করুন!</p>
+                <p class="text-[11px] text-slate-500 font-medium mt-1 leading-relaxed px-2">একটি ভিডিও অ্যাড দেখে সরাসরি <span class="text-purple-600 font-bold">৳০.৫০ থেকে ৳৩.০০</span> পর্যন্ত নিশ্চিত বোনাস জিতে নিন!</p>
+               </div>`,
+        showCancelButton: true,
+        confirmButtonText: 'বক্সটি খুলুন 🚀',
+        cancelButtonText: 'পরে আসব',
+        confirmButtonColor: '#8b5cf6',
+        cancelButtonColor: '#f1f5f9',
+        customClass: { 
+            popup: 'rounded-[30px] border border-slate-100 shadow-2xl pb-4',
+            cancelButton: 'text-slate-700 font-bold'
+        }
+    });
+
+    if (result.isConfirmed) {
+        // ভিডিও অ্যাড চালু হচ্ছে
+        window.showMonetagAd(async () => {
+            showLoading();
+            try {
+                // ০.৫০ থেকে ৩.০০ টাকার মধ্যে রেন্ডম উপহার
+                const randomAmount = Math.floor(Math.random() * (300 - 50 + 1) + 50) / 100; // 0.50 to 3.00
+
+                const userRef = db.collection("users").doc(currentUserId);
+                
+                await userRef.update({
+                    mainBalance: firebase.firestore.FieldValue.increment(randomAmount),
+                    totalEarnings: firebase.firestore.FieldValue.increment(randomAmount),
+                    todayEarnings: firebase.firestore.FieldValue.increment(randomAmount),
+                    lastMysteryGiftDate: todayStr
+                });
+
+                // হিস্ট্রিতে রেকর্ড
+                await db.collection("history").add({
+                    userId: currentUserId,
+                    type: "মিস্ট্রি গিফট 🎁",
+                    amount: randomAmount,
+                    status: "Success",
+                    details: "দৈনিক মিস্ট্রি গিফট বক্স ওপেন করে পাওয়া বোনাস",
+                    date: todayStr,
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                if(typeof todayEarnings !== 'undefined') {
+                    todayEarnings += randomAmount;
+                    const teEl = document.getElementById('todayEarnings');
+                    if (teEl) teEl.textContent = todayEarnings.toFixed(2);
+                }
+
+                hideLoading();
+
+                // ৩ডি বক্স এনিমেশন ও সাউন্ড এফেক্ট চালানো
+                window.trigger3DBoxReward(`৳${randomAmount.toFixed(2)}`);
+
+                if(typeof confetti === 'function') {
+                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                }
+
+                // ৩ডি এনিমেশন শেষ হওয়ার পর (২ সেকেন্ড পর) সফলতার অ্যালার্ট
+                setTimeout(() => {
+                    Swal.fire({
+                        title: '🎉 ক্লেইম সফল!',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100 p-4 rounded-2xl mb-4 mt-2 shadow-sm">
+                                    <p class="text-slate-400 font-bold text-[10px] uppercase">মিস্ট্রি বক্স থেকে পেয়েছেন</p>
+                                    <h2 class="text-3xl font-black text-purple-600 mt-1">৳${randomAmount.toFixed(2)}</h2>
+                                </div>
+                                <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+                                    টাকা সরাসরি আপনার মেইন ব্যালেন্সে সফলভাবে জমা করে দেওয়া হয়েছে। আগামীকাল আবার নতুন মিস্ট্রি বক্স আনলক করতে ফিরে আসুন! 🚀
+                                </p>
+                            </div>
+                        `,
+                        confirmButtonText: 'ধন্যবাদ, বুঝেছি',
+                        confirmButtonColor: '#8b5cf6',
+                        background: '#ffffff',
+                        customClass: {
+                            popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                            confirmButton: 'rounded-xl px-8 py-3 font-bold'
+                        }
+                    });
+                }, 2000);
+
+                window.playSound('snd_success');
+
+            } catch (e) {
+                console.error("Mystery Gift Error:", e);
+                showSmartToast("সমস্যা হয়েছে, আবার চেষ্টা করুন", "error");
+                hideLoading();
+            }
+        });
+    }
+};
 
     </script>
     
@@ -11841,6 +12049,80 @@ window.applyLanguage = (lang) => {
             </button>
             <button onclick="window.closePasswordChangeModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3.5 rounded-2xl text-xs transition-all">
                 বাতিল করুন
+            </button>
+        </div>
+    </div>
+</div>
+    
+    <!-- 📤 PREMIUM iOS STYLE SHARE BOTTOM SHEET (uppercase English Labels) -->
+<div id="shareModal" class="hidden fixed inset-0 z-[999999] flex flex-col items-center justify-end">
+    <!-- ব্যাকড্রপ গ্লাস ইফেক্ট -->
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="window.closePinVerifyModal()"></div>
+    
+    <!-- স্লাইডিং শিট -->
+    <div class="bg-white w-full max-w-md rounded-t-[35px] shadow-2xl p-6 relative z-10 animate__animated animate__slideInUp duration-300">
+        <!-- Top Indicator Bar -->
+        <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6"></div>
+        
+        <!-- হেডার -->
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-3 shadow-lg border-2 border-white">
+                <i class="ri-share-forward-box-fill"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-800 uppercase tracking-wider">SHARE PASS</h3>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[2px] mt-1">INVITE FRIENDS & EARN REWARDS</p>
+        </div>
+        
+        <!-- সোশ্যাল শেয়ারিং গ্রিড (বড় হাতের ইংরেজি হরফে) -->
+        <div class="grid grid-cols-4 gap-4 mb-6">
+            <!-- WhatsApp -->
+            <button onclick="window.shareToSocial('whatsapp')" class="flex flex-col items-center gap-2 group outline-none">
+                <div class="w-12 h-12 bg-[#25D366] text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-green-200 group-active:scale-90 transition-transform">
+                    <i class="ri-whatsapp-fill"></i>
+                </div>
+                <span class="text-[9px] font-black text-slate-500 tracking-wider">WHATSAPP</span>
+            </button>
+            
+            <!-- Messenger -->
+            <button onclick="window.shareToSocial('messenger')" class="flex flex-col items-center gap-2 group outline-none">
+                <div class="w-12 h-12 bg-[#0084FF] text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-blue-200 group-active:scale-90 transition-transform">
+                    <i class="ri-messenger-fill"></i>
+                </div>
+                <span class="text-[9px] font-black text-slate-500 tracking-wider">MESSENGER</span>
+            </button>
+            
+            <!-- Telegram -->
+            <button onclick="window.shareToSocial('telegram')" class="flex flex-col items-center gap-2 group outline-none">
+                <div class="w-12 h-12 bg-[#0088cc] text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-sky-200 group-active:scale-90 transition-transform">
+                    <i class="ri-telegram-fill"></i>
+                </div>
+                <span class="text-[9px] font-black text-slate-500 tracking-wider">TELEGRAM</span>
+            </button>
+            
+            <!-- Facebook -->
+            <button onclick="window.shareToSocial('facebook')" class="flex flex-col items-center gap-2 group outline-none">
+                <div class="w-12 h-12 bg-[#1877F2] text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-indigo-200 group-active:scale-90 transition-transform">
+                    <i class="ri-facebook-circle-fill"></i>
+                </div>
+                <span class="text-[9px] font-black text-slate-500 tracking-wider">FACEBOOK</span>
+            </button>
+        </div>
+        
+        <!-- কুইক অ্যাকশন বাটনসমূহ -->
+        <div class="space-y-2">
+            <!-- Native Share -->
+            <button onclick="window.triggerNativeShareSheet()" class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all border border-indigo-100 uppercase text-xs tracking-wider">
+                <i class="ri-share-forward-fill text-lg"></i> MORE OPTIONS
+            </button>
+
+            <!-- Copy Link -->
+            <button onclick="window.copyReferralLink(); window.closeShareModal();" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all uppercase text-xs tracking-wider">
+                <i class="ri-file-copy-line text-lg"></i> COPY LINK ONLY
+            </button>
+            
+            <!-- Close Button -->
+            <button onclick="window.closeShareModal()" class="w-full bg-red-50 text-red-600 font-black py-3.5 rounded-2xl text-xs transition-all uppercase tracking-widest mt-2">
+                CANCEL
             </button>
         </div>
     </div>
