@@ -245,13 +245,13 @@
             to { top: -100px; opacity: 0; transform: translateX(-50%) scale(0.9); visibility: hidden; }
         }
 
-       /* ✨ ULTRA PREMIUM SMART OVERLAY & FLICKER FIX */
+      /* ✨ ULTRA PREMIUM SMART OVERLAY & FLICKER FIX */
 #loadingOverlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(255, 255, 255, 0.5); /* হালকা সাদা গ্লাস ইফেক্ট */
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    background: rgba(15, 23, 42, 0.65); /* গর্জিয়াস ডার্ক স্লেট গ্লাস ইফেক্ট */
+    backdrop-filter: blur(15px) saturate(150%);
+    -webkit-backdrop-filter: blur(15px) saturate(150%);
     z-index: 9999999;
     display: flex;
     flex-direction: column;
@@ -3903,10 +3903,11 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
         };
         
      // ✅ ডাবল অ্যাড + অ্যান্টি-ফ্লিকারিং (Fast Return Protection)
+// ✅ ডাবল অ্যাড + হাই-স্পিড অ্যান্টি-ফ্লিকারিং (Optimized Delay)
 window.showMonetagAd = async (callback) => {
     showLoading();
-    // ১. অ্যাড আসার আগে সেফটি বাফার
-    await new Promise(resolve => setTimeout(resolve, 800));
+    // ১. অ্যাড আসার আগে সেফটি বাফার (কমিয়ে ৩০০মি.সে. করা হলো)
+    await new Promise(resolve => setTimeout(resolve, 300));
     hideLoading(); 
 
     const playSingleAd = () => {
@@ -3916,35 +3917,38 @@ window.showMonetagAd = async (callback) => {
                     window['show_10531082']();
                 }
             } catch (e) { console.log("Ad Error"); }
-            setTimeout(resolve, 2500); // ২.৫ সেকেন্ড পর রেজলভ হবে
+            // ২. অ্যাড এক্সিকিউশন বাফার (কমিয়ে ১ সেকেন্ড করা হলো)
+            setTimeout(resolve, 1000); 
         });
     };
 
-    showSmartToast('১ম অ্যাড শুরু হচ্ছে, দয়া করে একটু অপেক্ষা করুন...', 'info');
+    showSmartToast('১ম অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
     await playSingleAd();
     
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // ৩. দুই অ্যাডের মাঝের বিরতি (কমিয়ে ৪০০মি.সে. করা হলো)
+    await new Promise(resolve => setTimeout(resolve, 400));
 
-    showSmartToast('২য় অ্যাড শুরু হচ্ছে, দয়া করে একটু অপেক্ষা করুন...', 'info');
+    showSmartToast('২য় অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
     await playSingleAd();
 
-    // 🎁 পুরস্কার দেওয়ার আগে মেইন ফিক্স
+    // 🎁 পুরস্কার দেওয়ার মেইন ফিক্স
     const triggerReward = async () => {
         ensureMainAppVisible(); // প্রথমেই অ্যাপ শো করাও
         showLoading(); 
         
-        // ২ সেকেন্ডের লম্বা বিরতি যাতে ফোন শান্ত হয়
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // ৪. ফোন শান্ত করার বিরতি (কমিয়ে ৬০০মি.সে. করা হলো)
+        await new Promise(resolve => setTimeout(resolve, 600));
         
         hideLoading();
         ensureMainAppVisible(); // আবারও শো করাও সেফটির জন্য
         
         if (callback) {
+            // ৫. ব্যাকগ্রাউন্ড ডাটাবেস রাইটের জন্য সামান্য বাফার (১০০মি.সে.)
             setTimeout(async () => {
                 try {
                     await callback(); 
                 } catch(e) { console.error(e); }
-            }, 500); 
+            }, 100); 
         }
     };
 
@@ -3953,15 +3957,16 @@ window.showMonetagAd = async (callback) => {
         const onReturn = () => {
             if (!document.hidden) {
                 document.removeEventListener('visibilitychange', onReturn);
-                setTimeout(triggerReward, 1000); 
+                // ফিরে আসার পর বাফার (কমিয়ে ৩০০মি.সে.)
+                setTimeout(triggerReward, 300); 
             }
         };
         document.addEventListener('visibilitychange', onReturn);
     } else {
-        setTimeout(triggerReward, 500);
+        // ডাইরেক্ট ট্রিগার বাফার (কমিয়ে ২০০মি.সে.)
+        setTimeout(triggerReward, 200);
     }
 };
-
 // ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ফিক্সড)
 function ensureMainAppVisible() {
     const mainApp = document.getElementById('mainApp');
@@ -3971,13 +3976,13 @@ function ensureMainAppVisible() {
 
     if (mainApp) {
         mainApp.classList.remove('hidden');
-        mainApp.style.setProperty('display', 'block', 'important');
+        mainApp.style.setProperty('display', 'block', 'important'); // নিশ্চিত করা হলো এটি block থাকবে
         mainApp.style.setProperty('visibility', 'visible', 'important');
         mainApp.style.setProperty('opacity', '1', 'important');
     }
     if (bottomNav) {
         bottomNav.classList.remove('hidden');
-        bottomNav.style.setProperty('display', 'flex', 'important');
+        bottomNav.style.setProperty('display', 'flex', 'important'); // 💖 সংশোধন: এখন bottomNav সঠিকভাবে flex হবে
     }
     if (authScreen) {
         authScreen.classList.add('hidden');
@@ -5043,7 +5048,7 @@ auth.onAuthStateChanged((user) => {
         
         // 🚪 একদম নতুন ইউজার বা যারা লগআউট করেছে তাদের জন্য এই অংশ
         document.getElementById('authScreen').classList.remove('hidden'); 
-        document.getElementById('mainApp').classList.add('add', 'hidden'); 
+        document.getElementById('mainApp').classList.add('hidden');
         document.getElementById('bottomNav').classList.add('hidden');
         document.getElementById('globalChatIcon').style.display = 'none';
         document.getElementById('twaiChatbotIcon').style.display = 'none';
