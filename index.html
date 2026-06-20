@@ -1891,10 +1891,11 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <span class="text-[12px] font-bold text-slate-700">উত্তোলন</span>
     </div>
 
-    <div onclick="window.showDriveOffer()" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
-        <img src="https://i.postimg.cc/qByrJYrn/sim-card.png" class="w-11 mb-2 drop-shadow-md">
-        <span class="text-[12px] font-bold text-slate-700">ড্রাইভ অফার</span>
-    </div>
+    <div onclick="window.showPage('promoClaimScreen')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md relative">
+    <div class="absolute top-1 right-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-lg shadow-lg z-30 animate-pulse border border-white/50">NEW</div>
+    <img src="https://i.postimg.cc/dtj5JQqK/gift-box.png" class="w-11 mb-2 drop-shadow-md">
+    <span class="text-[12px] font-bold text-slate-700">প্রোমো কোড</span>
+</div>
 
     <div onclick="showAnnouncement()" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
         <img src="https://i.postimg.cc/9MW7x5nG/billboard.png" class="w-11 mb-2 drop-shadow-md">
@@ -1995,19 +1996,24 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <p class="text-base font-black mt-1">পেমেন্ট ও ডিপোজিট তথ্য</p>
         </div>
 
-        <!-- 💳 গর্জিয়াস ইনপুট গ্রুপ (সরাসরি রঙিন কার্ডের ভেতরে) -->
-        <div class="grid grid-cols-2 gap-3 mb-3 relative z-10">
-            <div>
-                <label class="text-[10px] font-black text-white/70 uppercase ml-1 mb-1 block">টাকার পরিমাণ</label>
-                <input type="number" id="depositAmount" oninput="window.updateDepositInstructionValues()" placeholder="৳১০০" 
-                    class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-white/70 uppercase ml-1 mb-1 block">যে নম্বর থেকে পাঠিয়েছেন</label>
-                <input type="text" id="depositSenderNumber" oninput="window.updateDepositInstructionValues()" placeholder="০১৭xxxxxxxx" 
-                    class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
-            </div>
+        <!-- 💳 গর্জিয়াস ইনপুট গ্রুপ (হরাইজনাল / ফুল-উইডথ ও ট্রানজেকশন আইডি-র মতো স্টাইল) -->
+<div class="space-y-3 mb-3 relative z-10">
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="ri-money-dollar-circle-line text-lg"></i>
         </div>
+        <input type="number" id="depositAmount" oninput="window.updateDepositInstructionValues()" placeholder="এখানে টাকার পরিমাণ লিখুন" 
+            class="w-full pl-11 py-4 bg-white rounded-2xl text-slate-800 font-black outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner text-sm">
+    </div>
+
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="ri-phone-line text-lg"></i>
+        </div>
+        <input type="text" id="depositSenderNumber" oninput="window.updateDepositInstructionValues()" placeholder="এখানে সেন্ডার নম্বর লিখুন" 
+            class="w-full pl-11 py-4 bg-white rounded-2xl text-slate-800 font-black outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner text-sm">
+    </div>
+</div>
         <div class="text-[11px] text-yellow-300 font-black text-center mb-4" id="vatCalculation">ভ্যাট (১০%): ৳০.০০ | মোট: ৳০.০০</div>
 
         <!-- ৩. ডাইনামিক পেমেন্ট নির্দেশনাবলী লিস্ট -->
@@ -2143,52 +2149,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             </div>
         </div>
         
-        <!-- ✅ DRIVE OFFER SCREEN -->
-                        <div id="driveOfferScreen" class="hidden min-h-screen bg-slate-900 text-white animate__animated animate__fadeInRight pb-24">
-            <div class="flex items-center gap-3 p-5 pt-8 bg-slate-800/50 backdrop-blur-md sticky top-0 z-50">
-                <button onclick="window.showPage('homeScreen')" class="bg-white/10 p-2 rounded-full shadow-md backdrop-blur-md active:scale-95 transition">
-                    <i class="ri-arrow-left-line text-xl"></i>
-                </button>
-                <h2 class="text-xl font-bold">ড্রাইভ অফার</h2>
-            </div>
-            
-            <div id="driveMaintenanceView" class="p-6 text-center mt-10 hidden">
-                <div class="relative inline-block mb-6">
-                    <div class="absolute inset-0 bg-blue-500 blur-2xl opacity-20 rounded-full"></div>
-                    <img src="https://i.postimg.cc/qByrJYrn/sim-card.png" class="w-24 relative z-10 animate-bounce">
-                </div>
-                <h1 class="text-2xl font-bold mb-3 text-blue-400" id="driveMainTitle">কাজ চলছে...</h1>
-                <p class="text-slate-400 text-sm mb-6" id="driveMainMessage">ড্রাইভ অফার খুব শীঘ্রই চালু হবে।</p>
-                <div class="inline-block bg-slate-800 px-4 py-1.5 rounded-full border border-slate-700">
-                    <p class="text-xs font-bold text-slate-300" id="driveLaunchDate">Coming Soon</p>
-                </div>
-            </div>
-
-            <div id="driveActiveView" class="hidden">
-                <div class="flex overflow-x-auto gap-3 p-4 scrollbar-hide sticky top-[72px] z-40 bg-slate-900/90 backdrop-blur-sm">
-                    <button onclick="window.loadDriveOffers('gp')" id="tab_gp" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700">
-                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> GP
-                    </button>
-                    <button onclick="window.loadDriveOffers('robi')" id="tab_robi" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700">
-                        <span class="w-2 h-2 rounded-full bg-red-500"></span> Robi
-                    </button>
-                    <button onclick="window.loadDriveOffers('bl')" id="tab_bl" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700">
-                        <span class="w-2 h-2 rounded-full bg-orange-500"></span> BL
-                    </button>
-                    <button onclick="window.loadDriveOffers('airtel')" id="tab_airtel" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700">
-                        <span class="w-2 h-2 rounded-full bg-red-600"></span> Airtel
-                    </button>
-                    <button onclick="window.loadDriveOffers('teletalk')" id="tab_teletalk" class="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700">
-                        <span class="w-2 h-2 rounded-full bg-green-500"></span> Teletalk
-                    </button>
-                </div>
-
-                <div id="driveOffersContainer" class="px-4 pb-20 space-y-3">
-                    </div>
-            </div>
-        </div>
-
-
+       
 <!-- LEADERBOARD SCREEN -->
         <div id="leaderboardScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight min-h-screen bg-slate-50 pb-24">
             <div class="flex items-center gap-3 mb-6">
@@ -5047,12 +5008,16 @@ document.getElementById('btnLoginAction').addEventListener('click', async () => 
      // ✅ ফিক্স: অ্যাপ একবার চালু হলে তা মনে রাখার ভেরিয়েবল
         window.isAppInitialized = false;
 
-       // ✅ AUTH STATE LISTENER WITH ALL FEATURES (FIXED & UNITIFIED)
-// ✅ AUTH STATE LISTENER (সব ফিচারসহ নিখুঁত সংস্করণ)
+       // ✅ AUTH STATE LISTENER (সব ফিচারসহ নিখুঁত সংস্করণ)
 auth.onAuthStateChanged((user) => {
     if (user) {
         currentUserId = user.uid;
         window.isUserLoggedIn = true; 
+        
+        // ⏰ ১৫ দিন ইন-একটিভ থাকলে অটোমেটিক ডিলিট হওয়ার সময় সেট করা (নতুন কোড)
+        const expireDate = new Date();
+        expireDate.setDate(expireDate.getDate() + 15);
+        db.collection("users").doc(user.uid).update({ deleteAt: expireDate }).catch(e => {});
         
         // 🚀 অ্যাড থেকে ফেরার সময় সাদা স্ক্রিন ঠেকানোর মেইন লক
         if (window.isAppInitialized) {
@@ -5755,10 +5720,56 @@ async function loadSimpleHistory(filterType = 'all') {
                 const time = h.time || '---';
                 
                 let icon = 'https://i.postimg.cc/VNTvSLRX/transaction-history.png';
-                let bgColor = 'bg-slate-100';
-                if(t.includes('recharge') || t.includes('রিচার্জ')) { icon = 'https://i.postimg.cc/jjdpNH5b/payment-method.png'; bgColor = 'bg-blue-50'; } 
-                else if(t.includes('withdraw') || t.includes('উত্তোলন')) { icon = 'https://i.postimg.cc/wMdF5zV5/withdraw.png'; bgColor = 'bg-red-50'; } 
-                else if(t.includes('deposit') || t.includes('ডিপোজিট')) { icon = 'https://i.postimg.cc/7ZGpHH5q/save-money.png'; bgColor = 'bg-green-50'; } 
+        let bgColor = 'bg-slate-100';
+
+        if (t.includes('recharge') || t.includes('রিচার্জ')) { 
+            icon = 'https://i.postimg.cc/jjdpNH5b/payment-method.png'; 
+            bgColor = 'bg-blue-50'; 
+        } 
+        else if (t.includes('withdraw') || t.includes('উত্তোলন')) { 
+            icon = 'https://i.postimg.cc/wMdF5zV5/withdraw.png'; 
+            bgColor = 'bg-red-50'; 
+        } 
+        else if (t.includes('deposit') || t.includes('ডিপোজিট')) { 
+            icon = 'https://i.postimg.cc/7ZGpHH5q/save-money.png'; 
+            bgColor = 'bg-green-50'; 
+        }
+        else if (t.includes('task') || t.includes('টাস্ক') || t.includes('ভিজিট')) { 
+            icon = 'https://i.postimg.cc/d1sXyCb6/clipboard.png'; 
+            bgColor = 'bg-emerald-50'; 
+        }
+        else if (t.includes('কুইজ') || t.includes('quiz')) { 
+            icon = 'https://i.postimg.cc/mkNFY0L0/solution.png'; 
+            bgColor = 'bg-amber-50'; 
+        }
+        else if (t.includes('স্পিন') || t.includes('spin')) { 
+            icon = 'https://i.postimg.cc/02p5C1GN/fortune-wheel.png'; 
+            bgColor = 'bg-indigo-50'; 
+        }
+        else if (t.includes('ড্র') || t.includes('draw') || t.includes('টিকেট') || t.includes('ticket')) { 
+            icon = 'https://i.postimg.cc/hj8zWcRb/tickets.png'; 
+            bgColor = 'bg-purple-50'; 
+        }
+        else if (t.includes('প্রোমো') || t.includes('promo')) { 
+            icon = 'https://i.postimg.cc/dtj5JQqK/gift-box.png'; 
+            bgColor = 'bg-pink-50'; 
+        }
+        else if (t.includes('রেফার') || t.includes('referral')) { 
+            icon = 'https://i.postimg.cc/c4xbp54V/add-friend.png'; 
+            bgColor = 'bg-teal-50'; 
+        }
+        else if (t.includes('বোনাস') || t.includes('bonus')) { 
+            icon = 'https://i.postimg.cc/qqLQKVHV/bonus.png'; 
+            bgColor = 'bg-yellow-50'; 
+        }
+        else if (t.includes('জিমেইল') || t.includes('gmail')) { 
+            icon = 'https://img.icons8.com/fluency/96/gmail-new.png'; 
+            bgColor = 'bg-sky-50'; 
+        }
+        else if (t.includes('অ্যাড') || t.includes('ad')) { 
+            icon = 'https://img.icons8.com/fluency/96/play-button-circled.png'; 
+            bgColor = 'bg-rose-50'; 
+        }
 
                 const amount = parseFloat(h.amount) || 0;
                 const amountColor = amount > 0 ? 'text-green-600' : 'text-red-500';
@@ -7062,26 +7073,31 @@ await db.collection("history").doc(newReqId).set({
                     // ডাটাবেস থেকে ইউজারের সব রেফারালদের ডাটা চেক করা হচ্ছে
                     const refSnap = await db.collection("users").where("referredBy", "==", myCode).get();
                     
-                    // চেক করবে কয়জন রেফার মেম্বার অন্তত ৫টি টাস্ক কমপ্লিট করেছে
-                    let activeRefCount = 0;
-                    refSnap.forEach(doc => {
-                        const refData = doc.data();
-                        if((refData.totalTasks || 0) >= 5) {
-                            activeRefCount++;
-                        }
-                    });
+                   // চেক করবে রেফার করা মেম্বার একটিভ কি না (টাস্ক ২ টি, অথবা অ্যাড ভিউ, অথবা ডেইলি বোনাস)
+            let activeRefCount = 0;
+            refSnap.forEach(doc => {
+                const refData = doc.data();
+                const hasDoneTasks = (refData.totalTasks || 0) >= 2; // ২টি টাস্ক কন্ডিশন
+                const hasWatchedAds = (refData.watchEarnCount || 0) > 0; // ভিডিও অ্যাড কন্ডিশন
+                const hasClaimedBonus = !!refData.lastDailyBonus; // ডেইলি বোনাস কন্ডিশন
+                
+                // যেকোনো একটি শর্ত পূরণ করলেই সে একটিভ হিসেবে গণ্য হবে
+                if (hasDoneTasks || hasWatchedAds || hasClaimedBonus) {
+                    activeRefCount++;
+                }
+            });
 
-                    if(activeRefCount < 1) {
-                        hideLoading();
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'উইথড্র আটকে দেওয়া হয়েছে! 🚫',
-                            html: `<div style="text-align:left; font-size:13px; line-height:1.6;">
-                                    মামা, আপনার অন্তত ১টি <b>এক্টিভ রেফার</b> নেই। <br><br>
-                                    বর্তমানে আপনার একটিভ রেফার: <b style="color:red;">${activeRefCount} জন</b><br>
-                                    প্রয়োজন: <b>১ জন</b><br><br>
-                                    <span style="color:#475569;">নিয়ম: আপনার রেফারে জয়েন করা মেম্বারকে অন্তত ৫টি টাস্ক কমপ্লিট করতে হবে, তবেই সে এক্টিভ হিসেবে গণ্য হবে।</span>
-                                   </div>`,
+            if(activeRefCount < 1) {
+                hideLoading();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'উইথড্র আটকে দেওয়া হয়েছে! 🚫',
+                    html: `<div style="text-align:left; font-size:13px; line-height:1.6;">
+                            মামা, আপনার অন্তত ১টি <b>এক্টিভ রেফার</b> নেই। <br><br>
+                            বর্তমানে আপনার একটিভ রেফার: <b style="color:red;">${activeRefCount} জন</b><br>
+                            প্রয়োজন: <b>১ জন</b><br><br>
+                            <span style="color:#475569;">নিয়ম: আপনার রেফারে জয়েন করা মেম্বারকে অন্তত ২টি টাস্ক কমপ্লিট করতে হবে অথবা নিয়মিত অ্যাপে ঢুকে ডেইলি বোনাস বা অন্তত ১টি ভিডিও অ্যাড দেখতে হবে।</span>
+                           </div>`,
                             confirmButtonText: 'বুঝেছি',
                             confirmButtonColor: '#ef4444',
                             customClass: { popup: 'rounded-[25px]' }
@@ -7328,26 +7344,30 @@ if(isFreeUser) {
                     // ডাটাবেস থেকে ইউজারের সব রেফারালদের ডাটা চেক করা হচ্ছে
                     const refSnap = await db.collection("users").where("referredBy", "==", myCode).get();
                     
-                    // চেক করবে কয়জন রেফার মেম্বার অন্তত ৫টি টাস্ক কমপ্লিট করেছে
-                    let activeRefCount = 0;
-                    refSnap.forEach(doc => {
-                        const refData = doc.data();
-                        if((refData.totalTasks || 0) >= 5) {
-                            activeRefCount++;
-                        }
-                    });
+                    // চেক করবে রেফার করা মেম্বার একটিভ কি না (টাস্ক ২ টি, অথবা অ্যাড ভিউ, অথবা ডেইলি বোনাস)
+            let activeRefCount = 0;
+            refSnap.forEach(doc => {
+                const refData = doc.data();
+                const hasDoneTasks = (refData.totalTasks || 0) >= 2; // ২টি টাস্ক কন্ডিশন
+                const hasWatchedAds = (refData.watchEarnCount || 0) > 0; // ভিডিও অ্যাড কন্ডিশন
+                const hasClaimedBonus = !!refData.lastDailyBonus; // ডেইলি বোনাস কন্ডিশন
+                
+                if (hasDoneTasks || hasWatchedAds || hasClaimedBonus) {
+                    activeRefCount++;
+                }
+            });
 
-                    if(activeRefCount < 1) {
-                        hideLoading();
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'রিচার্জ আটকে দেওয়া হয়েছে! 🚫',
-                            html: `<div style="text-align:left; font-size:13px; line-height:1.6;">
-                                    মামা, আপনার অন্তত ১টি <b>এক্টিভ রেফার</b> নেই। <br><br>
-                                    বর্তমানে আপনার একটিভ রেফার: <b style="color:red;">${activeRefCount} জন</b><br>
-                                    প্রয়োজন: <b>১ জন</b><br><br>
-                                    <span style="color:#475569;">নিয়ম: আপনার রেফারে জয়েন করা মেম্বারকে অন্তত ৫টি টাস্ক কমপ্লিট করতে হবে, তবেই সে এক্টিভ হিসেবে গণ্য হবে।</span>
-                                   </div>`,
+            if(activeRefCount < 1) {
+                hideLoading();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'রিচার্জ আটকে দেওয়া হয়েছে! 🚫',
+                    html: `<div style="text-align:left; font-size:13px; line-height:1.6;">
+                            মামা, আপনার অন্তত ১টি <b>এক্টিভ রেফার</b> নেই। <br><br>
+                            বর্তমানে আপনার একটিভ রেফার: <b style="color:red;">${activeRefCount} জন</b><br>
+                            প্রয়োজন: <b>১ জন</b><br><br>
+                            <span style="color:#475569;">নিয়ম: আপনার রেফারে জয়েন করা মেম্বারকে অন্তত ২টি টাস্ক কমপ্লিট করতে হবে অথবা নিয়মিত অ্যাপে ঢুকে ডেইলি বোনাস বা অন্তত ১টি ভিডিও অ্যাড দেখতে হবে।</span>
+                           </div>`,
                             confirmButtonText: 'বুঝেছি',
                             confirmButtonColor: '#ef4444',
                             customClass: { popup: 'rounded-[25px]' }
@@ -7859,127 +7879,7 @@ window.contactAdmin = (type) => {
     showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
 };
         
-                       // ✅ DYNAMIC DRIVE OFFER FUNCTION (UPDATED WITH AD)
-        window.showDriveOffer = async () => {
-            // অ্যাড শো করার ফাংশন দিয়ে র‍্যাপ করা হলো
-            window.showMonetagAd(async () => {
-                window.showPage('driveOfferScreen');
-                showLoading();
-
-                try {
-                    const doc = await db.collection("settings").doc("drive_offer").get();
-                    let isActive = false;
-                    
-                    if(doc.exists) {
-                        const data = doc.data();
-                        if(data.isActive === true) isActive = true;
-                        
-                        document.getElementById('driveMainTitle').innerText = data.title || "কাজ চলছে...";
-                        document.getElementById('driveMainMessage').innerText = data.message || "শীঘ্রই আসছে...";
-                        document.getElementById('driveLaunchDate').innerText = data.launchDate || "COMING SOON";
-                    }
-
-                    if(isActive) {
-                        document.getElementById('driveMaintenanceView').classList.add('hidden');
-                        document.getElementById('driveActiveView').classList.remove('hidden');
-                        window.loadDriveOffers('gp'); // ডিফল্ট হিসেবে GP লোড হবে
-                    } else {
-                        document.getElementById('driveMaintenanceView').classList.remove('hidden');
-                        document.getElementById('driveActiveView').classList.add('hidden');
-                        hideLoading();
-                    }
-                } catch(e) {
-                    console.log("Drive settings error:", e);
-                    hideLoading();
-                }
-            }); // অ্যাড ফাংশন শেষ
-        };
-
-        // 🔄 LOAD OFFERS BY OPERATOR
-        window.loadDriveOffers = async (operator) => {
-            // ১. ট্যাব ডিজাইন আপডেট
-            ['gp', 'robi', 'bl', 'airtel', 'teletalk'].forEach(op => {
-                const btn = document.getElementById(`tab_${op}`);
-                if(op === operator) {
-                    btn.className = 'flex-shrink-0 flex items-center gap-2 px-5 py-2 rounded-full bg-blue-600 text-white font-bold text-xs shadow-lg transition-all scale-105';
-                } else {
-                    btn.className = 'flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-bold text-xs transition-all hover:bg-slate-700';
-                }
-            });
-
-            const container = document.getElementById('driveOffersContainer');
-            container.innerHTML = '<div class="text-center py-10"><div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div></div>';
-
-            try {
-                // ফায়ারবেস থেকে অফার লোড
-                const snapshot = await db.collection("drive_offers")
-                    .where("operator", "==", operator)
-                    .orderBy("price", "asc") // দাম অনুযায়ী সাজানো
-                    .get();
-
-                container.innerHTML = '';
-                
-                if(snapshot.empty) {
-                    container.innerHTML = `
-                        <div class="text-center py-10 opacity-50">
-                            <img src="https://i.postimg.cc/qByrJYrn/sim-card.png" class="w-16 mx-auto mb-3 grayscale opacity-50">
-                            <p class="text-sm">এই সিমে বর্তমানে কোনো অফার নেই</p>
-                        </div>`;
-                    hideLoading();
-                    return;
-                }
-
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    // অপারেটর কালার লজিক
-                    let colorClass = 'border-l-4 border-blue-500'; // GP default
-                    if(operator === 'robi') colorClass = 'border-l-4 border-red-500';
-                    else if(operator === 'bl') colorClass = 'border-l-4 border-orange-500';
-                    else if(operator === 'airtel') colorClass = 'border-l-4 border-red-600';
-                    else if(operator === 'teletalk') colorClass = 'border-l-4 border-green-500';
-
-                    const card = `
-                        <div class="bg-slate-800 p-4 rounded-xl shadow-lg border border-slate-700 relative overflow-hidden ${colorClass}">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <h3 class="font-bold text-white text-lg">${data.title}</h3>
-                                    <p class="text-xs text-slate-400 mt-1">${data.description || 'মেয়াদ: ৩০ দিন'}</p>
-                                </div>
-                                <div class="text-right">
-                                    <span class="block text-xl font-black text-green-400">৳${data.price}</span>
-                                    ${data.regularPrice ? `<span class="text-[10px] text-slate-500 line-through">৳${data.regularPrice}</span>` : ''}
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-700">
-                                <div class="bg-slate-700/50 px-2 py-1 rounded text-[10px] text-slate-300 font-mono">
-                                    ${data.area || 'সারা বাংলাদেশ'}
-                                </div>
-                                <button onclick="window.buyDriveOffer('${data.title}', '${data.price}', '${operator}')" class="bg-white text-slate-900 px-6 py-2 rounded-lg font-bold text-xs hover:bg-blue-50 transition active:scale-95">
-                                    কিনুন <i class="ri-shopping-cart-2-line ml-1"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    container.innerHTML += card;
-                });
-
-            } catch(e) {
-                console.error("Error loading offers:", e);
-                container.innerHTML = '<p class="text-center text-red-400 text-xs">ডাটা লোড হতে সমস্যা হয়েছে</p>';
-            }
-            hideLoading();
-        };
-
-        // 🛍️ BUY FUNCTION (TELEGRAM REDIRECT)
-        window.buyDriveOffer = (offerName, price, operator) => {
-            const opName = operator.toUpperCase();
-            const message = encodeURIComponent(`আসসালামু আলাইকুম, আমি ${currentUserData.name} (${currentUserData.phone})।\n\nঅফার: ${offerName}\nঅপারেটর: ${opName}\nমূল্য: ৳${price}\n\nআমি এই অফারটি নিতে চাই।`);
-            
-            window.open(`https://t.me/TAKA_WALA_ADMIN?text=${message}`, '_blank');
-            showSmartToast('টেলিগ্রামে রিডাইরেক্ট করা হচ্ছে...', 'info');
-        };
-
+                     
 
          // ==========================================
 // 🎡 GORGEOUS SPIN GAME CONTROLLER (FIXED)
@@ -8689,6 +8589,28 @@ window.showPage = (id, defaultTab = null) => {
     }
     else if(id === 'settingsScreen') {
         loadSettingsFromLocalStorage();
+    }
+    else if(id === 'rechargeScreen') {
+        // 🛡️ রিচার্জ পেন্ডিং থাকলে কার্ড লক করা (ব্যাক বাটন সচল রেখে)
+        db.collection("pending_requests")
+            .where("userId", "==", currentUserId)
+            .where("type", "==", "Recharge")
+            .where("status", "==", "Pending")
+            .onSnapshot(snap => {
+                const card = document.getElementById('rechargeCard');
+                if(card) {
+                    if(!snap.empty) {
+                        card.style.opacity = "0.5";
+                        card.style.pointerEvents = "none";
+                        card.style.filter = "grayscale(100%)";
+                        showSmartToast('আপনার একটি রিচার্জ রিকোয়েস্ট পেন্ডিং আছে!', 'warning');
+                    } else {
+                        card.style.opacity = "1";
+                        card.style.pointerEvents = "auto";
+                        card.style.filter = "none";
+                    }
+                }
+            });
     }
     else if(id === 'summaryScreen') {
         if(typeof currentUserId !== 'undefined' && currentUserId) {
