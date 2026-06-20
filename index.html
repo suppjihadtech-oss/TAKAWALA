@@ -2063,8 +2063,18 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                         </div>
                     </div>
 
-                    <input type="number" id="withdrawNumber" placeholder="মোবাইল অ্যাকাউন্ট নাম্বার দিন" class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
-                    <input type="number" id="withdrawAmount" placeholder="পরিমাণ" class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+                    <div class="relative">
+    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
+        <i class="ri-phone-line text-lg"></i>
+    </div>
+    <input type="number" id="withdrawNumber" placeholder="মোবাইল অ্যাকাউন্ট নাম্বার দিন" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+</div>
+<div class="relative">
+    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
+        <i class="ri-money-dollar-circle-line text-lg"></i>
+    </div>
+    <input type="number" id="withdrawAmount" placeholder="পরিমাণ" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+</div>
                     <div class="text-xs text-yellow-300 font-bold block ml-1" id="withdrawVat">চার্জ (১০%): ৳0.00 | প্রাপ্ত: ৳0.00</div>
                     
                     <!-- ℹ️ ডাইনামিক উইথড্র নির্দেশিকা (ডিফল্ট বিকাশ নির্দেশিকা লোড করা থাকবে) -->
@@ -2131,8 +2141,18 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             </div>
             <!-- মডার্ন ডাইনামিক রিচার্জ কার্ড (ডিফল্ট জিপি এর নীল গ্রেডিয়েন্টে প্রি-স্টাইলড করা) -->
             <div id="rechargeCard" class="bg-gradient-to-br from-[#005cbb] to-[#003882] text-white border-0 p-6 rounded-[25px] space-y-4 shadow-xl transition-all duration-500">
-                 <input type="number" id="rechPhone" placeholder="মোবাইল রিচার্জ নাম্বার দিন" class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
-                 <input type="number" id="rechAmount" placeholder="পরিমাণ" class="w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+                <div class="relative">
+    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
+        <i class="ri-phone-line text-lg"></i>
+    </div>
+    <input type="number" id="rechPhone" placeholder="মোবাইল রিচার্জ নাম্বার দিন" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+</div>
+<div class="relative">
+    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
+        <i class="ri-money-dollar-circle-line text-lg"></i>
+    </div>
+    <input type="number" id="rechAmount" placeholder="পরিমাণ" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+</div>
                  <div class="text-xs text-yellow-300 font-bold block ml-1" id="rechargeFee">সার্ভিস চার্জ: ৳5.00 | মোট: ৳5.00</div>
                  
                  <!-- ℹ️ ডাইনামিক রিচার্জ গাইডলাইন্স বক্স -->
@@ -2371,23 +2391,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                  </div>
              </div>
              
-             <!-- ✅ ৬৪৮ নম্বর লাইনের আশেপাশে বসাও -->
-<div onclick="window.showPage('promoClaimScreen')" class="w-full mt-4 mb-2 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-5 rounded-[30px] shadow-lg relative overflow-hidden group cursor-pointer active:scale-95 transition-all duration-300">
-    <div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl transition-all"></div>
-    <div class="flex items-center justify-between relative z-10">
-        <div class="flex items-center gap-4">
-            <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/30">
-                <i class="ri-magic-line text-white text-3xl animate-pulse"></i>
-            </div>
-            <div class="text-left">
-                <h3 class="text-xl font-black text-white leading-none">প্রোমো বোনাস ✨</h3>
-                <p class="text-[11px] text-purple-100 font-bold mt-1 opacity-90 uppercase tracking-widest">আপনার প্রোমো কোড দিন এবং আকর্ষণীয় পুরস্কার জিতুন!</p>
-            </div>
-        </div>
-        <i class="ri-arrow-right-s-line text-white text-xl group-hover:translate-x-1 transition-transform"></i>
-    </div>
-</div>
-             
+                          
              <button onclick="window.logout()" class="w-full mt-10 bg-red-100 text-red-600 py-3 rounded-xl font-bold">লগআউট</button>
         </div>
 
@@ -7247,15 +7251,53 @@ if(isFreeUser) {
                     const telegramMessage = `💸 *নতুন উত্তোলন রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *অ্যাকাউন্ট:* ${number}\n💵 *উত্তোলন পরিমাণ:* ৳${amount.toFixed(2)}\n📊 *উত্তোলন চার্জ (${vatPercentage}%):* ৳${vat.toFixed(2)}\n💰 *প্রাপ্ত পরিমাণ (নিট):* ৳${received.toFixed(2)}\n⏰ *সময়সূচী:* ${withinSchedule ? 'ভিতরে' : 'বাইরে'}`;
                     await sendTelegramNotification(telegramMessage);
                     
-                    let successMessage = 'উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন';
-                    if(!withinSchedule) {
-                        successMessage += '\n\nনোটিশ: আপনার উত্তোলন পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।';
-                    }
-                    
-                    showSmartToast(successMessage, 'success');
-                  
                     window.playSound('snd_success');                
-                    hideLoading();
+                hideLoading();
+
+                // 🔔 ১. উপরে স্লাইডিং টোস্ট অ্যালার্ট (Smart Toast) দেখাবে
+                showSmartToast(withinSchedule ? 'উত্তোলন সফল হয়েছে! 🎉' : 'সময়সূচীর বাইরে উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে! ⏰', 'success');
+
+                // 🔔 ২. মেইন সুইট অ্যালার্ট পপ-আপ (SweetAlert2) দেখাবে
+                if (withinSchedule) {
+                    Swal.fire({
+                        title: 'উত্তোলন সফল! 🎉',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <p class="text-xs text-slate-500 leading-relaxed font-bold">
+                                    আপনার উত্তোলনের আবেদনটি সফলভাবে নেওয়া হয়েছে। <br><br>
+                                    আমাদের অফিশিয়াল সময়সূচীর মধ্যে থাকায় পেমেন্টটি <span class="text-green-600">৫ থেকে ৩০ মিনিটের</span> মধ্যে আপনার ওয়ালেটে পাঠিয়ে দেওয়া হবে। ধন্যবাদ!
+                                </p>
+                            </div>
+                        `,
+                        icon: 'success',
+                        confirmButtonText: 'ধন্যবাদ, বুঝেছি',
+                        confirmButtonColor: '#007AFF',
+                        customClass: { popup: 'rounded-[30px]' }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'সময়সূচীর বাইরে! ⏰',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl mb-4 text-left">
+                                    <h4 class="text-[10px] font-black text-amber-800 uppercase mb-1 flex items-center gap-1">
+                                        <i class="ri-error-warning-fill"></i> গুরুত্বপূর্ণ নোটিশ:
+                                    </h4>
+                                    <p class="text-[11px] text-amber-700 font-semibold leading-normal">
+                                        উত্তোলনের অফিশিয়াল সময়সূচী শেষ থাকায় আপনার পেমেন্টটি পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।
+                                    </p>
+                                </div>
+                                <p class="text-xs text-slate-500 leading-relaxed font-medium">
+                                    আপনার আবেদনটি সফলভাবে সেভ করা হয়েছে এবং পরবর্তী শিফট চালু হওয়া মাত্রই আপনার ওয়ালেটে পেমেন্ট পৌঁছে যাবে।
+                                </p>
+                            </div>
+                        `,
+                        icon: 'warning',
+                        confirmButtonText: 'ঠিক আছে, আমি রাজী',
+                        confirmButtonColor: '#F5A623',
+                        customClass: { popup: 'rounded-[30px]' }
+                    });
+                }
                     
            // 💾 ৫টি একাউন্ট স্লটে সেভ করার স্মার্ট লজিক
                     const accounts = currentUserData.savedAccounts || [];
@@ -7518,14 +7560,53 @@ if(isFreeUser) {
                     const telegramMessage = `📱 *নতুন রিচার্জ রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📞 *নাম্বার:* ${phone}\n🏢 *অপারেটর:* ${operator}\n💵 *রিচার্জ পরিমাণ:* ৳${amount.toFixed(2)}\n📊 *সার্ভিস চার্জ:* ৳${fee.toFixed(2)}\n💰 *মোট কেটে নেওয়া হবে:* ৳${totalAmount.toFixed(2)}`;
                     await sendTelegramNotification(telegramMessage);
                     
-                    let successMessage = 'রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে';
-                    if(!withinSchedule) {
-                        successMessage += '\n\nনোটিশ: রিচার্জ পরবর্তী কার্যদিবসে সম্পন্ন করা হবে।';
-                    }
-                    
-                    showSmartToast(successMessage, 'success'); 
                     window.playSound('snd_success');
-                    hideLoading();
+                hideLoading();
+
+                // 🔔 ১. উপরে স্লাইডিং টোস্ট অ্যালার্ট (Smart Toast) দেখাবে
+                showSmartToast(withinSchedule ? 'রিচার্জ সফল হয়েছে! 📱' : 'সময়সূচীর বাইরে রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে! ⏰', 'success');
+
+                // 🔔 ২. মেইন সুইট অ্যালার্ট পপ-আপ (SweetAlert2) দেখাবে
+                if (withinSchedule) {
+                    Swal.fire({
+                        title: 'রিচার্জ সফল! 📱',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <p class="text-xs text-slate-500 leading-relaxed font-bold">
+                                    আপনার রিচার্জের আবেদনটি সফলভাবে নেওয়া হয়েছে। <br><br>
+                                    আমাদের অফিশিয়াল সময়সূচীর মধ্যে থাকায় আপনার রিচার্জটি <span class="text-green-600">খুব দ্রুতই</span> মোবাইল নম্বরে পাঠিয়ে দেওয়া হবে। ধন্যবাদ!
+                                </p>
+                            </div>
+                        `,
+                        icon: 'success',
+                        confirmButtonText: 'ধন্যবাদ, বুঝেছি',
+                        confirmButtonColor: '#007AFF',
+                        customClass: { popup: 'rounded-[30px]' }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'সময়সূচীর বাইরে! ⏰',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl mb-4 text-left">
+                                    <h4 class="text-[10px] font-black text-amber-800 uppercase mb-1 flex items-center gap-1">
+                                        <i class="ri-error-warning-fill"></i> গুরুত্বপূর্ণ নোটিশ:
+                                    </h4>
+                                    <p class="text-[11px] text-amber-700 font-semibold leading-normal">
+                                        রিচার্জের অফিশিয়াল সময়সূচী শেষ থাকায় আপনার রিচার্জটি পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।
+                                    </p>
+                                </div>
+                                <p class="text-xs text-slate-500 leading-relaxed font-medium">
+                                    আপনার আবেদনটি সফলভাবে সেভ করা হয়েছে এবং পরবর্তী রিচার্জ শিফট চালু হওয়া মাত্রই আপনার নম্বরে রিচার্জ পৌঁছে যাবে।
+                                </p>
+                            </div>
+                        `,
+                        icon: 'warning',
+                        confirmButtonText: 'ঠিক আছে, আমি রাজী',
+                        confirmButtonColor: '#F5A623',
+                        customClass: { popup: 'rounded-[30px]' }
+                    });
+                }
                     
                     document.getElementById('rechPhone').value = '';
                     document.getElementById('rechAmount').value = '';
@@ -8868,7 +8949,7 @@ window.switchTaskTab = (type) => {
 
             // ৬. ইনপুট বক্স ও ভাট টেক্সট স্টাইলিং রিফ্রেশ করা
             [phoneInput, amountInput].forEach(inp => {
-                if(inp) inp.className = "w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm";
+                if(inp) inp.className = "w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm";
             });
 
             if(feeText) feeText.className = "text-xs text-yellow-300 font-bold block ml-1";
@@ -8997,7 +9078,7 @@ window.selectWithdrawMethod = (el, method) => {
     // ইনপুট বক্স ও ভ্যাট টেক্সটের কালার পরিবর্তন
     [numInput, amtInput].forEach(inp => {
         if (inp) {
-            inp.className = "w-full p-3 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm";
+            inp.className = "w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm";
         }
     });
 
@@ -12044,7 +12125,7 @@ window.claimMysteryGift = async () => {
             
             <!-- Close Button -->
             <button onclick="window.closeShareModal()" class="w-full bg-red-50 text-red-600 font-black py-3.5 rounded-2xl text-xs transition-all uppercase tracking-widest mt-2">
-                CANCEL
+                বাতিল
             </button>
         </div>
     </div>
