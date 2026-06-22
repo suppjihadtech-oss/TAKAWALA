@@ -1248,6 +1248,18 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <i class="ri-customer-service-2-fill text-2xl group-hover:scale-125 transition-transform"></i> সাপোর্টে কথা বলুন
         </button>
         
+        <!-- প্রতিক্রিয়া ও লাইভ চ্যাট বাটন (নিউ) -->
+<button onclick="window.openFeedbackChat()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-500 text-white py-4 rounded-2xl font-black shadow-xl shadow-purple-100 flex items-center justify-center gap-3 active:scale-95 transition-all group mt-4">
+    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center border border-white/20 group-hover:rotate-12 transition-transform">
+        <i class="ri-chat-smile-2-fill text-xl animate-bounce"></i>
+    </div>
+    <div class="text-left">
+        <p class="text-[13px] leading-none">প্রতিক্রিয়া ও লাইভ চ্যাট</p>
+        <p class="text-[9px] opacity-80 font-normal mt-1">স্ক্রিনশট বা অভিযোগ সরাসরি আমাদের জানান</p>
+    </div>
+    <i class="ri-arrow-right-s-line ml-auto text-xl opacity-50"></i>
+</button>
+
         <!-- Force Signout Button -->
         <button onclick="window.forceLogoutFromBan()" class="w-full mt-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-3 rounded-2xl transition-all active:scale-95">
             লগআউট করুন
@@ -1932,50 +1944,63 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     </div>
 </div>
         
-            <!-- WALLET SCREEN -->
+ <!-- WALLET SCREEN -->
 <div id="walletScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
     <!-- হেডার এবং নিয়মাবলী বাটন -->
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
-            <button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
+            <button onclick="window.showPage('homeScreen')" class="bg-white w-10 h-10 rounded-full shadow-md flex items-center justify-center active:scale-90 transition">
                 <i class="ri-arrow-left-line text-xl"></i>
             </button>
             <h2 id="titleWallet" class="text-2xl font-bold text-slate-800">ওয়ালেট</h2>
         </div>
-        <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules(document.getElementById('tabDeposit').classList.contains('bg-slate-800') ? 'ডিপোজিট' : 'উত্তোলন')" class="w-8 cursor-pointer active:scale-95 transition">
+        <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('ওয়ালেট')" class="w-8 cursor-pointer active:scale-95 transition">
     </div>
 
-    <!-- ৩টি ব্যালেন্স কার্ডের মডার্ন গ্রিড -->
-    <div class="grid grid-cols-3 gap-2 mb-6">
-        <!-- ১. ইনকাম ব্যালেন্স কার্ড (টাস্ক/রেফার/বোনাস) -->
-        <div class="bg-gradient-to-br from-rose-500 to-pink-600 p-3 rounded-2xl text-white text-center shadow-lg border border-white/10">
-            <p class="text-[8px] font-bold opacity-90 uppercase leading-none mb-1.5">ইনকাম ব্যালেন্স</p>
-            <h2 class="text-[13px] font-black leading-none">৳ <span id="walletMainDisplay">0.00</span></h2>
-            <p class="text-[7px] font-bold opacity-70 mt-1">$ <span id="walletMainUSDT">0.00</span></p>
-        </div>
-        
-        <!-- ২. ডিপোজিট ব্যালেন্স কার্ড (শুধুমাত্র প্যাকেজ কেনার জন্য) -->
-        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-2xl text-white text-center shadow-lg border border-white/10">
-            <p class="text-[8px] font-bold opacity-90 uppercase leading-none mb-1.5">ডিপোজিট ব্যালেন্স</p>
-            <h2 class="text-[13px] font-black leading-none">৳ <span id="walletDepositDisplay">0.00</span></h2>
-            <p class="text-[7px] font-bold opacity-70 mt-1">$ <span id="walletDepositUSDT">0.00</span></p>
-        </div>
+    <!-- 🌐 ৩টি প্রফেশনাল ব্যালেন্স সিলেক্টর টগল ( ক্যারিয়ার লিংক স্টাইল ) -->
+    <div class="flex bg-slate-100 p-1.5 rounded-2xl mb-6 border border-slate-200">
+        <button onclick="window.switchWalletBalanceTab('income')" id="balTab_income" class="flex-1 py-3.5 rounded-xl text-[11px] font-black bg-slate-800 text-white shadow-md transition-all">ইনকাম ব্যালেন্স</button>
+        <button onclick="window.switchWalletBalanceTab('deposit')" id="balTab_deposit" class="flex-1 py-3.5 rounded-xl text-[11px] font-bold text-slate-500 transition-all">ডিপোজিট</button>
+        <button onclick="window.switchWalletBalanceTab('recharge')" id="balTab_recharge" class="flex-1 py-3.5 rounded-xl text-[11px] font-bold text-slate-500 transition-all">রিচার্জ</button>
+    </div>
 
-        <!-- ৩. রিচার্জ ব্যালেন্স কার্ড (ইনকাম থেকে ট্রান্সফার করা টাকা) -->
-        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-2xl text-white text-center shadow-lg border border-white/10">
-            <p class="text-[8px] font-bold opacity-90 uppercase leading-none mb-1.5">রিচার্জ ব্যালেন্স</p>
-            <h2 class="text-[13px] font-black leading-none">৳ <span id="walletRechargeDisplay">0.00</span></h2>
-            <p class="text-[7px] font-bold opacity-70 mt-1">$ <span id="walletRechargeUSDT">0.00</span></p>
+    <!-- 💳 ULTRA PREMIUM 3D METRIC CARD (SCREENSHOT STYLE) -->
+    <div id="dynamicWalletCard" class="bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] rounded-[35px] p-6 text-white shadow-xl relative overflow-hidden transition-all duration-500 mb-6">
+        <!-- Background Light Effect -->
+        <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-black/10 rounded-full blur-2xl"></div>
+
+        <div class="relative z-10">
+            <!-- Top Label & Live Clock -->
+            <div class="flex justify-between items-center mb-4">
+                <span id="walletCardTitle" class="text-xs font-black uppercase tracking-wider text-slate-200">বর্তমান ব্যালেন্স</span>
+                <div class="bg-black/20 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 flex items-center gap-1.5 text-xs font-mono font-bold">
+                    <i class="ri-time-line text-yellow-300 animate-pulse"></i>
+                    <span id="liveWalletClock">00:00:00</span>
+                </div>
+            </div>
+
+            <!-- Amount Display (Bigger & Centered) -->
+            <div class="text-center py-4">
+                <h1 class="text-4xl font-black tracking-tight leading-none mb-1">
+                    ৳ <span id="walletValueDisplay">0.00</span>
+                </h4>
+                <p id="walletUSDTValueDisplay" class="text-xs font-bold text-slate-300">$0.00 USDT</p>
+            </div>
+
+            <!-- Statement Date -->
+            <div class="mt-4 pt-4 border-t border-white/10 text-center">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-200">
+                    STATEMENT DATE: <span id="walletStatementDate" class="text-white font-black">---</span>
+                </p>
+            </div>
         </div>
     </div>
 
-    <!-- টাস্ক বার বা ট্যাব সেকশন (এরপর থেকে আপনার বাকি কোড শুরু হবে) -->
-    <div class="flex bg-white p-1 rounded-2xl shadow-sm mb-6 border">
-        <button onclick="window.toggleWalletTab('deposit')" id="tabDeposit" class="flex-1 py-3 font-bold text-sm rounded-xl bg-slate-800 text-white shadow">ডিপোজিট</button>
-        <button onclick="window.toggleWalletTab('withdraw')" id="tabWithdraw" class="flex-1 py-3 font-bold text-sm rounded-xl text-slate-500">উত্তোলন</button>
-        <button onclick="window.toggleWalletTab('transfer')" id="tabTransfer" class="flex-1 py-3 font-bold text-sm rounded-xl text-slate-500">ট্রান্সফার</button>
+    <!-- ⚡ DYNAMIC ACTION BUTTONS (ব্যালেন্স টাইপ অনুযায়ী পরিবর্তন হবে) -->
+    <div id="walletActionButtons" class="grid grid-cols-2 gap-4 mb-6">
+        <!-- Buttons will be injected here via JavaScript -->
     </div>
-
             <!-- ✅ আপডেটেড ইন্টিগ্রেটেড ডিপোজিট সেকশন -->
 <div id="depositSection">
     <!-- ১. প্রফেশনাল মেথড সিলেক্টর গ্রিড -->
@@ -2255,7 +2280,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 
                 <h4 class="font-black text-slate-800 text-lg mb-1" id="watchStatusTitle">ভিডিও দেখতে ক্লিক করুন</h4>
                 <div class="border-y-2 border-dashed border-rose-300 py-3 my-6 bg-rose-50/50 rounded-xl">
-    <p class="text-sm font-black text-rose-600 tracking-wide" id="watchStatusText">প্রতিটি অ্যাড দেখার জন্য পাবেন ৳০.১০</p>
+    <p class="text-sm font-black text-rose-600 tracking-wide" id="watchStatusText">প্রতিটি অ্যাড দেখার জন্য পাবেন ৳০.২০</p>
 </div>
 
                 <!-- প্রিমিয়াম আড়াআড়ি মডার্ন অ্যাড বাটন -->
@@ -2277,7 +2302,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <ul class="text-[10px] text-blue-700 space-y-1 ml-4 list-disc">
                     <li>অ্যাড প্লে হলে পুরোটা দেখুন অথবা নির্দিষ্ট সময় অপেক্ষা করুন।</li>
                     <li>অ্যাডটি কেটে দিলে বা ক্রস (X) বাটনে চাপলে রিওয়ার্ড পাবেন।</li>
-                    <li>প্রতিটি অ্যাড দেখার পর ৩০ সেকেন্ড বিরতি নিতে হবে।</li>
+                    <li>প্রতিটি অ্যাড দেখার পর ১০ সেকেন্ড বিরতি নিতে হবে।</li>
                     <li>ভিপিএন (VPN) ব্যবহার করলে একাউন্ট ব্যান হবে।</li>
                 </ul>
             </div>
@@ -4883,26 +4908,43 @@ isActivated: false,
                 };
                 
                 await db.collection("users").doc(uc.user.uid).set(userData);
-                
-               if(referralCode) {
-    try {
-        const referralQuery = await db.collection("users").where("referralCode", "==", referralCode).get();
-        if(!referralQuery.empty) {
-            const referrerDoc = referralQuery.docs[0];
-            const referrerId = referrerDoc.id;
-            
-            // রেফারারকে সরাসরি টাকা না দিয়ে শুধু রেফারেল সংখ্যা ও ফ্রি স্পিন বাড়ানো হলো
-            await db.collection("users").doc(referrerId).update({
-                totalReferrals: firebase.firestore.FieldValue.increment(1),
-                dailySpins: firebase.firestore.FieldValue.increment(1) 
-            });
-            
-            await db.collection("users").doc(uc.user.uid).update({ referredBy: referralCode });
+        
+        if(referralCode) {
+            try {
+                const referralQuery = await db.collection("users").where("referralCode", "==", referralCode).get();
+                if(!referralQuery.empty) {
+                    const referrerDoc = referralQuery.docs[0];
+                    const referrerId = referrerDoc.id;
+                    
+                    // রেফারারকে সরাসরি টাকা না দিয়ে শুধু রেফারেল সংখ্যা ও ফ্রি স্পিন বাড়ানো হলো
+                    await db.collection("users").doc(referrerId).update({
+                        totalReferrals: firebase.firestore.FieldValue.increment(1),
+                        dailySpins: firebase.firestore.FieldValue.increment(1) 
+                    });
+                    
+                    await db.collection("users").doc(uc.user.uid).update({ referredBy: referralCode });
+                }
+            } catch (e) { console.error("Referral Error:", e); }
         }
-    } catch (e) { console.error("Referral Error:", e); }
-}
-                showSmartToast('একাউন্ট তৈরি সফল! ডেইলি বোনাস নিন', 'success');
-                hideLoading();
+
+        // 📢 মেইন টেলিগ্রাম বটে নতুন ইউজার রেজিস্ট্রেশনের বিস্তারিত তথ্য পাঠানো (নিউ)
+        try {
+            const tgRegMessage = `👤 <b>নতুন মেম্বার রেজিস্ট্রেশন! 🎉</b>\n\n` +
+                                 `💬 <b>নাম:</b> ${escapeHTML(name)}\n` +
+                                 `📱 <b>মোবাইল:</b> \`${escapeHTML(cleanedPhone)}\`\n` +
+                                 `📧 <b>ইমেইল:</b> ${escapeHTML(email)}\n` +
+                                 `🎫 <b>ইউজার রেফার কোড:</b> <code>${userReferralCode}</code>\n` +
+                                 `🔗 <b>রেফার করেছেন:</b> ${referralCode ? `<code>${escapeHTML(referralCode)}</code>` : "কেউ না"}\n` +
+                                 `🆔 <b>টেলিগ্রাম আইডি:</b> ${userData.tgId ? `<code>${userData.tgId}</code>` : "পাওয়া যায়নি"}\n` +
+                                 `📱 <b>ডিভাইস আইডি:</b> <code>${escapeHTML(deviceToken)}</code>\n` +
+                                 `📅 <b>তারিখ:</b> ${new Date().toLocaleDateString('bn-BD')} | ${new Date().toLocaleTimeString('bn-BD')}`;
+            await sendTelegramNotification(tgRegMessage);
+        } catch (tgErr) {
+            console.log("TG Registration Log Err:", tgErr);
+        }
+
+        showSmartToast('একাউন্ট তৈরি সফল! ডেইলি বোনাস নিন', 'success');
+        hideLoading();
            } catch (e) {
                 hideLoading();
                 console.error("Reg Error:", e);
@@ -8647,24 +8689,9 @@ window.showPage = (id, defaultTab = null) => {
         loadReferralList();
     } 
     else if(id === 'walletScreen') {
-        const defMethod = selectedMethod || 'bKash';
-        const defEl = document.getElementById(`payment_${defMethod}`);
-        
-        if (defaultTab) {
-            window.toggleWalletTab(defaultTab);
-        } else {
-            window.toggleWalletTab('deposit');
-        }
-
-        // ওয়ালেটে ঢোকার সাথে সাথে বিকাশ ডিফল্ট সিলেক্ট হয়ে কালার থিমে আপডেট হবে
-        setTimeout(() => {
-            if(defEl) {
-                window.selectPayment(defEl, defMethod);
-            } else {
-                updateDepositAddress(defMethod);
-            }
-        }, 100);
-    }
+    // ওয়ালেটে প্রবেশ করলেই অটোমেটিক ইনকাম ব্যালেন্স এবং বাটনগুলো ওপেন হবে
+    window.switchWalletBalanceTab('income');
+}
     else if(id === 'quizScreen') {
         window.switchQuizTab('types');
     }
@@ -8716,87 +8743,173 @@ window.showPage = (id, defaultTab = null) => {
 }; 
 // ↑ এই ব্র্যাকেটটা হলো showPage ফাংশন শেষের মূল ব্র্যাকেট
 
-// ২. ওয়ালেট ট্যাব সুইচিং লজিক (ফিক্সড)
-window.toggleWalletTab = (t) => {
-    // সব সেকশন হাইড করা
-    ['deposit','withdraw','transfer'].forEach(id => {
-        const sec = document.getElementById(id+'Section');
-        if(sec) sec.classList.add('hidden');
-    });
+// ✅ ১. ওয়ালেটের মেইন ব্যালেন্স টাইপ অনুযায়ী ডাইনামিক সুইচিং ফাংশন
+window.switchWalletBalanceTab = (type) => {
+    if(!currentUserData) return;
 
-    // টার্গেট সেকশন শো করা
-    const targetSection = document.getElementById(t+'Section');
-    if(targetSection) targetSection.classList.remove('hidden');
-
-    // ট্যাব বাটনের ডিজাইন আপডেট
-    ['tabDeposit','tabWithdraw','tabTransfer'].forEach(id => {
-        const btn = document.getElementById(id);
-        if(btn) btn.className = 'flex-1 py-3 font-bold text-sm rounded-xl text-slate-500 transition-all';
-    });
-
-    const activeTabId = 'tab' + t.charAt(0).toUpperCase() + t.slice(1);
-    const activeBtn = document.getElementById(activeTabId);
-    if(activeBtn) {
-        // একটিভ বাটনের কালার চেঞ্জ
-        activeBtn.className = 'flex-1 py-3 font-bold text-sm rounded-xl bg-slate-800 text-white shadow transition-all';
-    }
-    
-    // নির্দিষ্ট ক্যালকুলেশন কল
-    if(t === 'deposit') {
-        const depAmtInput = document.getElementById('depositAmount');
-        if(depAmtInput) {
-            // পুরনো ইভেন্ট লিসেনার রিমুভ করে নতুন যোগ করা (ডুপ্লিকেট এড়াতে)
-            depAmtInput.removeEventListener('input', window.calculateDepositVAT);
-            depAmtInput.addEventListener('input', window.calculateDepositVAT);
-            // একবার ম্যানুয়ালি কল করা যাতে আগের ভ্যালু থাকলে আপডেট হয়
-            if(window.calculateDepositVAT) window.calculateDepositVAT();
-        }
-    } 
-    else if(t === 'withdraw') {
-            const withAmtInput = document.getElementById('withdrawAmount');
-            if(withAmtInput) {
-                withAmtInput.removeEventListener('input', window.calculateWithdrawVAT);
-                withAmtInput.addEventListener('input', window.calculateWithdrawVAT);
-                if(window.calculateWithdrawVAT) window.calculateWithdrawVAT();
+    // টগল বাটনগুলোর মডার্ন ডিজাইন আপডেট
+    ['income', 'deposit', 'recharge'].forEach(t => {
+        const btn = document.getElementById(`balTab_${t}`);
+        if(btn) {
+            if(t === type) {
+                btn.className = 'flex-1 py-3.5 rounded-xl text-[11px] font-black bg-slate-800 text-white shadow-md transition-all scale-105';
+            } else {
+                btn.className = 'flex-1 py-3.5 rounded-xl text-[11px] font-bold text-slate-500 transition-all';
             }
-            
-           if(t === 'withdraw' && typeof window.renderSavedAccounts === 'function') window.renderSavedAccounts();
+        }
+    });
 
-           // 🔥 অটোমেটিক প্রথম মেথড (বিকাশ) সিলেক্ট করে মডার্ন থিম সক্রিয় করার ফিক্স
-           setTimeout(() => {
-               const defWithMethod = 'bKash';
-               const defWithEl = document.getElementById(`withdraw_${defWithMethod}`);
-               if(defWithEl && typeof window.selectWithdrawMethod === 'function') {
-                   window.selectWithdrawMethod(defWithEl, defWithMethod);
-               }
-           }, 50);
-       
-     // 🛡️ ইউজার যাতে ফর্ম টাচ করতে না পারে (স্মার্ট লক)
-    if(t === 'withdraw' || t === 'recharge' || t === 'deposit') {
-        const type = t.charAt(0).toUpperCase() + t.slice(1);
-        const sectionId = t === 'withdraw' ? 'withdrawSection' : (t === 'recharge' ? 'rechargeScreen' : 'depositSection');
+    const card = document.getElementById('dynamicWalletCard');
+    const title = document.getElementById('walletCardTitle');
+    const bdtDisplay = document.getElementById('walletValueDisplay');
+    const usdtDisplay = document.getElementById('walletUSDTValueDisplay');
+    const actionArea = document.getElementById('walletActionButtons');
+
+    // নিচের সব সাব-সেকশন ডিফল্টভাবে হাইড করে দেওয়া
+    document.getElementById('depositSection').classList.add('hidden');
+    document.getElementById('withdrawSection').classList.add('hidden');
+    document.getElementById('transferSection').classList.add('hidden');
+
+    const usdtRate = 120; // ১ ডলার = ১২০ টাকা
+
+    if(type === 'income') {
+        // ১. ইনকাম ব্যালেন্স ( ক্যারিয়ার লিংক অরেঞ্জ থিম )
+        card.className = "bg-gradient-to-br from-[#ea580c] to-[#c2410c] rounded-[35px] p-6 text-white shadow-xl relative overflow-hidden transition-all duration-500 mb-6";
+        title.innerText = "ইনকাম ব্যালেন্স";
         
-        db.collection("pending_requests")
-            .where("userId", "==", currentUserId)
-            .where("type", "==", type)
-            .where("status", "==", "Pending")
-            .onSnapshot(snap => {
-                const section = document.getElementById(sectionId);
-                if(section) {
-                    if(!snap.empty) {
-                        section.style.opacity = "0.5";
-                        section.style.pointerEvents = "none";
-                        section.style.filter = "grayscale(100%)";
-                        showSmartToast(`আপনার একটি ${type} রিকোয়েস্ট পেন্ডিং আছে!`, 'warning');
-                    } else {
-                        section.style.opacity = "1";
-                        section.style.pointerEvents = "auto";
-                        section.style.filter = "none";
-                    }
+        const bdt = currentUserData.mainBalance || 0;
+        bdtDisplay.innerText = bdt.toFixed(2);
+        usdtDisplay.innerText = "$" + (bdt / usdtRate).toFixed(2) + " USDT";
+
+        // বাটন: উইথড্র ও ট্রান্সফার
+        actionArea.innerHTML = `
+            <button onclick="window.showWalletSubSection('withdraw')" class="bg-white text-slate-800 p-4 rounded-2xl border border-slate-100 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all">
+                <i class="ri-bank-card-fill text-2xl text-orange-500"></i>
+                <span class="text-xs font-black">উইথড্র</span>
+            </button>
+            <button onclick="window.showWalletSubSection('transfer')" class="bg-white text-slate-800 p-4 rounded-2xl border border-slate-100 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all">
+                <i class="ri-shuffle-line text-2xl text-blue-500"></i>
+                <span class="text-xs font-black">সেন্ড মানি</span>
+            </button>
+        `;
+    } 
+    else if(type === 'deposit') {
+        // ২. ডিপোজিট ব্যালেন্স ( এমারেল্ড গ্রিন থিম )
+        card.className = "bg-gradient-to-br from-[#059669] to-[#047857] rounded-[35px] p-6 text-white shadow-xl relative overflow-hidden transition-all duration-500 mb-6";
+        title.innerText = "ডিপোজিট ব্যালেন্স";
+
+        const bdt = currentUserData.depositBalance || 0;
+        bdtDisplay.innerText = bdt.toFixed(2);
+        usdtDisplay.innerText = "$" + (bdt / usdtRate).toFixed(2) + " USDT";
+
+        // বাটন: ডিপোজিট করুন ও হিস্ট্রি
+        actionArea.innerHTML = `
+            <button onclick="window.showWalletSubSection('deposit')" class="bg-white text-slate-800 p-4 rounded-2xl border border-slate-100 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all">
+                <i class="ri-wallet-3-fill text-2xl text-emerald-600"></i>
+                <span class="text-xs font-black">ডিপোজিট করুন</span>
+            </button>
+            <button onclick="window.showPage('historyScreen'); window.filterHistory('deposit');" class="bg-white text-slate-800 p-4 rounded-2xl border border-slate-100 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all">
+                <i class="ri-history-line text-2xl text-slate-500"></i>
+                <span class="text-xs font-black">ডিপোজিট হিস্ট্রি</span>
+            </button>
+        `;
+    } 
+    else if(type === 'recharge') {
+        // ৩. রিচার্জ ব্যালেন্স ( রয়্যাল ব্লু থিম )
+        card.className = "bg-gradient-to-br from-[#1d4ed8] to-[#1e3a8a] rounded-[35px] p-6 text-white shadow-xl relative overflow-hidden transition-all duration-500 mb-6";
+        title.innerText = "রিচার্জ ব্যালেন্স";
+
+        const bdt = currentUserData.rechargeBalance || 0;
+        bdtDisplay.innerText = bdt.toFixed(2);
+        usdtDisplay.innerText = "$" + (bdt / usdtRate).toFixed(2) + " USDT";
+
+        // বাটন: রিচার্জ করুন ও হিস্ট্রি
+        actionArea.innerHTML = `
+            <button onclick="window.showPage('rechargeScreen')" class="bg-white text-slate-800 p-4 rounded-2xl border border-slate-100 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all">
+                <i class="ri-phone-find-fill text-2xl text-blue-600"></i>
+                <span class="text-xs font-black">রিচার্জ করুন</span>
+            </button>
+            <button onclick="window.showPage('historyScreen'); window.filterHistory('recharge');" class="bg-white text-slate-800 p-4 rounded-2xl border border-slate-100 flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition-all">
+                <i class="ri-history-line text-2xl text-slate-500"></i>
+                <span class="text-xs font-black">রিচার্জ হিস্ট্রি</span>
+            </button>
+        `;
+    }
+};
+
+// ✅ ২. অ্যাকশন বাটন ক্লিক করার পর নিচের গেটওয়ে স্ক্রিন খোলার ফাংশন (স্মার্ট লক ভেরিফিকেশন সহ)
+window.showWalletSubSection = (section) => {
+    document.getElementById('depositSection').classList.add('hidden');
+    document.getElementById('withdrawSection').classList.add('hidden');
+    document.getElementById('transferSection').classList.add('hidden');
+
+    if(section === 'deposit') {
+        document.getElementById('depositSection').classList.remove('hidden');
+        
+        // ডিফল্ট পেমেন্ট মেথড বিকাশ সিলেক্ট করা
+        const defEl = document.getElementById('payment_bKash');
+        if(defEl) window.selectPayment(defEl, 'bKash');
+        
+        // ডিপোজিট পেন্ডিং লক ভেরিফাই করা
+        window.activateWalletSectionPendingLock('Deposit', 'depositSection');
+    } 
+    else if(section === 'withdraw') {
+        document.getElementById('withdrawSection').classList.remove('hidden');
+        
+        // ডিফল্ট উইথড্র মেথড বিকাশ সিলেক্ট করা
+        const defEl = document.getElementById('withdraw_bKash');
+        if(defEl) window.selectWithdrawMethod(defEl, 'bKash');
+        
+        // উইথড্র পেন্ডিং লক ভেরিফাই করা
+        window.activateWalletSectionPendingLock('Withdraw', 'withdrawSection');
+    } 
+    else if(section === 'transfer') {
+        document.getElementById('transferSection').classList.remove('hidden');
+    }
+
+    // স্মুথলি ফর্মের নিচে স্ক্রল করা
+    setTimeout(() => {
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+        });
+    }, 200);
+};
+
+// ✅ ৩. গেটওয়ে সেকশনে সরাসরি পেন্ডিং রিকোয়েস্ট ট্র্যাকিং লক লজিক
+window.activateWalletSectionPendingLock = (type, sectionId) => {
+    db.collection("pending_requests")
+        .where("userId", "==", currentUserId)
+        .where("type", "==", type)
+        .where("status", "==", "Pending")
+        .onSnapshot(snap => {
+            const section = document.getElementById(sectionId);
+            if(section) {
+                if(!snap.empty) {
+                    section.style.opacity = "0.5";
+                    section.style.pointerEvents = "none";
+                    section.style.filter = "grayscale(100%)";
+                    showSmartToast(`আপনার একটি ${type} রিকোয়েস্ট প্রসেসিংয়ে আছে!`, 'warning');
+                } else {
+                    section.style.opacity = "1";
+                    section.style.pointerEvents = "auto";
+                    section.style.filter = "none";
                 }
-            });
-    }  
-        
+            }
+        });
+};
+
+// ✅ ৪. পুরানো ট্র্রিগারগুলোর ব্যাকওয়ার্ড সামঞ্জস্য রক্ষা করা (যেমন হোম বাটন ক্লিক)
+window.toggleWalletTab = (tab) => {
+    if(tab === 'deposit') {
+        window.switchWalletBalanceTab('deposit');
+        window.showWalletSubSection('deposit');
+    } else if(tab === 'withdraw') {
+        window.switchWalletBalanceTab('income');
+        window.showWalletSubSection('withdraw');
+    } else if(tab === 'transfer') {
+        window.switchWalletBalanceTab('income');
+        window.showWalletSubSection('transfer');
     }
 };
         
@@ -10369,9 +10482,9 @@ window.processMagicPromo = async () => {
 // 🎬 WATCH & EARN (POWERFUL AD SYSTEM)
 // ==========================================
 let watchCooldownInterval = null;
-const WATCH_REWARD = 0.10; // ১০ পয়সা
-const DAILY_LIMIT = 100; // দৈনিক ২০টি অ্যাড
-const COOLDOWN_SECONDS = 30; // ১ মিনিট
+const WATCH_REWARD = 0.20; // ২০ পয়সা
+const DAILY_LIMIT = 100; // দৈনিক ১০০টি অ্যাড
+const COOLDOWN_SECONDS = 10; // ০:১০ মিনিট
 
 // WATCH & EARN SCREEN (বাকি অ্যাডের কাউন্টার হিসাব সহ নতুন সংস্করণ)
         window.loadWatchEarnStats = async () => {
@@ -11915,6 +12028,214 @@ window.claimMysteryGift = async () => {
     }
 };
 
+// ⏰ মাস্টার কার্ডের লাইভ ডিজিটাল ঘড়ি ও আজকের বাংলা তারিখ লজিক
+setInterval(() => {
+    const clockEl = document.getElementById('liveWalletClock');
+    const dateEl = document.getElementById('walletStatementDate');
+    
+    if (clockEl) {
+        const now = new Date();
+        clockEl.innerText = now.toLocaleTimeString('en-US', { hour12: true });
+    }
+    
+    if (dateEl) {
+        // বাংলাদেশ সময় অনুযায়ী বর্তমান তারিখ জেনারেট
+        const options = { day: 'numeric', month: 'short', year: 'numeric' };
+        dateEl.innerText = new Date().toLocaleDateString('bn-BD', options);
+    }
+}, 1000);
+
+// ==========================================
+// 💬 PREMIUM FEEDBACK CHAT SYSTEM LOGIC
+// ==========================================
+let currentFeedbackScreenshotBase64 = null;
+
+// ১. ফিডব্যাক চ্যাট স্ক্রিন ওপেন এবং ২৪ ঘণ্টার ক্যাশ ডিলিট লজিক
+window.openFeedbackChat = () => {
+    window.showPage('feedbackChatScreen');
+    
+    const storageKey = `TAK_feedback_chat_${currentUserId}`;
+    const localData = localStorage.getItem(storageKey);
+    const now = Date.now();
+    const oneDayInMs = 24 * 60 * 60 * 1000; // ২৪ ঘণ্টা
+
+    if (localData) {
+        const parsed = JSON.parse(localData);
+        // যদি ডাটার বয়স ২৪ ঘণ্টার বেশি হয়, ক্যাশ মেমোরি খালি করার জন্য ডিলিট হবে
+        if (parsed.initTimestamp && (now - parsed.initTimestamp > oneDayInMs)) {
+            localStorage.removeItem(storageKey);
+            showSmartToast('নিরাপত্তার স্বার্থে চ্যাট মেমোরি খালি করা হয়েছে।', 'info');
+        }
+    }
+
+    // চ্যাট মেসেজগুলো রেন্ডার করা
+    window.renderFeedbackMessages();
+};
+
+// ২. স্ক্রিনশট ইমেজ সিলেক্ট এবং কম্প্রেশন লজিক (অনধিক ৫০কেবি সাইজ)
+window.handleFeedbackImageSelect = (input) => {
+    const file = input.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        showSmartToast('দয়া করে সঠিক ছবি সিলেক্ট করুন', 'error');
+        return;
+    }
+
+    // ইমেজ কম্প্রেশন লজিক (Firestore এবং LocalStorage নিরাপদ রাখতে)
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            const maxSize = 450; // ম্যাক্সিমাম সাইজ
+
+            if (width > height) {
+                if (width > maxSize) {
+                    height *= maxSize / width;
+                    width = maxSize;
+                }
+            } else {
+                if (height > maxSize) {
+                    width *= maxSize / height;
+                    height = maxSize;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // ৬০% কোয়ালিটি দিয়ে JPEG এ রূপান্তর
+            currentFeedbackScreenshotBase64 = canvas.toDataURL('image/jpeg', 0.6);
+            
+            // প্রিভিউ বক্স দেখানো
+            document.getElementById('screenshotPreviewBox').classList.remove('hidden');
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+};
+
+// সিলেক্ট করা স্ক্রিনশট বাতিল করা
+window.clearSelectedScreenshot = () => {
+    currentFeedbackScreenshotBase64 = null;
+    document.getElementById('feedbackScreenshotInput').value = '';
+    document.getElementById('screenshotPreviewBox').classList.add('hidden');
+};
+
+// ৩. চ্যাট মেসেজ রেন্ডার করার লজিক
+window.renderFeedbackMessages = () => {
+    const msgBox = document.getElementById('feedbackMessagesBox');
+    if (!msgBox) return;
+
+    msgBox.innerHTML = '';
+    const storageKey = `TAK_feedback_chat_${currentUserId}`;
+    const localData = localStorage.getItem(storageKey);
+
+    // যদি চ্যাট একদম ফাকা থাকে
+    if (!localData) {
+        msgBox.innerHTML = `
+            <div class="m-auto text-center p-8 opacity-40">
+                <i class="ri-chat-smile-line text-5xl text-slate-400"></i>
+                <p class="text-xs font-bold text-slate-500 mt-2">আপনার অভিযোগ বা মতামত সরাসরি মেসেজ করুন!</p>
+            </div>`;
+        return;
+    }
+
+    const parsed = JSON.parse(localData);
+    parsed.messages.forEach(msg => {
+        const isMe = msg.sender === 'user';
+        const justifyClass = isMe ? 'self-end items-end' : 'self-start items-start';
+        const bubbleClass = isMe ? 'bg-[#d9fdd3] text-slate-800 rounded-tr-none shadow-sm' : 'bg-white text-slate-800 rounded-tl-none shadow-sm';
+
+        msgBox.innerHTML += `
+            <div class="flex flex-col ${justifyClass} max-w-[80%]">
+                <div class="p-3 rounded-2xl text-xs font-semibold ${bubbleClass} border border-slate-100">
+                    ${msg.image ? `<img src="${msg.image}" class="rounded-lg mb-2 max-w-[180px] shadow-sm cursor-pointer" onclick="window.open('${msg.image}', '_blank')">` : ''}
+                    <p class="leading-relaxed break-words whitespace-pre-wrap">${msg.text}</p>
+                </div>
+                <span class="text-[9px] text-slate-400 font-bold mt-1 px-1">${msg.time}</span>
+            </div>`;
+    });
+
+    // স্ক্রল অটোমেটিক একদম নিচে নামিয়ে দেওয়া
+    setTimeout(() => {
+        msgBox.scrollTop = msgBox.scrollHeight;
+    }, 100);
+};
+
+// ৪. মেসেজ পাঠানো এবং ডাটাবেস ও টেলিগ্রামে সেন্ড করা
+window.sendFeedbackMessage = async () => {
+    const input = document.getElementById('feedbackInputText');
+    const text = input.value.trim();
+
+    if (!text && !currentFeedbackScreenshotBase64) {
+        showSmartToast('মেসেজ বা স্ক্রিনশট কিছু একটা লিখুন!', 'error');
+        return;
+    }
+
+    showLoading();
+
+    const storageKey = `TAK_feedback_chat_${currentUserId}`;
+    const now = Date.now();
+    const timeStr = new Date().toLocaleTimeString('bn-BD', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+    let localData = localStorage.getItem(storageKey);
+    let parsed = localData ? JSON.parse(localData) : { initTimestamp: now, messages: [] };
+
+    // নতুন মেসেজ অবজেক্ট
+    const newMsg = {
+        sender: 'user',
+        text: text || "📷 স্ক্রিনশট পাঠানো হয়েছে",
+        image: currentFeedbackScreenshotBase64 || null,
+        time: timeStr
+    };
+
+    parsed.messages.push(newMsg);
+    localStorage.setItem(storageKey, JSON.stringify(parsed));
+
+    try {
+        // ক. ফায়ারবেস Firestore-এ সরাসরি ডাটা পাঠানো (অ্যাডমিন প্যানেলের জন্য)
+        await db.collection("user_feedback").add({
+            userId: currentUserId,
+            userName: currentUserData.name,
+            userPhone: currentUserData.phone,
+            message: text,
+            screenshot: currentFeedbackScreenshotBase64 || "N/A",
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            status: "Unread",
+            date: new Date().toLocaleDateString('bn-BD'),
+            time: timeStr
+        });
+
+        // খ. টেলিগ্রাম এলার্ট নোটিফিকেশন পাঠানো
+        const tgMsg = `💬 *নতুন ইউজার প্রতিক্রিয়া/ফিডব্যাক*\n\n` +
+                      `👤 *ইউজার:* ${currentUserData.name}\n` +
+                      `📱 *ফোন:* \`${currentUserData.phone}\`\n` +
+                      `💬 *মেসেজ:* ${text || "শুধুমাত্র স্ক্রিনশট"}\n` +
+                      `📷 *স্ক্রিনশট:* ${currentFeedbackScreenshotBase64 ? "ছবি যুক্ত আছে (ফায়ারবেস চেক করুন)" : "নেই"}`;
+        await sendTelegramNotification(tgMsg);
+
+        // ইনপুট রিসেট করা
+        input.value = '';
+        window.clearSelectedScreenshot();
+        window.renderFeedbackMessages();
+        
+        showSmartToast('মেসেজ পাঠানো সফল হয়েছে!', 'success');
+        window.playSound('snd_success');
+
+    } catch (e) {
+        console.error("Feedback error:", e);
+        showSmartToast('সার্ভার সমস্যার কারণে মেসেজ পাঠানো যায়নি।', 'error');
+    }
+
+    hideLoading();
+};
+
     </script>
     
         <audio id="snd_click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
@@ -12126,6 +12447,68 @@ window.claimMysteryGift = async () => {
             <!-- Close Button -->
             <button onclick="window.closeShareModal()" class="w-full bg-red-50 text-red-600 font-black py-3.5 rounded-2xl text-xs transition-all uppercase tracking-widest mt-2">
                 বাতিল
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 💬 WHATSAPP STYLE LIVE FEEDBACK SCREEN (NEW) -->
+<div id="feedbackChatScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight min-h-screen bg-[#efeae2] pb-24 max-w-md mx-auto relative flex flex-col justify-between">
+    <!-- Header -->
+    <div class="flex items-center justify-between bg-white/95 backdrop-blur-md p-4 rounded-3xl border border-slate-100 shadow-sm mb-4">
+        <div class="flex items-center gap-3">
+            <button onclick="window.showPage('supportScreen')" class="bg-slate-50 w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition">
+                <i class="ri-arrow-left-line text-lg text-slate-700"></i>
+            </button>
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white relative">
+                    <i class="ri-customer-service-2-line text-lg"></i>
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></span>
+                </div>
+                <div class="text-left">
+                    <h3 class="font-black text-sm text-slate-800 leading-none">টাকাওয়ালা সাপোর্ট</h3>
+                    <span class="text-[10px] text-green-600 font-bold leading-none">২৪/৭ অনলাইন চ্যাট</span>
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-[8px] font-black text-red-500 uppercase tracking-wider bg-red-50 px-2 py-1 rounded-lg border border-red-100">১ দিন পর মুছে যাবে</p>
+        </div>
+    </div>
+
+    <!-- Chat Messages View Area -->
+    <div id="feedbackMessagesBox" class="flex-1 overflow-y-auto px-1 space-y-3 mb-4 max-h-[60vh] flex flex-col">
+        <!-- Messages will render dynamically here -->
+    </div>
+
+    <!-- Input Footer Bar with Screenshot Upload -->
+    <div class="bg-white p-3 rounded-[28px] border border-slate-100 shadow-lg flex flex-col gap-2 relative">
+        <!-- Image Preview Indicator (If user selects image) -->
+        <div id="screenshotPreviewBox" class="hidden flex items-center justify-between bg-slate-50 p-2 rounded-xl border">
+            <div class="flex items-center gap-2">
+                <i class="ri-image-line text-purple-600"></i>
+                <span class="text-xs font-bold text-slate-500">স্ক্রিনশট যুক্ত হয়েছে</span>
+            </div>
+            <button onclick="window.clearSelectedScreenshot()" class="text-red-500 active:scale-90 transition">
+                <i class="ri-close-circle-fill text-xl"></i>
+            </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <!-- Hidden File Input for Image -->
+            <input type="file" id="feedbackScreenshotInput" accept="image/*" class="hidden" onchange="window.handleFeedbackImageSelect(this)">
+            
+            <!-- Attachment Button -->
+            <button onclick="document.getElementById('feedbackScreenshotInput').click()" class="w-11 h-11 bg-slate-50 hover:bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500 shrink-0 active:scale-90 transition">
+                <i class="ri-image-add-line text-xl text-purple-600"></i>
+            </button>
+
+            <!-- Text Input -->
+            <input type="text" id="feedbackInputText" placeholder="আপনার সমস্যাটি এখানে লিখুন..." class="flex-1 bg-slate-50 p-3 rounded-2xl outline-none text-slate-700 font-medium text-sm border border-slate-100 focus:bg-white focus:border-purple-300">
+
+            <!-- Send Button -->
+            <button onclick="window.sendFeedbackMessage()" class="w-11 h-11 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shrink-0 active:scale-90 transition shadow-md">
+                <i class="ri-send-plane-2-fill text-lg"></i>
             </button>
         </div>
     </div>
