@@ -1247,19 +1247,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <button onclick="window.contactAdmin('general')" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-3 shadow-lg group">
             <i class="ri-customer-service-2-fill text-2xl group-hover:scale-125 transition-transform"></i> সাপোর্টে কথা বলুন
         </button>
-        
-        <!-- প্রতিক্রিয়া ও লাইভ চ্যাট বাটন (নিউ) -->
-<button onclick="window.openFeedbackChat()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-500 text-white py-4 rounded-2xl font-black shadow-xl shadow-purple-100 flex items-center justify-center gap-3 active:scale-95 transition-all group mt-4">
-    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center border border-white/20 group-hover:rotate-12 transition-transform">
-        <i class="ri-chat-smile-2-fill text-xl animate-bounce"></i>
-    </div>
-    <div class="text-left">
-        <p class="text-[13px] leading-none">প্রতিক্রিয়া ও লাইভ চ্যাট</p>
-        <p class="text-[9px] opacity-80 font-normal mt-1">স্ক্রিনশট বা অভিযোগ সরাসরি আমাদের জানান</p>
-    </div>
-    <i class="ri-arrow-right-s-line ml-auto text-xl opacity-50"></i>
-</button>
-
+              
         <!-- Force Signout Button -->
         <button onclick="window.forceLogoutFromBan()" class="w-full mt-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-3 rounded-2xl transition-all active:scale-95">
             লগআউট করুন
@@ -1668,10 +1656,10 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     </div> 
 
                     <!-- অ্যাড মানি বাটন -->
-                    <button onclick="window.showPage('walletScreen')" class="bg-white text-emerald-700 px-5 rounded-full text-[11px] font-bold shadow-md flex items-center justify-center gap-2 active:scale-95 transition-transform shrink-0 border border-emerald-50 h-10">
-                        <img src="https://i.postimg.cc/7ZGpHH5q/save-money.png" class="w-4 h-4">
-                        অ্যাড মানি
-                    </button>
+                    <button onclick="window.showPage('depositScreen')" class="bg-white text-emerald-700 px-5 rounded-full text-[11px] font-bold shadow-md flex items-center justify-center gap-2 active:scale-95 transition-transform shrink-0 border border-emerald-50 h-10">
+    <img src="https://i.postimg.cc/7ZGpHH5q/save-money.png" class="w-4 h-4">
+    অ্যাড মানি
+</button>
                 </div>
             </div> <!-- Closes bg-white/10 balance container -->
         </div> <!-- Closes the main bg-premium container -->
@@ -1898,10 +1886,10 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <span class="text-[12px] font-bold text-slate-700">বোনাস</span>
     </div>
 
-   <div onclick="window.showPage('walletScreen'); setTimeout(() => window.toggleWalletTab('withdraw'), 100);" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
-        <img src="https://i.postimg.cc/wMdF5zV5/withdraw.png" class="w-11 mb-2 drop-shadow-md">
-        <span class="text-[12px] font-bold text-slate-700">উত্তোলন</span>
-    </div>
+  <div onclick="window.showPage('withdrawScreen')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md">
+    <img src="https://i.postimg.cc/wMdF5zV5/withdraw.png" class="w-11 mb-2 drop-shadow-md">
+    <span class="text-[12px] font-bold text-slate-700">উত্তোলন</span>
+</div>
 
     <div onclick="window.showPage('promoClaimScreen')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center cursor-pointer active:scale-95 transition shadow-sm hover:shadow-md relative">
     <div class="absolute top-1 right-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-lg shadow-lg z-30 animate-pulse border border-white/50">NEW</div>
@@ -1984,7 +1972,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <div class="text-center py-4">
                 <h1 class="text-4xl font-black tracking-tight leading-none mb-1">
                     ৳ <span id="walletValueDisplay">0.00</span>
-                </h4>
+                </h1>
                 <p id="walletUSDTValueDisplay" class="text-xs font-bold text-slate-300">$0.00 USDT</p>
             </div>
 
@@ -2001,133 +1989,161 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     <div id="walletActionButtons" class="grid grid-cols-2 gap-4 mb-6">
         <!-- Buttons will be injected here via JavaScript -->
     </div>
-            <!-- ✅ আপডেটেড ইন্টিগ্রেটেড ডিপোজিট সেকশন -->
-<div id="depositSection">
-    <!-- ১. প্রফেশনাল মেথড সিলেক্টর গ্রিড -->
-    <div class="grid grid-cols-4 gap-3 mb-4">
-        <div onclick="window.selectPayment(this, 'bKash')" id="payment_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-8 object-contain"></div>
-        <div onclick="window.selectPayment(this, 'Nagad')" id="payment_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-6 object-contain"></div>
-        <div onclick="window.selectPayment(this, 'Rocket')" id="payment_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-8 object-contain"></div>
-        <div onclick="window.selectPayment(this, 'USDT')" id="payment_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-8 object-contain"></div>
-    </div>
 
-    <!-- ২. উত্তোলন পেজের মতো ডাইনামিক ও ইন্টিগ্রেটেড কার্ড -->
-    <div id="screenshotDepositCard" class="hidden rounded-[30px] p-5 text-white shadow-xl animate__animated animate__fadeIn relative overflow-hidden transition-all duration-500">
-        
-        <div class="absolute -right-10 -top-10 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
-        
-        <div class="text-center mb-4">
-            <h4 class="text-[9px] uppercase tracking-[0.2em] font-black opacity-80">MANUAL DEPOSIT GATEWAY</h4>
-            <p class="text-base font-black mt-1">পেমেন্ট ও ডিপোজিট তথ্য</p>
+    <!-- ব্যালেন্স ট্রান্সফার সেকশনটি ওয়ালেটের ভেতরেই থাকবে -->
+    <div id="transferSection" class="hidden">
+        <div class="glass-card p-6 rounded-[25px] text-center space-y-4">
+            <div class="flex items-center justify-center gap-3 text-sm font-bold text-slate-600">
+                <span>মেইন ব্যালেন্স</span> <i class="ri-arrow-right-line"></i> <span>রিচার্জ ব্যালেন্স</span>
+            </div>
+            <input type="number" id="transferAmount" placeholder="পরিমাণ" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none text-center text-xl">
+            <button onclick="window.transferBalance()" class="w-full bg-slate-800 text-white font-bold py-3.5 rounded-xl shadow-lg">ট্রান্সফার করুন</button>
+            <p class="text-xs text-red-500">* রিচার্জ ব্যালেন্স থেকে মেইন ব্যালেন্সে নেওয়া যাবে না।</p>
         </div>
-
-        <!-- 💳 গর্জিয়াস ইনপুট গ্রুপ (হরাইজনাল / ফুল-উইডথ ও ট্রানজেকশন আইডি-র মতো স্টাইল) -->
-<div class="space-y-3 mb-3 relative z-10">
-    <div class="relative">
-        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-            <i class="ri-money-dollar-circle-line text-lg"></i>
-        </div>
-        <input type="number" id="depositAmount" oninput="window.updateDepositInstructionValues()" placeholder="এখানে টাকার পরিমাণ লিখুন" 
-            class="w-full pl-11 py-4 bg-white rounded-2xl text-slate-800 font-black outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner text-sm">
-    </div>
-
-    <div class="relative">
-        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-            <i class="ri-phone-line text-lg"></i>
-        </div>
-        <input type="text" id="depositSenderNumber" oninput="window.updateDepositInstructionValues()" placeholder="এখানে সেন্ডার নম্বর লিখুন" 
-            class="w-full pl-11 py-4 bg-white rounded-2xl text-slate-800 font-black outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner text-sm">
     </div>
 </div>
-        <div class="text-[11px] text-yellow-300 font-black text-center mb-4" id="vatCalculation">ভ্যাট (১০%): ৳০.০০ | মোট: ৳০.০০</div>
 
-        <!-- ৩. ডাইনামিক পেমেন্ট নির্দেশনাবলী লিস্ট -->
-        <ul id="depositInstructionsList" class="space-y-3.5 border-t border-white/20 pt-4 pb-4">
-            <!-- Instructions will load here dynamically -->
-        </ul>
+<!-- ✅ DEPOSIT SCREEN (আলাদা নতুন পেইজ) -->
+<div id="depositScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight bg-white min-h-screen pb-24 max-w-md mx-auto">
+    <!-- হেডার এবং নিয়মাবলী বাটন -->
+    <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center gap-3">
+            <button onclick="window.showPage('walletScreen')" class="bg-white w-10 h-10 rounded-full shadow-md flex items-center justify-center active:scale-90 transition">
+                <i class="ri-arrow-left-line text-xl text-slate-700"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-slate-800">ডিপোজিট করুন 💳</h2>
+        </div>
+        <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('ডিপোজিট')" class="w-8 cursor-pointer active:scale-95 transition">
+    </div>
 
-        <!-- ৪. ট্রানজেকশন আইডি ইনপুট -->
-        <div class="relative group mt-2 mb-5 z-10">
-            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <i class="ri-hashtag text-slate-400"></i>
-            </div>
-            <input type="text" id="depositTrxId" placeholder="এখানে ট্রানজেকশন আইডি লিখুন" 
-                class="w-full pl-9 pr-24 py-4 bg-white rounded-2xl text-slate-800 font-mono font-black tracking-wider outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner uppercase text-xs">
+    <div id="depositSection">
+        <!-- ১. প্রফেশনাল মেথড সিলেক্টর গ্রিড -->
+        <div class="grid grid-cols-4 gap-3 mb-4">
+            <div onclick="window.selectPayment(this, 'bKash')" id="payment_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-8 object-contain"></div>
+            <div onclick="window.selectPayment(this, 'Nagad')" id="payment_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-6 object-contain"></div>
+            <div onclick="window.selectPayment(this, 'Rocket')" id="payment_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-8 object-contain"></div>
+            <div onclick="window.selectPayment(this, 'USDT')" id="payment_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-8 object-contain"></div>
+        </div>
+
+        <!-- ২. উত্তোলন পেজের মতো ডাইনামিক ও ইন্টিগ্রেটেড কার্ড -->
+        <div id="screenshotDepositCard" class="hidden rounded-[30px] p-5 text-white shadow-xl animate__animated animate__fadeIn relative overflow-hidden transition-all duration-500">
+            <div class="absolute -right-10 -top-10 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
             
-            <button onclick="window.smartPasteTrxId()" class="absolute right-1.5 top-1.5 bottom-1.5 bg-slate-800 hover:bg-slate-900 text-white px-3.5 rounded-xl text-[10px] font-black flex items-center gap-1 shadow-md active:scale-95 transition-all uppercase">
-                <i class="ri-clipboard-line"></i> PASTE
-            </button>
-        </div>
+            <div class="text-center mb-4">
+                <h4 class="text-[9px] uppercase tracking-[0.2em] font-black opacity-80">MANUAL DEPOSIT GATEWAY</h4>
+                <p class="text-base font-black mt-1">পেমেন্ট ও ডিপোজিট তথ্য</p>
+            </div>
 
-        <!-- ৫. ভেরিফাই বাটন -->
-        <div class="mt-4 pt-4 border-t border-white/10 relative z-10">
-            <button onclick="window.submitDeposit()" id="depositSubmitBtn" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl text-sm tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all uppercase flex items-center justify-center gap-2">
-                <i class="ri-shield-check-fill text-lg"></i> নিশ্চিত করুন
-            </button>
-        </div>
-    </div>
-
-    <input type="hidden" id="selectedDepositMethod" value="">
-</div>
-
-            <div id="withdrawSection" class="hidden">
-                 <div class="grid grid-cols-4 gap-3 mb-6">
-                    <!-- প্রথম থেকেই বিকাশ বাটনটি সিলেক্টেড স্টাইলে থাকবে -->
-                    <div onclick="window.selectWithdrawMethod(this, 'bKash')" id="withdraw_bKash" class="bg-pink-50/40 p-2 rounded-2xl border-2 border-[#d12053] cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'Nagad')" id="withdraw_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'Rocket')" id="withdraw_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain"></div>
-                    <div onclick="window.selectWithdrawMethod(this, 'USDT')" id="withdraw_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
+            <!-- 💳 গর্জিয়াস ইনপুট গ্রুপ (হরাইজনাল / ফুল-উইডথ ও ট্রানজেকশন আইডি-র মতো স্টাইল) -->
+            <div class="space-y-3 mb-3 relative z-10">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="ri-money-dollar-circle-line text-lg"></i>
+                    </div>
+                    <input type="number" id="depositAmount" oninput="window.updateDepositInstructionValues()" placeholder="এখানে টাকার পরিমাণ লিখুন" 
+                        class="w-full pl-11 py-4 bg-white rounded-2xl text-slate-800 font-black outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner text-sm">
                 </div>
-                 <!-- মডার্ন উইথড্র কার্ড (ডিফল্ট বিকাশ গ্রেডিয়েন্ট থিম ও মডার্ন ইনপুট দিয়ে ডিজাইন করা) -->
-                 <div id="withdrawCard" class="bg-gradient-to-br from-[#d12053] to-[#a3103c] text-white border-0 p-5 rounded-[25px] space-y-4 transition-all duration-500 shadow-xl">
-                   <!-- 💳 MULTI-ACCOUNT SAVED SLIDER -->
-                    <div id="savedAccountsContainer" class="mb-5 hidden animate__animated animate__fadeIn">
-                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 ml-1"><i class="ri-bookmark-fill text-blue-500"></i> সেভ করা একাউন্ট (সর্বোচ্চ ৫টি)</p>
-                        <div id="savedAccountsList" class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide px-1">
-                            <!-- কার্ডগুলো এখানে অটো আসবে -->
-                        </div>
-                    </div>
 
-                    <div class="relative">
-    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
-        <i class="ri-phone-line text-lg"></i>
-    </div>
-    <input type="number" id="withdrawNumber" placeholder="মোবাইল অ্যাকাউন্ট নাম্বার দিন" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
-</div>
-<div class="relative">
-    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
-        <i class="ri-money-dollar-circle-line text-lg"></i>
-    </div>
-    <input type="number" id="withdrawAmount" placeholder="পরিমাণ" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
-</div>
-                    <div class="text-xs text-yellow-300 font-bold block ml-1" id="withdrawVat">চার্জ (১০%): ৳0.00 | প্রাপ্ত: ৳0.00</div>
-                    
-                    <!-- ℹ️ ডাইনামিক উইথড্র নির্দেশিকা (ডিফল্ট বিকাশ নির্দেশিকা লোড করা থাকবে) -->
-                    <div id="withdrawGuidelines" class="p-3.5 rounded-xl border border-dashed border-pink-300/40 text-[10px] leading-relaxed block">
-                        <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> BKASH উত্তোলন নির্দেশনা:</h4>
-                        <ul class="space-y-1 list-disc pl-4 font-bold text-pink-100 text-[10px]">
-                            <li>বিকাশ পার্সোনাল নাম্বারে সেন্ড মানি পেমেন্ট পাঠানো হবে।</li>
-                            <li>উত্তোলন চার্জ ১০% কেটে নেওয়া হবে।</li>
-                            <li>নম্বরটি সঠিক কিনা সাবমিট করার আগে ২ বার চেক করুন।</li>
-                        </ul>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="ri-phone-line text-lg"></i>
                     </div>
+                    <input type="text" id="depositSenderNumber" oninput="window.updateDepositInstructionValues()" placeholder="এখানে সেন্ডার নম্বর লিখুন" 
+                        class="w-full pl-11 py-4 bg-white rounded-2xl text-slate-800 font-black outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner text-sm">
+                </div>
+            </div>
+            <div class="text-[11px] text-yellow-300 font-black text-center mb-4" id="vatCalculation">ভ্যাট (১০%): ৳০.০০ | মোট: ৳০.০০</div>
 
-                    <input type="hidden" id="selectedWithdrawMethod" value="bKash">
-                    <button id="mainWithdrawBtn" onclick="window.submitWithdraw()" class="w-full bg-white text-[#d12053] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider"><i class="ri-wallet-3-line"></i> উত্তোলন করুন</button>
+            <!-- ৩. ডাইনামিক পেমেন্ট নির্দেশনাবলী লিস্ট -->
+            <ul id="depositInstructionsList" class="space-y-3.5 border-t border-white/20 pt-4 pb-4">
+                <!-- Instructions will load here dynamically -->
+            </ul>
+
+            <!-- ৪. ট্রানজেকশন আইডি ইনপুট -->
+            <div class="relative group mt-2 mb-5 z-10">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <i class="ri-hashtag text-slate-400"></i>
+                </div>
+                <input type="text" id="depositTrxId" placeholder="এখানে ট্রানজেকশন আইডি লিখুন" 
+                    class="w-full pl-9 pr-24 py-4 bg-white rounded-2xl text-slate-800 font-mono font-black tracking-wider outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner uppercase text-xs">
+                
+                <button onclick="window.smartPasteTrxId()" class="absolute right-1.5 top-1.5 bottom-1.5 bg-slate-800 hover:bg-slate-900 text-white px-3.5 rounded-xl text-[10px] font-black flex items-center gap-1 shadow-md active:scale-95 transition-all uppercase">
+                    <i class="ri-clipboard-line"></i> PASTE
+                </button>
+            </div>
+
+            <!-- ৫. ভেরিফাই বাটন -->
+            <div class="mt-4 pt-4 border-t border-white/10 relative z-10">
+                <button onclick="window.submitDeposit()" id="depositSubmitBtn" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl text-sm tracking-widest shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all uppercase flex items-center justify-center gap-2">
+                    <i class="ri-shield-check-fill text-lg"></i> নিশ্চিত করুন
+                </button>
+            </div>
+        </div>
+
+        <input type="hidden" id="selectedDepositMethod" value="">
+    </div>
+</div>
+
+<!-- ✅ WITHDRAW SCREEN (আলাদা নতুন পেইজ) -->
+<div id="withdrawScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight bg-white min-h-screen pb-24 max-w-md mx-auto">
+    <!-- হেডার এবং নিয়মাবলী বাটন -->
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+            <button onclick="window.showPage('walletScreen')" class="bg-white w-10 h-10 rounded-full shadow-md flex items-center justify-center active:scale-90 transition">
+                <i class="ri-arrow-left-line text-xl text-slate-700"></i>
+            </button>
+            <h2 class="text-2xl font-bold text-slate-800">উত্তোলন করুন 💸</h2>
+        </div>
+        <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('উত্তোলন')" class="w-8 cursor-pointer active:scale-95 transition">
+    </div>
+
+    <div id="withdrawSection">
+         <div class="grid grid-cols-4 gap-3 mb-6">
+            <!-- প্রথম থেকেই বিকাশ বাটনটি সিলেক্টেড স্টাইলে থাকবে -->
+            <div onclick="window.selectWithdrawMethod(this, 'bKash')" id="withdraw_bKash" class="bg-pink-50/40 p-2 rounded-2xl border-2 border-[#d12053] cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
+            <div onclick="window.selectWithdrawMethod(this, 'Nagad')" id="withdraw_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
+            <div onclick="window.selectWithdrawMethod(this, 'Rocket')" id="withdraw_Rocket" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png" class="h-10 object-contain"></div>
+            <div onclick="window.selectWithdrawMethod(this, 'USDT')" id="withdraw_USDT" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/0QRCvZDV/usdt.png" class="h-10 object-contain"></div>
+        </div>
+         <!-- মডার্ন উইথড্র কার্ড (ডিফল্ট বিকাশ গ্রেডিয়েন্ট থিম ও মডার্ন ইনপুট দিয়ে ডিজাইন করা) -->
+         <div id="withdrawCard" class="bg-gradient-to-br from-[#d12053] to-[#a3103c] text-white border-0 p-5 rounded-[25px] space-y-4 transition-all duration-500 shadow-xl">
+           <!-- 💳 MULTI-ACCOUNT SAVED SLIDER -->
+            <div id="savedAccountsContainer" class="mb-5 hidden animate__animated animate__fadeIn">
+                <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 ml-1"><i class="ri-bookmark-fill text-blue-500"></i> সেভ করা একাউন্ট (সর্বোচ্চ ৫টি)</p>
+                <div id="savedAccountsList" class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide px-1">
+                    <!-- কার্ডগুলো এখানে অটো আসবে -->
                 </div>
             </div>
 
-            <div id="transferSection" class="hidden">
-                <div class="glass-card p-6 rounded-[25px] text-center space-y-4">
-                    <div class="flex items-center justify-center gap-3 text-sm font-bold text-slate-600">
-                        <span>মেইন ব্যালেন্স</span> <i class="ri-arrow-right-line"></i> <span>রিচার্জ ব্যালেন্স</span>
-                    </div>
-                    <input type="number" id="transferAmount" placeholder="পরিমাণ" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none text-center text-xl">
-                    <button onclick="window.transferBalance()" class="w-full bg-slate-800 text-white font-bold py-3.5 rounded-xl shadow-lg">ট্রান্সফার করুন</button>
-                    <p class="text-xs text-red-500">* রিচার্জ ব্যালেন্স থেকে মেইন ব্যালেন্সে নেওয়া যাবে না।</p>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
+                    <i class="ri-phone-line text-lg"></i>
                 </div>
+                <input type="number" id="withdrawNumber" placeholder="মোবাইল অ্যাকাউন্ট নাম্বার দিন" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
             </div>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
+                    <i class="ri-money-dollar-circle-line text-lg"></i>
+                </div>
+                <input type="number" id="withdrawAmount" placeholder="পরিমাণ" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+            </div>
+            <div class="text-xs text-yellow-300 font-bold block ml-1" id="withdrawVat">চার্জ (১০%): ৳0.00 | প্রাপ্ত: ৳0.00</div>
+            
+            <!-- ℹ️ ডাইনামিক উইথড্র নির্দেশিকা -->
+            <div id="withdrawGuidelines" class="p-3.5 rounded-xl border border-dashed border-pink-300/40 text-[10px] leading-relaxed block">
+                <h4 class="font-black text-yellow-300 mb-1 flex items-center gap-1"><i class="ri-shield-user-fill"></i> BKASH উত্তোলন নির্দেশনা:</h4>
+                <ul class="space-y-1 list-disc pl-4 font-bold text-pink-100 text-[10px]">
+                    <li>বিকাশ পার্সোনাল নাম্বারে সেন্ড মানি পেমেন্ট পাঠানো হবে।</li>
+                    <li>উত্তোলন চার্জ ১০% কেটে নেওয়া হবে।</li>
+                    <li>নম্বরটি সঠিক কিনা সাবমিট করার আগে ২ বার চেক করুন।</li>
+                </ul>
+            </div>
+
+            <input type="hidden" id="selectedWithdrawMethod" value="bKash">
+            <button id="mainWithdrawBtn" onclick="window.submitWithdraw()" class="w-full bg-white text-[#d12053] hover:bg-slate-50 font-black py-4 rounded-xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider"><i class="ri-wallet-3-line"></i> উত্তোলন করুন</button>
         </div>
+    </div>
+</div>
 
         <!-- RECHARGE SCREEN -->
         <div id="rechargeScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight">
@@ -3306,6 +3322,18 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 </div>
                 <i class="ri-arrow-right-s-line ml-auto text-xl opacity-50"></i>
             </button>
+              <!-- প্রতিক্রিয়া ও লাইভ চ্যাট বাটন (নিউ) -->
+<button onclick="window.openFeedbackChat()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-500 text-white py-4 rounded-2xl font-black shadow-xl shadow-purple-100 flex items-center justify-center gap-3 active:scale-95 transition-all group mt-4">
+    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center border border-white/20 group-hover:rotate-12 transition-transform">
+        <i class="ri-chat-smile-2-fill text-xl animate-bounce"></i>
+    </div>
+    <div class="text-left">
+        <p class="text-[13px] leading-none">প্রতিক্রিয়া ও লাইভ চ্যাট</p>
+        <p class="text-[9px] opacity-80 font-normal mt-1">স্ক্রিনশট বা অভিযোগ সরাসরি আমাদের জানান</p>
+    </div>
+    <i class="ri-arrow-right-s-line ml-auto text-xl opacity-50"></i>
+</button>
+
         </div>
 
         <p class="text-[10px] text-slate-400 font-bold mt-8 uppercase tracking-[3px]">T A K A W A L A</p>
@@ -8688,6 +8716,20 @@ window.showPage = (id, defaultTab = null) => {
     else if(id === 'referralScreen') {
         loadReferralList();
     } 
+    else if(id === 'depositScreen') {
+                // ডিপোজিট পেজে প্রবেশ করলে প্রয়োজনীয় এলিমেন্ট ভিজিবল ও মেথড সেটআপ করা
+                document.getElementById('depositSection').classList.remove('hidden');
+                const defEl = document.getElementById('payment_bKash');
+                if(defEl) window.selectPayment(defEl, 'bKash');
+                window.activateWalletSectionPendingLock('Deposit', 'depositSection');
+            }
+            else if(id === 'withdrawScreen') {
+                // উত্তোলন পেজে প্রবেশ করলে প্রয়োজনীয় এলিমেন্ট ভিজিবল ও মেথড সেটআপ করা
+                document.getElementById('withdrawSection').classList.remove('hidden');
+                const defEl = document.getElementById('withdraw_bKash');
+                if(defEl) window.selectWithdrawMethod(defEl, 'bKash');
+                window.activateWalletSectionPendingLock('Withdraw', 'withdrawSection');
+            }
     else if(id === 'walletScreen') {
     // ওয়ালেটে প্রবেশ করলেই অটোমেটিক ইনকাম ব্যালেন্স এবং বাটনগুলো ওপেন হবে
     window.switchWalletBalanceTab('income');
@@ -8837,45 +8879,24 @@ window.switchWalletBalanceTab = (type) => {
     }
 };
 
-// ✅ ২. অ্যাকশন বাটন ক্লিক করার পর নিচের গেটওয়ে স্ক্রিন খোলার ফাংশন (স্মার্ট লক ভেরিফিকেশন সহ)
+// ✅ ২. অ্যাকশন বাটন ক্লিক করার পর সরাসরি নতুন স্ক্রিনে রিডাইরেক্ট করা
 window.showWalletSubSection = (section) => {
-    document.getElementById('depositSection').classList.add('hidden');
-    document.getElementById('withdrawSection').classList.add('hidden');
-    document.getElementById('transferSection').classList.add('hidden');
-
     if(section === 'deposit') {
-        document.getElementById('depositSection').classList.remove('hidden');
-        
-        // ডিফল্ট পেমেন্ট মেথড বিকাশ সিলেক্ট করা
-        const defEl = document.getElementById('payment_bKash');
-        if(defEl) window.selectPayment(defEl, 'bKash');
-        
-        // ডিপোজিট পেন্ডিং লক ভেরিফাই করা
-        window.activateWalletSectionPendingLock('Deposit', 'depositSection');
+        window.showPage('depositScreen');
     } 
     else if(section === 'withdraw') {
-        document.getElementById('withdrawSection').classList.remove('hidden');
-        
-        // ডিফল্ট উইথড্র মেথড বিকাশ সিলেক্ট করা
-        const defEl = document.getElementById('withdraw_bKash');
-        if(defEl) window.selectWithdrawMethod(defEl, 'bKash');
-        
-        // উইথড্র পেন্ডিং লক ভেরিফাই করা
-        window.activateWalletSectionPendingLock('Withdraw', 'withdrawSection');
+        window.showPage('withdrawScreen');
     } 
     else if(section === 'transfer') {
         document.getElementById('transferSection').classList.remove('hidden');
+        setTimeout(() => {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        }, 200);
     }
-
-    // স্মুথলি ফর্মের নিচে স্ক্রল করা
-    setTimeout(() => {
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: 'smooth'
-        });
-    }, 200);
 };
-
 // ✅ ৩. গেটওয়ে সেকশনে সরাসরি পেন্ডিং রিকোয়েস্ট ট্র্যাকিং লক লজিক
 window.activateWalletSectionPendingLock = (type, sectionId) => {
     db.collection("pending_requests")
@@ -8899,14 +8920,12 @@ window.activateWalletSectionPendingLock = (type, sectionId) => {
         });
 };
 
-// ✅ ৪. পুরানো ট্র্রিগারগুলোর ব্যাকওয়ার্ড সামঞ্জস্য রক্ষা করা (যেমন হোম বাটন ক্লিক)
+// ✅ ৪. ওয়ালেট ট্যাবের সাথে নতুন স্ক্রিনের সামঞ্জস্য রক্ষা করা
 window.toggleWalletTab = (tab) => {
     if(tab === 'deposit') {
-        window.switchWalletBalanceTab('deposit');
-        window.showWalletSubSection('deposit');
+        window.showPage('depositScreen');
     } else if(tab === 'withdraw') {
-        window.switchWalletBalanceTab('income');
-        window.showWalletSubSection('withdraw');
+        window.showPage('withdrawScreen');
     } else if(tab === 'transfer') {
         window.switchWalletBalanceTab('income');
         window.showWalletSubSection('transfer');
@@ -11521,24 +11540,6 @@ window.loadMyGmailTasks = async () => {
     }
 };
 
-// ৪. পেজ ওপেন হলে অটোমেটিক যা হবে (Hooking into main showPage)
-const originalShowPage = window.showPage;
-window.showPage = (id) => {
-    // আগের ফাংশন কল করা
-    originalShowPage(id);
-    
-    // যদি জিমেইল স্ক্রিন ওপেন হয়
-    if (id === 'gmailTaskScreen') {
-        // ১. যদি ইউজার আগে আনলক করে থাকে তবে ফর্ম দেখাবে
-        if(localStorage.getItem('gmailTaskUnlocked') === 'true') {
-            const area = document.getElementById('gmailSubmissionArea');
-            if(area) area.classList.remove('hidden');
-        }
-        
-        // ২. হিস্ট্রি লিস্ট লোড করা
-        window.loadMyGmailTasks();
-    }
-};
 
 // ৫. 👑 অ্যাডমিন এপ্রুভ ফাংশন (এটি তোমার অ্যাডমিন প্যানেলে কাজে লাগবে)
 // যদি তুমি সরাসরি এখানে বসেও এপ্রুভ করতে চাও, তবে কনসোলে এটি ব্যবহার করতে পারো
@@ -12236,6 +12237,52 @@ window.sendFeedbackMessage = async () => {
     hideLoading();
 };
 
+// 🔒 জিমেইল সেল, ডিপোজিট ও উত্তোলনের কাজ সচল করার একক ম্যাজিক ইন্টারসেপ্টর
+const originalShowPage = window.showPage;
+window.showPage = (id, defaultTab = null) => {
+    // প্রথমে মেইন showPage ফাংশনটি রান হবে
+    originalShowPage(id, defaultTab);
+    
+    // ১. জিমেইল সেল পেজের কাজ সচল করা
+    if (id === 'gmailTaskScreen') {
+        if (localStorage.getItem('gmailTaskUnlocked') === 'true') {
+            const area = document.getElementById('gmailSubmissionArea');
+            if (area) area.classList.remove('hidden');
+        }
+        if (typeof window.loadMyGmailTasks === 'function') {
+            window.loadMyGmailTasks();
+        }
+    }
+    
+    // ২. ডিপোজিট পেজের কাজ সচল করা (ডিপোজিট সবসময় আনলক থাকবে)
+    else if (id === 'depositScreen') {
+        const depositSec = document.getElementById('depositSection');
+        if (depositSec) {
+            depositSec.classList.remove('hidden');
+            depositSec.style.opacity = "1";
+            depositSec.style.pointerEvents = "auto";
+            depositSec.style.filter = "none";
+            
+            const defEl = document.getElementById('payment_bKash');
+            if(defEl) window.selectPayment(defEl, 'bKash');
+        }
+    } 
+    
+    // ৩. উত্তোলন পেজের কাজ সচল করা (এখানে পেন্ডিং লক সচল থাকবে)
+    else if (id === 'withdrawScreen') {
+        const withdrawSec = document.getElementById('withdrawSection');
+        if (withdrawSec) {
+            withdrawSec.classList.remove('hidden');
+            const defEl = document.getElementById('withdraw_bKash');
+            if(defEl) window.selectWithdrawMethod(defEl, 'bKash');
+            
+            if (typeof window.activateWalletSectionPendingLock === 'function') {
+                window.activateWalletSectionPendingLock('Withdraw', 'withdrawSection');
+            }
+        }
+    }
+};
+
     </script>
     
         <audio id="snd_click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
@@ -12476,43 +12523,43 @@ window.sendFeedbackMessage = async () => {
         </div>
     </div>
 
-    <!-- Chat Messages View Area -->
-    <div id="feedbackMessagesBox" class="flex-1 overflow-y-auto px-1 space-y-3 mb-4 max-h-[60vh] flex flex-col">
-        <!-- Messages will render dynamically here -->
-    </div>
+   <!-- Chat Messages View Area -->
+        <div id="feedbackMessagesBox" class="flex-1 overflow-y-auto px-1 space-y-3 mb-4 max-h-[60vh] flex flex-col">
+            <!-- Messages will render dynamically here -->
+        </div>
 
-    <!-- Input Footer Bar with Screenshot Upload -->
-    <div class="bg-white p-3 rounded-[28px] border border-slate-100 shadow-lg flex flex-col gap-2 relative">
-        <!-- Image Preview Indicator (If user selects image) -->
-        <div id="screenshotPreviewBox" class="hidden flex items-center justify-between bg-slate-50 p-2 rounded-xl border">
-            <div class="flex items-center gap-2">
-                <i class="ri-image-line text-purple-600"></i>
-                <span class="text-xs font-bold text-slate-500">স্ক্রিনশট যুক্ত হয়েছে</span>
+        <!-- Input Footer Bar with Screenshot Upload -->
+        <div class="bg-white p-3 rounded-[28px] border border-slate-100 shadow-lg flex flex-col gap-2 relative">
+            <!-- Image Preview Indicator (If user selects image) -->
+            <div id="screenshotPreviewBox" class="hidden flex items-center justify-between bg-slate-50 p-2 rounded-xl border">
+                <div class="flex items-center gap-2">
+                    <i class="ri-image-line text-purple-600"></i>
+                    <span class="text-xs font-bold text-slate-500">স্ক্রিনশট যুক্ত হয়েছে</span>
+                </div>
+                <button onclick="window.clearSelectedScreenshot()" class="text-red-500 active:scale-90 transition">
+                    <i class="ri-close-circle-fill text-xl"></i>
+                </button>
             </div>
-            <button onclick="window.clearSelectedScreenshot()" class="text-red-500 active:scale-90 transition">
-                <i class="ri-close-circle-fill text-xl"></i>
-            </button>
-        </div>
 
-        <div class="flex items-center gap-2">
-            <!-- Hidden File Input for Image -->
-            <input type="file" id="feedbackScreenshotInput" accept="image/*" class="hidden" onchange="window.handleFeedbackImageSelect(this)">
-            
-            <!-- Attachment Button -->
-            <button onclick="document.getElementById('feedbackScreenshotInput').click()" class="w-11 h-11 bg-slate-50 hover:bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500 shrink-0 active:scale-90 transition">
-                <i class="ri-image-add-line text-xl text-purple-600"></i>
-            </button>
+            <div class="flex items-center gap-2">
+                <!-- Hidden File Input for Image -->
+                <input type="file" id="feedbackScreenshotInput" accept="image/*" class="hidden" onchange="window.handleFeedbackImageSelect(this)">
+                
+                <!-- Attachment Button -->
+                <button onclick="document.getElementById('feedbackScreenshotInput').click()" class="w-11 h-11 bg-slate-50 hover:bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500 shrink-0 active:scale-90 transition">
+                    <i class="ri-image-add-line text-xl text-purple-600"></i>
+                </button>
 
-            <!-- Text Input -->
-            <input type="text" id="feedbackInputText" placeholder="আপনার সমস্যাটি এখানে লিখুন..." class="flex-1 bg-slate-50 p-3 rounded-2xl outline-none text-slate-700 font-medium text-sm border border-slate-100 focus:bg-white focus:border-purple-300">
+                <!-- Text Input -->
+                <input type="text" id="feedbackInputText" placeholder="আপনার সমস্যাটি এখানে লিখুন..." class="flex-1 bg-slate-50 p-3 rounded-2xl outline-none text-slate-700 font-medium text-sm border border-slate-100 focus:bg-white focus:border-purple-300">
 
-            <!-- Send Button -->
-            <button onclick="window.sendFeedbackMessage()" class="w-11 h-11 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shrink-0 active:scale-90 transition shadow-md">
-                <i class="ri-send-plane-2-fill text-lg"></i>
-            </button>
+                <!-- Send Button -->
+                <button onclick="window.sendFeedbackMessage()" class="w-11 h-11 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shrink-0 active:scale-90 transition shadow-md">
+                    <i class="ri-send-plane-2-fill text-lg"></i>
+                </button>
+            </div>
         </div>
     </div>
-</div>
     
 </body>
 </html>
