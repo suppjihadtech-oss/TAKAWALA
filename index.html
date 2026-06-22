@@ -1947,7 +1947,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
 
     <!-- 🌐 ৩টি প্রফেশনাল ব্যালেন্স সিলেক্টর টগল ( ক্যারিয়ার লিংক স্টাইল ) -->
     <div class="flex bg-slate-100 p-1.5 rounded-2xl mb-6 border border-slate-200">
-        <button onclick="window.switchWalletBalanceTab('income')" id="balTab_income" class="flex-1 py-3.5 rounded-xl text-[11px] font-black bg-slate-800 text-white shadow-md transition-all">ইনকাম ব্যালেন্স</button>
+        <button onclick="window.switchWalletBalanceTab('income')" id="balTab_income" class="flex-1 py-3.5 rounded-xl text-[11px] font-black bg-slate-800 text-white shadow-md transition-all">ইনকাম</button>
         <button onclick="window.switchWalletBalanceTab('deposit')" id="balTab_deposit" class="flex-1 py-3.5 rounded-xl text-[11px] font-bold text-slate-500 transition-all">ডিপোজিট</button>
         <button onclick="window.switchWalletBalanceTab('recharge')" id="balTab_recharge" class="flex-1 py-3.5 rounded-xl text-[11px] font-bold text-slate-500 transition-all">রিচার্জ</button>
     </div>
@@ -2011,9 +2011,15 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <button onclick="window.showPage('walletScreen')" class="bg-white w-10 h-10 rounded-full shadow-md flex items-center justify-center active:scale-90 transition">
                 <i class="ri-arrow-left-line text-xl text-slate-700"></i>
             </button>
-            <h2 class="text-2xl font-bold text-slate-800">ডিপোজিট করুন 💳</h2>
+            <h2 class="text-2xl font-bold text-slate-800">ডিপোজিট করুন</h2>
         </div>
         <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('ডিপোজিট')" class="w-8 cursor-pointer active:scale-95 transition">
+    </div>
+
+<!-- 💸 ডিপোজিট ব্যালেন্স কার্ড -->
+    <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 flex justify-between items-center mb-6">
+        <div><p class="text-xs font-bold text-slate-500">ব্যালেন্স</p><h2 class="text-2xl font-extrabold text-emerald-600">৳ <span id="depositPageBalance">0.00</span></h2></div>
+        <img src="https://i.postimg.cc/7ZGpHH5q/save-money.png" class="w-10">
     </div>
 
     <div id="depositSection">
@@ -2092,9 +2098,15 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <button onclick="window.showPage('walletScreen')" class="bg-white w-10 h-10 rounded-full shadow-md flex items-center justify-center active:scale-90 transition">
                 <i class="ri-arrow-left-line text-xl text-slate-700"></i>
             </button>
-            <h2 class="text-2xl font-bold text-slate-800">উত্তোলন করুন 💸</h2>
+            <h2 class="text-2xl font-bold text-slate-800">উত্তোলন করুন</h2>
         </div>
         <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('উত্তোলন')" class="w-8 cursor-pointer active:scale-95 transition">
+    </div>
+    
+<!-- 💸 উইথড্র ব্যালেন্স কার্ড -->
+    <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 flex justify-between items-center mb-6">
+        <div><p class="text-xs font-bold text-slate-500">ব্যালেন্স</p><h2 class="text-2xl font-extrabold text-rose-600">৳ <span id="withdrawPageBalance">0.00</span></h2></div>
+        <img src="https://i.postimg.cc/wMdF5zV5/withdraw.png" class="w-10">
     </div>
 
     <div id="withdrawSection">
@@ -3442,6 +3454,67 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <p id="navTextProfile" class="text-[9px] font-bold text-slate-400 group-hover:text-green-600 transition-colors">প্রোফাইল</p>
         </div>
     </div>
+    <!-- 💬 WHATSAPP STYLE LIVE FEEDBACK SCREEN (NEW) -->
+<div id="feedbackChatScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight min-h-screen bg-[#efeae2] pb-24 max-w-md mx-auto relative flex flex-col justify-between">
+    <!-- Header -->
+    <div class="flex items-center justify-between bg-white/95 backdrop-blur-md p-4 rounded-3xl border border-slate-100 shadow-sm mb-4">
+        <div class="flex items-center gap-3">
+            <button onclick="window.showPage('supportScreen')" class="bg-slate-50 w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition">
+                <i class="ri-arrow-left-line text-lg text-slate-700"></i>
+            </button>
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white relative">
+                    <i class="ri-customer-service-2-line text-lg"></i>
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></span>
+                </div>
+                <div class="text-left">
+                    <h3 class="font-black text-sm text-slate-800 leading-none">টাকাওয়ালা সাপোর্ট</h3>
+                    <span class="text-[10px] text-green-600 font-bold leading-none">২৪/৭ অনলাইন চ্যাট</span>
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-[8px] font-black text-red-500 uppercase tracking-wider bg-red-50 px-2 py-1 rounded-lg border border-red-100">১ দিন পর মুছে যাবে</p>
+        </div>
+    </div>
+
+   <!-- Chat Messages View Area -->
+        <div id="feedbackMessagesBox" class="flex-1 overflow-y-auto px-1 space-y-3 mb-4 max-h-[60vh] flex flex-col">
+            <!-- Messages will render dynamically here -->
+        </div>
+
+        <!-- Input Footer Bar with Screenshot Upload -->
+        <div class="bg-white p-3 rounded-[28px] border border-slate-100 shadow-lg flex flex-col gap-2 relative">
+            <!-- Image Preview Indicator (If user selects image) -->
+            <div id="screenshotPreviewBox" class="hidden flex items-center justify-between bg-slate-50 p-2 rounded-xl border">
+                <div class="flex items-center gap-2">
+                    <i class="ri-image-line text-purple-600"></i>
+                    <span class="text-xs font-bold text-slate-500">স্ক্রিনশট যুক্ত হয়েছে</span>
+                </div>
+                <button onclick="window.clearSelectedScreenshot()" class="text-red-500 active:scale-90 transition">
+                    <i class="ri-close-circle-fill text-xl"></i>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- Hidden File Input for Image -->
+                <input type="file" id="feedbackScreenshotInput" accept="image/*" class="hidden" onchange="window.handleFeedbackImageSelect(this)">
+                
+                <!-- Attachment Button -->
+                <button onclick="document.getElementById('feedbackScreenshotInput').click()" class="w-11 h-11 bg-slate-50 hover:bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500 shrink-0 active:scale-90 transition">
+                    <i class="ri-image-add-line text-xl text-purple-600"></i>
+                </button>
+
+                <!-- Text Input -->
+                <input type="text" id="feedbackInputText" placeholder="আপনার সমস্যাটি এখানে লিখুন..." class="flex-1 bg-slate-50 p-3 rounded-2xl outline-none text-slate-700 font-medium text-sm border border-slate-100 focus:bg-white focus:border-purple-300">
+
+                <!-- Send Button -->
+                <button onclick="window.sendFeedbackMessage()" class="w-11 h-11 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shrink-0 active:scale-90 transition shadow-md">
+                    <i class="ri-send-plane-2-fill text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>    
      </div>
     <!-- ✅ UPDATED PROOF SUBMISSION MODAL -->
     <div id="proofModal" class="proof-modal hidden">
@@ -5297,12 +5370,14 @@ document.getElementById('bottomNav').classList.remove('hidden');
             if(document.getElementById('walletMainDisplay')) animateNumberUpdate('walletMainDisplay', lastValues.main || 0, bdtMain);
             if(document.getElementById('walletMainUSDT')) document.getElementById('walletMainUSDT').innerText = (bdtMain / usdtRate).toFixed(2);
             lastValues.main = bdtMain;
-
+            
+if(document.getElementById('withdrawPageBalance')) animateNumberUpdate('withdrawPageBalance', lastValues.main || 0, bdtMain);
             // ২. ডিপোজিট ব্যালেন্স (ওয়ালেট)
             if(document.getElementById('walletDepositDisplay')) animateNumberUpdate('walletDepositDisplay', lastValues.dep || 0, bdtDep);
             if(document.getElementById('walletDepositUSDT')) document.getElementById('walletDepositUSDT').innerText = (bdtDep / usdtRate).toFixed(2);
             lastValues.dep = bdtDep;
-
+            
+if(document.getElementById('depositPageBalance')) animateNumberUpdate('depositPageBalance', lastValues.dep || 0, bdtDep);
             // ৩. রিচার্জ ব্যালেন্স (ওয়ালেট ও রিচার্জ পেজ)
             if(document.getElementById('walletRechargeDisplay')) animateNumberUpdate('walletRechargeDisplay', lastValues.rech || 0, bdtRech);
             if(document.getElementById('rechargePageBalance')) animateNumberUpdate('rechargePageBalance', lastValues.rech || 0, bdtRech);
@@ -12169,7 +12244,7 @@ window.renderFeedbackMessages = () => {
     }, 100);
 };
 
-// ৪. মেসেজ পাঠানো এবং ডাটাবেস ও টেলিগ্রামে সেন্ড করা
+// ৪. মেসেজ পাঠানো এবং ডাটাবেস ও টেলিগ্রামে সেন্ড করা (সুরক্ষিত ফলব্যাক সহ)
 window.sendFeedbackMessage = async () => {
     const input = document.getElementById('feedbackInputText');
     const text = input.value.trim();
@@ -12199,12 +12274,12 @@ window.sendFeedbackMessage = async () => {
     parsed.messages.push(newMsg);
     localStorage.setItem(storageKey, JSON.stringify(parsed));
 
+    // ক. ফায়ারবেস Firestore-এ ডাটা সেভ করার চেষ্টা (ব্যর্থ হলেও কোড থামবে না)
     try {
-        // ক. ফায়ারবেস Firestore-এ সরাসরি ডাটা পাঠানো (অ্যাডমিন প্যানেলের জন্য)
         await db.collection("user_feedback").add({
             userId: currentUserId,
-            userName: currentUserData.name,
-            userPhone: currentUserData.phone,
+            userName: currentUserData ? currentUserData.name : "অজানা ইউজার",
+            userPhone: currentUserData ? currentUserData.phone : "N/A",
             message: text,
             screenshot: currentFeedbackScreenshotBase64 || "N/A",
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -12212,31 +12287,40 @@ window.sendFeedbackMessage = async () => {
             date: new Date().toLocaleDateString('bn-BD'),
             time: timeStr
         });
+        console.log("Firestore-এ তথ্য সফলভাবে সেভ হয়েছে।");
+    } catch (fsErr) {
+        // ডাটাবেস রুলস লক থাকলেও আমরা কনসোলে সতর্ক করব, কিন্তু ইউজারের মেসেজ পাঠানো আটকাব না
+        console.warn("ফায়ারবেস রুলস ব্লকের কারণে ডাটাবেসে সেভ হয়নি, টেলিগ্রাম ব্যাকআপ ব্যবহার করা হচ্ছে:", fsErr);
+    }
 
-        // খ. টেলিগ্রাম এলার্ট নোটিফিকেশন পাঠানো
-        const tgMsg = `💬 *নতুন ইউজার প্রতিক্রিয়া/ফিডব্যাক*\n\n` +
-                      `👤 *ইউজার:* ${currentUserData.name}\n` +
-                      `📱 *ফোন:* \`${currentUserData.phone}\`\n` +
-                      `💬 *মেসেজ:* ${text || "শুধুমাত্র স্ক্রিনশট"}\n` +
-                      `📷 *স্ক্রিনশট:* ${currentFeedbackScreenshotBase64 ? "ছবি যুক্ত আছে (ফায়ারবেস চেক করুন)" : "নেই"}`;
+    // খ. টেলিগ্রাম এলার্ট নোটিফিকেশন পাঠানো (ফায়ারবেস ফেল করলেও এটি কাজ করবে)
+    try {
+        const uName = currentUserData ? escapeHTML(currentUserData.name) : "অজানা";
+        const uPhone = currentUserData ? escapeHTML(currentUserData.phone) : "N/A";
+        const safeText = text ? escapeHTML(text) : "শুধুমাত্র স্ক্রিনশট";
+        
+        const tgMsg = `💬 <b>নতুন ইউজার প্রতিক্রিয়া/ফিডব্যাক</b>\n\n` +
+                      `👤 <b>ইউজার:</b> ${uName}\n` +
+                      `📱 <b>ফোন:</b> ${uPhone}\n` +
+                      `💬 <b>মেসেজ:</b> ${safeText}\n` +
+                      `📷 <b>স্ক্রিনশট:</b> ${currentFeedbackScreenshotBase64 ? "ছবি যুক্ত আছে (Firestore চেক করুন)" : "নেই"}`;
+        
         await sendTelegramNotification(tgMsg);
 
-        // ইনপুট রিসেট করা
+        // মেসেজ পাঠানো সফল
         input.value = '';
         window.clearSelectedScreenshot();
         window.renderFeedbackMessages();
         
-        showSmartToast('মেসেজ পাঠানো সফল হয়েছে!', 'success');
+        showSmartToast('মেসেজ পাঠানো সফল হয়েছে! ', 'success');
         window.playSound('snd_success');
-
-    } catch (e) {
-        console.error("Feedback error:", e);
-        showSmartToast('সার্ভার সমস্যার কারণে মেসেজ পাঠানো যায়নি।', 'error');
+    } catch (tgErr) {
+        console.error("টেলিগ্রামে মেসেজ পাঠানো ব্যর্থ হয়েছে:", tgErr);
+        showSmartToast('মেসেজ পাঠানো যায়নি। দয়া করে ইন্টারনেট চেক করুন।', 'error');
     }
 
     hideLoading();
 };
-
 // 🔒 জিমেইল সেল, ডিপোজিট ও উত্তোলনের কাজ সচল করার একক ম্যাজিক ইন্টারসেপ্টর
 const originalShowPage = window.showPage;
 window.showPage = (id, defaultTab = null) => {
@@ -12499,67 +12583,5 @@ window.showPage = (id, defaultTab = null) => {
     </div>
 </div>
 
-<!-- 💬 WHATSAPP STYLE LIVE FEEDBACK SCREEN (NEW) -->
-<div id="feedbackChatScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight min-h-screen bg-[#efeae2] pb-24 max-w-md mx-auto relative flex flex-col justify-between">
-    <!-- Header -->
-    <div class="flex items-center justify-between bg-white/95 backdrop-blur-md p-4 rounded-3xl border border-slate-100 shadow-sm mb-4">
-        <div class="flex items-center gap-3">
-            <button onclick="window.showPage('supportScreen')" class="bg-slate-50 w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition">
-                <i class="ri-arrow-left-line text-lg text-slate-700"></i>
-            </button>
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white relative">
-                    <i class="ri-customer-service-2-line text-lg"></i>
-                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></span>
-                </div>
-                <div class="text-left">
-                    <h3 class="font-black text-sm text-slate-800 leading-none">টাকাওয়ালা সাপোর্ট</h3>
-                    <span class="text-[10px] text-green-600 font-bold leading-none">২৪/৭ অনলাইন চ্যাট</span>
-                </div>
-            </div>
-        </div>
-        <div class="text-right">
-            <p class="text-[8px] font-black text-red-500 uppercase tracking-wider bg-red-50 px-2 py-1 rounded-lg border border-red-100">১ দিন পর মুছে যাবে</p>
-        </div>
-    </div>
-
-   <!-- Chat Messages View Area -->
-        <div id="feedbackMessagesBox" class="flex-1 overflow-y-auto px-1 space-y-3 mb-4 max-h-[60vh] flex flex-col">
-            <!-- Messages will render dynamically here -->
-        </div>
-
-        <!-- Input Footer Bar with Screenshot Upload -->
-        <div class="bg-white p-3 rounded-[28px] border border-slate-100 shadow-lg flex flex-col gap-2 relative">
-            <!-- Image Preview Indicator (If user selects image) -->
-            <div id="screenshotPreviewBox" class="hidden flex items-center justify-between bg-slate-50 p-2 rounded-xl border">
-                <div class="flex items-center gap-2">
-                    <i class="ri-image-line text-purple-600"></i>
-                    <span class="text-xs font-bold text-slate-500">স্ক্রিনশট যুক্ত হয়েছে</span>
-                </div>
-                <button onclick="window.clearSelectedScreenshot()" class="text-red-500 active:scale-90 transition">
-                    <i class="ri-close-circle-fill text-xl"></i>
-                </button>
-            </div>
-
-            <div class="flex items-center gap-2">
-                <!-- Hidden File Input for Image -->
-                <input type="file" id="feedbackScreenshotInput" accept="image/*" class="hidden" onchange="window.handleFeedbackImageSelect(this)">
-                
-                <!-- Attachment Button -->
-                <button onclick="document.getElementById('feedbackScreenshotInput').click()" class="w-11 h-11 bg-slate-50 hover:bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500 shrink-0 active:scale-90 transition">
-                    <i class="ri-image-add-line text-xl text-purple-600"></i>
-                </button>
-
-                <!-- Text Input -->
-                <input type="text" id="feedbackInputText" placeholder="আপনার সমস্যাটি এখানে লিখুন..." class="flex-1 bg-slate-50 p-3 rounded-2xl outline-none text-slate-700 font-medium text-sm border border-slate-100 focus:bg-white focus:border-purple-300">
-
-                <!-- Send Button -->
-                <button onclick="window.sendFeedbackMessage()" class="w-11 h-11 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white shrink-0 active:scale-90 transition shadow-md">
-                    <i class="ri-send-plane-2-fill text-lg"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    
 </body>
 </html>
