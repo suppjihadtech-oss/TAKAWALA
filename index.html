@@ -774,10 +774,9 @@
         }
 
         div:where(.swal2-icon) {
-            width: 60px !important;
-            height: 60px !important;
-            margin: 0 auto 5px auto !important;
-            border-width: 3px !important;
+            transform: scale(0.75) !important;
+            transform-origin: center !important;
+            margin: 10px auto 5px auto !important;
         }
         
         .swal2-icon-content {
@@ -1990,17 +1989,92 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <!-- Buttons will be injected here via JavaScript -->
     </div>
 
-    <!-- ব্যালেন্স ট্রান্সফার সেকশনটি ওয়ালেটের ভেতরেই থাকবে -->
-    <div id="transferSection" class="hidden">
-        <div class="glass-card p-6 rounded-[25px] text-center space-y-4">
-            <div class="flex items-center justify-center gap-3 text-sm font-bold text-slate-600">
-                <span>মেইন ব্যালেন্স</span> <i class="ri-arrow-right-line"></i> <span>রিচার্জ ব্যালেন্স</span>
-            </div>
-            <input type="number" id="transferAmount" placeholder="পরিমাণ" class="w-full p-3 bg-slate-50 rounded-xl border font-bold outline-none text-center text-xl">
-            <button onclick="window.transferBalance()" class="w-full bg-slate-800 text-white font-bold py-3.5 rounded-xl shadow-lg">ট্রান্সফার করুন</button>
-            <p class="text-xs text-red-500">* রিচার্জ ব্যালেন্স থেকে মেইন ব্যালেন্সে নেওয়া যাবে না।</p>
+   <!-- ✅ TRANSFER SCREEN (আলাদা নতুন মডার্ন পেজ) -->
+<div id="transferScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight bg-white min-h-screen pb-24 max-w-md mx-auto">
+    <!-- হেডার এবং নিয়মাবলী বাটন -->
+    <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center gap-3">
+            <button onclick="window.showPage('walletScreen')" class="bg-white w-10 h-10 rounded-full shadow-md flex items-center justify-center active:scale-90 transition">
+                <i class="ri-arrow-left-line text-xl text-slate-700"></i>
+            </button>
+            <h2 class="text-2xl font-black text-slate-800 tracking-tight">ব্যালেন্স স্থানান্তর</h2>
+        </div>
+        <img src="https://i.postimg.cc/1zy2ppvd/insurance.png" onclick="window.showRules('স্থানান্তর')" class="w-8 cursor-pointer active:scale-95 transition">
+    </div>
+
+    <!-- 💸 ২ স্তরের ব্যালেন্স তুলনামূলক কার্ড -->
+    <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="bg-orange-50 p-4 rounded-2xl border border-orange-100 flex flex-col justify-between h-[85px] shadow-sm">
+            <span class="text-[10px] font-black text-orange-600 uppercase tracking-wider">মেইন ব্যালেন্স</span>
+            <h3 class="text-xl font-black text-slate-800 mt-1">৳<span id="transSourceBalance">0.00</span></h3>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 flex flex-col justify-between h-[85px] shadow-sm">
+            <span class="text-[10px] font-black text-blue-600 uppercase tracking-wider">রিচার্জ ব্যালেন্স</span>
+            <h3 class="text-xl font-black text-slate-800 mt-1">৳<span id="transTargetBalance">0.00</span></h3>
         </div>
     </div>
+
+    <!-- 🔄 ৩ডি স্টাইলিশ ভিজ্যুয়াল ট্রানজিশন কার্ড -->
+    <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-6 rounded-[30px] space-y-4 shadow-xl border border-indigo-500/20 relative overflow-hidden mb-6">
+        <div class="absolute -right-6 -top-6 bg-indigo-500/10 w-20 h-20 rounded-full blur-xl animate-pulse"></div>
+        
+        <div class="text-center relative z-10">
+            <p class="text-[9px] uppercase tracking-[0.2em] font-black text-slate-400">Main to Recharge Transfer</p>
+            <h4 class="text-base font-black mt-1">সুরক্ষিত ফান্ড স্থানান্তর</h4>
+        </div>
+
+        <!-- ভিজ্যুয়াল কার্ড-টু-কার্ড প্রবাহ -->
+        <div class="flex items-center justify-between bg-black/30 p-3 rounded-2xl border border-white/10 relative z-10">
+            <div class="text-center flex-1">
+                <i class="ri-wallet-3-line text-xl text-orange-400 animate-pulse"></i>
+                <p class="text-[10px] font-bold text-slate-300 mt-1">মেইন থেকে</p>
+            </div>
+            <div class="flex-1 flex justify-center">
+                <div class="w-10 h-10 bg-indigo-600/30 rounded-full flex items-center justify-center border border-indigo-500/40 animate-pulse">
+                    <i class="ri-arrow-right-double-line text-indigo-400 text-xl"></i>
+                </div>
+            </div>
+            <div class="text-center flex-1">
+                <i class="ri-phone-find-line text-xl text-blue-400 animate-pulse"></i>
+                <p class="text-[10px] font-bold text-slate-300 mt-1">রিচার্জে</p>
+            </div>
+        </div>
+
+        <!-- পরিমাণ ইনপুট বক্স -->
+        <div class="relative group z-10">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
+                <i class="ri-money-dollar-circle-line text-lg"></i>
+            </div>
+            <input type="number" id="transferAmount" placeholder="স্থানান্তরের পরিমাণ লিখুন" 
+                class="w-full pl-11 pr-14 py-4 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-2xl font-black outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-yellow-300">BDT</span>
+        </div>
+
+        <!-- কুইক এমাউন্ট শর্টকাট বাটন গ্রুপ -->
+        <div class="grid grid-cols-4 gap-2 relative z-10">
+            <button onclick="document.getElementById('transferAmount').value = 10" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳১০</button>
+            <button onclick="document.getElementById('transferAmount').value = 50" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳৫০</button>
+            <button onclick="document.getElementById('transferAmount').value = 100" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳১০০</button>
+            <button onclick="document.getElementById('transferAmount').value = 500" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳৫০০</button>
+        </div>
+
+        <!-- ট্রান্সফার বাটন -->
+        <button onclick="window.transferBalance()" class="w-full bg-white text-indigo-700 hover:bg-slate-50 font-black py-4 rounded-2xl shadow-lg active:scale-95 transition-all text-sm uppercase tracking-wider relative z-10 flex items-center justify-center gap-1.5">
+            <i class="ri-shuffle-line"></i> স্থানান্তর করুন
+        </button>
+    </div>
+
+    <!-- ℹ️ ডাইনামিক রুলס বক্স -->
+    <div class="p-4 bg-slate-50 border border-slate-100 rounded-[22px]">
+        <h4 class="font-black text-slate-700 text-xs mb-1.5 flex items-center gap-1"><i class="ri-information-fill text-indigo-600"></i> স্থানান্তর গাইডলাইন:</h4>
+        <ul class="text-[10px] text-slate-500 space-y-1.5 list-disc pl-4 font-bold leading-normal">
+            <li>স্থানান্তর করার জন্য সর্বনিম্ন পরিমাণ <span class="text-rose-500">৳১০</span> টাকা।</li>
+            <li>মেইন ব্যালেন্স থেকে রিচার্জ ব্যালেন্সে ট্রান্সফার হতে কোনো অতিরিক্ত চার্জ কাটা হবে না।</li>
+            <li>নিরাপত্তার স্বার্থে স্থানান্তর সম্পন্ন করতে আপনার গোপন ৪ ডিজিটের পিন নম্বর প্রয়োজন হবে।</li>
+            <li><span class="text-rose-500">সতর্কতা:</span> একবার রিচার্জ ব্যালেন্সে টাকা স্থানান্তর করা হয়ে গেলে তা পুনরায় মেইন ব্যালেন্সে ফেরত নেওয়া অসম্ভব।</li>
+        </ul>
+    </div>
+</div>
 </div>
 
 <!-- ✅ DEPOSIT SCREEN (আলাদা নতুন পেইজ) -->
@@ -4072,10 +4146,10 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-    // ✅ ডাবল অ্যাড + হাই-স্পিড অ্যান্টি-ফ্লিকারিং (সঠিকভাবে ২য় অ্যাড লোড ফিক্সড)
+   // ✅ ডাবল অ্যাড + হাই-স্পিড অ্যান্টি-ফ্লিকারিং (২টি অ্যাডই দেখাবে, সিপিএম কমবে না এবং ক্রাশও হবে না)
 window.showMonetagAd = async (callback) => {
     showLoading();
-    // ১. অ্যাড আসার আগে সেফটি বাফার (কমিয়ে ৩০০মি.সে. করা হলো)
+    // ১. অ্যাড আসার আগে সেফটি বাফার
     await new Promise(resolve => setTimeout(resolve, 300));
     hideLoading(); 
 
@@ -4084,43 +4158,72 @@ window.showMonetagAd = async (callback) => {
             if (typeof window['show_10531082'] === 'function') {
                 window['show_10531082']()
                     .then(() => {
-                        // অ্যাড দেখা সফল হয়েছে (ইউজার অ্যাড ক্লোজ করার পর এটি ট্রিগার হবে)
                         resolve(true);
                     })
                     .catch((err) => {
                         console.log("Ad Error or Skipped:", err);
-                        // কোনো কারণে অ্যাড লোড না হলে বা কেটে দিলে অ্যাপ আটকে থাকবে না, পরের ধাপে যাবে
                         resolve(false); 
                     });
             } else {
-                // যদি কোনো কারণে SDK লোড না থাকে
                 setTimeout(() => resolve(false), 1000);
             }
         });
     };
 
+    // ইউজার ব্রাউজারে চলে গেলে আবার ফিরে আসা পর্যন্ত স্ক্রিপ্ট থামিয়ে রাখার হেল্পার
+    const waitForForeground = () => {
+        return new Promise((resolve) => {
+            if (!document.hidden) {
+                resolve();
+            } else {
+                const onReturn = () => {
+                    if (!document.hidden) {
+                        document.removeEventListener('visibilitychange', onReturn);
+                        resolve();
+                    }
+                };
+                document.addEventListener('visibilitychange', onReturn);
+            }
+        });
+    };
+
+    // --- ১ম অ্যাড প্রদর্শন ---
     showSmartToast('১ম অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
-    await playSingleAd(); // এটি এখন সম্পূর্ণ অ্যাড শেষ হওয়া পর্যন্ত অপেক্ষা করবে
-    
-    // ৩. দুই অ্যাডের মাঝের বিরতি (কমিয়ে ৮০০মি.সে. করা হলো যেন ২য় অ্যাড প্রস্তুতির সময় পায়)
-    await new Promise(resolve => setTimeout(resolve, 800));
+    await playSingleAd(); 
 
+    // ১ম অ্যাড শেষ হওয়ার পর ইউজার যদি ব্রাউজারে চলে যায় (ক্লিক করার কারণে), তবে ফিরে আসা পর্যন্ত অপেক্ষা করবে
+    if (document.hidden) {
+        showSmartToast('ফিরে আসার জন্য অপেক্ষা করা হচ্ছে...', 'info');
+        await waitForForeground();
+        // ফিরে আসার পর মোবাইল ডিভাইসকে শান্ত হওয়ার জন্য ১ সেকেন্ড সময় দেওয়া হলো
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    } else {
+        // যদি ব্রাউজারে না যায়, তবে স্বাভাবিক ৮০০ মিলি-সেকেন্ড বিরতি নেবে
+        await new Promise(resolve => setTimeout(resolve, 800));
+    }
+
+    // --- ২য় অ্যাড প্রদর্শন (১০০% গ্যারান্টি সহ রান হবে) ---
     showSmartToast('২য় অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
-    await playSingleAd(); // ২য় অ্যাড দেখাবে এবং এটিও শেষ হওয়া পর্যন্ত অপেক্ষা করবে
+    await playSingleAd();
 
-    // 🎁 পুরস্কার দেওয়ার মেইন ফিক্স
+    // ২য় অ্যাড চলাকালীনও যদি ইউজার ক্লিক করে ব্রাউজারে চলে যায়, তবে ফিরে আসা পর্যন্ত অপেক্ষা করবে
+    if (document.hidden) {
+        await waitForForeground();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+
+    // --- পুরস্কার দেওয়ার মেইন ফিক্স ---
     const triggerReward = async () => {
-        ensureMainAppVisible(); // প্রথমেই অ্যাপ শো করাও
+        ensureMainAppVisible(); 
         showLoading(); 
         
-        // ৪. ফোন শান্ত করার বিরতি (কমিয়ে ৬০০মি.সে. করা হলো)
+        // রেন্ডারিং শান্ত করার বিরতি
         await new Promise(resolve => setTimeout(resolve, 600));
         
         hideLoading();
-        ensureMainAppVisible(); // আবারও শো করাও সেফটির জন্য
+        ensureMainAppVisible(); 
         
         if (callback) {
-            // ৫. ব্যাকগ্রাউন্ড ডাটাবেস রাইটের জন্য সামান্য বাফার (১০০মি.সে.)
             setTimeout(async () => {
                 try {
                     await callback(); 
@@ -4129,22 +4232,9 @@ window.showMonetagAd = async (callback) => {
         }
     };
 
-    // যদি ইউজার ব্রাউজারে চলে যায়, ফিরে না আসা পর্যন্ত রিওয়ার্ড আটকিয়ে রাখা
-    if (document.hidden) {
-        const onReturn = () => {
-            if (!document.hidden) {
-                document.removeEventListener('visibilitychange', onReturn);
-                // ফিরে আসার পর বাফার (কমিয়ে ৩০০মি.সে.)
-                setTimeout(triggerReward, 300); 
-            }
-        };
-        document.addEventListener('visibilitychange', onReturn);
-    } else {
-        // ডাইরেক্ট ট্রিগার বাফার (কমিয়ে ২০০মি.সে.)
-        setTimeout(triggerReward, 200);
-    }
+    setTimeout(triggerReward, 200);
 };
-// ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ফিক্সড)
+// ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ও পেজ রিসেট ফিক্সড)
 function ensureMainAppVisible() {
     const mainApp = document.getElementById('mainApp');
     const bottomNav = document.getElementById('bottomNav');
@@ -4153,13 +4243,32 @@ function ensureMainAppVisible() {
 
     if (mainApp) {
         mainApp.classList.remove('hidden');
-        mainApp.style.setProperty('display', 'block', 'important'); // নিশ্চিত করা হলো এটি block থাকবে
+        mainApp.style.setProperty('display', 'block', 'important'); 
         mainApp.style.setProperty('visibility', 'visible', 'important');
         mainApp.style.setProperty('opacity', '1', 'important');
+
+        // 🛡️ ফলব্যাক প্রোটেকশন: চেক করা হচ্ছে মেইন অ্যাপের ভেতর কোনো একটি পেজ অন্তত ভিজিবল আছে কি না
+        const pages = document.querySelectorAll('#mainApp > div');
+        let anyPageVisible = false;
+        pages.forEach(div => {
+            if (div.id !== 'bottomNav' && !div.id.includes('Icon') && !div.classList.contains('hidden')) {
+                anyPageVisible = true;
+            }
+        });
+
+        // যদি সব পেজ ইন-অ্যাক্টিভ বা হাইড হয়ে সাদা স্ক্রিন তৈরি হয়, তবে স্বয়ংক্রিয়ভাবে হোম পেজ নিয়ে আসবে
+        if (!anyPageVisible) {
+            console.log("রিসেট সনাক্ত করা হয়েছে! হোম স্ক্রিনে ফিরিয়ে নেওয়া হচ্ছে...");
+            const home = document.getElementById('homeScreen');
+            if (home) {
+                home.classList.remove('hidden');
+                home.classList.add('animate__animated', 'animate__fadeIn');
+            }
+        }
     }
     if (bottomNav) {
         bottomNav.classList.remove('hidden');
-        bottomNav.style.setProperty('display', 'flex', 'important'); // 💖 সংশোধন: এখন bottomNav সঠিকভাবে flex হবে
+        bottomNav.style.setProperty('display', 'flex', 'important'); 
     }
     if (authScreen) {
         authScreen.classList.add('hidden');
@@ -4169,7 +4278,6 @@ function ensureMainAppVisible() {
         loader.classList.add('hidden');
         loader.style.setProperty('display', 'none', 'important');
     }
-    // বডি রিসেট
     document.body.style.backgroundColor = ""; 
     document.body.style.overflow = "auto";
 }
@@ -7168,8 +7276,9 @@ await db.collection("history").doc(newReqId).set({
             }
         };
         
-       // ✅ UPDATED WITHDRAW FUNCTION WITH SCHEDULE
-        window.submitWithdraw = async () => {
+      // ✅ UPDATED WITHDRAW FUNCTION WITH SCHEDULE (সুবিন্যস্ত ও ক্লিন গেটওয়ে সিকোয়েন্স)
+window.submitWithdraw = async () => {
+    // === স্তর ১: ইনস্ট্যান্ট ফ্রন্টএন্ড গেট (Sync Checks) ===
     if (currentUserData.isActivated === false) {
         return window.handleActivation();
     }
@@ -7178,28 +7287,28 @@ await db.collection("history").doc(newReqId).set({
     const amount = parseFloat(document.getElementById('withdrawAmount').value);
     const method = document.getElementById('selectedWithdrawMethod').value;
     
-    // ১. মেথড ভ্যালিডেশন
+    // ১.১ মেথড ভ্যালিডেশন
     if(!method) {
         showSmartToast('দয়া করে প্রথমে টাকা উত্তোলনের জন্য একটি মেথড সিলেক্ট করুন', 'error');
         return;
     }
-    // ২. নম্বর বা ওয়ালেট ভ্যালিডেশন
+    // ১.২ নম্বর বা ওয়ালেট ভ্যালিডেশন
     if(!number) {
         showSmartToast(method === 'USDT' ? 'দয়া করে আপনার সঠিক USDT ওয়ালেট অ্যাড্রেস দিন' : 'দয়া করে টাকা উত্তোলনের মোবাইল নম্বরটি দিন', 'error');
         return;
     }
-    // ৩. মোবাইল নম্বর ফরম্যাট ভ্যালিডেশন (USDT ছাড়া অন্যান্য মেথডের ক্ষেত্রে বাংলাদেশী নম্বর চেক)
+    // ১.৩ মোবাইল নম্বর ফরম্যাট ভ্যালিডেশন [2]
     if(method !== 'USDT' && !/^01[3-9]\d{8}$/.test(number)) {
         showSmartToast('দয়া করে ১১ ডিজিটের সঠিক সচল মোবাইল নম্বর দিন (যেমন: 017xxxxxxxx)', 'error');
         return;
     }
-    // ৪. নির্দিষ্ট অ্যামাউন্ট ভ্যালিডেশন
+    // ১.৪ নির্দিষ্ট অ্যামাউন্ট ভ্যালিডেশন
     if(!amount || isNaN(amount) || amount <= 0) {
         showSmartToast('দয়া করে উত্তোলনের জন্য একটি সঠিক পরিমাণ (টাকার অংক) লিখুন', 'error');
         return;
     }
 
-    // ৫. উত্তোলন সীমা চেক (ডাইনামিক অ্যাডমিন সেটিংস থেকে)
+    // ১.৫ উত্তোলন সীমা চেক
     const minWithdraw = systemSettings.minWithdraw || 50;
     const maxWithdraw = systemSettings.maxWithdraw || 5000;
 
@@ -7207,30 +7316,97 @@ await db.collection("history").doc(newReqId).set({
         showSmartToast(`ন্যূনতম উত্তোলন পরিমাণ ৳${minWithdraw}`, 'error');
         return;
     }
-
     if(amount > maxWithdraw) {
         showSmartToast(`সর্বোচ্চ উত্তোলন পরিমাণ ৳${maxWithdraw}`, 'error');
         return;
     }
+
+    // ১.৬ ব্যালেন্স চেক
+    if(!currentUserData) {
+        showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
+        return;
+    }
+    if(currentUserData.mainBalance < amount) {
+        showSmartToast('পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
+        return;
+    }
+
+    // ১.৭ মেম্বারশিপ ভিত্তিক লিমিট চেক (ফ্রি বনাম ভিআইপি)
+    const userPlan = (currentUserData.plan || "").toLowerCase();
+    const isVIP = !userPlan.includes("free") && !userPlan.includes("ফ্রি") && userPlan !== "";
+    
+    if (!isVIP) {
+        const alreadyWithdrawn = parseFloat(currentUserData.totalWithdraw || 0);
+        if (alreadyWithdrawn >= 100) {
+            Swal.fire({
+                icon: 'error',
+                title: 'লিমিট শেষ! ❌',
+                text: '❌ আপনার ফ্রি উইথড্র লিমিট (১০০৳) শেষ! পরবর্তী উইথড্র করতে আপনার অ্যাকাউন্টটি VIP প্যাকেজে আপগ্রেড করুন।',
+                confirmButtonText: 'ঠিক আছে',
+                confirmButtonColor: '#ef4444',
+                customClass: { popup: 'rounded-[25px]' }
+            });
+            return;
+        }
+    }
+
+    const dailyLimit = isVIP ? 2 : 1; 
+    const maxMFS = isVIP ? 50 : 30;
+
+    if (userWithdrawCount >= dailyLimit) {
+        return showSmartToast(`দুঃখিত! ${isVIP ? 'VIP' : 'ফ্রি'} মেম্বার হিসেবে আপনি দিনে সর্বোচ্চ ${dailyLimit} বার টাকা তুলতে পারবেন।`, 'error');
+    }
+    if (amount > maxMFS) {
+        return showSmartToast(`দুঃখিত! আপনি একবারে সর্বোচ্চ ৳${maxMFS} উত্তোলন করতে পারবেন।`, 'error');
+    }
+
+    const isFreeUser = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
+    if(isFreeUser) {
+        const referralCount = currentUserData.totalReferrals || 0;
+        if(referralCount < 1) {
+            showSmartToast(`আপনার রেফার ${referralCount}। উইথড্র করতে সর্বনিম্ন ১টি রেফার প্রয়োজন।`, 'error');
+            return;
+        }
+    }
+
+    // === স্তর ২: অ্যাসিনক্রোনাস ডাটাবেজ গেট (Async DB Checks) ===
+    showLoading();
+    try {
+        // ২.১ উইথড্র পেন্ডিং চেক (মামা স্পেশাল লক)
+        const pendingWithdraw = await db.collection("pending_requests")
+            .where("userId", "==", currentUserId)
+            .where("type", "==", "Withdraw")
+            .where("status", "==", "Pending")
+            .limit(1).get();
+
+        if (!pendingWithdraw.empty) {
+            hideLoading();
+            Swal.fire({
+                title: '<span style="color:#f59e0b">আবেদন পেন্ডিং! ⏳</span>',
+                html: `<div style="text-align:center; font-size:14px; font-weight:600; color:#475569;">
+                        মামা, আপনার একটি <b>উত্তোলনের আবেদন</b> বর্তমানে প্রসেসিংয়ে আছে। <br><br>
+                        সেটি সফল (Success) বা বাতিল না হওয়া পর্যন্ত আপনি নতুন কোনো উত্তোলনের রিকোয়েস্ট দিতে পারবেন না।
+                       </div>`,
+                icon: 'warning',
+                confirmButtonText: 'বুঝেছি',
+                confirmButtonColor: '#3b82f6',
+                customClass: { popup: 'rounded-[30px]' }
+            });
+            return; 
+        }
+
+        // ২.২ মেগা সিকিউরিটি: একটিভ রেফার চেক (ফ্রি মেম্বারদের জন্য)
+        if (isFreeUser) {
+            const myCode = currentUserData.referralCode.trim();
+            const refSnap = await db.collection("users").where("referredBy", "==", myCode).get();
             
-            // 🛡️ মেগা সিকিউরিটি: একটিভ রেফার চেক (উইথড্র সেকশন লক)
-            const isFreeUserCheck = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
-            if(isFreeUserCheck) {
-                showLoading(); // চেক করার সময় লোডিং দেখাবে
-                try {
-                    const myCode = currentUserData.referralCode.trim();
-                    // ডাটাবেস থেকে ইউজারের সব রেফারালদের ডাটা চেক করা হচ্ছে
-                    const refSnap = await db.collection("users").where("referredBy", "==", myCode).get();
-                    
-                   // চেক করবে রেফার করা মেম্বার একটিভ কি না (টাস্ক ২ টি, অথবা অ্যাড ভিউ, অথবা ডেইলি বোনাস)
             let activeRefCount = 0;
             refSnap.forEach(doc => {
                 const refData = doc.data();
-                const hasDoneTasks = (refData.totalTasks || 0) >= 2; // ২টি টাস্ক কন্ডিশন
-                const hasWatchedAds = (refData.watchEarnCount || 0) > 0; // ভিডিও অ্যাড কন্ডিশন
-                const hasClaimedBonus = !!refData.lastDailyBonus; // ডেইলি বোনাস কন্ডিশন
+                const hasDoneTasks = (refData.totalTasks || 0) >= 2;
+                const hasWatchedAds = (refData.watchEarnCount || 0) > 0;
+                const hasClaimedBonus = !!refData.lastDailyBonus;
                 
-                // যেকোনো একটি শর্ত পূরণ করলেই সে একটিভ হিসেবে গণ্য হবে
                 if (hasDoneTasks || hasWatchedAds || hasClaimedBonus) {
                     activeRefCount++;
                 }
@@ -7245,117 +7421,36 @@ await db.collection("history").doc(newReqId).set({
                             মামা, আপনার অন্তত ১টি <b>এক্টিভ রেফার</b> নেই। <br><br>
                             বর্তমানে আপনার একটিভ রেফার: <b style="color:red;">${activeRefCount} জন</b><br>
                             প্রয়োজন: <b>১ জন</b><br><br>
-                            <span style="color:#475569;">নিয়ম: আপনার রেফারে জয়েন করা মেম্বারকে অন্তত ২টি টাস্ক কমপ্লিট করতে হবে অথবা নিয়মিত অ্যাপে ঢুকে ডেইলি বোনাস বা অন্তত ১টি ভিডিও অ্যাড দেখতে হবে।</span>
+                            <span style="color:#475569;">নিয়ม: আপনার রেফারে জয়েন করা মেম্বারকে অন্তত ২টি টাস্ক কমপ্লিট করতে হবে অথবা নিয়মিত অ্যাপে ঢুকে ডেইলি বোনাস বা অন্তত ১টি ভিডিও অ্যাড দেখতে হবে।</span>
                            </div>`,
-                            confirmButtonText: 'বুঝেছি',
-                            confirmButtonColor: '#ef4444',
-                            customClass: { popup: 'rounded-[25px]' }
-                        });
-                        return;
-                    }
-                } catch (e) {
-                    console.log("Ref Check Error:", e);
-                }
-                hideLoading();
-            }
-            
-           // 🔐 bKash/Nagad স্টাইল প্রিমিয়াম পিন ভেরিফিকেশন ট্র্রিগার
-            window.verifyTransactionPin(async () => {
-                // ⏳ উইথড্র পেন্ডিং চেক (মামা স্পেশাল লক)
-                showLoading();
-                const pendingWithdraw = await db.collection("pending_requests")
-        .where("userId", "==", currentUserId)
-        .where("type", "==", "Withdraw")
-        .where("status", "==", "Pending")
-        .limit(1).get();
-
-    if (!pendingWithdraw.empty) {
-        hideLoading();
-        Swal.fire({
-            title: '<span style="color:#f59e0b">আবেদন পেন্ডিং! ⏳</span>',
-            html: `<div style="text-align:center; font-size:14px; font-weight:600; color:#475569;">
-                    মামা, আপনার একটি <b>উত্তোলনের আবেদন</b> বর্তমানে প্রসেসিংয়ে আছে। <br><br>
-                    সেটি সফল (Success) বা বাতিল না হওয়া পর্যন্ত আপনি নতুন কোনো উত্তোলনের রিকোয়েস্ট দিতে পারবেন না।
-                   </div>`,
-            icon: 'warning',
-            confirmButtonText: 'বুঝেছি',
-            confirmButtonColor: '#3b82f6',
-            customClass: { popup: 'rounded-[30px]' }
-        });
-        return; 
-    }
-    hideLoading();
-            
-// 🚀 স্মার্ট লিমিট লজিক (Free vs VIP)
-    const userPlan = (currentUserData.plan || "").toLowerCase();
-    const isVIP = !userPlan.includes("free") && !userPlan.includes("ফ্রি") && userPlan !== "";
-    // 🛑 ফ্রি মেম্বারদের জন্য উইথড্র লিমিট চেক (কঠোর ১০০৳ লিমিট)
-            if (!isVIP) {
-                const alreadyWithdrawn = parseFloat(currentUserData.totalWithdraw || 0);
-                if (alreadyWithdrawn >= 100) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'লিমিট শেষ! ❌',
-                        text: '❌ আপনার ফ্রি উইথড্র লিমিট (১০০৳) শেষ! পরবর্তী উইথড্র করতে আপনার অ্যাকাউন্টটি VIP প্যাকেজে আপগ্রেড করুন।',
-                        confirmButtonText: 'ঠিক আছে',
-                        confirmButtonColor: '#ef4444',
-                        customClass: { popup: 'rounded-[25px]' }
-                    });
-                    return; // উইথড্র প্রসেস বন্ধ
-                }
-            }
-    
-    const dailyLimit = isVIP ? 2 : 1; 
-    const maxMFS = isVIP ? 50 : 30;
-
-    if (userWithdrawCount >= dailyLimit) {
-        return showSmartToast(`দুঃখিত! ${isVIP ? 'VIP' : 'ফ্রি'} মেম্বার হিসেবে আপনি দিনে সর্বোচ্চ ${dailyLimit} বার টাকা তুলতে পারবেন।`, 'error');
-    }
-    if (amount > maxMFS) {
-        return showSmartToast(`দুঃখিত! আপনি একবারে সর্বোচ্চ ৳${maxMFS} উত্তোলন করতে পারবেন।`, 'error');
-    }
-            
-            if(!currentUserData) {
-                showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                    confirmButtonText: 'বুঝেছি',
+                    confirmButtonColor: '#ef4444',
+                    customClass: { popup: 'rounded-[25px]' }
+                });
                 return;
             }
-            
-            if(currentUserData.mainBalance < amount) {
-                showSmartToast('পর্যাপ্ত ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
-                return;
-            }
-            
-            const isFreeUser = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
-if(isFreeUser) {
-    const referralCount = currentUserData.totalReferrals || 0;
-    if(referralCount < 1) {
-        showSmartToast(`আপনার রেফার ${referralCount}। উইথড্র করতে সর্বনিম্ন ১টি রেফার প্রয়োজন।`, 'error');
-        return;
-    }
-}
-            
-                        
+        }
+
+        hideLoading(); // ডাটাবেস চেক সফল হলে লোডার অফ করব
+
+        // === স্তর ৩: নিরাপত্তা পিন গেট (Verify PIN Prompt) ===
+        window.verifyTransactionPin(async () => {
             const vatPercentage = systemSettings.vatPercentage || 0;
             const vat = amount * (vatPercentage / 100);
             const received = amount - vat;
-            
-            
-            // ✅ CHECK WITHDRAWAL SCHEDULE
             const withinSchedule = isWithinWithdrawalSchedule();
-            
-            // 💰 উইথড্র রিকোয়েস্ট পাঠানোর আগে Monetag অ্যাড আসবে
+
+            // === স্তর ৪: মনিটাইজেশন গেট (Play Monetag Ad) ===
             window.showMonetagAd(async () => {
                 showLoading();
-                showSmartToast('উত্তোলন রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
-                
                 try {
+                    // === স্তর ৫: ডাটাবেস সাবমিশন ও নোটিফিকেশন ===
                     const userRef = db.collection("users").doc(currentUserId);
                     await userRef.update({
                         mainBalance: firebase.firestore.FieldValue.increment(-amount),
                         totalWithdraw: firebase.firestore.FieldValue.increment(amount)
                     });
                     
-                    // নতুন আইডি জেনারেট করে দুই জায়গায় সেভ করা (Withdraw)
                     const newReqRef = db.collection("pending_requests").doc();
                     const newReqId = newReqRef.id;
 
@@ -7390,61 +7485,57 @@ if(isFreeUser) {
                     });
                     
                     userWithdrawCount++;
-   currentUserData.withdraw_count = userWithdrawCount; // লোকাল আপডেট                 
+                    currentUserData.withdraw_count = userWithdrawCount;               
                     
-                  // Send Telegram notification
                     const telegramMessage = `💸 *নতুন উত্তোলন রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *অ্যাকাউন্ট:* ${number}\n💵 *উত্তোলন পরিমাণ:* ৳${amount.toFixed(2)}\n📊 *উত্তোলন চার্জ (${vatPercentage}%):* ৳${vat.toFixed(2)}\n💰 *প্রাপ্ত পরিমাণ (নিট):* ৳${received.toFixed(2)}\n⏰ *সময়সূচী:* ${withinSchedule ? 'ভিতরে' : 'বাইরে'}`;
                     await sendTelegramNotification(telegramMessage);
                     
                     window.playSound('snd_success');                
-                hideLoading();
+                    hideLoading();
 
-                // 🔔 ১. উপরে স্লাইডিং টোস্ট অ্যালার্ট (Smart Toast) দেখাবে
-                showSmartToast(withinSchedule ? 'উত্তোলন সফল হয়েছে! 🎉' : 'সময়সূচীর বাইরে উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে! ⏰', 'success');
+                    showSmartToast(withinSchedule ? 'উত্তোলন সফল হয়েছে! 🎉' : 'সময়সূচীর বাইরে উত্তোলন রিকোয়েস্ট পাঠানো হয়েছে! ⏰', 'success');
 
-                // 🔔 ২. মেইন সুইট অ্যালার্ট পপ-আপ (SweetAlert2) দেখাবে
-                if (withinSchedule) {
-                    Swal.fire({
-                        title: 'উত্তোলন সফল! 🎉',
-                        html: `
-                            <div class="text-center animate__animated animate__zoomIn">
-                                <p class="text-xs text-slate-500 leading-relaxed font-bold">
-                                    আপনার উত্তোলনের আবেদনটি সফলভাবে নেওয়া হয়েছে। <br><br>
-                                    আমাদের অফিশিয়াল সময়সূচীর মধ্যে থাকায় পেমেন্টটি <span class="text-green-600">৫ থেকে ৩০ মিনিটের</span> মধ্যে আপনার ওয়ালেটে পাঠিয়ে দেওয়া হবে। ধন্যবাদ!
-                                </p>
-                            </div>
-                        `,
-                        icon: 'success',
-                        confirmButtonText: 'ধন্যবাদ, বুঝেছি',
-                        confirmButtonColor: '#007AFF',
-                        customClass: { popup: 'rounded-[30px]' }
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'সময়সূচীর বাইরে! ⏰',
-                        html: `
-                            <div class="text-center animate__animated animate__zoomIn">
-                                <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl mb-4 text-left">
-                                    <h4 class="text-[10px] font-black text-amber-800 uppercase mb-1 flex items-center gap-1">
-                                        <i class="ri-error-warning-fill"></i> গুরুত্বপূর্ণ নোটিশ:
-                                    </h4>
-                                    <p class="text-[11px] text-amber-700 font-semibold leading-normal">
-                                        উত্তোলনের অফিশিয়াল সময়সূচী শেষ থাকায় আপনার পেমেন্টটি পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।
+                    if (withinSchedule) {
+                        Swal.fire({
+                            title: 'উত্তোলন সফল! 🎉',
+                            html: `
+                                <div class="text-center animate__animated animate__zoomIn">
+                                    <p class="text-xs text-slate-500 leading-relaxed font-bold">
+                                        আপনার উত্তোলনের আবেদনটি সফলভাবে নেওয়া হয়েছে। <br><br>
+                                        আমাদের অফিশিয়াল সময়সূচীর মধ্যে থাকায় পেমেন্টটি <span class="text-green-600">৫ থেকে ৩০ মিনিটের</span> মধ্যে আপনার ওয়ালেটে পাঠিয়ে দেওয়া হবে। ধন্যবাদ!
                                     </p>
                                 </div>
-                                <p class="text-xs text-slate-500 leading-relaxed font-medium">
-                                    আপনার আবেদনটি সফলভাবে সেভ করা হয়েছে এবং পরবর্তী শিফট চালু হওয়া মাত্রই আপনার ওয়ালেটে পেমেন্ট পৌঁছে যাবে।
-                                </p>
-                            </div>
-                        `,
-                        icon: 'warning',
-                        confirmButtonText: 'ঠিক আছে, আমি রাজী',
-                        confirmButtonColor: '#F5A623',
-                        customClass: { popup: 'rounded-[30px]' }
-                    });
-                }
+                            `,
+                            icon: 'success',
+                            confirmButtonText: 'ধন্যবাদ, বুঝেছি',
+                            confirmButtonColor: '#007AFF',
+                            customClass: { popup: 'rounded-[30px]' }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'সময়সূচীর বাইরে! ⏰',
+                            html: `
+                                <div class="text-center animate__animated animate__zoomIn">
+                                    <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl mb-4 text-left">
+                                        <h4 class="text-[10px] font-black text-amber-800 uppercase mb-1 flex items-center gap-1">
+                                            <i class="ri-error-warning-fill"></i> গুরুত্বপূর্ণ নোটিশ:
+                                        </h4>
+                                        <p class="text-[11px] text-amber-700 font-semibold leading-normal">
+                                            উত্তোলনের অফিশিয়াল সময়সূচী শেষ থাকায় আপনার পেমেন্টটি পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।
+                                        </p>
+                                    </div>
+                                    <p class="text-xs text-slate-500 leading-relaxed font-medium">
+                                        আপনার আবেদনটি সফলভাবে সেভ করা হয়েছে এবং পরবর্তী শিফট চালু হওয়া মাত্রই আপনার ওয়ালেটে পেমেন্ট পৌঁছে যাবে।
+                                    </p>
+                                </div>
+                            `,
+                            icon: 'warning',
+                            confirmButtonText: 'ঠিক আছে, আমি রাজী',
+                            confirmButtonColor: '#F5A623',
+                            customClass: { popup: 'rounded-[30px]' }
+                        });
+                    }
                     
-           // 💾 ৫টি একাউন্ট স্লটে সেভ করার স্মার্ট লজিক
                     const accounts = currentUserData.savedAccounts || [];
                     const isAlreadySaved = accounts.some(acc => acc.number === number);
 
@@ -7461,12 +7552,10 @@ if(isFreeUser) {
                                 customClass: { popup: 'rounded-[25px]' }
                             }).then(async (res) => {
                                 if(res.isConfirmed) {
-                                    // নতুন একাউন্ট অ্যারেতে যোগ করা
                                     accounts.push({ number: number, method: method });
                                     await db.collection("users").doc(currentUserId).update({
                                         savedAccounts: accounts
                                     });
-                                    // স্লাইডার রিফ্রেশ করা
                                     if(typeof window.renderSavedAccounts === 'function') window.renderSavedAccounts();
                                     showSmartToast('নাম্বার সফলভাবে সেভ হয়েছে! ✅', 'success');
                                 }
@@ -7474,7 +7563,6 @@ if(isFreeUser) {
                         }, 1000);
                     }
 
-                    // ইনপুট বক্স রিসেট করা
                     document.getElementById('withdrawNumber').value = '';
                     document.getElementById('withdrawAmount').value = '';
                     if(window.calculateWithdrawVAT) window.calculateWithdrawVAT();
@@ -7483,13 +7571,23 @@ if(isFreeUser) {
                     showSmartToast('উত্তোলন রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
                     hideLoading();
                 }
-            }); // <-- Monetag অ্যাড ফাংশন শেষ
             });
-        }; 
+        });
+
+    } catch (e) {
+        console.error("Async Verification Error:", e);
+        hideLoading();
+        showSmartToast("সার্ভার সমস্যা হয়েছে, আবার চেষ্টা করুন।", "error");
+    }
+};
             
-        
-       // ✅ এডমিন প্যানেলের সাথে সিঙ্ক করা রিচার্জ ফাংশন (Corrected)
+        // ✅ লজিক্যাল সিকোয়েন্সে সাজানো মোবাইল রিচার্জ ফাংশন (নিখুঁত ও এরর-ফ্রি সংস্করণ)
         window.submitRecharge = async () => { 
+    // === স্তর ১: ইনস্ট্যান্ট ফ্রন্টএন্ড গেট (Sync Checks) ===
+    if (currentUserData.isActivated === false) {
+        return window.handleActivation();
+    }
+
     const phone = document.getElementById('rechPhone').value.trim();
     const amount = parseFloat(document.getElementById('rechAmount').value);
     const operator = document.getElementById('selectedOperator').value;
@@ -7504,7 +7602,7 @@ if(isFreeUser) {
         showSmartToast('দয়া করে মোবাইল রিচার্জ করার নম্বরটি দিন', 'error');
         return;
     }
-    // বাংলাদেশী নম্বর ফরম্যাট ভ্যালিডেশন
+    // বাংলাদেশী নম্বর ফরম্যাট ভ্যালিডেশন [2]
     if(!/^01[3-9]\d{8}$/.test(phone)) {
         showSmartToast('দয়া করে ১১ ডিজিটের সঠিক সচল মোবাইল নম্বর দিন (যেমন: 017xxxxxxxx)', 'error');
         return;
@@ -7515,29 +7613,103 @@ if(isFreeUser) {
         return;
     }
             
-            const minRecharge = systemSettings.minRecharge || 20;
-            if(amount < minRecharge) {
-                showSmartToast(`ন্যূনতম রিচার্জ পরিমাণ ৳${minRecharge}`, 'error');
-                return;
+    const minRecharge = systemSettings.minRecharge || 20;
+    if(amount < minRecharge) {
+        showSmartToast(`ন্যূনতম রিচার্জ পরিমাণ ৳${minRecharge}`, 'error');
+        return;
+    }
+
+    const fee = systemSettings.rechargeFee || 5;
+    const totalAmount = amount + fee;
+    
+    if(!currentUserData) {
+        showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
+        return;
+    }
+    
+    if(currentUserData.rechargeBalance < totalAmount) {
+        showSmartToast('পর্যাপ্ত রিচার্জ ব্যালেন্স নেই!', 'error');
+        return;
+    }
+
+    // রিচার্জ লিমিট ও অপারেটর সীমা চেক
+    const userPlan = (currentUserData.plan || "").toLowerCase();
+    const isVIP = !userPlan.includes("free") && !userPlan.includes("ফ্রি") && userPlan !== "";
+    const maxRechargeLimit = isVIP ? 30 : 20; 
+
+    if (amount > maxRechargeLimit) {
+        return showSmartToast(`দুঃখিত! ${isVIP ? 'VIP' : 'ফ্রি'} মেম্বার হিসেবে আপনি সর্বোচ্চ ৳${maxRechargeLimit} রিচার্জ করতে পারবেন।`, 'error');
+    }
+
+    // === স্তর ২: অ্যাসিনক্রোনাস ডাটাবেজ গেট (Async DB Checks) ===
+    showLoading();
+    try {
+        // ২.১ পেন্ডিং রিচার্জ রিকোয়েস্ট চেক
+        const pendingRecharge = await db.collection("pending_requests")
+            .where("userId", "==", currentUserId)
+            .where("type", "==", "Recharge")
+            .where("status", "==", "Pending")
+            .limit(1).get();
+
+        if (!pendingRecharge.empty) {
+            hideLoading();
+            Swal.fire({
+                title: '<span style="color:#0284c7">রিচার্জ পেন্ডিং! 📱</span>',
+                html: `<div style="text-align:center; font-size:14px; font-weight:600; color:#475569;">
+                        আপনার একটি <b>রিচার্জের আবেদন</b> বর্তমানে পেন্ডিং আছে। <br><br>
+                        মামা, রিকোয়েস্টটি সম্পন্ন হওয়া পর্যন্ত দয়া করে অপেক্ষা করুন। এর মধ্যে নতুন রিচার্জ রিকোয়েস্ট দেওয়া যাবে না।
+                       </div>`,
+                icon: 'info',
+                confirmButtonText: 'ঠিক আছে',
+                confirmButtonColor: '#0284c7',
+                customClass: { popup: 'rounded-[30px]' }
+            });
+            return;
+        }
+
+        // ২.২ ফ্রি মেম্বার লাইফটাইম রিচার্জ লিমিট (৳৫০) চেক
+        if (!isVIP) {
+            const historySnap = await db.collection("history")
+                .where("userId", "==", currentUserId)
+                .get();
+            
+            let totalRecharged = 0;
+            historySnap.forEach(doc => {
+                const h = doc.data();
+                const t = (h.type || "").toLowerCase();
+                if (t === "recharge" || t === "রিচার্জ") {
+                    const totalAmt = Math.abs(parseFloat(h.amount) || 0);
+                    const baseAmt = totalAmt > 5 ? totalAmt - 5 : totalAmt;
+                    totalRecharged += baseAmt;
+                }
+            });
+
+            if (totalRecharged >= 50) {
+                hideLoading();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'লিমিট শেষ! ❌',
+                    text: '❌ আপনার ফ্রি মোবাইল রিচার্জ লিমিট (৫০৳) শেষ! পুনরায় রিচার্জ বা উইথড্র করতে আপনার অ্যাকাউন্টটি VIP প্যাকেজে আপগ্রেড করুন।',
+                    confirmButtonText: 'ঠিক আছে',
+                    confirmButtonColor: '#ef4444',
+                    customClass: { popup: 'rounded-[25px]' }
+                });
+                return; 
             }
-                  
-             
-            // 🛡️ মেগা সিকিউরিটি: একটিভ রেফার চেক (মামা স্পেশাল)
-            const isFreeUser = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
-            if(isFreeUser) {
-                showLoading(); // চেক করার সময় লোডিং দেখাবে
-                try {
-                    const myCode = currentUserData.referralCode.trim();
-                    // ডাটাবেস থেকে ইউজারের সব রেফারালদের ডাটা চেক করা হচ্ছে
-                    const refSnap = await db.collection("users").where("referredBy", "==", myCode).get();
-                    
-                    // চেক করবে রেফার করা মেম্বার একটিভ কি না (টাস্ক ২ টি, অথবা অ্যাড ভিউ, অথবা ডেইলি বোনাস)
+        }
+
+        // ২.৩ একটিভ রেফার চেক (ফ্রি মেম্বারের জন্য)
+        const isFreeUser = currentUserData.plan === "Free Member" || currentUserData.plan.includes("Free");
+        if(isFreeUser) {
+            const myCode = currentUserData.referralCode.trim();
+            const refSnap = await db.collection("users").where("referredBy", "==", myCode).get();
+            
             let activeRefCount = 0;
             refSnap.forEach(doc => {
                 const refData = doc.data();
-                const hasDoneTasks = (refData.totalTasks || 0) >= 2; // ২টি টাস্ক কন্ডিশন
-                const hasWatchedAds = (refData.watchEarnCount || 0) > 0; // ভিডিও অ্যাড কন্ডিশন
-                const hasClaimedBonus = !!refData.lastDailyBonus; // ডেইলি বোনাস কন্ডিশন
+                const hasDoneTasks = (refData.totalTasks || 0) >= 2;
+                const hasWatchedAds = (refData.watchEarnCount || 0) > 0;
+                const hasClaimedBonus = !!refData.lastDailyBonus;
                 
                 if (hasDoneTasks || hasWatchedAds || hasClaimedBonus) {
                     activeRefCount++;
@@ -7555,119 +7727,29 @@ if(isFreeUser) {
                             প্রয়োজন: <b>১ জন</b><br><br>
                             <span style="color:#475569;">নিয়ম: আপনার রেফারে জয়েন করা মেম্বারকে অন্তত ২টি টাস্ক কমপ্লিট করতে হবে অথবা নিয়মিত অ্যাপে ঢুকে ডেইলি বোনাস বা অন্তত ১টি ভিডিও অ্যাড দেখতে হবে।</span>
                            </div>`,
-                            confirmButtonText: 'বুঝেছি',
-                            confirmButtonColor: '#ef4444',
-                            customClass: { popup: 'rounded-[25px]' }
-                        });
-                        return;
-                    }
-                } catch (e) {
-                    console.log("Ref Check Error:", e);
-                }
-                hideLoading();
-            }
-                     
-            const fee = systemSettings.rechargeFee || 5;
-            const totalAmount = amount + fee;
-            
-            if(!currentUserData) {
-                showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
+                    confirmButtonText: 'বুঝেছি',
+                    confirmButtonColor: '#ef4444',
+                    customClass: { popup: 'rounded-[25px]' }
+                });
                 return;
             }
-            
-            if(currentUserData.rechargeBalance < totalAmount) {
-                showSmartToast('পর্যাপ্ত রিচার্জ ব্যালেন্স নেই!', 'error');
-                return;
-            }
-            
-            // 🔐 bKash/Nagad স্টাইল প্রিমিয়াম পিন ভেরিফিকেশন ট্র্রিগার
-            window.verifyTransactionPin(async () => {
-                // ⏳ রিচার্জ পেন্ডিং চেক (মামা স্পেশাল লক)
-                showLoading();
-                const pendingRecharge = await db.collection("pending_requests")
-        .where("userId", "==", currentUserId)
-        .where("type", "==", "Recharge")
-        .where("status", "==", "Pending")
-        .limit(1).get();
+        }
 
-    if (!pendingRecharge.empty) {
-        hideLoading();
-        Swal.fire({
-            title: '<span style="color:#0284c7">রিচার্জ পেন্ডিং! 📱</span>',
-            html: `<div style="text-align:center; font-size:14px; font-weight:600; color:#475569;">
-                    আপনার একটি <b>রিচার্জের আবেদন</b> বর্তমানে পেন্ডিং আছে। <br><br>
-                    মামা, রিকোয়েস্টটি সম্পন্ন হওয়া পর্যন্ত দয়া করে অপেক্ষা করুন। এর মধ্যে নতুন রিচার্জ রিকোয়েস্ট দেওয়া যাবে না।
-                   </div>`,
-            icon: 'info',
-            confirmButtonText: 'ঠিক আছে',
-            confirmButtonColor: '#0284c7',
-            customClass: { popup: 'rounded-[30px]' }
-        });
-        return;
-    }
-         hideLoading()   
-    // 🚀 রিচার্জ লিমিট লজিক
-    const userPlan = (currentUserData.plan || "").toLowerCase();
-    const isVIP = !userPlan.includes("free") && !userPlan.includes("ফ্রি") && userPlan !== "";
-    
-    // 🛑 ফ্রি মেম্বারদের জন্য মোবাইল রিচার্জ লিমিট চেক (কঠোর ৫০৳ লিমিট)
-            if (!isVIP) {
-                showLoading();
-                try {
-                    const historySnap = await db.collection("history")
-                        .where("userId", "==", currentUserId)
-                        .get();
-                    
-                    let totalRecharged = 0;
-                    historySnap.forEach(doc => {
-                        const h = doc.data();
-                        const t = (h.type || "").toLowerCase();
-                        if (t === "recharge" || t === "রিচার্জ") {
-                            const totalAmt = Math.abs(parseFloat(h.amount) || 0);
-                            const baseAmt = totalAmt > 5 ? totalAmt - 5 : totalAmt;
-                            totalRecharged += baseAmt;
-                        }
-                    });
+        hideLoading(); // ডাটাবেস চেক সফল হলে লোডার অফ করব
 
-                    hideLoading();
-
-                    if (totalRecharged >= 50) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'লিমিট শেষ! ❌',
-                            text: '❌ আপনার ফ্রি মোবাইল রিচার্জ লিমিট (৫০৳) শেষ! পুনরায় রিচার্জ বা উইথড্র করতে আপনার অ্যাকাউন্টটি VIP প্যাকেজে আপগ্রেড করুন।',
-                            confirmButtonText: 'ঠিক আছে',
-                            confirmButtonColor: '#ef4444',
-                            customClass: { popup: 'rounded-[25px]' }
-                        });
-                        return; // রিচার্জ প্রসেস বন্ধ
-                    }
-                } catch (e) {
-                    console.error(e);
-                    hideLoading();
-                }
-            }
-    
-    const maxRechargeLimit = isVIP ? 30 : 20; 
-
-    if (amount > maxRechargeLimit) {
-        return showSmartToast(`দুঃখিত! ${isVIP ? 'VIP' : 'ফ্রি'} মেম্বার হিসেবে আপনি সর্বোচ্চ ৳${maxRechargeLimit} রিচার্জ করতে পারবেন।`, 'error');
-    }
-            
+        // === স্তর ৩: নিরাপত্তা পিন গেট (Verify PIN Prompt) ===
+        window.verifyTransactionPin(async () => {
             const withinSchedule = isWithinWithdrawalSchedule();
-            
-            // 💰 রিচার্জ রিকোয়েস্ট পাঠানোর আগে Monetag অ্যাড আসবে
+
+            // === স্তর ৪: মনিটাইজেশন গেট (Play Monetag Ad) ===
             window.showMonetagAd(async () => {
                 showLoading();
-                
-                // 🔥 এই 'try' ব্লকটি মিসিং ছিল তোমার কোডে
                 try {
-                    // ১. ইউজার রিচার্জ ব্যালেন্স থেকে টাকা কাটা
+                    // === স্তর ৫: ডাটাবেস সাবমিশন ও নোটিফিকেশন ===
                     await db.collection("users").doc(currentUserId).update({
                         rechargeBalance: firebase.firestore.FieldValue.increment(-totalAmount)
                     });
                     
-                    // ২ ও ৩. নতুন আইডি দিয়ে রিচার্জ রিকোয়েস্ট ও হিস্ট্রি সেভ করা
                     const newReqRef = db.collection("pending_requests").doc();
                     const newReqId = newReqRef.id;
 
@@ -7700,58 +7782,55 @@ if(isFreeUser) {
                     });
                     
                     userRechargeCount++;
-                    
-                    // ৪. টেলিগ্রাম নোটিফিকেশন
+
                     const telegramMessage = `📱 *নতুন রিচার্জ রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📞 *নাম্বার:* ${phone}\n🏢 *অপারেটর:* ${operator}\n💵 *রিচার্জ পরিমাণ:* ৳${amount.toFixed(2)}\n📊 *সার্ভিস চার্জ:* ৳${fee.toFixed(2)}\n💰 *মোট কেটে নেওয়া হবে:* ৳${totalAmount.toFixed(2)}`;
                     await sendTelegramNotification(telegramMessage);
                     
                     window.playSound('snd_success');
-                hideLoading();
+                    hideLoading();
 
-                // 🔔 ১. উপরে স্লাইডিং টোস্ট অ্যালার্ট (Smart Toast) দেখাবে
-                showSmartToast(withinSchedule ? 'রিচার্জ সফল হয়েছে! 📱' : 'সময়সূচীর বাইরে রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে! ⏰', 'success');
+                    showSmartToast(withinSchedule ? 'রিচার্জ সফল হয়েছে! 📱' : 'সময়সূচীর বাইরে রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে! ⏰', 'success');
 
-                // 🔔 ২. মেইন সুইট অ্যালার্ট পপ-আপ (SweetAlert2) দেখাবে
-                if (withinSchedule) {
-                    Swal.fire({
-                        title: 'রিচার্জ সফল! 📱',
-                        html: `
-                            <div class="text-center animate__animated animate__zoomIn">
-                                <p class="text-xs text-slate-500 leading-relaxed font-bold">
-                                    আপনার রিচার্জের আবেদনটি সফলভাবে নেওয়া হয়েছে। <br><br>
-                                    আমাদের অফিশিয়াল সময়সূচীর মধ্যে থাকায় আপনার রিচার্জটি <span class="text-green-600">খুব দ্রুতই</span> মোবাইল নম্বরে পাঠিয়ে দেওয়া হবে। ধন্যবাদ!
-                                </p>
-                            </div>
-                        `,
-                        icon: 'success',
-                        confirmButtonText: 'ধন্যবাদ, বুঝেছি',
-                        confirmButtonColor: '#007AFF',
-                        customClass: { popup: 'rounded-[30px]' }
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'সময়সূচীর বাইরে! ⏰',
-                        html: `
-                            <div class="text-center animate__animated animate__zoomIn">
-                                <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl mb-4 text-left">
-                                    <h4 class="text-[10px] font-black text-amber-800 uppercase mb-1 flex items-center gap-1">
-                                        <i class="ri-error-warning-fill"></i> গুরুত্বপূর্ণ নোটিশ:
-                                    </h4>
-                                    <p class="text-[11px] text-amber-700 font-semibold leading-normal">
-                                        রিচার্জের অফিশিয়াল সময়সূচী শেষ থাকায় আপনার রিচার্জটি পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।
+                    if (withinSchedule) {
+                        Swal.fire({
+                            title: 'রিচার্জ সফল! 📱',
+                            html: `
+                                <div class="text-center animate__animated animate__zoomIn">
+                                    <p class="text-xs text-slate-500 leading-relaxed font-bold">
+                                        আপনার রিচার্জের আবেদনটি সফলভাবে নেওয়া হয়েছে। <br><br>
+                                        আমাদের অফিশিয়াল সময়সূচীর মধ্যে থাকায় আপনার রিচার্জটি <span class="text-green-600">খুব দ্রুতই</span> মোবাইল নম্বরে পাঠিয়ে দেওয়া হবে। ধন্যবাদ!
                                     </p>
                                 </div>
-                                <p class="text-xs text-slate-500 leading-relaxed font-medium">
-                                    আপনার আবেদনটি সফলভাবে সেভ করা হয়েছে এবং পরবর্তী রিচার্জ শিফট চালু হওয়া মাত্রই আপনার নম্বরে রিচার্জ পৌঁছে যাবে।
-                                </p>
-                            </div>
-                        `,
-                        icon: 'warning',
-                        confirmButtonText: 'ঠিক আছে, আমি রাজী',
-                        confirmButtonColor: '#F5A623',
-                        customClass: { popup: 'rounded-[30px]' }
-                    });
-                }
+                            `,
+                            icon: 'success',
+                            confirmButtonText: 'ধন্যবাদ, বুঝেছি',
+                            confirmButtonColor: '#007AFF',
+                            customClass: { popup: 'rounded-[30px]' }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'সময়সূচীর বাইরে! ⏰',
+                            html: `
+                                <div class="text-center animate__animated animate__zoomIn">
+                                    <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl mb-4 text-left">
+                                        <h4 class="text-[10px] font-black text-amber-800 uppercase mb-1 flex items-center gap-1">
+                                            <i class="ri-error-warning-fill"></i> গুরুত্বপূর্ণ নোটিশ:
+                                        </h4>
+                                        <p class="text-[11px] text-amber-700 font-semibold leading-normal">
+                                            রিচার্জের অফিশিয়াল সময়সূচী শেষ থাকায় আপনার রিচার্জটি পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।
+                                        </p>
+                                    </div>
+                                    <p class="text-xs text-slate-500 leading-relaxed font-medium">
+                                        আপনার আবেদনটি সফলভাবে সেভ করা হয়েছে এবং পরবর্তী রিচার্জ শিফট চালু হওয়া মাত্রই আপনার নম্বরে রিচার্জ পৌঁছে যাবে।
+                                    </p>
+                                </div>
+                            `,
+                            icon: 'warning',
+                            confirmButtonText: 'ঠিক আছে, আমি রাজী',
+                            confirmButtonColor: '#F5A623',
+                            customClass: { popup: 'rounded-[30px]' }
+                        });
+                    }
                     
                     document.getElementById('rechPhone').value = '';
                     document.getElementById('rechAmount').value = '';
@@ -7763,15 +7842,29 @@ if(isFreeUser) {
                     hideLoading();
                 }
             });
-            });
-        };
-        
-        window.transferBalance = async () => {
+        });
+
+    } catch (e) {
+        console.error("রিচার্জ লোড এরর:", e);
+        hideLoading();
+        showSmartToast("সার্ভার সমস্যা হয়েছে, আবার চেষ্টা করুন।", "error");
+    }
+};
+
+// 🔄 উন্নত এবং সুরক্ষিত ব্যালেন্স স্থানান্তর ফাংশন (Premium Transfer Module)
+window.transferBalance = async () => {
     const am = parseFloat(document.getElementById('transferAmount').value);
     
-    // ১. ভ্যালিডেশন চেক
-    if(!am || am <= 0) {
-        showSmartToast('ভুল পরিমাণ! সঠিক অংক লিখুন', 'error');
+    // ১. বেসিক ভ্যালিডেশন চেক
+    if(!am || isNaN(am) || am <= 0) {
+        showSmartToast('দয়া করে স্থানান্তরের জন্য একটি সঠিক পরিমাণ (টাকার অংক) লিখুন', 'error');
+        return;
+    }
+    
+    // সিকিউরিটি চেক: সর্বনিম্ন স্থানান্তর ১০ টাকা
+    const minTransfer = 10;
+    if (am < minTransfer) {
+        showSmartToast(`সর্বনিম্ন স্থানান্তর পরিমাণ ৳${minTransfer}`, 'error');
         return;
     }
     
@@ -7781,53 +7874,79 @@ if(isFreeUser) {
     }
     
     if(currentUserData.mainBalance < am) {
-        showSmartToast('পর্যাপ্ত ব্যালেন্স নেই! বর্তমান ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
+        showSmartToast('পর্যাপ্ত মেইন ব্যালেন্স নেই! আপনার ব্যালেন্স: ৳' + currentUserData.mainBalance.toFixed(2), 'error');
         return;
     }
     
-    showLoading();
-    
-    try {
-        const userRef = db.collection("users").doc(currentUserId);
-        
-        // ২. ডাটাবেজে ব্যালেন্স আপডেট (মেইন থেকে মাইনাস, রিচার্জে প্লাস)
-        await userRef.update({
-            mainBalance: firebase.firestore.FieldValue.increment(-am),
-            rechargeBalance: firebase.firestore.FieldValue.increment(am)
-        });
-        
-        // ৩. ইউজারের হিস্ট্রিতে রেকর্ড যোগ করা
-        await db.collection("history").add({
-            userId: currentUserId,
-            type: "ব্যালেন্স ট্রান্সফার",
-            amount: am,
-            status: "Success",
-            details: "মেইন ব্যালেন্স থেকে রিচার্জ ব্যালেন্স",
-            date: new Date().toLocaleDateString('bn-BD'),
-            time: new Date().toLocaleTimeString('bn-BD'),
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
+    // ২. নিরাপত্তা নিশ্চিত করতে পিন ভেরিফিকেশন ট্র্রিগার (New Feature)
+    window.verifyTransactionPin(async () => {
+        showLoading();
+        try {
+            const userRef = db.collection("users").doc(currentUserId);
+            
+            // ৩. ডাটাবেজে ব্যালেন্স স্থানান্তর (মেইন থেকে মাইনাস, রিচার্জে প্লাস)
+            await userRef.update({
+                mainBalance: firebase.firestore.FieldValue.increment(-am),
+                rechargeBalance: firebase.firestore.FieldValue.increment(am)
+            });
+            
+            // ৪. হিস্ট্রি রেকর্ড যোগ করা (ইউনিক ট্রানজেকশন আইডিসহ)
+            const newHistoryId = db.collection("history").doc().id;
+            await db.collection("history").doc(newHistoryId).set({
+                userId: currentUserId,
+                type: "ব্যালেন্স স্থানান্তর",
+                amount: am,
+                status: "Success",
+                details: "মেইন ব্যালেন্স থেকে রিচার্জ ব্যালেন্সে স্থানান্তর",
+                date: new Date().toLocaleDateString('bn-BD'),
+                time: new Date().toLocaleTimeString('bn-BD'),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
 
-        // ✅ ৪. টেলিগ্রাম নোটিফিকেশন (এডমিনের জন্য)
-        const tgMsg = `🔄 *ব্যালেন্স ট্রান্সফার*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💰 *পরিমাণ:* ৳${am}\nℹ️ মেইন ব্যালেন্স থেকে রিচার্জ ব্যালেন্সে ট্রান্সফার করা হয়েছে।`;
-        await sendTelegramNotification(tgMsg);
-        
-        // ৫. সফলতার মেসেজ ও সাউন্ড
-        showSmartToast(`৳${am} টাকা সফলভাবে ট্রান্সফার হয়েছে`, 'success');
-        if(typeof window.playSound === 'function') window.playSound('snd_success');
-        
-        hideLoading();
-        
-        // ইনপুট বক্স খালি করা
-        document.getElementById('transferAmount').value = '';
-        
-    } catch (e) {
-        console.error("Transfer Error:", e);
-        showSmartToast('ট্রান্সফার করতে সমস্যা হয়েছে, আবার চেষ্টা করুন', 'error');
-        hideLoading();
-    }
+            // ৫. টেলিগ্রাম এডমিন অ্যালার্ট নোটিফিকেশন
+            const tgMsg = `🔄 *ব্যালেন্স স্থানান্তর*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💰 *স্থানান্তর পরিমাণ:* ৳${am.toFixed(2)}\nℹ️ মেইন ব্যালেন্স থেকে রিচার্জ ব্যালেন্সে সফলভাবে স্থানান্তরিত হয়েছে।`;
+            await sendTelegramNotification(tgMsg);
+            
+            window.playSound('snd_success');
+            hideLoading();
+
+            // ৬. প্রিমিয়াম ৩ডি বক্স অ্যানিমেশন এবং কনফেটি উড়ানো
+            window.trigger3DBoxReward(`৳${am.toFixed(2)}`);
+            if(typeof confetti === 'function') {
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+            }
+
+            // প্রফেশনাল সাকসেস পপ-আপ (SweetAlert)
+            Swal.fire({
+                title: 'স্থানান্তর সফল! 🔄',
+                html: `
+                    <div class="text-center animate__animated animate__zoomIn">
+                        <p class="text-xs text-slate-500 leading-relaxed font-bold">
+                            আপনার মেইন ব্যালেন্স থেকে <b>৳${am.toFixed(2)}</b> সফলভাবে রিচার্জ ব্যালেন্সে স্থানান্তর করা হয়েছে। <br><br>
+                            এই ব্যালেন্সটি দিয়ে আপনি এখন যেকোনো মোবাইল নম্বরে রিচার্জ করতে পারবেন।
+                        </p>
+                    </div>
+                `,
+                icon: 'success',
+                confirmButtonText: 'ধন্যবাদ',
+                confirmButtonColor: '#3b82f6',
+                customClass: { popup: 'rounded-[30px]' }
+            }).then(() => {
+                // 👈 এই অংশটি যোগ করুন (ইউজার পপ-আপ বন্ধ করলে ওয়ালেট পেজে ফিরিয়ে নিয়ে যাবে)
+                window.showPage('walletScreen');
+            });
+            
+            // ইনপুট বক্স রিসেট
+            document.getElementById('transferAmount').value = '';
+            
+        } catch (e) {
+            console.error("Transfer Error:", e);
+            showSmartToast('ব্যালেন্স স্থানান্তর করতে সমস্যা হয়েছে, আবার চেষ্টা করুন', 'error');
+            hideLoading();
+        }
+    });
 };
-        
+       
         
         // ✅ SUMMARY FUNCTIONS
         window.loadFilteredSummary = async (range) => {
@@ -8805,6 +8924,13 @@ window.showPage = (id, defaultTab = null) => {
                 if(defEl) window.selectWithdrawMethod(defEl, 'bKash');
                 window.activateWalletSectionPendingLock('Withdraw', 'withdrawSection');
             }
+            // 👈 ঠিক এখানে নতুন কন্ডিশনটি যুক্ত হলো
+            else if(id === 'transferScreen') {
+                if(currentUserData) {
+                    document.getElementById('transSourceBalance').innerText = (currentUserData.mainBalance || 0).toFixed(2);
+                    document.getElementById('transTargetBalance').innerText = (currentUserData.rechargeBalance || 0).toFixed(2);
+                }
+            }
     else if(id === 'walletScreen') {
     // ওয়ালেটে প্রবেশ করলেই অটোমেটিক ইনকাম ব্যালেন্স এবং বাটনগুলো ওপেন হবে
     window.switchWalletBalanceTab('income');
@@ -8963,13 +9089,8 @@ window.showWalletSubSection = (section) => {
         window.showPage('withdrawScreen');
     } 
     else if(section === 'transfer') {
-        document.getElementById('transferSection').classList.remove('hidden');
-        setTimeout(() => {
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: 'smooth'
-            });
-        }, 200);
+        // নতুন ডেডিকেটেড পেজে ইউজারকে নিয়ে যাবে
+        window.showPage('transferScreen');
     }
 };
 // ✅ ৩. গেটওয়ে সেকশনে সরাসরি পেন্ডিং রিকোয়েস্ট ট্র্যাকিং লক লজিক
