@@ -1988,7 +1988,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     <div id="walletActionButtons" class="grid grid-cols-2 gap-4 mb-6">
         <!-- Buttons will be injected here via JavaScript -->
     </div>
-
+</div> 
    <!-- ✅ TRANSFER SCREEN (আলাদা নতুন মডার্ন পেজ) -->
 <div id="transferScreen" class="hidden p-5 pt-8 animate__animated animate__fadeInRight bg-white min-h-screen pb-24 max-w-md mx-auto">
     <!-- হেডার এবং নিয়মাবলী বাটন -->
@@ -9009,9 +9009,10 @@ window.switchWalletBalanceTab = (type) => {
     const actionArea = document.getElementById('walletActionButtons');
 
     // নিচের সব সাব-সেকশন ডিফল্টভাবে হাইড করে দেওয়া
-    document.getElementById('depositSection').classList.add('hidden');
-    document.getElementById('withdrawSection').classList.add('hidden');
-    document.getElementById('transferSection').classList.add('hidden');
+        const depSec = document.getElementById('depositSection');
+        const withSec = document.getElementById('withdrawSection');
+        if (depSec) depSec.classList.add('hidden');
+        if (withSec) withSec.classList.add('hidden');
 
     const usdtRate = 120; // ১ ডলার = ১২০ টাকা
 
