@@ -744,76 +744,140 @@
 
        
 
-        /* 🍎 ULTRA PREMIUM iPHONE STYLE POPUP */
-        div:where(.swal2-container) div:where(.swal2-popup) {
-            border-radius: 30px !important;
-            background: rgba(255, 255, 255, 0.88) !important;
-            backdrop-filter: blur(10px) saturate(150%) !important; /* জিপিইউ ফ্রেন্ডলি আইওএস ব্লার */
-            -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
-            padding: 15px !important;
-            width: 320px !important;
-            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+        /* 🛡️ SWEETALERT2 TAILWIND FIX & CUSTOM POPUP (MATCHES USER IMAGE) */
+        .swal2-icon, .swal2-icon * {
+            border-width: inherit !important;
+            border-color: inherit !important;
         }
+
+        div:where(.swal2-container) div:where(.swal2-popup) {
+            border-radius: 28px !important;
+            background: #ffffff !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12) !important;
+            padding: 24px 20px !important;
+            width: 320px !important;
+            border: none !important;
+        }
+
+        /* Success Icon (Green Circle with clean inner styling) */
+        div:where(.swal2-icon).swal2-success {
+            border: 2px solid #a7f3d0 !important;
+            background-color: #ecfdf5 !important;
+            color: #10b981 !important;
+            width: 65px !important;
+            height: 65px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 50% !important;
+            margin: 15px auto !important;
+        }
+        /* Hiding buggy default animations */
+        div:where(.swal2-icon).swal2-success .swal2-success-ring,
+        div:where(.swal2-icon).swal2-success .swal2-success-fix,
+        div:where(.swal2-icon).swal2-success [class^='swal2-success-line'] {
+            display: none !important;
+        }
+        /* Injecting a bulletproof checkmark */
+        div:where(.swal2-icon).swal2-success::before {
+            content: "✓" !important;
+            font-size: 32px !important;
+            font-weight: bold !important;
+            display: block !important;
+            color: #10b981 !important;
+        }
+
+        /* Error Icon (Red Circle with clean inner styling) */
+        div:where(.swal2-icon).swal2-error {
+            border: 2px solid #fecaca !important;
+            background-color: #fef2f2 !important;
+            color: #ef4444 !important;
+            width: 65px !important;
+            height: 65px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 50% !important;
+            margin: 15px auto !important;
+        }
+        /* Hiding buggy default animations */
+        div:where(.swal2-icon).swal2-error [class^='swal2-x-mark-line'] {
+            display: none !important;
+        }
+        /* Injecting a bulletproof cross mark */
+        div:where(.swal2-icon).swal2-error::before {
+            content: "✖" !important;
+            font-size: 26px !important;
+            font-weight: bold !important;
+            display: block !important;
+            color: #ef4444 !important;
+        }
+
+        /* Title Style */
         div:where(.swal2-title) {
             font-family: 'Hind Siliguri', sans-serif !important;
-            font-weight: 700 !important;
+            font-weight: 800 !important;
             color: #1e293b !important;
-            font-size: 1.3rem !important;
-            padding: 0 !important;
-            margin-bottom: 2px !important;
+            font-size: 18px !important;
+            margin-top: 10px !important;
+            margin-bottom: 8px !important;
+            text-align: center !important;
+            line-height: 1.3 !important;
         }
 
+        /* Subtext Style */
         div:where(.swal2-html-container) {
             font-family: 'Hind Siliguri', sans-serif !important;
-            font-size: 0.95rem !important;
+            font-size: 13px !important;
             color: #64748b !important;
-            margin: 0 !important;
-            line-height: 1.5 !important;
             font-weight: 500 !important;
+            line-height: 1.5 !important;
+            margin-bottom: 20px !important;
+            text-align: center !important;
         }
 
-        div:where(.swal2-icon) {
-            transform: scale(0.75) !important;
-            transform-origin: center !important;
-            margin: 10px auto 5px auto !important;
-        }
-        
-        .swal2-icon-content {
-            font-size: 30px !important;
-        }
-
+        /* Actions/Buttons Container */
         div:where(.swal2-actions) {
-            margin-top: 10px !important;
-            gap: 12px !important;
             width: 100% !important;
+            margin-top: 15px !important;
             display: flex !important;
             flex-direction: column !important;
+            gap: 10px !important;
         }
 
-        div:where(.swal2-confirm), div:where(.swal2-cancel) {
-            border-radius: 18px !important;
+        /* Buttons matching the image's flat green/gray premium design */
+        div:where(.swal2-confirm) {
+            background: #00e676 !important;
+            background-image: linear-gradient(135deg, #00e676, #00c853) !important;
+            color: white !important;
+            border-radius: 16px !important;
             font-weight: 700 !important;
             padding: 14px 0 !important;
-            box-shadow: none !important;
             width: 100% !important;
             font-size: 15px !important;
-            margin: 0 !important;
+            border: none !important;
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.15) !important;
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
+            margin: 0 !important;
             transition: transform 0.2s ease !important;
         }
 
-        div:where(.swal2-confirm) {
-            background: #007AFF !important;
-            color: white !important;
-            background-image: linear-gradient(135deg, #007AFF, #005ecb) !important;
-        }
-        
         div:where(.swal2-cancel) {
-            background: #F2F2F7 !important;
-            color: #8E8E93 !important;
+            background: #f1f5f9 !important;
+            color: #64748b !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            padding: 14px 0 !important;
+            width: 100% !important;
+            font-size: 15px !important;
+            border: none !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin: 0 !important;
+            transition: transform 0.2s ease !important;
         }
 
         div:where(.swal2-confirm):active, div:where(.swal2-cancel):active {
@@ -2124,6 +2188,14 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                         class="w-full pl-11 py-4 bg-white rounded-2xl text-slate-800 font-black outline-none border border-white/10 focus:ring-4 focus:ring-white/20 transition-all shadow-inner text-sm">
                 </div>
 
+<!-- কুইক ডিপোজিট বাটন -->
+                <div class="grid grid-cols-4 gap-2 relative z-10 mt-2 mb-2">
+                    <button type="button" onclick="document.getElementById('depositAmount').value = 10; window.updateDepositInstructionValues();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳১০</button>
+                    <button type="button" onclick="document.getElementById('depositAmount').value = 50; window.updateDepositInstructionValues();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳৫০</button>
+                    <button type="button" onclick="document.getElementById('depositAmount').value = 150; window.updateDepositInstructionValues();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳১৫০</button>
+                    <button type="button" onclick="document.getElementById('depositAmount').value = 300; window.updateDepositInstructionValues();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳৩০০</button>
+                </div>
+
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <i class="ri-phone-line text-lg"></i>
@@ -2201,17 +2273,26 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 </div>
             </div>
 
-            <div class="relative">
+           <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
                     <i class="ri-phone-line text-lg"></i>
                 </div>
                 <input type="number" id="withdrawNumber" placeholder="মোবাইল অ্যাকাউন্ট নাম্বার দিন" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
             </div>
+            
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-white/50">
                     <i class="ri-money-dollar-circle-line text-lg"></i>
                 </div>
                 <input type="number" id="withdrawAmount" placeholder="পরিমাণ" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
+            </div>
+
+            <!-- কুইক উইথড্র বাটন (নতুন পজিশন) -->
+            <div class="grid grid-cols-4 gap-2 relative z-10 mt-2 mb-2">
+                <button type="button" onclick="document.getElementById('withdrawAmount').value = 30; window.calculateWithdrawVAT();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳৩০</button>
+                <button type="button" onclick="document.getElementById('withdrawAmount').value = 50; window.calculateWithdrawVAT();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳৫০</button>
+                <button type="button" onclick="document.getElementById('withdrawAmount').value = 100; window.calculateWithdrawVAT();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳১০০</button>
+                <button type="button" onclick="document.getElementById('withdrawAmount').value = 200; window.calculateWithdrawVAT();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳২০০</button>
             </div>
             <div class="text-xs text-yellow-300 font-bold block ml-1" id="withdrawVat">চার্জ (১০%): ৳0.00 | প্রাপ্ত: ৳0.00</div>
             
@@ -2280,6 +2361,15 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     </div>
     <input type="number" id="rechAmount" placeholder="পরিমাণ" class="w-full pl-11 py-3.5 bg-white/10 text-white placeholder-white/50 border border-white/20 rounded-xl font-bold outline-none focus:bg-white focus:text-slate-800 focus:placeholder-slate-400 focus:border-white transition-all shadow-inner text-sm">
 </div>
+
+<!-- কুইক রিচার্জ বাটন -->
+                <div class="grid grid-cols-4 gap-2 relative z-10 mt-2 mb-2">
+                    <button type="button" onclick="document.getElementById('rechAmount').value = 20; window.calculateRechargeFee();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳২০</button>
+                    <button type="button" onclick="document.getElementById('rechAmount').value = 30; window.calculateRechargeFee();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳৩০</button>
+                    <button type="button" onclick="document.getElementById('rechAmount').value = 40; window.calculateRechargeFee();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳৪০</button>
+                    <button type="button" onclick="document.getElementById('rechAmount').value = 50; window.calculateRechargeFee();" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl py-2 text-[11px] font-black transition-all">৳৫০</button>
+                </div>
+
                  <div class="text-xs text-yellow-300 font-bold block ml-1" id="rechargeFee">সার্ভিস চার্জ: ৳5.00 | মোট: ৳5.00</div>
                  
                  <!-- ℹ️ ডাইনামিক রিচার্জ গাইডলাইন্স বক্স -->
@@ -7211,9 +7301,16 @@ window.submitProof = async () => {
         return;
     }
             
-            const minDeposit = systemSettings.minDeposit || 50;
+            // এডমিন প্যানেল থেকে ডেটা নিবে, না থাকলে ডিফল্ট ১০ ও ৩০০ ব্যবহার করবে
+            const minDeposit = systemSettings.minDeposit || 10;
+            const maxDeposit = systemSettings.maxDeposit || 300;
+
             if(amount < minDeposit) {
                 showSmartToast(`ন্যূনতম ডিপোজিট পরিমাণ ৳${minDeposit}`, 'error');
+                return;
+            }
+            if(amount > maxDeposit) {
+                showSmartToast(`সর্বোচ্চ ডিপোজিট পরিমাণ ৳${maxDeposit}`, 'error');
                 return;
             }
             
@@ -7308,9 +7405,9 @@ window.submitWithdraw = async () => {
         return;
     }
 
-    // ১.৫ উত্তোলন সীমা চেক
-    const minWithdraw = systemSettings.minWithdraw || 50;
-    const maxWithdraw = systemSettings.maxWithdraw || 5000;
+    // এডমিন প্যানেল থেকে ডেটা নিবে, না থাকলে ডিফল্ট ৩০ ও ২০০ ব্যবহার করবে
+    const minWithdraw = systemSettings.minWithdraw || 30;
+    const maxWithdraw = systemSettings.maxWithdraw || 200;
 
     if(amount < minWithdraw) {
         showSmartToast(`ন্যূনতম উত্তোলন পরিমাণ ৳${minWithdraw}`, 'error');
@@ -7320,7 +7417,6 @@ window.submitWithdraw = async () => {
         showSmartToast(`সর্বোচ্চ উত্তোলন পরিমাণ ৳${maxWithdraw}`, 'error');
         return;
     }
-
     // ১.৬ ব্যালেন্স চেক
     if(!currentUserData) {
         showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
@@ -7613,32 +7709,37 @@ window.submitWithdraw = async () => {
         return;
     }
             
+   // ন্যূনতম রিচার্জ ২০ টাকা (এডমিন প্যানেল থেকে নিবে, না থাকলে ডিফল্ট ২০)
     const minRecharge = systemSettings.minRecharge || 20;
     if(amount < minRecharge) {
         showSmartToast(`ন্যূনতম রিচার্জ পরিমাণ ৳${minRecharge}`, 'error');
         return;
     }
 
+    // ইউজার ফ্রি নাকি ভিআইপি তা চেক করার সিস্টেম
+    const userPlan = (currentUserData.plan || "").toLowerCase();
+    const isVIP = !userPlan.includes("free") && !userPlan.includes("ফ্রি") && userPlan !== "";
+    
+    // এডমিন প্যানেলের ভ্যারিয়েবল (maxRechargeVIP এবং maxRechargeFree) থেকে মান নিবে, 
+    // যদি এডমিন প্যানেলে সেট করা না থাকে তবে ফ্রি মেম্বার সর্বোচ্চ ২০ টাকা এবং ভিআইপি সর্বোচ্চ ৫০ টাকা রিচার্জ করতে পারবে।
+    const maxRechargeLimit = isVIP 
+        ? (systemSettings.maxRechargeVIP || 50) 
+        : (systemSettings.maxRechargeFree || 20); 
+
+    if (amount > maxRechargeLimit) {
+        return showSmartToast(`দুঃখিত! ${isVIP ? 'VIP' : 'ফ্রি'} মেম্বার হিসেবে আপনি সর্বোচ্চ ৳${maxRechargeLimit} রিচার্জ করতে পারবেন।`, 'error');
+    }
+
+    // রিচার্জ ফি হিসাব এবং ব্যালেন্স চেক (রিকভার করা অংশ)
     const fee = systemSettings.rechargeFee || 5;
     const totalAmount = amount + fee;
     
     if(!currentUserData) {
-        showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
-        return;
+        return showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
     }
     
     if(currentUserData.rechargeBalance < totalAmount) {
-        showSmartToast('পর্যাপ্ত রিচার্জ ব্যালেন্স নেই!', 'error');
-        return;
-    }
-
-    // রিচার্জ লিমিট ও অপারেটর সীমা চেক
-    const userPlan = (currentUserData.plan || "").toLowerCase();
-    const isVIP = !userPlan.includes("free") && !userPlan.includes("ফ্রি") && userPlan !== "";
-    const maxRechargeLimit = isVIP ? 30 : 20; 
-
-    if (amount > maxRechargeLimit) {
-        return showSmartToast(`দুঃখিত! ${isVIP ? 'VIP' : 'ফ্রি'} মেম্বার হিসেবে আপনি সর্বোচ্চ ৳${maxRechargeLimit} রিচার্জ করতে পারবেন।`, 'error');
+        return showSmartToast(`পর্যাপ্ত রিচার্জ ব্যালেন্স নেই! ফি সহ মোট প্রয়োজন ৳${totalAmount}`, 'error');
     }
 
     // === স্তর ২: অ্যাসিনক্রোনাস ডাটাবেজ গেট (Async DB Checks) ===
@@ -8607,7 +8708,7 @@ window.buySpins = async (count, price) => {
             }
         };
         
-                // ✅ NEW SMART PASSWORD RESET SYSTEM (UI + DATABASE VERIFICATION)
+               // ✅ NEW SMART PASSWORD RESET SYSTEM (UI + DATABASE VERIFICATION)
 window.showForgotPasswordScreen = () => {
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('forgotPasswordScreen').classList.remove('hidden');
@@ -8634,11 +8735,12 @@ window.processPasswordReset = async () => {
     showLoading();
     
     try {
-        // 🔥 স্মার্ট ট্রিক: আগে ফায়ারবেস ডাটাবেসে চেক করব ইমেইলটি আসলেই আছে কি না!
-        const userCheckSnap = await db.collection("users").where("email", "==", emailInput).get();
+        // 🔥 ফায়ারবেস মডিউলার নিয়মে ডাটাবেজ চেক করা হচ্ছে ইমেইলটি আছে কি না
+        const q = query(collection(db, "users"), where("email", "==", emailInput));
+        const userCheckSnap = await getDocs(q);
         
         if (userCheckSnap.empty) {
-            // যদি ডাটাবেজে ইমেইল না থাকে, তবে এখানেই আটকে দেব!
+            // যদি ডাটাবেজে ইমেইল না থাকে
             hideLoading();
             Swal.fire({
                 icon: 'error',
@@ -8651,8 +8753,8 @@ window.processPasswordReset = async () => {
             return;
         }
 
-        // যদি ডাটাবেজে ইমেইল থাকে, তবেই রিসেট লিংক পাঠাব
-        await auth.sendPasswordResetEmail(emailInput);
+        // যদি ডাটাবেজে ইমেইল থাকে, তবে মডিউলার নিয়মে রিসেট লিংক পাঠানো হবে
+        await sendPasswordResetEmail(auth, emailInput);
         
         hideLoading();
         
@@ -8668,12 +8770,11 @@ window.processPasswordReset = async () => {
         });
         
     } catch (error) {
-        console.error("Reset Error:", error);
+        console.error("Reset Error Details:", error);
         hideLoading();
         showSmartToast('ইমেইল পাঠাতে সার্ভারে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
     }
 };
-
         
     // ✅ ফিক্সড রুলস ইঞ্জিন (একদম আলাদা আলাদা ক্যাটাগরি)
         window.showRules = async (title) => {
@@ -10053,8 +10154,7 @@ async function runAutoLuckyDraw() {
         const winnerData = winnerDoc.data();
 
         // ৪. ১১ থেকে ২০ টাকার মধ্যে রেন্ডম পুরস্কার নির্ধারণ (সিক্রেট লজিক 🤫)
-        const randomPrize = Math.floor(Math.random() * (20 - 11 + 1)) + 11;
-
+        const randomPrize = Math.floor(Math.random() * (20 - 9 + 1)) + 9;
         // ৫. বিজয়ীর ফোন নাম্বার বের করা (টেলিগ্রামের জন্য)
         let winnerPhone = "N/A";
         try {
