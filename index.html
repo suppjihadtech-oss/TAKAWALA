@@ -743,15 +743,16 @@
         }
 
        
-/* 🛡️ SWEETALERT2 TAILWIND RESET FIX & PROFESSIONAL VECTOR POPUPS */
+/* 🛡️ ULTRA-SPECIFIC SWEETALERT2 TAILWIND FIX (100% CRSTAL CLEAR ICONS) */
         
-        /* ১. সুইট অ্যালার্টের ভেতরের সব ডিফল্ট বাগি এলিমেন্টকে ১০০% হাইড করে দেওয়া */
-        .swal2-icon * {
+        /* ১. সুইট অ্যালার্টের সাকসেস ও এরর আইকনের ভেতরের সব নড়বড়ে ডিফল্ট উপাদান পুরোপুরি হাইড করা */
+        body .swal2-container .swal2-popup .swal2-icon.swal2-success *, 
+        body .swal2-container .swal2-popup .swal2-icon.swal2-error * {
             display: none !important;
         }
 
-        /* ২. পপ-আপ কন্টেইনারের মডার্ন রাউন্ডেড ডিজাইন */
-        div:where(.swal2-container) div:where(.swal2-popup) {
+        /* ২. গ্লোবাল পপ-আপ বডি কন্টেইনার ডিজাইন */
+        body .swal2-container .swal2-popup {
             border-radius: 28px !important;
             background: #ffffff !important;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12) !important;
@@ -760,10 +761,12 @@
             border: none !important;
         }
 
-        /* ৩. গ্লোবাল আইকন বক্স রিসেট (Tailwind বর্ডার রিসেটের হাত থেকে সুরক্ষার জন্য) */
-        div:where(.swal2-icon) {
+        /* ৩. গ্লোবাল আইকন বক্স রিসেট (উচ্চ অগ্রাধিকারসহ নিখুঁত বৃত্ত গঠন) */
+        body .swal2-container .swal2-popup .swal2-icon {
             width: 65px !important;
             height: 65px !important;
+            min-width: 65px !important;
+            min-height: 65px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -771,48 +774,53 @@
             margin: 15px auto !important;
             box-sizing: border-box !important;
             position: relative !important;
+            background-image: none !important; /* ডিফল্ট ব্যাকগ্রাউন্ড ক্লিয়ারেন্স */
         }
 
-        /* ৪. পেশাদার সাকসেস টিক আইকন (গ্রিন থিম) */
-        div:where(.swal2-icon).swal2-success {
+        /* ৪. প্রিমিয়াম সাকসেস বৃত্ত (সবুজ থিম) */
+        body .swal2-container .swal2-popup .swal2-icon.swal2-success {
             border: 2px solid #10b981 !important;
             background-color: #ecfdf5 !important;
             color: #10b981 !important;
         }
 
-        /* নিখুঁত এবং শার্প এসভিজি (SVG) চেক মার্ক ইনজেকশন */
-        div:where(.swal2-icon).swal2-success::before {
+        /* নিখুঁত ও তীক্ষ্ণ ভেক্টর টিক চিহ্ন ইনজেকশন (কখনো বাঁকা বা ভাঙবে না) */
+        body .swal2-container .swal2-popup .swal2-icon.swal2-success::before {
             content: "" !important;
             display: block !important;
             width: 28px !important;
             height: 28px !important;
+            min-width: 28px !important;
+            min-height: 28px !important;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") !important;
             background-size: contain !important;
             background-repeat: no-repeat !important;
             background-position: center !important;
         }
 
-        /* ৫. পেশাদার এরর ক্রস আইকন (রেড থিম) */
-        div:where(.swal2-icon).swal2-error {
+        /* ৫. প্রিমিয়াম এরর বৃত্ত (লাল থিম) */
+        body .swal2-container .swal2-popup .swal2-icon.swal2-error {
             border: 2px solid #ef4444 !important;
             background-color: #fef2f2 !important;
             color: #ef4444 !important;
         }
 
-        /* নিখুঁত এবং শার্প এসভিজি (SVG) ক্রস মার্ক ইনজেকশন */
-        div:where(.swal2-icon).swal2-error::before {
+        /* নিখুঁত ও তীক্ষ্ণ ভেক্টর ক্রস চিহ্ন ইনজেকশন (কখনো বাঁকা বা ভাঙবে না) */
+        body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
             content: "" !important;
             display: block !important;
             width: 22px !important;
             height: 22px !important;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E") !important;
+            min-width: 22px !important;
+            min-height: 22px !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") !important;
             background-size: contain !important;
             background-repeat: no-repeat !important;
             background-position: center !important;
         }
 
-        /* Title Style */
-        div:where(.swal2-title) {
+        /* ৬. শিরোনাম ডিজাইন (উচ্চ অগ্রাধিকার) */
+        body .swal2-container .swal2-popup .swal2-title {
             font-family: 'Hind Siliguri', sans-serif !important;
             font-weight: 800 !important;
             color: #1e293b !important;
@@ -823,8 +831,8 @@
             line-height: 1.3 !important;
         }
 
-        /* Subtext Style */
-        div:where(.swal2-html-container) {
+        /* ৭. সাবটেক্সট ডিজাইন (উচ্চ অগ্রাধিকার) */
+        body .swal2-container .swal2-popup .swal2-html-container {
             font-family: 'Hind Siliguri', sans-serif !important;
             font-size: 13px !important;
             color: #64748b !important;
@@ -834,8 +842,8 @@
             text-align: center !important;
         }
 
-        /* Actions/Buttons Container */
-        div:where(.swal2-actions) {
+        /* ৮. বোতাম কন্টেইনার */
+        body .swal2-container .swal2-popup .swal2-actions {
             width: 100% !important;
             margin-top: 15px !important;
             display: flex !important;
@@ -843,8 +851,8 @@
             gap: 10px !important;
         }
 
-        /* Buttons matching the image's flat green/gray premium design */
-        div:where(.swal2-confirm) {
+        /* ৯. প্রিমিয়াম কনফার্ম বোতাম */
+        body .swal2-container .swal2-popup .swal2-confirm {
             background: #00e676 !important;
             background-image: linear-gradient(135deg, #00e676, #00c853) !important;
             color: white !important;
@@ -862,7 +870,8 @@
             transition: transform 0.2s ease !important;
         }
 
-        div:where(.swal2-cancel) {
+        /* ১০. প্রিমিয়াম ক্যানসেল বোতাম */
+        body .swal2-container .swal2-popup .swal2-cancel {
             background: #f1f5f9 !important;
             color: #64748b !important;
             border-radius: 16px !important;
