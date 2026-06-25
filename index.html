@@ -743,12 +743,14 @@
         }
 
        
-/* 🛡️ SWEETALERT2 TAILWIND FIX & CUSTOM POPUP (VECTORS REPLACED FOR ZERO DISTORTION) */
-        .swal2-icon, .swal2-icon * {
-            border-width: inherit !important;
-            border-color: inherit !important;
+/* 🛡️ SWEETALERT2 TAILWIND RESET FIX & PROFESSIONAL VECTOR POPUPS */
+        
+        /* ১. সুইট অ্যালার্টের ভেতরের সব ডিফল্ট বাগি এলিমেন্টকে ১০০% হাইড করে দেওয়া */
+        .swal2-icon * {
+            display: none !important;
         }
 
+        /* ২. পপ-আপ কন্টেইনারের মডার্ন রাউন্ডেড ডিজাইন */
         div:where(.swal2-container) div:where(.swal2-popup) {
             border-radius: 28px !important;
             background: #ffffff !important;
@@ -758,11 +760,8 @@
             border: none !important;
         }
 
-        /* Success Icon (Green Circle with clean inner styling) */
-        div:where(.swal2-icon).swal2-success {
-            border: 2px solid #a7f3d0 !important;
-            background-color: #ecfdf5 !important;
-            color: #10b981 !important;
+        /* ৩. গ্লোবাল আইকন বক্স রিসেট (Tailwind বর্ডার রিসেটের হাত থেকে সুরক্ষার জন্য) */
+        div:where(.swal2-icon) {
             width: 65px !important;
             height: 65px !important;
             display: flex !important;
@@ -770,14 +769,18 @@
             justify-content: center !important;
             border-radius: 50% !important;
             margin: 15px auto !important;
+            box-sizing: border-box !important;
+            position: relative !important;
         }
-        /* Hiding buggy default animations */
-        div:where(.swal2-icon).swal2-success .swal2-success-ring,
-        div:where(.swal2-icon).swal2-success .swal2-success-fix,
-        div:where(.swal2-icon).swal2-success [class^='swal2-success-line'] {
-            display: none !important;
+
+        /* ৪. পেশাদার সাকসেস টিক আইকন (গ্রিন থিম) */
+        div:where(.swal2-icon).swal2-success {
+            border: 2px solid #10b981 !important;
+            background-color: #ecfdf5 !important;
+            color: #10b981 !important;
         }
-        /* Injecting a sharp, non-distorted SVG checkmark */
+
+        /* নিখুঁত এবং শার্প এসভিজি (SVG) চেক মার্ক ইনজেকশন */
         div:where(.swal2-icon).swal2-success::before {
             content: "" !important;
             display: block !important;
@@ -789,24 +792,14 @@
             background-position: center !important;
         }
 
-        /* Error Icon (Red Circle with clean inner styling) */
+        /* ৫. পেশাদার এরর ক্রস আইকন (রেড থিম) */
         div:where(.swal2-icon).swal2-error {
-            border: 2px solid #fecaca !important;
+            border: 2px solid #ef4444 !important;
             background-color: #fef2f2 !important;
             color: #ef4444 !important;
-            width: 65px !important;
-            height: 65px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            border-radius: 50% !important;
-            margin: 15px auto !important;
         }
-        /* Hiding buggy default animations */
-        div:where(.swal2-icon).swal2-error [class^='swal2-x-mark-line'] {
-            display: none !important;
-        }
-        /* Injecting a sharp, non-distorted SVG cross mark */
+
+        /* নিখুঁত এবং শার্প এসভিজি (SVG) ক্রস মার্ক ইনজেকশন */
         div:where(.swal2-icon).swal2-error::before {
             content: "" !important;
             display: block !important;
@@ -1911,7 +1904,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     </div>
                     <div class="text-left text-white">
                         <h3 class="text-base font-black leading-none tracking-wide flex items-center gap-2">
-                            অ্যাড দেখে আয় 🎬
+                            অ্যাড দেখে আয় 
                         </h3>
                         <p class="text-[10px] text-pink-50 font-bold mt-1 opacity-90">প্রতিদিন ১০০ টি  অ্যাড দেখুন!</p>
                     </div>
@@ -2088,7 +2081,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         <div class="absolute -right-6 -top-6 bg-indigo-500/10 w-20 h-20 rounded-full blur-xl animate-pulse"></div>
         
         <div class="text-center relative z-10">
-            <p class="text-[9px] uppercase tracking-[0.2em] font-black text-slate-400">Main to Recharge Transfer</p>
+            <p class="text-[9px] uppercase tracking-[0.2em] font-black text-slate-400">MAIN TO RECHARGE TRANSFER</p>
             <h4 class="text-base font-black mt-1">সুরক্ষিত ফান্ড স্থানান্তর</h4>
         </div>
 
@@ -2424,7 +2417,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <button onclick="window.showPage('homeScreen')" class="bg-white p-2 rounded-full shadow-md active:scale-90 transition">
                     <i class="ri-arrow-left-line text-xl text-slate-700"></i>
                 </button>
-                <h2 class="text-2xl font-black text-slate-800 tracking-tight">অ্যাড দেখে আয় 🎬</h2>
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight">অ্যাড দেখে আয় </h2>
                 <!-- ৳ ভাসমান ইনকাম ব্যালেন্স পিল -->
                 <div class="bg-rose-50 text-rose-600 px-3.5 py-2 rounded-full text-xs font-black border border-rose-100 flex items-center gap-1 ml-auto shrink-0 shadow-sm animate__animated animate__zoomIn">
                     আজকের আয়: ৳<span id="watchEarnDisplay">0.00</span>
@@ -3832,29 +3825,36 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
             <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
             
-            <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg border-4 border-white relative z-10">
-                <i class="ri-telegram-fill text-5xl text-white animate-pulse"></i>
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg border-4 border-white relative z-10 animate-bounce">
+                <i class="ri-telegram-fill text-5xl text-white"></i>
             </div>
             
-            <h2 class="text-2xl font-black text-slate-800 mb-2 relative z-10">অফিসিয়াল চ্যানেলে যুক্ত হোন!</h2>
+            <h2 class="text-2xl font-black text-slate-800 mb-2 relative z-10">টেলিগ্রামে যুক্ত হোন! </h2>
             <p class="text-sm text-slate-500 mb-6 font-medium leading-relaxed relative z-10">
-                অ্যাপটি ব্যবহার করতে এবং পেমেন্ট পেতে আমাদের টেলিগ্রাম চ্যানেলে জয়েন করা <span class="text-red-500 font-bold">বাধ্যতামূলক</span>।
+                অ্যাপটি ব্যবহার করতে এবং পেমেন্ট পেতে আমাদের <span class="text-blue-600 font-bold">অফিসিয়াল চ্যানেল</span> ও <span class="text-blue-600 font-bold">পেমেন্ট প্রুফ গ্রুপ</span> উভয়টিতে জয়েন করা <span class="text-red-500 font-bold">বাধ্যতামূলক</span>।
             </p>
             
             <div class="space-y-3 relative z-10">
-                <button onclick="window.openTelegramChannel()" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2 text-lg border border-blue-400">
-                    <i class="ri-links-line"></i> জয়েন করুন
+                <!-- Channel Button -->
+                <button onclick="window.openTelegramChannel('channel')" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-black py-3 rounded-2xl shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2 text-md border border-blue-400">
+                    <i class="ri-notification-badge-line"></i> ১. চ্যানেলে জয়েন করুন
+                </button>
+
+                <!-- Group Button -->
+                <button onclick="window.openTelegramChannel('group')" class="w-full bg-gradient-to-r from-[#2AABEE] to-[#229ED9] hover:from-[#229ED9] hover:to-[#229ED9] text-white font-black py-3 rounded-2xl shadow-lg shadow-sky-200 transition-all active:scale-95 flex items-center justify-center gap-2 text-md border border-[#229ED9]">
+                    <i class="ri-group-line"></i> ২. গ্রুপে জয়েন করুন
                 </button>
                 
-                <button onclick="window.verifyTelegramJoin()" id="btnVerifyJoin" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 border border-slate-200">
-                    <i class="ri-refresh-line"></i> আমি জয়েন করেছি
+                <hr class="border-slate-100 my-2">
+
+                <!-- Verify Button -->
+                <button onclick="window.verifyTelegramJoin()" id="btnVerifyJoin" class="w-full bg-slate-900 hover:bg-slate-950 text-white font-black py-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 border border-slate-800 shadow-md">
+                    <i class="ri-refresh-line"></i> আমি ২ টিতেই জয়েন করেছি
                 </button>
             </div>
             <p class="text-[11px] text-red-500 font-bold mt-4 animate-pulse h-4" id="joinErrorText"></p>
         </div>
     </div>
-
-
     <script>
         
                 // 🛡️ SECRET PRO TIP: SECURITY SHIELD
@@ -10944,7 +10944,7 @@ window.startWatchAd = async () => {
             // হিস্ট্রিতে সেভ করা
             await db.collection("history").add({
                 userId: currentUserId,
-                type: "অ্যাড দেখে আয় 🎬",
+                type: "অ্যাড দেখে আয় ",
                 amount: WATCH_REWARD,
                 status: "Success",
                 details: `ভিডিও অ্যাড বোনাস (${watchCount + 1}/${DAILY_LIMIT})`,
@@ -11058,12 +11058,15 @@ cooldownBox.classList.add('hidden');
 // 🚀 TELEGRAM FORCE JOIN CHECKER (SMART API)
 // ==========================================
 let hasClickedJoin = false;
-// ✅ তোমার চ্যানেলের সঠিক ইউজারনেম (লিংক নয়, শুধু @ সহ নাম)
-const TARGET_CHANNEL = "@TAKA_WALA"; // আপনার চ্যানেলের ইউজারনেম
+// ✅ চ্যানেল ও গ্রুপের সঠিক ইউজারনেম (@ সহ)
+const TARGET_CHANNEL = "@TAKA_WALA";     // আপনার অফিসিয়াল চ্যানেল
+const TARGET_GROUP = "@TAKA_WALA_PAY";   // আপনার পেমেন্ট প্রুফ গ্রুপ
 
-window.openTelegramChannel = () => {
-    hasClickedJoin = true; // ইউজার ক্লিক করেছে সেটা মনে রাখলাম
-    window.open(`https://t.me/${TARGET_CHANNEL.replace('@', '')}`, '_blank');
+window.openTelegramChannel = (target) => {
+    hasClickedJoin = true; 
+    // target 'group' হলে গ্রুপ লিংক এবং অন্যথা চ্যানেল লিংকে রিডাইরেক্ট করবে
+    const targetPath = target === 'group' ? TARGET_GROUP.replace('@', '') : TARGET_CHANNEL.replace('@', '');
+    window.open(`https://t.me/${targetPath}`, '_blank');
 };
 
 window.verifyTelegramJoin = async () => {
@@ -11078,7 +11081,7 @@ window.verifyTelegramJoin = async () => {
         tgUser = window.Telegram.WebApp.initDataUnsafe.user;
     }
     
-    // ১. যদি ইউজার ব্রাউজার (Chrome) দিয়ে ঢোকে
+    // ১. ব্রাউজার ইউজারদের জন্য সাময়িক ভেরিফিকেশন ফলব্যাক
     if (!tgUser || !tgUser.id) {
         btn.innerHTML = `<i class="ri-loader-4-line animate-spin"></i> ভেরিফাই হচ্ছে...`;
         setTimeout(() => {
@@ -11089,34 +11092,89 @@ window.verifyTelegramJoin = async () => {
         return;
     }
 
-    // ২. রিয়েল টাইম টেলিগ্রাম এপিআই চেক (Real Hard Check)
+    // ২. রিয়াল টাইম বোথ-মেম্বারশিপ চেক (চ্যানেল এবং গ্রুপ দুইটাই)
     btn.innerHTML = `<i class="ri-loader-4-line animate-spin"></i> সার্ভারে চেক হচ্ছে...`;
     
     try {
-        // আপনার বট দিয়ে চ্যানেলের মেম্বারশিপ চেক
-        const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/getChatMember?chat_id=${TARGET_CHANNEL}&user_id=${tgUser.id}`;
-        const response = await fetch(url);
-        const data = await response.json();
+        // ক. চ্যানেলের স্ট্যাটাস চেক
+        const channelUrl = `https://api.telegram.org/bot${TG_BOT_TOKEN}/getChatMember?chat_id=${TARGET_CHANNEL}&user_id=${tgUser.id}`;
+        const channelRes = await fetch(channelUrl);
+        const channelData = await channelRes.json();
+
+        // খ. গ্রুপের স্ট্যাটাস চেক
+        const groupUrl = `https://api.telegram.org/bot${TG_BOT_TOKEN}/getChatMember?chat_id=${TARGET_GROUP}&user_id=${tgUser.id}`;
+        const groupRes = await fetch(groupUrl);
+        const groupData = await groupRes.json();
         
-        if (data.ok) {
-            const status = data.result.status;
-            // যদি সে মেম্বার, এডমিন বা মালিক হয়
-            if (['member', 'administrator', 'creator'].includes(status)) {
+        if (channelData.ok && groupData.ok) {
+            const channelStatus = channelData.result.status;
+            const groupStatus = groupData.result.status;
+            
+            const isChannelMember = ['member', 'administrator', 'creator'].includes(channelStatus);
+            const isGroupMember = ['member', 'administrator', 'creator'].includes(groupStatus);
+
+            if (isChannelMember && isGroupMember) {
                 document.getElementById('forceJoinModal').classList.add('hidden');
-                showSmartToast('ধন্যবাদ! ভেরিফিকেশন সফল। 🎉', 'success');
+                showSmartToast('ধন্যবাদ! চ্যানেল ও গ্রুপ ভেরিফিকেশন সফল। 🎉', 'success');
                 db.collection("users").doc(currentUserId).update({ isTelegramJoined: true });
-            } else {
-                btn.innerHTML = `<i class="ri-refresh-line"></i> আমি জয়েন করেছি`;
+            } else if (!isChannelMember && !isGroupMember) {
+                btn.innerHTML = `<i class="ri-refresh-line"></i> আমি ২ টিতেই জয়েন করেছি`;
+                errText.innerText = "❌ আপনি চ্যানেল ও গ্রুপ কোনটিতেই জয়েন করেননি!";
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]); 
+            } else if (!isChannelMember) {
+                btn.innerHTML = `<i class="ri-refresh-line"></i> আমি ২ টিতেই জয়েন করেছি`;
                 errText.innerText = "❌ আপনি এখনো চ্যানেলে জয়েন করেননি বা লিভ নিয়েছেন!";
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]); 
+            } else {
+                btn.innerHTML = `<i class="ri-refresh-line"></i> আমি ২ টিতেই জয়েন করেছি`;
+                errText.innerText = "❌ আপনি এখনো গ্রুপে জয়েন করেননি বা লিভ নিয়েছেন!";
                 if (navigator.vibrate) navigator.vibrate([100, 50, 100]); 
             }
         } else {
-            // যদি বট চ্যানেলে এডমিন না থাকে তবে এই এরর আসবে
-            errText.innerText = "⚠️ বটকে চ্যানেলে এডমিন করুন!";
-            console.error("Bot API Error:", data.description);
+            btn.innerHTML = `<i class="ri-refresh-line"></i> আমি ২ টিতেই জয়েন করেছি`;
+            errText.innerText = "⚠️ বটকে অবশ্যই চ্যানেল ও গ্রুপ—উভয় জায়গায় এডমিন করুন!";
+            console.error("Bot API Error. Channel API Status:", channelData.ok, "Group API Status:", groupData.ok);
         }
     } catch (e) {
+        btn.innerHTML = `<i class="ri-refresh-line"></i> আমি ২ টিতেই জয়েন করেছি`;
         errText.innerText = "সার্ভার কানেকশন এরর!";
+    }
+};
+
+// ✅ মেম্বারশিপ পুনরায় চেক করার হার্ডকোর ফাংশন (চ্যানেল ও গ্রুপ থেকে লিভ নিলেই অ্যাপ লক হবে)
+window.reVerifyMembership = async () => {
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+        const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+        if(tgUser && tgUser.id) {
+            try {
+                // ১. চ্যানেলের লাইভ মেম্বারশিপ চেক
+                const channelUrl = `https://api.telegram.org/bot${TG_BOT_TOKEN}/getChatMember?chat_id=${TARGET_CHANNEL}&user_id=${tgUser.id}`;
+                const channelRes = await fetch(channelUrl);
+                const channelData = await channelRes.json();
+                
+                // ২. গ্রুপের লাইভ মেম্বারশিপ চেক
+                const groupUrl = `https://api.telegram.org/bot${TG_BOT_TOKEN}/getChatMember?chat_id=${TARGET_GROUP}&user_id=${tgUser.id}`;
+                const groupRes = await fetch(groupUrl);
+                const groupData = await groupRes.json();
+
+                if(channelData.ok && groupData.ok) {
+                    const channelStatus = channelData.result.status;
+                    const groupStatus = groupData.result.status;
+                    
+                    const isChannelMember = ['member', 'administrator', 'creator'].includes(channelStatus);
+                    const isGroupMember = ['member', 'administrator', 'creator'].includes(groupStatus);
+
+                    // কোনো একটি থেকে লিভ নিলেই ডাটাবেস লক এবং পপ-আপ ওপেন হবে
+                    if (!isChannelMember || !isGroupMember) {
+                        db.collection("users").doc(currentUserId).update({ isTelegramJoined: false });
+                        document.getElementById('forceJoinModal').classList.remove('hidden');
+                        showSmartToast('আপনি চ্যানেল বা গ্রুপ থেকে লিভ নিয়েছেন! দয়া করে আবার জয়েন করুন।', 'error');
+                    }
+                }
+            } catch (err) {
+                console.log("API Error during re-verification:", err);
+            }
+        }
     }
 };
              
@@ -11432,35 +11490,7 @@ window.deleteSavedAccount = async (index) => {
 };
         
         
-// ✅ মেম্বারশিপ পুনরায় চেক করার হার্ডকোর ফাংশন (মামা পিন কোড)
-window.reVerifyMembership = async () => {
-    // শুধুমাত্র টেলিগ্রাম অ্যাপের ভেতরে থাকলেই এই চেক কাজ করবে
-    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
-        const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
-        if(tgUser && tgUser.id) {
-            try {
-                const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/getChatMember?chat_id=${TARGET_CHANNEL}&user_id=${tgUser.id}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                
-                if(data.ok) {
-                    const status = data.result.status;
-                    // যদি সে এখন আর মেম্বার না থাকে
-                    if (!['member', 'administrator', 'creator'].includes(status)) {
-                        // ডাটাবেসে false করে দাও এবং স্ক্রিন লক করো
-                        db.collection("users").doc(currentUserId).update({ isTelegramJoined: false });
-                        document.getElementById('forceJoinModal').classList.remove('hidden');
-                        showSmartToast('আপনি চ্যানেল লিভ নিয়েছেন! দয়া করে আবার জয়েন করুন।', 'error');
-                    }
-                }
-            } catch (err) {
-                console.log("API Error:", err);
-            }
-        }
-    }
-};
 
-        
         // ✅ SMART TASK NUDGE FUNCTION (মামা পিন কোড)
 window.showTaskNudge = async () => {
     try {
