@@ -743,8 +743,7 @@
         }
 
        
-
-        /* 🛡️ SWEETALERT2 TAILWIND FIX & CUSTOM POPUP (MATCHES USER IMAGE) */
+/* 🛡️ SWEETALERT2 TAILWIND FIX & CUSTOM POPUP (VECTORS REPLACED FOR ZERO DISTORTION) */
         .swal2-icon, .swal2-icon * {
             border-width: inherit !important;
             border-color: inherit !important;
@@ -778,13 +777,16 @@
         div:where(.swal2-icon).swal2-success [class^='swal2-success-line'] {
             display: none !important;
         }
-        /* Injecting a bulletproof checkmark */
+        /* Injecting a sharp, non-distorted SVG checkmark */
         div:where(.swal2-icon).swal2-success::before {
-            content: "✓" !important;
-            font-size: 32px !important;
-            font-weight: bold !important;
+            content: "" !important;
             display: block !important;
-            color: #10b981 !important;
+            width: 28px !important;
+            height: 28px !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") !important;
+            background-size: contain !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
         }
 
         /* Error Icon (Red Circle with clean inner styling) */
@@ -804,13 +806,16 @@
         div:where(.swal2-icon).swal2-error [class^='swal2-x-mark-line'] {
             display: none !important;
         }
-        /* Injecting a bulletproof cross mark */
+        /* Injecting a sharp, non-distorted SVG cross mark */
         div:where(.swal2-icon).swal2-error::before {
-            content: "✖" !important;
-            font-size: 26px !important;
-            font-weight: bold !important;
+            content: "" !important;
             display: block !important;
-            color: #ef4444 !important;
+            width: 22px !important;
+            height: 22px !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E") !important;
+            background-size: contain !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
         }
 
         /* Title Style */
@@ -4236,11 +4241,13 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-   // ✅ ডাবল অ্যাড + হাই-স্পিড অ্যান্টি-ফ্লিকারিং (২টি অ্যাডই দেখাবে, সিপিএম কমবে না এবং ক্রাশও হবে না)
+  // ✅ ডাবল অ্যাড + হাই-স্পিড অ্যান্টি-ফ্লিকারিং (ক্লিনআপ প্রটেকশন সহ)
 window.showMonetagAd = async (callback) => {
     showLoading();
+    cleanupAdOverlays(); // অ্যাড শুরু করার আগে বডি ও স্ক্রিন ক্লিয়ারেন্স
+    
     // ১. অ্যাড আসার আগে সেফটি বাফার
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise(resolve => setTimeout(resolve, 400));
     hideLoading(); 
 
     const playSingleAd = () => {
@@ -4260,7 +4267,6 @@ window.showMonetagAd = async (callback) => {
         });
     };
 
-    // ইউজার ব্রাউজারে চলে গেলে আবার ফিরে আসা পর্যন্ত স্ক্রিপ্ট থামিয়ে রাখার হেল্পার
     const waitForForeground = () => {
         return new Promise((resolve) => {
             if (!document.hidden) {
@@ -4281,34 +4287,41 @@ window.showMonetagAd = async (callback) => {
     showSmartToast('১ম অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
     await playSingleAd(); 
 
-    // ১ম অ্যাড শেষ হওয়ার পর ইউজার যদি ব্রাউজারে চলে যায় (ক্লিক করার কারণে), তবে ফিরে আসা পর্যন্ত অপেক্ষা করবে
+    // ১ম অ্যাড শেষ হওয়ার পর ইউজার যদি ব্রাউজারে চলে যায়, তবে ফিরে আসা পর্যন্ত অপেক্ষা করবে
     if (document.hidden) {
         showSmartToast('ফিরে আসার জন্য অপেক্ষা করা হচ্ছে...', 'info');
         await waitForForeground();
-        // ফিরে আসার পর মোবাইল ডিভাইসকে শান্ত হওয়ার জন্য ১ সেকেন্ড সময় দেওয়া হলো
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // ফিরে আসার পর মোবাইল রেন্ডারিং শান্ত হওয়ার জন্য ২.৫ সেকেন্ড সময় দেওয়া হলো (ক্র্যাশ মুক্ত রাখতে)
+        await new Promise(resolve => setTimeout(resolve, 2500));
+        cleanupAdOverlays(); // ফিরে আসার সাথে সাথে ক্ষতিকারক ওভারলে সাফ
     } else {
-        // যদি ব্রাউজারে না যায়, তবে স্বাভাবিক ৮০০ মিলি-সেকেন্ড বিরতি নেবে
-        await new Promise(resolve => setTimeout(resolve, 800));
+        // যদি ব্রাউজারে না যায়, তবে স্বাভাবিক ১.২ সেকেন্ড বিরতি নেবে
+        await new Promise(resolve => setTimeout(resolve, 1200));
     }
 
-    // --- ২য় অ্যাড প্রদর্শন (১০০% গ্যারান্টি সহ রান হবে) ---
+    // --- ২য় অ্যাড প্রদর্শন ---
+    cleanupAdOverlays(); // ২য় অ্যাড শুরু করার আগে আবার ক্লিয়ারেন্স
     showSmartToast('২য় অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
     await playSingleAd();
 
-    // ২য় অ্যাড চলাকালীনও যদি ইউজার ক্লিক করে ব্রাউজারে চলে যায়, তবে ফিরে আসা পর্যন্ত অপেক্ষা করবে
+    // ২য় অ্যাড চলাকালীনও যদি ইউজার ক্লিক করে ব্রাউজারে চলে যায়
     if (document.hidden) {
         await waitForForeground();
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // ফিরে আসার পর সম্পূর্ণ রেন্ডার সেটলমেন্টের জন্য ২.৫ সেকেন্ড বাফার
+        await new Promise(resolve => setTimeout(resolve, 2500));
+        cleanupAdOverlays();
+    } else {
+        await new Promise(resolve => setTimeout(resolve, 800));
     }
 
     // --- পুরস্কার দেওয়ার মেইন ফিক্স ---
     const triggerReward = async () => {
+        cleanupAdOverlays(); // ফাইনাল ক্লিয়ার
         ensureMainAppVisible(); 
         showLoading(); 
         
         // রেন্ডারিং শান্ত করার বিরতি
-        await new Promise(resolve => setTimeout(resolve, 600));
+        await new Promise(resolve => setTimeout(resolve, 800));
         
         hideLoading();
         ensureMainAppVisible(); 
@@ -4322,9 +4335,9 @@ window.showMonetagAd = async (callback) => {
         }
     };
 
-    setTimeout(triggerReward, 200);
+    setTimeout(triggerReward, 300);
 };
-// ✅ হেল্পার: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ও পেজ রিসেট ফিক্সড)
+// ✅ হেল্পের: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ও পেজ রিসেট ফিক্সড)
 function ensureMainAppVisible() {
     const mainApp = document.getElementById('mainApp');
     const bottomNav = document.getElementById('bottomNav');
@@ -4370,6 +4383,46 @@ function ensureMainAppVisible() {
     }
     document.body.style.backgroundColor = ""; 
     document.body.style.overflow = "auto";
+}
+
+// 🧹 ফোর্সেড অ্যাড ওভারলে ক্লিয়ারার (মেমোরি এবং স্ক্রিন লক রিলিজ করার জন্য)
+function cleanupAdOverlays() {
+    try {
+        // বডির ক্ষতিকারক লক রিসেট করা
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('position');
+        document.body.style.removeProperty('pointer-events');
+        document.documentElement.style.removeProperty('overflow');
+        
+        // TAKAWALA-র বৈধ এলিমেন্টগুলোর আইডি লিস্ট
+        const allowedIds = [
+            'mainApp', 'authScreen', 'loadingOverlay', 'smartToast', 
+            'loginNoticeModal', 'twaiModal', 'forgotPasswordScreen', 
+            'bannedScreen', 'maintenanceScreen', 'globalChatIcon', 
+            'twaiChatbotIcon', 'avatarModal', 'proofModal', 
+            'userReceiptModal', 'forceJoinModal', 'taskNudge', 
+            'inboxModal', 'pinVerifyModal', 'passwordChangeModal', 
+            'shareModal', 'snd_click', 'snd_success', 'snd_bonus', 'snd_welcome'
+        ];
+        
+        // বডির সরাসরি চাইল্ডগুলো চেক করে অ্যাড ওভারলে এবং ফেইক আইফ্রেম রিমুভ করা
+        const bodyChildren = Array.from(document.body.children);
+        bodyChildren.forEach(child => {
+            if (allowedIds.includes(child.id)) return;
+            if (child.tagName === 'AUDIO' || child.tagName === 'SCRIPT' || child.tagName === 'LINK') return;
+            
+            const isIframe = child.tagName === 'IFRAME';
+            const style = window.getComputedStyle(child);
+            const isOverlay = (style.position === 'fixed' || style.position === 'absolute') && 
+                              (parseInt(style.zIndex) > 1000 || style.width === '100vw' || style.height === '100vh');
+            
+            if (isIframe || (!child.id && isOverlay)) {
+                child.remove();
+            }
+        });
+    } catch (e) {
+        console.log("Ad cleanup error: ", e);
+    }
 }
 
         // ✅ LOAD SYSTEM SETTINGS (এডমিন প্যানেলের appConfig এর সাথে সিঙ্ক)
@@ -8663,7 +8716,7 @@ window.buySpins = async (count, price) => {
         hideLoading();
     }
 };
-        // ✅ iOS Style Premium Logout Confirmation (FIXED)
+        // ✅ iOS Style Premium Logout Confirmation (REAL-TIME FIX WITH MEMORY FLASH)
         window.logout = async () => {
             window.playSound('snd_click');
             
@@ -8689,22 +8742,27 @@ window.buySpins = async (count, price) => {
             if (result.isConfirmed) {
                 showLoading();
                 try {
-                    // 🚀 মেইন ফিক্স: লগআউট করার আগে সিকিউরিটি লকগুলো খুলে দিতে হবে
-                    window.isUserLoggedIn = false; 
+                    // ১. সব অ্যাক্টিভ ফায়ারবেস লিসেনার আনসাবস্ক্রাইব করা (ক্র্যাশ ও লিক ঠেকাতে)
+                    if (typeof userUnsub === 'function') userUnsub();
+                    if (typeof configUnsub === 'function') configUnsub();
+                    if (typeof systemUnsub === 'function') systemUnsub();
+                    if (typeof historyUnsubscribe === 'function') historyUnsubscribe();
+                    if (typeof leaderboardUnsub === 'function') leaderboardUnsub();
+                    
+                    // ২. স্টেট ভ্যারিয়েবল রিসেট
+                    window.isUserLoggedIn = false;
                     window.isAppInitialized = false;
                     
+                    // ৩. সাইন আউট করা
                     await auth.signOut();
                     
-                    showSmartToast('লগআউট সফল হয়েছে! 👋', 'success');
-                    
-                    // আইকনগুলো লুকিয়ে ফেলা
-                    if(document.getElementById('globalChatIcon')) document.getElementById('globalChatIcon').style.display = 'none';
-                    if(document.getElementById('twaiChatbotIcon')) document.getElementById('twaiChatbotIcon').style.display = 'none';
+                    // ৪. পেজটি রিফ্রেশ করা (যাতে সম্পূর্ণ মেমোরি ফ্লাশ হয়ে ফ্রেশ লগইন স্ক্রিন আসে)
+                    location.reload();
                     
                 } catch (e) {
                     showSmartToast('লগআউট করতে সমস্যা হয়েছে', 'error');
+                    hideLoading();
                 }
-                hideLoading();
             }
         };
         
@@ -8720,61 +8778,69 @@ window.hideForgotPasswordScreen = () => {
     document.getElementById('resetEmailInput').value = ''; // ইনপুট ক্লিয়ার করে দিলাম
 };
 
-window.processPasswordReset = async () => {
-    const emailInput = document.getElementById('resetEmailInput').value.trim();
+// ✅ ফায়ারবেস কমপ্যাট নিয়মে পাসওয়ার্ড রিসেট ফাংশন (ReferenceError ফিক্সড)
+        window.processPasswordReset = async () => {
+            const emailInput = document.getElementById('resetEmailInput').value.trim();
 
-    if (!emailInput) {
-        return showSmartToast('দয়া করে আপনার ইমেইল এড্রেসটি লিখুন!', 'error');
-    }
+            if (!emailInput) {
+                return showSmartToast('দয়া করে আপনার ইমেইল এড্রেসটি লিখুন!', 'error');
+            }
 
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(emailInput)) {
-        return showSmartToast('সঠিক ইমেইল ফরম্যাট দিন (যেমন: mail@gmail.com)', 'error');
-    }
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(emailInput)) {
+                return showSmartToast('সঠিক ইমেইল ফরম্যাট দিন (যেমন: mail@gmail.com)', 'error');
+            }
 
-    showLoading();
-    
-    try {
-        // 🔥 ফায়ারবেস মডিউলার নিয়মে ডাটাবেজ চেক করা হচ্ছে ইমেইলটি আছে কি না
-        const q = query(collection(db, "users"), where("email", "==", emailInput));
-        const userCheckSnap = await getDocs(q);
-        
-        if (userCheckSnap.empty) {
-            // যদি ডাটাবেজে ইমেইল না থাকে
-            hideLoading();
-            Swal.fire({
-                icon: 'error',
-                title: 'একাউন্ট পাওয়া যায়নি! ❌',
-                html: `<b>${emailInput}</b> - এই ইমেইল দিয়ে আমাদের অ্যাপে কোনো একাউন্ট খোলা নেই। দয়া করে সঠিক ইমেইল দিন অথবা নতুন একাউন্ট খুলুন।`,
-                confirmButtonText: 'ঠিক আছে',
-                confirmButtonColor: '#ef4444',
-                customClass: { popup: 'rounded-[25px]' }
-            });
-            return;
-        }
+            showLoading();
+            
+            try {
+                // ১. ফায়ারবেস কমপ্যাট (v8 style) নিয়মে ডাটাবেজ চেক করা হচ্ছে ইমেইলটি আছে কি না
+                const userCheckSnap = await db.collection("users").where("email", "==", emailInput).get();
+                
+                if (userCheckSnap.empty) {
+                    // যদি ডাটাবেজে ইমেইল না থাকে
+                    hideLoading();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'একাউন্ট পাওয়া যায়নি! ❌',
+                        html: `<b>${emailInput}</b> - এই ইমেইল দিয়ে আমাদের অ্যাপে কোনো একাউন্ট খোলা নেই। দয়া করে সঠিক ইমেইল দিন অথবা নতুন একাউন্ট খুলুন।`,
+                        confirmButtonText: 'ঠিক আছে',
+                        confirmButtonColor: '#ef4444',
+                        customClass: { popup: 'rounded-[25px]' }
+                    });
+                    return;
+                }
 
-        // যদি ডাটাবেজে ইমেইল থাকে, তবে মডিউলার নিয়মে রিসেট লিংক পাঠানো হবে
-        await sendPasswordResetEmail(auth, emailInput);
-        
-        hideLoading();
-        
-        Swal.fire({
-            icon: 'success',
-            title: 'লিংক পাঠানো হয়েছে! 🎉',
-            html: `আপনার <b>${emailInput}</b> ইমেইলে একটি পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে।<br><br><span class="text-rose-500 font-bold text-sm">অবশ্যই ইমেইলের Spam ফোল্ডার চেক করবেন!</span>`,
-            confirmButtonText: 'লগইন পেজে যান',
-            confirmButtonColor: '#059669',
-            customClass: { popup: 'rounded-[25px]' }
-        }).then(() => {
-            window.hideForgotPasswordScreen();
-        });
-        
-    } catch (error) {
-        console.error("Reset Error Details:", error);
-        hideLoading();
-        showSmartToast('ইমেইল পাঠাতে সার্ভারে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
-    }
-};
+                // ২. ফায়ারবেস কমপ্যাট (v8 style) নিয়মে রিসেট লিংক পাঠানো হচ্ছে
+                await auth.sendPasswordResetEmail(emailInput);
+                
+                hideLoading();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'লিংক পাঠানো হয়েছে! 🎉',
+                    html: `আপনার <b>${emailInput}</b> ইমেইলে একটি পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে।<br><br><span class="text-rose-500 font-bold text-sm">অবশ্যই ইমেইলের Spam ফোল্ডার চেক করবেন!</span>`,
+                    confirmButtonText: 'লগইন পেজে যান',
+                    confirmButtonColor: '#059669',
+                    customClass: { popup: 'rounded-[25px]' }
+                }).then(() => {
+                    window.hideForgotPasswordScreen();
+                });
+                
+            } catch (error) {
+                console.error("Reset Error Details:", error);
+                hideLoading();
+                
+                let errMsg = 'ইমেইল পাঠাতে সার্ভারে সমস্যা হয়েছে। আবার চেষ্টা করুন।';
+                if (error.code === 'auth/invalid-email') {
+                    errMsg = 'ভুল ইমেইল অ্যাড্রেস দিয়েছেন!';
+                } else if (error.code === 'auth/user-not-found') {
+                    errMsg = 'এই ইমেইল দিয়ে কোনো অ্যাকাউন্ট খুঁজে পাওয়া যায়নি!';
+                }
+                
+                showSmartToast(errMsg, 'error');
+            }
+        };
         
     // ✅ ফিক্সড রুলস ইঞ্জিন (একদম আলাদা আলাদা ক্যাটাগরি)
         window.showRules = async (title) => {
@@ -11965,19 +12031,24 @@ function showBannedScreen(reason) {
     }
 }
 
-// ✅ ব্যান স্ক্রিন থেকে লগআউট করার ফাংশন
+// ✅ ব্যান স্ক্রিন থেকে লগআউট করার ফাংশন (সুরক্ষিত ও মেমোরি ফ্লাশ সম্পন্ন)
 window.forceLogoutFromBan = async () => {
     showLoading();
     try {
+        if (typeof userUnsub === 'function') userUnsub();
+        if (typeof configUnsub === 'function') configUnsub();
+        if (typeof systemUnsub === 'function') systemUnsub();
+        
+        window.isUserLoggedIn = false;
+        window.isAppInitialized = false;
+        
         await auth.signOut();
-        document.getElementById('bannedScreen').classList.add('hidden');
-        document.getElementById('authScreen').classList.remove('hidden');
+        location.reload();
     } catch (e) {
         console.log("Signout error", e);
+        hideLoading();
     }
-    hideLoading();
 };
-
 // 🎁 সিক্রেট ৮% প্রোমো কোড ভেরিফিকেশন ও অ্যাপ্লাই লজিক
 window.applyPackagePromo = () => {
     const input = document.getElementById('packagePromoInput');
