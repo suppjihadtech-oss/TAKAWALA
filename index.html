@@ -742,23 +742,30 @@
             backdrop-filter: blur(5px);
         }
 
-       
-/* 🛡️ ULTRA-SPECIFIC SWEETALERT2 TAILWIND FIX (100% CRSTAL CLEAR ICONS) */
+       /* 🛡️ ULTRA-SPECIFIC SWEETALERT2 TAILWIND FIX (100% CRSTAL CLEAR ICONS) */
         
-        /* ১. সুইট অ্যালার্টের সাকসেস ও এরর আইকনের ভেতরের সব নড়বড়ে ডিফল্ট উপাদান পুরোপুরি হাইড করা */
+        /* ১. সুইট অ্যালার্টের সাকসেস ও এরর আইকনের ভেতরের সব নড়বড়ে ডিবল্ট উপাদান পুরোপুরি হাইড করা */
         body .swal2-container .swal2-popup .swal2-icon.swal2-success *, 
         body .swal2-container .swal2-popup .swal2-icon.swal2-error * {
             display: none !important;
         }
 
-        /* ২. গ্লোবাল পপ-আপ বডি কন্টেইনার ডিজাইন */
+        /* ২. গ্লোবাল পপ-আপ কন্টেইনার এবং প্রিমিয়াম ফ্রস্টেড গ্লাস ইফেক্ট */
+        body .swal2-container {
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            background-color: rgba(15, 23, 42, 0.5) !important; /* হালকা ডার্ক গ্লাস ব্যাকগ্রাউন্ড */
+        }
+
         body .swal2-container .swal2-popup {
             border-radius: 28px !important;
-            background: #ffffff !important;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12) !important;
+            background: rgba(255, 255, 255, 0.88) !important; /* ৮৮% ওপাল রিচ গ্লাস ইফেক্ট */
+            backdrop-filter: blur(20px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15) !important;
             padding: 24px 20px !important;
             width: 320px !important;
-            border: none !important;
         }
 
         /* ৩. গ্লোবাল আইকন বক্স রিসেট (উচ্চ অগ্রাধিকারসহ নিখুঁত বৃত্ত গঠন) */
@@ -767,14 +774,24 @@
             height: 65px !important;
             min-width: 65px !important;
             min-height: 65px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
             border-radius: 50% !important;
             margin: 15px auto !important;
             box-sizing: border-box !important;
             position: relative !important;
             background-image: none !important; /* ডিফল্ট ব্যাকগ্রাউন্ড ক্লিয়ারেন্স */
+            /* display: flex !important; <--- এইটা এখানে ফোর্স করা ছিল, যার কারণে ফাঁকা গোল আসতো। এটা নিচে নির্দিষ্ট আইকনে রিলোকেট করা হয়েছে */
+        }
+
+        /* শুধুমাত্র সচল বা সক্রিয় আইকনগুলোর ক্ষেত্রে flex ডিসপ্লে সচল করা (ভেঙে যাওয়া ফাঁকা গোল চিহ্নটি পুরোপুরি রিমুভ করার জন্য) */
+        body .swal2-container .swal2-popup .swal2-icon.swal2-icon-show,
+        body .swal2-container .swal2-popup .swal2-icon.swal2-success,
+        body .swal2-container .swal2-popup .swal2-icon.swal2-error,
+        body .swal2-container .swal2-popup .swal2-icon.swal2-warning,
+        body .swal2-container .swal2-popup .swal2-icon.swal2-info,
+        body .swal2-container .swal2-popup .swal2-icon.swal2-question {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
         /* ৪. প্রিমিয়াম সাকসেস বৃত্ত (সবুজ থিম) */
@@ -805,19 +822,20 @@
             color: #ef4444 !important;
         }
 
-        /* নিখুঁত ও তীক্ষ্ণ ভেক্টর ক্রস চিহ্ন ইনজেকশন (কখনো বাঁকা বা ভাঙবে না) */
-        body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
-            content: "" !important;
-            display: block !important;
-            width: 22px !important;
-            height: 22px !important;
-            min-width: 22px !important;
-            min-height: 22px !important;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") !important;
-            background-size: contain !important;
-            background-repeat: no-repeat !important;
-            background-position: center !important;
-        }
+     /* নিখুঁত ও তীক্ষ্ণ ভেক্টর ক্রস (X) চিহ্ন ইনজেকশন (কখনো বাঁকা বা ভাঙবে না এবং পূর্বে ভুল করে টিক চিহ্ন দেওয়া ছিল) */
+body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
+    content: "" !important;
+    display: block !important;
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
 
         /* ৬. শিরোনাম ডিজাইন (উচ্চ অগ্রাধিকার) */
         body .swal2-container .swal2-popup .swal2-title {
@@ -3876,6 +3894,26 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
         }
 
+// 🔄 SWEETALERT2 GLOBAL BENGALI INTERCEPTOR & FALLBACK (নিখুঁত অনুবাদ ও ক্যানসেল বোতাম ফিক্স)
+if (typeof Swal !== 'undefined') {
+    const originalFire = Swal.fire;
+    Swal.fire = function(options, ...args) {
+        if (options && typeof options === 'object') {
+            // ১. ক্যানসেল বোতামের টেক্সট না থাকলে বা ডিফল্ট থাকলে তা বাংলায় "বাতিল" এ রূপান্তর করা
+            if (options.showCancelButton && (!options.cancelButtonText || options.cancelButtonText.toLowerCase() === 'cancel')) {
+                options.cancelButtonText = 'বাতিল';
+            }
+            // ২. সাকসেস এবং এরর আইকনগুলির জন্য সঠিক ক্লাস ইনজেকশন নিশ্চিত করা
+            if (options.icon) {
+                if (!options.customClass) options.customClass = {};
+                if (typeof options.customClass === 'object') {
+                    options.customClass.icon = `swal2-icon-show`;
+                }
+            }
+        }
+        return originalFire.apply(this, [options, ...args]);
+    };
+}
         
         // ✅ FIREBASE CONFIGURATION
         const firebaseConfig = {
@@ -4250,23 +4288,41 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-  // ✅ ডাবল অ্যাড + হাই-স্পিড অ্যান্টি-ফ্লিকারিং (ক্লিনআপ প্রটেকশন সহ)
+  // 🛡️ গ্লোবাল অ্যাড কনকারেন্সি লক (ডাবল বা র‍্যাপিড ক্লিক প্রটেকশন)
+window.isAdShowing = false;
+
+// ✅ ডাবল অ্যাড + হাই-স্পিড অ্যান্টি-ফ্লিকারিং (ক্লিনআপ প্রটেকশন ও কনকারেন্সি লক সহ)
 window.showMonetagAd = async (callback) => {
+    // ১. ডুপ্লিকেট বা র‍্যাপিড ট্র্রিগার সরাসরি ব্লক করা
+    if (window.isAdShowing) {
+        console.log("অ্যাড ইতিমধ্যে সক্রিয় রয়েছে। ডুপ্লিকেট ক্লিক বাতিল করা হলো।");
+        return;
+    }
+    window.isAdShowing = true;
+
     showLoading();
-    cleanupAdOverlays(); // অ্যাড শুরু করার আগে বডি ও স্ক্রিন ক্লিয়ারেন্স
+    cleanupAdOverlays(); // অ্যাড শুরু করার আগে বডি ও স্ক্রিন ক্লিয়ারেন্স
     
-    // ১. অ্যাড আসার আগে সেফটি বাফার
+    // সেফটি বাফার
     await new Promise(resolve => setTimeout(resolve, 400));
     hideLoading(); 
 
     const playSingleAd = () => {
         return new Promise((resolve) => {
             if (typeof window['show_10531082'] === 'function') {
+                // ৮ সেকেন্ডের সেফটি টাইমআউট ফলব্যাক (যদি মনেট্যাগ নেটওয়ার্কের কারণে আটকে যায়)
+                const safetyTimer = setTimeout(() => {
+                    console.log("মনেট্যাগ অ্যাড লোডিং টাইমআউট, ফলব্যাক রান হচ্ছে।");
+                    resolve(false);
+                }, 8000);
+
                 window['show_10531082']()
                     .then(() => {
+                        clearTimeout(safetyTimer);
                         resolve(true);
                     })
                     .catch((err) => {
+                        clearTimeout(safetyTimer);
                         console.log("Ad Error or Skipped:", err);
                         resolve(false); 
                     });
@@ -4280,15 +4336,21 @@ window.showMonetagAd = async (callback) => {
         return new Promise((resolve) => {
             if (!document.hidden) {
                 resolve();
-            } else {
-                const onReturn = () => {
-                    if (!document.hidden) {
-                        document.removeEventListener('visibilitychange', onReturn);
-                        resolve();
-                    }
-                };
-                document.addEventListener('visibilitychange', onReturn);
+                return;
             }
+            const onReturn = () => {
+                if (!document.hidden) {
+                    document.removeEventListener('visibilitychange', onReturn);
+                    resolve();
+                }
+            };
+            document.addEventListener('visibilitychange', onReturn);
+            
+            // ১০ সেকেন্ডের সেফটি মেমোরি ফলব্যাক
+            setTimeout(() => {
+                document.removeEventListener('visibilitychange', onReturn);
+                resolve();
+            }, 10000);
         });
     };
 
@@ -4296,45 +4358,43 @@ window.showMonetagAd = async (callback) => {
     showSmartToast('১ম অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
     await playSingleAd(); 
 
-    // ১ম অ্যাড শেষ হওয়ার পর ইউজার যদি ব্রাউজারে চলে যায়, তবে ফিরে আসা পর্যন্ত অপেক্ষা করবে
     if (document.hidden) {
         showSmartToast('ফিরে আসার জন্য অপেক্ষা করা হচ্ছে...', 'info');
         await waitForForeground();
-        // ফিরে আসার পর মোবাইল রেন্ডারিং শান্ত হওয়ার জন্য ২.৫ সেকেন্ড সময় দেওয়া হলো (ক্র্যাশ মুক্ত রাখতে)
+        // ফিরে আসার পর সম্পূর্ণ রেন্ডার সেটলমেন্টের জন্য বাফার সময়
         await new Promise(resolve => setTimeout(resolve, 2500));
-        cleanupAdOverlays(); // ফিরে আসার সাথে সাথে ক্ষতিকারক ওভারলে সাফ
+        cleanupAdOverlays(); 
     } else {
-        // যদি ব্রাউজারে না যায়, তবে স্বাভাবিক ১.২ সেকেন্ড বিরতি নেবে
         await new Promise(resolve => setTimeout(resolve, 1200));
     }
 
     // --- ২য় অ্যাড প্রদর্শন ---
-    cleanupAdOverlays(); // ২য় অ্যাড শুরু করার আগে আবার ক্লিয়ারেন্স
+    cleanupAdOverlays(); 
     showSmartToast('২য় অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
     await playSingleAd();
 
-    // ২য় অ্যাড চলাকালীনও যদি ইউজার ক্লিক করে ব্রাউজারে চলে যায়
     if (document.hidden) {
         await waitForForeground();
-        // ফিরে আসার পর সম্পূর্ণ রেন্ডার সেটলমেন্টের জন্য ২.৫ সেকেন্ড বাফার
         await new Promise(resolve => setTimeout(resolve, 2500));
         cleanupAdOverlays();
     } else {
         await new Promise(resolve => setTimeout(resolve, 800));
     }
 
-    // --- পুরস্কার দেওয়ার মেইন ফিক্স ---
+    // --- পুরস্কার প্রদানের মেইন ফিক্সড পদ্ধতি ---
     const triggerReward = async () => {
-        cleanupAdOverlays(); // ফাইনাল ক্লিয়ার
+        cleanupAdOverlays(); 
         ensureMainAppVisible(); 
         showLoading(); 
         
-        // রেন্ডারিং শান্ত করার বিরতি
         await new Promise(resolve => setTimeout(resolve, 800));
         
         hideLoading();
         ensureMainAppVisible(); 
         
+        // অ্যাড লকটি মুক্ত করা
+        window.isAdShowing = false;
+
         if (callback) {
             setTimeout(async () => {
                 try {
@@ -4346,12 +4406,20 @@ window.showMonetagAd = async (callback) => {
 
     setTimeout(triggerReward, 300);
 };
-// ✅ হেল্পের: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ও পেজ রিসেট ফিক্সড)
+
+// ✅ হেল্পের: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ও পেজ রিসেট সম্পূর্ণ ফিক্সড)
 function ensureMainAppVisible() {
     const mainApp = document.getElementById('mainApp');
     const bottomNav = document.getElementById('bottomNav');
     const authScreen = document.getElementById('authScreen');
     const loader = document.getElementById('loadingOverlay');
+
+    // বডি ও এইচটিএমএল-এর যাবতীয় ক্ষতিকর টাচ ও লেআউট লক রিলিজ
+    document.body.style.overflow = "auto";
+    document.body.style.position = "static";
+    document.body.style.pointerEvents = "auto";
+    document.body.style.backgroundColor = "";
+    document.documentElement.style.overflow = "auto";
 
     if (mainApp) {
         mainApp.classList.remove('hidden');
@@ -4359,22 +4427,26 @@ function ensureMainAppVisible() {
         mainApp.style.setProperty('visibility', 'visible', 'important');
         mainApp.style.setProperty('opacity', '1', 'important');
 
-        // 🛡️ ফলব্যাক প্রোটেকশন: চেক করা হচ্ছে মেইন অ্যাপের ভেতর কোনো একটি পেজ অন্তত ভিজিবল আছে কি না
+        // চেক করা হচ্ছে মেইন অ্যাপের ভেতর কোনো একটি সাব-পেজ অন্তত সচল আছে কি না
         const pages = document.querySelectorAll('#mainApp > div');
         let anyPageVisible = false;
         pages.forEach(div => {
-            if (div.id !== 'bottomNav' && !div.id.includes('Icon') && !div.classList.contains('hidden')) {
+            if (div.id !== 'bottomNav' && 
+                !div.id.includes('Icon') && 
+                !div.classList.contains('side-widget-container-left') &&
+                !div.classList.contains('side-widget-container-right') &&
+                !div.classList.contains('hidden')) {
                 anyPageVisible = true;
             }
         });
 
-        // যদি সব পেজ ইন-অ্যাক্টিভ বা হাইড হয়ে সাদা স্ক্রিন তৈরি হয়, তবে স্বয়ংক্রিয়ভাবে হোম পেজ নিয়ে আসবে
+        // যদি কোনো পেজ সচল না পাওয়া যায় (সাদা স্ক্রিনের সম্ভাবনা), তবে হোমে নিয়ে আসবে
         if (!anyPageVisible) {
-            console.log("রিসেট সনাক্ত করা হয়েছে! হোম স্ক্রিনে ফিরিয়ে নেওয়া হচ্ছে...");
+            console.log("failsafe triggered: restoring homeScreen.");
             const home = document.getElementById('homeScreen');
             if (home) {
                 home.classList.remove('hidden');
-                home.classList.add('animate__animated', 'animate__fadeIn');
+                home.style.setProperty('display', 'block', 'important');
             }
         }
     }
@@ -4390,14 +4462,12 @@ function ensureMainAppVisible() {
         loader.classList.add('hidden');
         loader.style.setProperty('display', 'none', 'important');
     }
-    document.body.style.backgroundColor = ""; 
-    document.body.style.overflow = "auto";
 }
 
 // 🧹 ফোর্সেড অ্যাড ওভারলে ক্লিয়ারার (মেমোরি এবং স্ক্রিন লক রিলিজ করার জন্য)
 function cleanupAdOverlays() {
     try {
-        // বডির ক্ষতিকারক লক রিসেট করা
+        // বডির ক্ষতিকারক স্ক্রল লক রিসেট করা
         document.body.style.removeProperty('overflow');
         document.body.style.removeProperty('position');
         document.body.style.removeProperty('pointer-events');
@@ -8787,69 +8857,54 @@ window.hideForgotPasswordScreen = () => {
     document.getElementById('resetEmailInput').value = ''; // ইনপুট ক্লিয়ার করে দিলাম
 };
 
-// ✅ ফায়ারবেস কমপ্যাট নিয়মে পাসওয়ার্ড রিসেট ফাংশন (ReferenceError ফিক্সড)
-        window.processPasswordReset = async () => {
-            const emailInput = document.getElementById('resetEmailInput').value.trim();
+// ✅ ফায়ারবেস কমপ্যাট নিয়মে পাসওয়ার্ড রিসেট ফাংশন (ডিজাইন অপরিবর্তিত রেখে শুধুমাত্র ব্যাকএন্ড এরর ফিক্স)
+window.processPasswordReset = async () => {
+    const emailInput = document.getElementById('resetEmailInput').value.trim();
 
-            if (!emailInput) {
-                return showSmartToast('দয়া করে আপনার ইমেইল এড্রেসটি লিখুন!', 'error');
-            }
+    if (!emailInput) {
+        return showSmartToast('দয়া করে আপনার ইমেইল এড্রেসটি লিখুন!', 'error');
+    }
 
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            if (!emailRegex.test(emailInput)) {
-                return showSmartToast('সঠিক ইমেইল ফরম্যাট দিন (যেমন: mail@gmail.com)', 'error');
-            }
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(emailInput)) {
+        return showSmartToast('সঠিক ইমেইল ফরম্যাট দিন (যেমন: mail@gmail.com)', 'error');
+    }
 
-            showLoading();
-            
-            try {
-                // ১. ফায়ারবেস কমপ্যাট (v8 style) নিয়মে ডাটাবেজ চেক করা হচ্ছে ইমেইলটি আছে কি না
-                const userCheckSnap = await db.collection("users").where("email", "==", emailInput).get();
-                
-                if (userCheckSnap.empty) {
-                    // যদি ডাটাবেজে ইমেইল না থাকে
-                    hideLoading();
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'একাউন্ট পাওয়া যায়নি! ❌',
-                        html: `<b>${emailInput}</b> - এই ইমেইল দিয়ে আমাদের অ্যাপে কোনো একাউন্ট খোলা নেই। দয়া করে সঠিক ইমেইল দিন অথবা নতুন একাউন্ট খুলুন।`,
-                        confirmButtonText: 'ঠিক আছে',
-                        confirmButtonColor: '#ef4444',
-                        customClass: { popup: 'rounded-[25px]' }
-                    });
-                    return;
-                }
-
-                // ২. ফায়ারবেস কমপ্যাট (v8 style) নিয়মে রিসেট লিংক পাঠানো হচ্ছে
-                await auth.sendPasswordResetEmail(emailInput);
-                
-                hideLoading();
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'লিংক পাঠানো হয়েছে! 🎉',
-                    html: `আপনার <b>${emailInput}</b> ইমেইলে একটি পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে।<br><br><span class="text-rose-500 font-bold text-sm">অবশ্যই ইমেইলের Spam ফোল্ডার চেক করবেন!</span>`,
-                    confirmButtonText: 'লগইন পেজে যান',
-                    confirmButtonColor: '#059669',
-                    customClass: { popup: 'rounded-[25px]' }
-                }).then(() => {
-                    window.hideForgotPasswordScreen();
-                });
-                
-            } catch (error) {
-                console.error("Reset Error Details:", error);
-                hideLoading();
-                
-                let errMsg = 'ইমেইল পাঠাতে সার্ভারে সমস্যা হয়েছে। আবার চেষ্টা করুন।';
-                if (error.code === 'auth/invalid-email') {
-                    errMsg = 'ভুল ইমেইল অ্যাড্রেস দিয়েছেন!';
-                } else if (error.code === 'auth/user-not-found') {
-                    errMsg = 'এই ইমেইল দিয়ে কোনো অ্যাকাউন্ট খুঁজে পাওয়া যায়নি!';
-                }
-                
-                showSmartToast(errMsg, 'error');
-            }
-        };
+    showLoading();
+    
+    try {
+        // সরাসরি ফায়ারবেস অথেনটিকেশন ব্যবহার করে রিসেট লিংক পাঠানো হচ্ছে (ডিজাইন সম্পূর্ণ অক্ষত থাকবে)
+        await auth.sendPasswordResetEmail(emailInput);
+        
+        hideLoading();
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'লিংক পাঠানো হয়েছে! 🎉',
+            html: `আপনার <b>${emailInput}</b> ইমেইলে একটি পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে।<br><br><span class="text-rose-500 font-bold text-sm">অবশ্যই ইমেইলের Spam ফোল্ডার চেক করবেন!</span>`,
+            confirmButtonText: 'লগইন পেজে যান',
+            confirmButtonColor: '#059669',
+            customClass: { popup: 'rounded-[25px]' }
+        }).then(() => {
+            window.hideForgotPasswordScreen();
+        });
+        
+    } catch (error) {
+        console.error("Reset Error Details:", error);
+        hideLoading();
+        
+        let errMsg = 'ইমেইল পাঠাতে সার্ভারে সমস্যা হয়েছে। আবার চেষ্টা করুন।';
+        if (error.code === 'auth/invalid-email') {
+            errMsg = 'ভুল ইমেইল অ্যাড্রেস দিয়েছেন!';
+        } else if (error.code === 'auth/user-not-found') {
+            errMsg = 'এই ইমেইল দিয়ে কোনো অ্যাকাউন্ট খুঁজে পাওয়া যায়নি!';
+        } else if (error.code === 'auth/network-request-failed') {
+            errMsg = 'ইন্টারনেট কানেকশন নেই! নেট চেক করুন।';
+        }
+        
+        showSmartToast(errMsg, 'error');
+    }
+};
         
     // ✅ ফিক্সড রুলস ইঞ্জিন (একদম আলাদা আলাদা ক্যাটাগরি)
         window.showRules = async (title) => {
