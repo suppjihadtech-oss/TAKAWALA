@@ -888,21 +888,9 @@ body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
             transition: transform 0.2s ease !important;
         }
 
-        /* ১০. প্রিমিয়াম ক্যানসেল বোতাম */
+        /* ১০. প্রিমিয়াম ক্যানসেল বোতাম (অসামঞ্জস্যতা দূর করতে ক্যানসেল বোতামটি সম্পূর্ণ নিষ্ক্রিয় ও লুকিয়ে দেওয়া হলো) */
         body .swal2-container .swal2-popup .swal2-cancel {
-            background: #f1f5f9 !important;
-            color: #64748b !important;
-            border-radius: 16px !important;
-            font-weight: 700 !important;
-            padding: 14px 0 !important;
-            width: 100% !important;
-            font-size: 15px !important;
-            border: none !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            margin: 0 !important;
-            transition: transform 0.2s ease !important;
+            display: none !important;
         }
 
         div:where(.swal2-confirm):active, div:where(.swal2-cancel):active {
@@ -4801,6 +4789,7 @@ async function loadPackages() {
     }
 }
 
+
 // ✅ VIP PACKAGE BUY FUNCTION (FIXED: ONLY FROM DEPOSIT BALANCE)
 window.buyPackage = async (packageId, price, name, days) => {
     if(!currentUserData) {
@@ -4808,12 +4797,27 @@ window.buyPackage = async (packageId, price, name, days) => {
         return;
     }
 
+    // টাইপ সেফটি এবং ডাটা বিশুদ্ধকরণ
+    const numericPrice = parseFloat(price);
+    const numericDays = parseInt(days) || 30;
+
+    if (isNaN(numericPrice) || numericPrice <= 0) {
+        showSmartToast('প্যাকেজের মূল্য সঠিক নয়!', 'error');
+        return;
+    }
+
     // 🛑 ১. ডাবল পারচেজ প্রোটেকশন (মেয়াদ থাকলে নতুন কেনা যাবে না)
     if (currentUserData.plan !== "Free Member" && currentUserData.packageExpiresAt) {
         try {
-            const expiryDate = currentUserData.packageExpiresAt.toDate();
-            const now = new Date();
+            // সেফটি রূপান্তর: যদি আগে ডেট অবজেক্ট বা অন্য ফরমেটে সেভ হয়ে থাকে তবুও ক্র্যাশ করবে না
+            let expiryDate;
+            if (currentUserData.packageExpiresAt && typeof currentUserData.packageExpiresAt.toDate === 'function') {
+                expiryDate = currentUserData.packageExpiresAt.toDate();
+            } else {
+                expiryDate = new Date(currentUserData.packageExpiresAt);
+            }
             
+            const now = new Date();
             if (expiryDate > now) {
                 Swal.fire({
                     icon: 'warning',
@@ -4825,12 +4829,14 @@ window.buyPackage = async (packageId, price, name, days) => {
                 });
                 return;
             }
-        } catch (e) { console.error("Expiry Check Error", e); }
+        } catch (e) { 
+            console.error("Expiry Check Error", e); 
+        }
     }
     
     // 🛑 ২. ব্যালেন্স চেক (শুধুমাত্র ডিপোজিট ব্যালেন্স চেক করবে)
-    const currentDeposit = currentUserData.depositBalance || 0;
-    if(currentDeposit < price) {
+    const currentDeposit = parseFloat(currentUserData.depositBalance) || 0;
+    if(currentDeposit < numericPrice) {
         Swal.fire({
             icon: 'error',
             title: 'ডিপোজিট ব্যালেন্স নেই!',
@@ -4847,7 +4853,7 @@ window.buyPackage = async (packageId, price, name, days) => {
     // ৩. কনফার্মেশন পপ-আপ
     const result = await Swal.fire({
         title: `${name} কিনবেন?`,
-        html: `মূল্য: <b>৳${price}</b> | মেয়াদ: <b>${days} দিন</b><br><br>কিনলে আপনার ডিপোজিট ব্যালেন্স থাকবে: ৳${(currentDeposit - price).toFixed(2)}`,
+        html: `মূল্য: <b>৳${numericPrice}</b> | মেয়াদ: <b>${numericDays} দিন</b><br><br>কিনলে আপনার ডিপোজিট ব্যালেন্স থাকবে: ৳${(currentDeposit - numericPrice).toFixed(2)}`,
         showCancelButton: true,
         confirmButtonText: 'হ্যাঁ, একটিভ করুন',
         cancelButtonText: 'বাতিল',
@@ -4863,29 +4869,35 @@ window.buyPackage = async (packageId, price, name, days) => {
             
             // মেয়াদ ক্যালকুলেশন
             const expiryDate = new Date();
-            expiryDate.setDate(expiryDate.getDate() + parseInt(days));
+            expiryDate.setDate(expiryDate.getDate() + numericDays);
             
-            // 🔥 ১. ইউজারের ডাটা আপডেট (টাকা শুধু depositBalance থেকে কাটবে)
+            // 🛡️ মেগা ফিক্স: Raw Date এর বদলে ফায়ারবেস অফিশিয়াল টাইমস্ট্যাম্পে কনভার্ট করা (ক্লিন সিরিয়ালাইজেশন)
+            const firestoreExpiryDate = firebase.firestore.Timestamp.fromDate(expiryDate);
+
+            // 🔥 ৪. ইউজারের ডাটা আপডেট (টাকা শুধু depositBalance থেকে কাটবে)
             const updateFields = {
-                depositBalance: firebase.firestore.FieldValue.increment(-price), // ফিক্সড: ডিপোজিট থেকে মাইনাস
-                plan: name,
+                depositBalance: firebase.firestore.FieldValue.increment(-numericPrice),
+                plan: String(name),
                 isActivated: true,
-                packageExpiresAt: expiryDate,
-                packageId: packageId,
-                totalSpent: firebase.firestore.FieldValue.increment(price)
+                packageExpiresAt: firestoreExpiryDate, // <--- টাইমস্ট্যাম্প অবজেক্ট ফিক্সড
+                packageId: String(packageId),
+                totalSpent: firebase.firestore.FieldValue.increment(numericPrice)
             };
+
             // যদি ইউজার কোডটি দিয়ে ডিসকাউন্ট নিয়ে প্যাকেজ কেনেন
-            if (appliedPromoPercent === 8) {
+            if (typeof appliedPromoPercent !== 'undefined' && appliedPromoPercent === 8) {
                 updateFields.isSecretPromoUsed = true;
             }
+
+            // ফায়ারবেসে সরাসরি রাইট রিকোয়েস্ট পাঠানো
             await userRef.update(updateFields);
             
-            // ২. হিস্ট্রি লগ
+            // ৫. হিস্ট্রি লগ
             await db.collection("history").add({
-                userId: currentUserId,
-                name: currentUserData.name,
+                userId: String(currentUserId),
+                name: String(currentUserData.name || "মেম্বার"),
                 type: "প্যাকেজ ক্রয়",
-                amount: -price,
+                amount: -numericPrice,
                 status: "Success",
                 details: `${name} প্যাকেজটি ডিপোজিট ব্যালেন্স দিয়ে কেনা হয়েছে।`,
                 date: new Date().toLocaleDateString('bn-BD'),
@@ -4893,12 +4905,11 @@ window.buyPackage = async (packageId, price, name, days) => {
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
             
-            // ৩. টেলিগ্রাম নোটিফিকেশন
-            // ৩. টেলিগ্রাম নোটিফিকেশন
-            const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় (ডিপোজিট ব্যালেন্স)*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${price}\n✅ *অবস্থা:* সফল`;
+            // ৬. টেলিগ্রাম নোটিফিকেশন
+            const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় (ডিপোজিট ব্যালেন্স)*\n\n👤 *ইউজার:* ${currentUserData.name || "মেম্বার"}\n📱 *ফোন:* ${currentUserData.phone || "N/A"}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${numericPrice}\n✅ *অবস্থা:* সফল`;
             await sendTelegramNotification(telegramMessage);
             
-            // 🎁 ম্যাজিক সিকিউরিটি ফিক্স: প্যাকেজ কেনা সফল হলেই ডিসকাউন্ট কোড অটোমেটিক রিসেট হবে
+            // ডিসকাউন্ট প্রোমো কোড রিসেট করা
             appliedPromoPercent = 0; 
             
             showSmartToast(`${name} সফলভাবে সক্রিয় করা হয়েছে!`, 'success');
@@ -4910,13 +4921,13 @@ window.buyPackage = async (packageId, price, name, days) => {
             setTimeout(() => { window.showPage('homeScreen'); }, 1500);
             
         } catch (e) {
-            console.error("Purchase error:", e);
-            showSmartToast('ক্রয় করতে সমস্যা হয়েছে।', 'error');
+            console.error("Purchase error details:", e);
+            showSmartToast('ক্রয় করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।', 'error');
             hideLoading();
         }
     }
 };
-    
+
        // ✅ রিয়েল-টাইমে টাকার মান টাইপ করার সাথে সাথে ডাইনামিক কার্ড আপডেট করার হেল্পার
 window.updateDepositInstructionValues = () => {
     const amountInput = document.getElementById('depositAmount');
