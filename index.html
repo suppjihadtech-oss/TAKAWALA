@@ -1312,6 +1312,16 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     background-color: #334155 !important;
     color: #94a3b8 !important;
 }
+
+/* 🛑 ক্যানসেল বাটন গ্লোবালি বড় হাতের অক্ষরে (UPPERCASE) দেখানোর ফিক্স */
+.swal2-cancel, 
+.cancel-button, 
+.btn-cancel, 
+[class*="cancel" i], 
+[id*="cancel" i] {
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px; /* লেখাটিকে আরও সুন্দর ও স্পষ্ট দেখানোর জন্য হালকা স্পেসিং */
+}
     </style>
     
 </head>
@@ -4751,6 +4761,7 @@ async function loadPackages() {
             
             // 🔥 সেফটি ফিক্স: নামের ভেতরে (') থাকলে সেটা হ্যান্ডেল করা
             const safeName = pName.replace(/'/g, "\\'"); 
+            const safeDesc = pDesc.replace(/'/g, "\\'"); 
             
             let pDiscount = packageData.discountPrice || 0;
 
@@ -4825,8 +4836,8 @@ async function loadPackages() {
                             ${pDiscount > 0 ? `<p class="text-[10px] text-slate-400 line-through mt-0.5">৳${basePrice}</p>` : ''}
                         </div>
                     </div>
-                    <!-- 🔥 কেনার সময় ইউজার finalPrice টাই পে করবে -->
-                    <button onclick="window.buyPackage('${packageId}', ${finalPrice}, '${safeName}', ${pDays})" 
+                    <!-- 🔥 কেনার সময় ইউজার ডাইনামিক চেকআউট স্লিপ লঞ্চ করার জন্য অতিরিক্ত আর্গুমেন্ট পাস করা হচ্ছে -->
+                    <button onclick="window.buyPackage('${packageId}', ${finalPrice}, '${safeName}', ${pDays}, ${basePrice}, '${safeDesc}')" 
                         class="w-full mt-4 ${bgColor} text-white py-3 rounded-2xl font-bold shadow-lg hover:opacity-90 active:scale-95 transition-all flex justify-center items-center gap-2">
                         ${typeof window.isHappyHourActive === 'function' && window.isHappyHourActive() ? '<i class="ri-flashlight-fill text-yellow-300 animate-pulse"></i> অফারে কিনুন' : 'প্যাকেজটি একটিভ করুন'}
                     </button>
@@ -4842,24 +4853,22 @@ async function loadPackages() {
     }
 }
 
+// ✅ গ্লোবাল ভেরিয়েবল ফর কারেন্ট চেকআউট সেশন
+window.selectedCheckoutPackage = null;
 
-// ✅ VIP PACKAGE BUY FUNCTION (FIXED: ONLY FROM DEPOSIT BALANCE)
-window.buyPackage = async (packageId, price, name, days) => {
-    if(!currentUserData) {
+// ✅ ১. প্যাকেজ ক্লিক হ্যান্ডলার (ব্যালেন্স ও এক্সপায়ারি লাইভ ভ্যালিডেশন)
+window.buyPackage = async (packageId, price, name, days, basePrice, description) => {
+    if (!currentUserData) {
         showSmartToast('ইউজার ডেটা লোড হচ্ছে...', 'error');
         return;
     }
 
-    // টাইপ সেফটি এবং ডাটা বিশুদ্ধকরণ
-    const numericPrice = parseFloat(price);
+    const finalPrice = parseFloat(price);
+    const originalPrice = parseFloat(basePrice) || finalPrice;
     const numericDays = parseInt(days) || 30;
+    const safeDesc = description || "প্রিমিয়াম মেম্বারশিপ প্যাকেজ";
 
-    if (isNaN(numericPrice) || numericPrice <= 0) {
-        showSmartToast('প্যাকেজের মূল্য সঠিক নয়!', 'error');
-        return;
-    }
-
-    // 🛑 ১. ডাবল পারচেজ প্রোটেকশন (মেয়াদ থাকলে নতুন কেনা যাবে না)
+    // ডাবল পারচেজ প্রোটেকশন
     const userPlan = currentUserData.plan || "Free Member";
     if (userPlan !== "Free Member" && currentUserData.packageExpiresAt) {
         try {
@@ -4883,97 +4892,146 @@ window.buyPackage = async (packageId, price, name, days) => {
                 return;
             }
         } catch (e) { 
-            console.error("Expiry Check Error", e); 
+            console.error(e); 
         }
     }
-    
-    // 🛑 ২. ব্যালেন্স চেক (ডিপোজিট ব্যালেন্স থেকে টাকা কাটবে)
-    const currentDeposit = parseFloat(currentUserData.depositBalance) || 0;
-    if(currentDeposit < numericPrice) {
-        Swal.fire({
-            icon: 'error',
-            title: 'ডিপোজিট ব্যালেন্স নেই!',
-            html: `প্যাকেজ কিনতে আপনার <b>ডিপোজিট ব্যালেন্সে</b> পর্যাপ্ত টাকা নেই।<br>আপনার বর্তমান ডিপোজিট ব্যালেন্স: ৳${currentDeposit.toFixed(2)}`,
-            confirmButtonText: 'টাকা ডিপোজিট করুন',
-            confirmButtonColor: '#059669',
-            customClass: { popup: 'rounded-[25px]' }
-        }).then((res) => {
-            if(res.isConfirmed) window.showPage('walletScreen');
+
+    // পপ-আপ না দেখিয়ে সরাসরি গর্জিয়াস চেকআউট শিট লঞ্চ করা হচ্ছে
+    window.openPackageCheckout(packageId, originalPrice, finalPrice, name, numericDays, safeDesc);
+};
+
+// ✅ ২. ওপেন প্যাকেজ চেকআউট মডিউল (ডাইনামিক বাটন ম্যানেজমেন্ট সহ)
+window.openPackageCheckout = (packageId, basePrice, finalPrice, name, days, description) => {
+    // ডাটা মেমরিতে ব্যাকআপ রাখা
+    window.selectedCheckoutPackage = { packageId, basePrice, finalPrice, name, days, description };
+
+    // ডম (DOM) কন্টেন্ট আপডেট
+    document.getElementById('checkoutPackageName').innerText = name;
+    document.getElementById('checkoutPackageDesc').innerText = description;
+    document.getElementById('checkoutUserName').innerText = currentUserData.name || "মেম্বার";
+    document.getElementById('checkoutUserAvatar').src = currentUserData.avatar || "https://img.icons8.com/fluency/96/user-male-circle.png";
+    document.getElementById('checkoutDuration').innerText = days + " দিন";
+    document.getElementById('checkoutBasePrice').innerText = "৳" + basePrice.toFixed(2);
+    document.getElementById('checkoutFinalPrice').innerText = "৳" + finalPrice.toFixed(2);
+
+    // ডিসকাউন্ট ক্যালকুলেশন
+    const discountAmt = basePrice - finalPrice;
+    const discountPercent = basePrice > 0 ? Math.round((discountAmt / basePrice) * 100) : 0;
+
+    const discountRow = document.getElementById('checkoutDiscountRow');
+    const buyBtnText = document.getElementById('checkoutBuyBtnText');
+
+    if (discountAmt > 0) {
+        discountRow.classList.remove('hidden');
+        document.getElementById('checkoutDiscountAmt').innerText = "৳" + discountAmt.toFixed(2);
+        document.getElementById('checkoutDiscountPercent').innerText = discountPercent + "%";
+        buyBtnText.innerText = "অফারে কিনুন 🚀";
+    } else {
+        discountRow.classList.add('hidden');
+        buyBtnText.innerText = "প্যাকেজটি একটিভ করুন 💎";
+    }
+
+    // ইউজারের ডিপোজিট ব্যালেন্স রেন্ডার
+    const depositBal = parseFloat(currentUserData.depositBalance) || 0;
+    document.getElementById('checkoutUserDeposit').innerText = "৳" + depositBal.toFixed(2);
+
+    // 🔄 ব্যালেন্স চেক করে ডাইনামিক বাটন কন্ট্রোল (লজিক্যাল ম্যাজিক)
+    const buyBtn = document.getElementById('checkoutConfirmBuyBtn');
+    const depBtn = document.getElementById('checkoutDepositBtn');
+    const warningBox = document.getElementById('checkoutWarningBox');
+
+    if (depositBal >= finalPrice) {
+        // ব্যালেন্স পর্যাপ্ত থাকলে: অফারে কিনুন বাটন দৃশ্যমান ও ডিপোজিট বাটন হিডেন
+        buyBtn.classList.remove('hidden');
+        depBtn.classList.add('hidden');
+        warningBox.classList.add('hidden');
+    } else {
+        // ব্যালেন্স কম থাকলে: ডিপোজিট বাটন দৃশ্যমান ও কিনুন বাটন হিডেন
+        buyBtn.classList.add('hidden');
+        depBtn.classList.remove('hidden');
+        warningBox.classList.remove('hidden');
+    }
+
+    // মোডাল স্লাইড-আপ ভিউ সচল করা
+    const modal = document.getElementById('packageCheckoutModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        window.playSound('snd_click');
+    }
+};
+
+// ✅ ৩. ক্লোজ প্যাকেজ চেকআউট
+window.closePackageCheckout = () => {
+    const modal = document.getElementById('packageCheckoutModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+    window.selectedCheckoutPackage = null;
+};
+
+// ✅ ৪. ডিপোজিট স্ক্রিনে রি-রাউটিং ফাংশন
+window.redirectToDeposit = () => {
+    window.closePackageCheckout();
+    window.showPage('depositScreen');
+};
+
+// ✅ ৫. ডেডিকেটেড প্যাকেজ পারচেজ কনফার্মেশন (সফল ক্রয় প্রক্রিয়া)
+window.confirmPackagePurchase = async () => {
+    if (!window.selectedCheckoutPackage) return;
+    const { packageId, basePrice, finalPrice, name, days, description } = window.selectedCheckoutPackage;
+
+    window.closePackageCheckout();
+    showLoading();
+
+    try {
+        const userRef = db.collection("users").doc(currentUserId);
+        const expiryDate = new Date();
+        expiryDate.setDate(expiryDate.getDate() + parseInt(days));
+
+        const updateFields = {
+            depositBalance: firebase.firestore.FieldValue.increment(-finalPrice),
+            plan: String(name),
+            isActivated: true,
+            packageExpiresAt: expiryDate,
+            packageId: String(packageId)
+        };
+
+        if (typeof appliedPromoPercent !== 'undefined' && appliedPromoPercent === 8) {
+            updateFields.isSecretPromoUsed = true;
+        }
+
+        await userRef.update(updateFields);
+
+        await db.collection("history").add({
+            userId: String(currentUserId),
+            name: String(currentUserData.name || "মেম্বার"),
+            type: "প্যাকেজ ক্রয়",
+            amount: -finalPrice,
+            status: "Success",
+            details: `${name} প্যাকেজটি ডিপোজিট ব্যালেন্স দিয়ে কেনা হয়েছে।`,
+            date: new Date().toLocaleDateString('bn-BD'),
+            time: new Date().toLocaleTimeString('bn-BD'),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-        return;
-    }
-    
-    // ৩. কনফার্মেশন পপ-আপ
-    const result = await Swal.fire({
-        title: `${name} কিনবেন?`,
-        html: `মূল্য: <b>৳${numericPrice}</b> | মেয়াদ: <b>${numericDays} দিন</b><br><br>কিনলে আপনার ডিপোজিট ব্যালেন্স থাকবে: ৳${(currentDeposit - numericPrice).toFixed(2)}`,
-        showCancelButton: true,
-        confirmButtonText: 'হ্যাঁ, একটিভ করুন',
-        cancelButtonText: 'বাতিল',
-        confirmButtonColor: '#059669',
-        icon: 'question',
-        customClass: { popup: 'rounded-[25px]' }
-    });
-    
-    if (result.isConfirmed) {
-        showLoading();
-        try {
-            const userRef = db.collection("users").doc(currentUserId);
-            
-            // মেয়াদ ক্যালকুলেশন
-            const expiryDate = new Date();
-            expiryDate.setDate(expiryDate.getDate() + numericDays);
 
-            // 🔥 ৪. ইউজারের ডাটা আপডেট (অপ্রয়োজনীয় totalSpent ফিল্ড বাদ দেওয়া হয়েছে)
-            const updateFields = {
-                depositBalance: firebase.firestore.FieldValue.increment(-numericPrice),
-                plan: String(name),
-                isActivated: true,
-                packageExpiresAt: expiryDate, // Standard Date অবজেক্ট ফায়ারস্টোর সরাসরি সাপোর্ট করে
-                packageId: String(packageId)
-            };
+        const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় (ডিপোজিট ব্যালেন্স)*\n\n👤 *ইউজার:* ${currentUserData.name || "মেম্বার"}\n📱 *ফোন:* ${currentUserData.phone || "N/A"}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${finalPrice}\n✅ *অবস্থা:* সফল`;
+        await sendTelegramNotification(telegramMessage);
 
-            // যদি ইউজার কুপন কোড ব্যবহার করে থাকেন
-            if (typeof appliedPromoPercent !== 'undefined' && appliedPromoPercent === 8) {
-                updateFields.isSecretPromoUsed = true;
-            }
+        appliedPromoPercent = 0; 
 
-            // ফায়ারবেসে সরাসরি আপডেট
-            await userRef.update(updateFields);
-            
-            // ৫. হিস্ট্রি লগ তৈরি করা
-            await db.collection("history").add({
-                userId: String(currentUserId),
-                name: String(currentUserData.name || "মেম্বার"),
-                type: "প্যাকেজ ক্রয়",
-                amount: -numericPrice,
-                status: "Success",
-                details: `${name} প্যাকেজটি ডিপোজিট ব্যালেন্স দিয়ে কেনা হয়েছে।`,
-                date: new Date().toLocaleDateString('bn-BD'),
-                time: new Date().toLocaleTimeString('bn-BD'),
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            // ৬. টেলিগ্রাম নোটিফিকেশন পাঠানো
-            const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় (ডিপোজিট ব্যালেন্স)*\n\n👤 *ইউজার:* ${currentUserData.name || "মেম্বার"}\n📱 *ফোন:* ${currentUserData.phone || "N/A"}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${numericPrice}\n✅ *অবস্থা:* সফল`;
-            await sendTelegramNotification(telegramMessage);
-            
-            // ডিসকাউন্ট প্রোমো কোড রিসেট
-            appliedPromoPercent = 0; 
-            
-            showSmartToast(`${name} সফলভাবে সক্রিয় করা হয়েছে!`, 'success');
-            window.playSound('snd_success');
-            if(typeof confetti === 'function') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-            hideLoading();
-            
-            // হোমে রিডাইরেক্ট
-            setTimeout(() => { window.showPage('homeScreen'); }, 1500);
-            
-        } catch (e) {
-            console.error("Purchase error details:", e);
-            showSmartToast('ক্রয় করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।', 'error');
-            hideLoading();
-        }
+        showSmartToast(`${name} সফলভাবে সক্রিয় করা হয়েছে!`, 'success');
+        window.playSound('snd_success');
+        if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        hideLoading();
+
+        setTimeout(() => { window.showPage('homeScreen'); }, 1500);
+
+    } catch (e) {
+        console.error("Purchase error:", e);
+        showSmartToast('ক্রয় করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।', 'error');
+        hideLoading();
     }
 };
        // ✅ রিয়েল-টাইমে টাকার মান টাইপ করার সাথে সাথে ডাইনামিক কার্ড আপডেট করার হেল্পার
@@ -13024,6 +13082,91 @@ window.showPage = (id, defaultTab = null) => {
             <!-- Close Button -->
             <button onclick="window.closeShareModal()" class="w-full bg-red-50 text-red-600 font-black py-3.5 rounded-2xl text-xs transition-all uppercase tracking-widest mt-2">
                 বাতিল
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 🛒 ULTRA PREMIUM VIP CHECKOUT MODAL (BENGALI) -->
+<div id="packageCheckoutModal" class="hidden fixed inset-0 z-[999999] flex flex-col items-center justify-end transition-all duration-300">
+    <!-- Backdrop with premium blurry glass mask -->
+    <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" onclick="window.closePackageCheckout()"></div>
+    
+    <!-- iOS Style Sliding Checkout Sheet -->
+    <div class="bg-white w-full max-w-md rounded-t-[35px] shadow-2xl p-6 relative z-10 animate__animated animate__slideInUp duration-300 overflow-hidden max-h-[90vh] overflow-y-auto">
+        <!-- iOS Style Indicator Bar -->
+        <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-5"></div>
+        
+        <!-- Dynamic Glowing Crown Badge -->
+        <div class="text-center mb-5">
+            <div class="w-16 h-16 bg-gradient-to-tr from-yellow-400 to-amber-500 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-2.5 shadow-lg border-2 border-white animate-pulse">
+                <i class="ri-vip-crown-fill"></i>
+            </div>
+            <h3 id="checkoutPackageName" class="text-xl font-black text-slate-800">প্যাকেজ একটিভেশন</h3>
+            <p id="checkoutPackageDesc" class="text-[11px] text-slate-400 font-bold tracking-wide mt-1 uppercase">---</p>
+        </div>
+
+        <!-- Checkout Billing Specification Card -->
+        <div class="bg-slate-50 border border-slate-100 rounded-3xl p-5 space-y-3.5 mb-5 shadow-inner">
+            <!-- User Info Segment -->
+            <div class="flex items-center gap-2.5 pb-3 border-b border-dashed border-slate-200">
+                <img id="checkoutUserAvatar" src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-8 h-8 rounded-full border border-slate-200">
+                <p class="text-xs font-bold text-slate-600">প্যাকেজ ক্রেতা: <span id="checkoutUserName" class="text-slate-800 font-black">---</span></p>
+            </div>
+
+            <!-- Invoice Rows -->
+            <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500 font-bold">প্যাকেজের মেয়াদ</span>
+                <span id="checkoutDuration" class="font-black text-slate-700 bg-slate-200 px-2.5 py-0.5 rounded text-[10px]">-- দিন</span>
+            </div>
+            <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500 font-bold">মূল মূল্য (ORIGINAL PRICE)</span>
+                <span id="checkoutBasePrice" class="font-bold text-slate-400 line-through">৳০.০০</span>
+            </div>
+            <div id="checkoutDiscountRow" class="flex justify-between items-center text-xs text-rose-500 font-bold">
+                <span>বিশেষ ছাড় (DISCOUNT)</span>
+                <span class="bg-rose-50 border border-rose-100 px-2 py-0.5 rounded text-[10px]"><span id="checkoutDiscountAmt">৳০.০০</span> (<span id="checkoutDiscountPercent">০%</span>)</span>
+            </div>
+            <div class="flex justify-between items-center pt-3 border-t border-dashed border-slate-200">
+                <span class="text-slate-800 font-black text-sm">পরিশোধযোগ্য মূল্য</span>
+                <span id="checkoutFinalPrice" class="font-black text-2xl text-emerald-600">৳০.০০</span>
+            </div>
+        </div>
+
+        <!-- Balance Status Card -->
+        <div class="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl mb-5">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-emerald-500 text-white rounded-lg flex items-center justify-center text-sm shadow-sm"><i class="ri-wallet-3-fill"></i></div>
+                    <span class="text-xs font-bold text-slate-600">আপনার ডিপোজিট ব্যালেন্স</span>
+                </div>
+                <span id="checkoutUserDeposit" class="font-black text-slate-800 text-sm">৳০.০০</span>
+            </div>
+        </div>
+
+        <!-- Warning Alert (if balance is low) -->
+        <div id="checkoutWarningBox" class="hidden bg-rose-50 border border-rose-100 p-3.5 rounded-2xl mb-5 flex items-start gap-2.5 animate__animated animate__shakeX">
+            <i class="ri-error-warning-fill text-rose-500 text-lg shrink-0 mt-0.5"></i>
+            <div class="text-left text-[11px] font-bold text-rose-700 leading-normal">
+                দুঃখিত মামা, আপনার ডিপোজিট ব্যালেন্স কম রয়েছে! এই প্যাকেজটি কিনতে হলে আপনাকে পর্যাপ্ত ব্যালেন্স এড করতে হবে।
+            </div>
+        </div>
+
+        <!-- Dynamic CTA Bottom Buttons -->
+        <div class="space-y-2">
+            <!-- 1. Active Purchase Button -->
+            <button id="checkoutConfirmBuyBtn" onclick="window.confirmPackagePurchase()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                <i class="ri-shield-check-fill text-lg animate-pulse"></i> <span id="checkoutBuyBtnText">প্যাকেজটি একটিভ করুন</span>
+            </button>
+            
+            <!-- 2. Re-Route Deposit Button (High Priority if Balance is Low) -->
+            <button id="checkoutDepositBtn" onclick="window.redirectToDeposit()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                <i class="ri-add-circle-fill text-lg"></i> ডিপোজিট করুন
+            </button>
+
+            <!-- 3. Dismiss Sheet Button -->
+            <button onclick="window.closePackageCheckout()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold py-3.5 rounded-2xl text-xs transition-all">
+                বাতিল করুন
             </button>
         </div>
     </div>
