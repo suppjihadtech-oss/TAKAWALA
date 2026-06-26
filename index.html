@@ -742,33 +742,32 @@
             backdrop-filter: blur(5px);
         }
 
-       /* 🛡️ ULTRA-SPECIFIC SWEETALERT2 TAILWIND FIX (100% CRSTAL CLEAR ICONS) */
+       /* 🛡️ ULTRA-SPECIFIC SWEETALERT2 TAILWIND FIX (100% CRYSTAL CLEAR ICONS) */
         
-        /* ১. সুইট অ্যালার্টের সাকসেস ও এরর আইকনের ভেতরের সব নড়বড়ে ডিবল্ট উপাদান পুরোপুরি হাইড করা */
+        /* ১. সুইট অ্যালার্টের সাকসেস ও এরর আইকনের ভেতরের উপাদান হাইড করা */
         body .swal2-container .swal2-popup .swal2-icon.swal2-success *, 
         body .swal2-container .swal2-popup .swal2-icon.swal2-error * {
             display: none !important;
         }
 
-        /* ২. গ্লোবাল পপ-আপ কন্টেইনার এবং প্রিমিয়াম ফ্রস্টেড গ্লাস ইফেক্ট */
+        /* ২. গ্লোবাল ব্যাকগ্রাউন্ড ডার্ক মাস্ক (ডাবল ব্লার ক্র্যাশ এড়াতে এখানে ব্লার রিমুভ করা হয়েছে) */
         body .swal2-container {
-            backdrop-filter: blur(8px) !important;
-            -webkit-backdrop-filter: blur(8px) !important;
-            background-color: rgba(15, 23, 42, 0.5) !important; /* হালকা ডার্ক গ্লাস ব্যাকগ্রাউন্ড */
+            background-color: rgba(15, 23, 42, 0.45) !important; /* প্রিমিয়াম ডার্ক মাস্ক */
         }
 
+        /* ৩. আল্ট্রা-প্রিমিয়াম রিয়েল গ্লসি ফ্রস্টেড গ্লাস কার্ড ইফেক্ট */
         body .swal2-container .swal2-popup {
             border-radius: 28px !important;
-            background: rgba(255, 255, 255, 0.88) !important; /* ৮৮% ওপাল রিচ গ্লাস ইফেক্ট */
-            backdrop-filter: blur(20px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-            border: 1px solid rgba(255, 255, 255, 0.5) !important;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15) !important;
+            background: rgba(255, 255, 255, 0.65) !important; /* ৬৫% ট্রান্সপারেন্ট লাক্সারি গ্লাস */
+            backdrop-filter: blur(25px) saturate(210%) !important; /* গভীর আইওএস ব্লার ও ভাইব্রেন্ট কালার */
+            -webkit-backdrop-filter: blur(25px) saturate(210%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.6) !important; /* গ্লসি হোয়াইট বর্ডার */
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
             padding: 24px 20px !important;
             width: 320px !important;
         }
 
-        /* ৩. গ্লোবাল আইকন বক্স রিসেট (উচ্চ অগ্রাধিকারসহ নিখুঁত বৃত্ত গঠন) */
+        /* ৪. গ্লোবাল আইকন বক্স রিসেট */
         body .swal2-container .swal2-popup .swal2-icon {
             width: 65px !important;
             height: 65px !important;
@@ -778,11 +777,9 @@
             margin: 15px auto !important;
             box-sizing: border-box !important;
             position: relative !important;
-            background-image: none !important; /* ডিফল্ট ব্যাকগ্রাউন্ড ক্লিয়ারেন্স */
-            /* display: flex !important; <--- এইটা এখানে ফোর্স করা ছিল, যার কারণে ফাঁকা গোল আসতো। এটা নিচে নির্দিষ্ট আইকনে রিলোকেট করা হয়েছে */
+            background-image: none !important;
         }
 
-        /* শুধুমাত্র সচল বা সক্রিয় আইকনগুলোর ক্ষেত্রে flex ডিসপ্লে সচল করা (ভেঙে যাওয়া ফাঁকা গোল চিহ্নটি পুরোপুরি রিমুভ করার জন্য) */
         body .swal2-container .swal2-popup .swal2-icon.swal2-icon-show,
         body .swal2-container .swal2-popup .swal2-icon.swal2-success,
         body .swal2-container .swal2-popup .swal2-icon.swal2-error,
@@ -794,50 +791,43 @@
             justify-content: center !important;
         }
 
-        /* ৪. প্রিমিয়াম সাকসেস বৃত্ত (সবুজ থিম) */
+        /* ৫. প্রিমিয়াম সাকসেস বৃত্ত (সবুজ থিম) */
         body .swal2-container .swal2-popup .swal2-icon.swal2-success {
             border: 2px solid #10b981 !important;
-            background-color: #ecfdf5 !important;
+            background-color: rgba(236, 253, 245, 0.8) !important;
             color: #10b981 !important;
         }
 
-        /* নিখুঁত ও তীক্ষ্ণ ভেক্টর টিক চিহ্ন ইনজেকশন (কখনো বাঁকা বা ভাঙবে না) */
         body .swal2-container .swal2-popup .swal2-icon.swal2-success::before {
             content: "" !important;
             display: block !important;
             width: 28px !important;
             height: 28px !important;
-            min-width: 28px !important;
-            min-height: 28px !important;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") !important;
             background-size: contain !important;
             background-repeat: no-repeat !important;
             background-position: center !important;
         }
 
-        /* ৫. প্রিমিয়াম এরর বৃত্ত (লাল থিম) */
+        /* ৬. প্রিমিয়াম এরর বৃত্ত (লাল থিম) */
         body .swal2-container .swal2-popup .swal2-icon.swal2-error {
             border: 2px solid #ef4444 !important;
-            background-color: #fef2f2 !important;
+            background-color: rgba(254, 242, 242, 0.8) !important;
             color: #ef4444 !important;
         }
 
-     /* নিখুঁত ও তীক্ষ্ণ ভেক্টর ক্রস (X) চিহ্ন ইনজেকশন (কখনো বাঁকা বা ভাঙবে না এবং পূর্বে ভুল করে টিক চিহ্ন দেওয়া ছিল) */
-body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
-    content: "" !important;
-    display: block !important;
-    width: 22px !important;
-    height: 22px !important;
-    min-width: 22px !important;
-    min-height: 22px !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-}
+        body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
+            content: "" !important;
+            display: block !important;
+            width: 22px !important;
+            height: 22px !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
+            background-size: contain !important;
+            background-repeat: no-repeat !important;
+            background-position: center !important;
+        }
 
-
-        /* ৬. শিরোনাম ডিজাইন (উচ্চ অগ্রাধিকার) */
+        /* ৭. শিরোনাম ডিজাইন */
         body .swal2-container .swal2-popup .swal2-title {
             font-family: 'Hind Siliguri', sans-serif !important;
             font-weight: 800 !important;
@@ -849,18 +839,18 @@ body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
             line-height: 1.3 !important;
         }
 
-        /* ৭. সাবটেক্সট ডিজাইন (উচ্চ অগ্রাধিকার) */
+        /* ৮. সাবটেক্সট ডিজাইন */
         body .swal2-container .swal2-popup .swal2-html-container {
             font-family: 'Hind Siliguri', sans-serif !important;
             font-size: 13px !important;
-            color: #64748b !important;
-            font-weight: 500 !important;
+            color: #475569 !important;
+            font-weight: 600 !important;
             line-height: 1.5 !important;
             margin-bottom: 20px !important;
             text-align: center !important;
         }
 
-        /* ৮. বোতাম কন্টেইনার */
+        /* ৯. বোতাম কন্টেইনার */
         body .swal2-container .swal2-popup .swal2-actions {
             width: 100% !important;
             margin-top: 15px !important;
@@ -869,7 +859,7 @@ body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
             gap: 10px !important;
         }
 
-        /* ৯. প্রিমিয়াম কনফার্ম বোতাম */
+        /* ১০. প্রিমিয়াম কনফার্ম বোতাম */
         body .swal2-container .swal2-popup .swal2-confirm {
             background: #00e676 !important;
             background-image: linear-gradient(135deg, #00e676, #00c853) !important;
@@ -888,17 +878,17 @@ body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
             transition: transform 0.2s ease !important;
         }
 
-       /* ১০. প্রিমিয়াম বাতিল বোতাম ডিজাইন সচল ও সুন্দর করা */
+        /* ১১. প্রিমিয়াম বাতিল বোতাম ডিজাইন */
         body .swal2-container .swal2-popup .swal2-cancel {
             display: flex !important;
-            background: #f1f5f9 !important;
-            color: #475569 !important;
+            background: rgba(0, 0, 0, 0.05) !important;
+            color: #334155 !important;
             border-radius: 16px !important;
             font-weight: 700 !important;
             padding: 12px 0 !important;
             width: 100% !important;
-            font-size: 15px !important;
-            border: 1px solid #e2e8f0 !important;
+            font-size: 14px !important;
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
             justify-content: center !important;
             align-items: center !important;
             margin: 0 !important;
@@ -907,10 +897,10 @@ body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
         }
         body .swal2-container .swal2-popup .swal2-cancel:active {
             transform: scale(0.96) !important;
-            background: #e2e8f0 !important;
+            background: rgba(0, 0, 0, 0.1) !important;
         }
 
-        /* ১১. প্রিমিয়াম ক্লোজ (ক্রস) বোতাম ডিজাইন */
+        /* ১২. প্রিমিয়াম ক্লোজ (ক্রস) বোতাম */
         body .swal2-container .swal2-popup .swal2-close {
             display: flex !important;
             color: #94a3b8 !important;
@@ -924,13 +914,6 @@ body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
             height: 32px !important;
             top: 10px !important;
             right: 10px !important;
-        }
-        body .swal2-container .swal2-popup .swal2-close:hover {
-            color: #ef4444 !important;
-        }
-
-        div:where(.swal2-confirm):active, div:where(.swal2-cancel):active {
-            transform: scale(0.96) !important;
         }
 
        /* ✅ MODERN iPHONE DOCK BOTTOM NAV */
@@ -3918,20 +3901,16 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
         }
 
-// 🔄 SWEETALERT2 GLOBAL BENGALI INTERCEPTOR & FALLBACK (নিখুঁত অনুবাদ ও বাতিল বোতাম ফিক্স)
+// 🔄 SWEETALERT2 GLOBAL BENGALI INTERCEPTOR & FALLBACK (আইকন ও ক্রস বোতাম ফিক্স)
 if (typeof Swal !== 'undefined') {
     const originalFire = Swal.fire;
     Swal.fire = function(options, ...args) {
         if (options && typeof options === 'object') {
-            // ১. বাতিল বোতামের টেক্সট না থাকলে বা ইংরেজি থাকলে তা বাংলায় "বাতিল" এ রূপান্তর করা
-            if (options.showCancelButton && (!options.cancelButtonText || options.cancelButtonText.toLowerCase() === 'cancel')) {
-                options.cancelButtonText = 'বাতিল';
-            }
-            // ২. প্রতিটি পপ-আপে স্বয়ংক্রিয়ভাবে ক্লোজ (ক্রস) বোতাম সচল করা
+            // ১. প্রতিটি পপ-আপে স্বয়ংক্রিয়ভাবে ক্লোজ (ক্রস) বোতাম সচল করা
             if (options.showCloseButton === undefined) {
                 options.showCloseButton = true;
             }
-            // ৩. সাকসেস এবং এরর আইকনগুলির জন্য সঠিক ক্লাস ইনজেকশন নিশ্চিত করা
+            // ২. সাকসেস এবং এরর আইকনগুলির জন্য সঠিক ক্লাস ইনজেকশন নিশ্চিত করা
             if (options.icon) {
                 if (!options.customClass) options.customClass = {};
                 if (typeof options.customClass === 'object') {
@@ -4316,8 +4295,22 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
             });
         };
         
-  // 🛡️ গ্লোবাল অ্যাড কনকারেন্সি লক (ডাবল বা র‍্যাপিড ক্লিক প্রটেকশন)
+ // 🛡️ গ্লোবাল অ্যাড কনকারেন্সি লক ও টাইমার রেজিস্ট্রি (র‍্যাপিড ক্লিক ও টাইমার সংঘর্ষ এড়াতে)
 window.isAdShowing = false;
+window.activeAdTimeouts = [];
+
+// নিরাপদ টাইমার সেট করার হেল্পার ফাংশন
+function safeAdTimeout(fn, delay) {
+    const id = setTimeout(fn, delay);
+    window.activeAdTimeouts.push(id);
+    return id;
+}
+
+// সমস্ত রানিং অ্যাড টাইমার একসাথে বন্ধ ও মেমোরি ক্লিয়ার করার ফাংশন
+function clearAllAdTimeouts() {
+    window.activeAdTimeouts.forEach(id => clearTimeout(id));
+    window.activeAdTimeouts = [];
+}
 
 // ✅ ডাবল অ্যাড + হাই-স্পিড অ্যান্টি-ফ্লিকারিং (ক্লিনআপ প্রটেকশন ও কনকারেন্সি লক সহ)
 window.showMonetagAd = async (callback) => {
@@ -4327,22 +4320,26 @@ window.showMonetagAd = async (callback) => {
         return;
     }
     window.isAdShowing = true;
+    clearAllAdTimeouts(); // পূর্ববর্তী কোনো ঝুলন্ত টাইমার থাকলে তা পরিষ্কার করা
 
     showLoading();
     cleanupAdOverlays(); // অ্যাড শুরু করার আগে বডি ও স্ক্রিন ক্লিয়ারেন্স
     
     // সেফটি বাফার
-    await new Promise(resolve => setTimeout(resolve, 400));
+    await new Promise(resolve => {
+        safeAdTimeout(resolve, 400);
+    });
     hideLoading(); 
 
     const playSingleAd = () => {
         return new Promise((resolve) => {
             if (typeof window['show_10531082'] === 'function') {
-                // ৮ সেকেন্ডের সেফটি টাইমআউট ফলব্যাক (যদি মনেট্যাগ নেটওয়ার্কের কারণে আটকে যায়)
+                // ৮ সেকেন্ডের সেফটি টাইমআউট ফলব্যাক
                 const safetyTimer = setTimeout(() => {
                     console.log("মনেট্যাগ অ্যাড লোডিং টাইমআউট, ফলব্যাক রান হচ্ছে।");
                     resolve(false);
                 }, 8000);
+                window.activeAdTimeouts.push(safetyTimer);
 
                 window['show_10531082']()
                     .then(() => {
@@ -4355,7 +4352,8 @@ window.showMonetagAd = async (callback) => {
                         resolve(false); 
                     });
             } else {
-                setTimeout(() => resolve(false), 1000);
+                const fallbackTimer = setTimeout(() => resolve(false), 1000);
+                window.activeAdTimeouts.push(fallbackTimer);
             }
         });
     };
@@ -4390,10 +4388,14 @@ window.showMonetagAd = async (callback) => {
         showSmartToast('ফিরে আসার জন্য অপেক্ষা করা হচ্ছে...', 'info');
         await waitForForeground();
         // ফিরে আসার পর সম্পূর্ণ রেন্ডার সেটলমেন্টের জন্য বাফার সময়
-        await new Promise(resolve => setTimeout(resolve, 2500));
+        await new Promise(resolve => {
+            safeAdTimeout(resolve, 2000); // বাফার সময় সেটল হতে দেওয়া হলো
+        });
         cleanupAdOverlays(); 
     } else {
-        await new Promise(resolve => setTimeout(resolve, 1200));
+        await new Promise(resolve => {
+            safeAdTimeout(resolve, 1000);
+        });
     }
 
     // --- ২য় অ্যাড প্রদর্শন ---
@@ -4403,10 +4405,14 @@ window.showMonetagAd = async (callback) => {
 
     if (document.hidden) {
         await waitForForeground();
-        await new Promise(resolve => setTimeout(resolve, 2500));
+        await new Promise(resolve => {
+            safeAdTimeout(resolve, 2000);
+        });
         cleanupAdOverlays();
     } else {
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise(resolve => {
+            safeAdTimeout(resolve, 800);
+        });
     }
 
     // --- পুরস্কার প্রদানের মেইন ফিক্সড পদ্ধতি ---
@@ -4415,13 +4421,16 @@ window.showMonetagAd = async (callback) => {
         ensureMainAppVisible(); 
         showLoading(); 
         
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise(resolve => {
+            safeAdTimeout(resolve, 800);
+        });
         
         hideLoading();
         ensureMainAppVisible(); 
         
-        // অ্যাড লকটি মুক্ত করা
+        // অ্যাড লক এবং টাইমার সম্পূর্ণরূপে মুক্ত করা
         window.isAdShowing = false;
+        clearAllAdTimeouts();
 
         if (callback) {
             setTimeout(async () => {
@@ -4432,7 +4441,7 @@ window.showMonetagAd = async (callback) => {
         }
     };
 
-    setTimeout(triggerReward, 300);
+    safeAdTimeout(triggerReward, 300);
 };
 
 // ✅ হেল্পের: মেইন অ্যাপ ও বটম ন্যাভ ফোর্স ভিজিবল (সাদা স্ক্রিন ক্রাশ ও পেজ রিসেট সম্পূর্ণ ফিক্সড)
@@ -4450,10 +4459,13 @@ function ensureMainAppVisible() {
     document.documentElement.style.overflow = "auto";
 
     if (mainApp) {
-        mainApp.classList.remove('hidden');
-        mainApp.style.setProperty('display', 'block', 'important'); 
-        mainApp.style.setProperty('visibility', 'visible', 'important');
-        mainApp.style.setProperty('opacity', '1', 'important');
+        // কেবল তখনই ক্লাস ও স্টাইল টগল করব যখন এটি বর্তমানে হাইড অবস্থায় থাকবে (এটি ঝিলিক মারা বন্ধ করবে)
+        if (mainApp.classList.contains('hidden') || mainApp.style.display === 'none' || window.getComputedStyle(mainApp).display === 'none') {
+            mainApp.classList.remove('hidden');
+            mainApp.style.setProperty('display', 'block', 'important'); 
+            mainApp.style.setProperty('visibility', 'visible', 'important');
+            mainApp.style.setProperty('opacity', '1', 'important');
+        }
 
         // চেক করা হচ্ছে মেইন অ্যাপের ভেতর কোনো একটি সাব-পেজ অন্তত সচল আছে কি না
         const pages = document.querySelectorAll('#mainApp > div');
@@ -4479,8 +4491,10 @@ function ensureMainAppVisible() {
         }
     }
     if (bottomNav) {
-        bottomNav.classList.remove('hidden');
-        bottomNav.style.setProperty('display', 'flex', 'important'); 
+        if (bottomNav.classList.contains('hidden') || bottomNav.style.display === 'none') {
+            bottomNav.classList.remove('hidden');
+            bottomNav.style.setProperty('display', 'flex', 'important'); 
+        }
     }
     if (authScreen) {
         authScreen.classList.add('hidden');
@@ -4531,7 +4545,6 @@ function cleanupAdOverlays() {
         console.log("Ad cleanup error: ", e);
     }
 }
-
         // ✅ LOAD SYSTEM SETTINGS (এডমিন প্যানেলের appConfig এর সাথে সিঙ্ক)
 async function loadSystemSettings() {
     try {
