@@ -888,9 +888,45 @@ body .swal2-container .swal2-popup .swal2-icon.swal2-error::before {
             transition: transform 0.2s ease !important;
         }
 
-        /* ১০. প্রিমিয়াম ক্যানসেল বোতাম (অসামঞ্জস্যতা দূর করতে ক্যানসেল বোতামটি সম্পূর্ণ নিষ্ক্রিয় ও লুকিয়ে দেওয়া হলো) */
+       /* ১০. প্রিমিয়াম বাতিল বোতাম ডিজাইন সচল ও সুন্দর করা */
         body .swal2-container .swal2-popup .swal2-cancel {
-            display: none !important;
+            display: flex !important;
+            background: #f1f5f9 !important;
+            color: #475569 !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            padding: 12px 0 !important;
+            width: 100% !important;
+            font-size: 15px !important;
+            border: 1px solid #e2e8f0 !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin: 0 !important;
+            transition: all 0.2s ease !important;
+            box-shadow: none !important;
+        }
+        body .swal2-container .swal2-popup .swal2-cancel:active {
+            transform: scale(0.96) !important;
+            background: #e2e8f0 !important;
+        }
+
+        /* ১১. প্রিমিয়াম ক্লোজ (ক্রস) বোতাম ডিজাইন */
+        body .swal2-container .swal2-popup .swal2-close {
+            display: flex !important;
+            color: #94a3b8 !important;
+            font-size: 24px !important;
+            outline: none !important;
+            box-shadow: none !important;
+            transition: color 0.2s !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 32px !important;
+            height: 32px !important;
+            top: 10px !important;
+            right: 10px !important;
+        }
+        body .swal2-container .swal2-popup .swal2-close:hover {
+            color: #ef4444 !important;
         }
 
         div:where(.swal2-confirm):active, div:where(.swal2-cancel):active {
@@ -3882,16 +3918,20 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
             if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
         }
 
-// 🔄 SWEETALERT2 GLOBAL BENGALI INTERCEPTOR & FALLBACK (নিখুঁত অনুবাদ ও ক্যানসেল বোতাম ফিক্স)
+// 🔄 SWEETALERT2 GLOBAL BENGALI INTERCEPTOR & FALLBACK (নিখুঁত অনুবাদ ও বাতিল বোতাম ফিক্স)
 if (typeof Swal !== 'undefined') {
     const originalFire = Swal.fire;
     Swal.fire = function(options, ...args) {
         if (options && typeof options === 'object') {
-            // ১. ক্যানসেল বোতামের টেক্সট না থাকলে বা ডিফল্ট থাকলে তা বাংলায় "বাতিল" এ রূপান্তর করা
+            // ১. বাতিল বোতামের টেক্সট না থাকলে বা ইংরেজি থাকলে তা বাংলায় "বাতিল" এ রূপান্তর করা
             if (options.showCancelButton && (!options.cancelButtonText || options.cancelButtonText.toLowerCase() === 'cancel')) {
                 options.cancelButtonText = 'বাতিল';
             }
-            // ২. সাকসেস এবং এরর আইকনগুলির জন্য সঠিক ক্লাস ইনজেকশন নিশ্চিত করা
+            // ২. প্রতিটি পপ-আপে স্বয়ংক্রিয়ভাবে ক্লোজ (ক্রস) বোতাম সচল করা
+            if (options.showCloseButton === undefined) {
+                options.showCloseButton = true;
+            }
+            // ৩. সাকসেস এবং এরর আইকনগুলির জন্য সঠিক ক্লাস ইনজেকশন নিশ্চিত করা
             if (options.icon) {
                 if (!options.customClass) options.customClass = {};
                 if (typeof options.customClass === 'object') {
@@ -4807,9 +4847,9 @@ window.buyPackage = async (packageId, price, name, days) => {
     }
 
     // 🛑 ১. ডাবল পারচেজ প্রোটেকশন (মেয়াদ থাকলে নতুন কেনা যাবে না)
-    if (currentUserData.plan !== "Free Member" && currentUserData.packageExpiresAt) {
+    const userPlan = currentUserData.plan || "Free Member";
+    if (userPlan !== "Free Member" && currentUserData.packageExpiresAt) {
         try {
-            // সেফটি রূপান্তর: যদি আগে ডেট অবজেক্ট বা অন্য ফরমেটে সেভ হয়ে থাকে তবুও ক্র্যাশ করবে না
             let expiryDate;
             if (currentUserData.packageExpiresAt && typeof currentUserData.packageExpiresAt.toDate === 'function') {
                 expiryDate = currentUserData.packageExpiresAt.toDate();
@@ -4822,7 +4862,7 @@ window.buyPackage = async (packageId, price, name, days) => {
                 Swal.fire({
                     icon: 'warning',
                     title: 'প্যাকেজ ইতিমধ্যে সক্রিয়!',
-                    html: `আপনার বর্তমান প্যাকেজের মেয়াদ <b>${expiryDate.toLocaleDateString('bn-BD')}</b> পর্যন্ত আছে। শেষ হলে আবার কিনতে পারবেন।`,
+                    html: `আপনার বর্তমান প্যাকেজের মেয়াদ <b>${expiryDate.toLocaleDateString('bn-BD')}</b> পর্যন্ত আছে। মেয়াদ শেষ হলে আবার কিনতে পারবেন।`,
                     confirmButtonText: 'বুঝেছি',
                     confirmButtonColor: '#3b82f6',
                     customClass: { popup: 'rounded-[25px]' }
@@ -4834,7 +4874,7 @@ window.buyPackage = async (packageId, price, name, days) => {
         }
     }
     
-    // 🛑 ২. ব্যালেন্স চেক (শুধুমাত্র ডিপোজিট ব্যালেন্স চেক করবে)
+    // 🛑 ২. ব্যালেন্স চেক (ডিপোজিট ব্যালেন্স থেকে টাকা কাটবে)
     const currentDeposit = parseFloat(currentUserData.depositBalance) || 0;
     if(currentDeposit < numericPrice) {
         Swal.fire({
@@ -4870,29 +4910,25 @@ window.buyPackage = async (packageId, price, name, days) => {
             // মেয়াদ ক্যালকুলেশন
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + numericDays);
-            
-            // 🛡️ মেগা ফিক্স: Raw Date এর বদলে ফায়ারবেস অফিশিয়াল টাইমস্ট্যাম্পে কনভার্ট করা (ক্লিন সিরিয়ালাইজেশন)
-            const firestoreExpiryDate = firebase.firestore.Timestamp.fromDate(expiryDate);
 
-            // 🔥 ৪. ইউজারের ডাটা আপডেট (টাকা শুধু depositBalance থেকে কাটবে)
+            // 🔥 ৪. ইউজারের ডাটা আপডেট (অপ্রয়োজনীয় totalSpent ফিল্ড বাদ দেওয়া হয়েছে)
             const updateFields = {
                 depositBalance: firebase.firestore.FieldValue.increment(-numericPrice),
                 plan: String(name),
                 isActivated: true,
-                packageExpiresAt: firestoreExpiryDate, // <--- টাইমস্ট্যাম্প অবজেক্ট ফিক্সড
-                packageId: String(packageId),
-                totalSpent: firebase.firestore.FieldValue.increment(numericPrice)
+                packageExpiresAt: expiryDate, // Standard Date অবজেক্ট ফায়ারস্টোর সরাসরি সাপোর্ট করে
+                packageId: String(packageId)
             };
 
-            // যদি ইউজার কোডটি দিয়ে ডিসকাউন্ট নিয়ে প্যাকেজ কেনেন
+            // যদি ইউজার কুপন কোড ব্যবহার করে থাকেন
             if (typeof appliedPromoPercent !== 'undefined' && appliedPromoPercent === 8) {
                 updateFields.isSecretPromoUsed = true;
             }
 
-            // ফায়ারবেসে সরাসরি রাইট রিকোয়েস্ট পাঠানো
+            // ফায়ারবেসে সরাসরি আপডেট
             await userRef.update(updateFields);
             
-            // ৫. হিস্ট্রি লগ
+            // ৫. হিস্ট্রি লগ তৈরি করা
             await db.collection("history").add({
                 userId: String(currentUserId),
                 name: String(currentUserData.name || "মেম্বার"),
@@ -4905,11 +4941,11 @@ window.buyPackage = async (packageId, price, name, days) => {
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
             
-            // ৬. টেলিগ্রাম নোটিফিকেশন
+            // ৬. টেলিগ্রাম নোটিফিকেশন পাঠানো
             const telegramMessage = `🛒 *নতুন প্যাকেজ ক্রয় (ডিপোজিট ব্যালেন্স)*\n\n👤 *ইউজার:* ${currentUserData.name || "মেম্বার"}\n📱 *ফোন:* ${currentUserData.phone || "N/A"}\n📦 *প্যাকেজ:* ${name}\n💰 *মূল্য:* ৳${numericPrice}\n✅ *অবস্থা:* সফল`;
             await sendTelegramNotification(telegramMessage);
             
-            // ডিসকাউন্ট প্রোমো কোড রিসেট করা
+            // ডিসকাউন্ট প্রোমো কোড রিসেট
             appliedPromoPercent = 0; 
             
             showSmartToast(`${name} সফলভাবে সক্রিয় করা হয়েছে!`, 'success');
@@ -4917,7 +4953,7 @@ window.buyPackage = async (packageId, price, name, days) => {
             if(typeof confetti === 'function') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             hideLoading();
             
-            // হোমে নিয়ে যাওয়া
+            // হোমে রিডাইরেক্ট
             setTimeout(() => { window.showPage('homeScreen'); }, 1500);
             
         } catch (e) {
@@ -4927,7 +4963,6 @@ window.buyPackage = async (packageId, price, name, days) => {
         }
     }
 };
-
        // ✅ রিয়েল-টাইমে টাকার মান টাইপ করার সাথে সাথে ডাইনামিক কার্ড আপডেট করার হেল্পার
 window.updateDepositInstructionValues = () => {
     const amountInput = document.getElementById('depositAmount');
