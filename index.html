@@ -7416,105 +7416,91 @@ window.submitProof = async () => {
             const total = amount + fee;
             document.getElementById('rechargeFee').innerHTML = `সার্ভিস চার্জ: ৳${fee.toFixed(2)} | মোট: ৳${total.toFixed(2)}`;
         };
-        // ✅ UPDATED DEPOSIT FUNCTION
-        window.submitDeposit = async () => {
-    const trxId = document.getElementById('depositTrxId').value.trim();
-    const amount = parseFloat(document.getElementById('depositAmount').value);
-    const method = document.getElementById('selectedDepositMethod').value;
-    const senderNumber = document.getElementById('depositSenderNumber').value.trim();
+// ৪. প্রথম ভ্যালিডেশন শেষে মডাল ওপেন করার আল্ট্রা-স্মার্ট ফাংশন (কনফ্লিক্ট প্রুফ)
+window.submitDeposit = async () => {
+    if (!currentUserData) {
+        showSmartToast('আপনার তথ্য লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন।', 'warning');
+        return;
+    }
+
+    // ১. প্রথমে ডিপোজিট স্ক্রিনের কন্টেইনারটি খুঁজে বের করা (যাতে অন্য পেজের আইডির সাথে কনফ্লিক্ট না হয়)
+    const depositContainer = document.getElementById('depositScreen') || 
+                             document.getElementById('deposit_screen') || 
+                             document.getElementById('depositPage') || 
+                             document.body; // ফলব্যাক হিসেবে বডি
+
+    // ২. টাকার পরিমাণ ইনপুট খোঁজা (আইডি অথবা প্লেসহোল্ডার "পরিমাণ"/"টাকা"/"Amount" মিলিয়ে)
+    const amountField = depositContainer.querySelector('#depAmount') || 
+                        depositContainer.querySelector('#depositAmount') || 
+                        depositContainer.querySelector('#depAmt') || 
+                        depositContainer.querySelector('[placeholder*="পরিমাণ"]') || 
+                        depositContainer.querySelector('[placeholder*="টাকা"]') || 
+                        depositContainer.querySelector('[placeholder*="Amount"]') || 
+                        depositContainer.querySelector('[placeholder*="amount"]') || 
+                        document.getElementById('depAmount');
+
+    // ৩. প্রেরক নাম্বার ইনপুট খোঁজা (আইডি অথবা প্লেসহোল্ডার "নাম্বার"/"নম্বর"/"Phone"/"Number" মিলিয়ে)
+    const phoneField = depositContainer.querySelector('#depPhone') || 
+                       depositContainer.querySelector('#senderPhone') || 
+                       depositContainer.querySelector('#depNumber') || 
+                       depositContainer.querySelector('#depPhoneVal') || 
+                       depositContainer.querySelector('#dep_phone') || 
+                       depositContainer.querySelector('[placeholder*="নাম্বার"]') || 
+                       depositContainer.querySelector('[placeholder*="নম্বর"]') || 
+                       depositContainer.querySelector('[placeholder*="Number"]') || 
+                       depositContainer.querySelector('[placeholder*="phone"]') || 
+                       document.getElementById('depPhone');
+
+    // ৪. ট্রানজেকশন আইডি ইনপুট খোঁজা (আইডি অথবা প্লেসহোল্ডার "TrxID"/"ID"/"আইডি" মিলিয়ে)
+    const trxField = depositContainer.querySelector('#depTrx') || 
+                     depositContainer.querySelector('#trxId') || 
+                     depositContainer.querySelector('#depTrxid') || 
+                     depositContainer.querySelector('#dep_trx') || 
+                     depositContainer.querySelector('#trx') || 
+                     depositContainer.querySelector('[placeholder*="TrxID"]') || 
+                     depositContainer.querySelector('[placeholder*="trx"]') || 
+                     depositContainer.querySelector('[placeholder*="আইডি"]') || 
+                     depositContainer.querySelector('[placeholder*="ID"]') || 
+                     document.getElementById('depTrx');
     
-    // নির্দিষ্ট মেথড ভ্যালিডেশন
-    if(!senderNumber) {
-    showSmartToast('দয়া করে যে নাম্বার/ওয়ালেট থেকে টাকা পাঠিয়েছেন তা লিখুন', 'error');
-    return;
-}
-    
-    if(!method) {
-        showSmartToast('দয়া করে প্রথমে টাকা পাঠানোর একটি মেথড সিলেক্ট করুন', 'error');
+    // সিলেক্ট করা পেমেন্ট মেথড খোঁজা
+    const methodField = depositContainer.querySelector('#selectedDepositMethod') || 
+                        depositContainer.querySelector('#depositMethod') || 
+                        depositContainer.querySelector('#depMethod') ||
+                        document.getElementById('selectedDepositMethod');
+
+    // মান সংগ্রহ করা
+    const amount = amountField ? parseFloat(amountField.value) : 0;
+    const senderNumber = phoneField ? phoneField.value.trim() : '';
+    const trxId = trxField ? trxField.value.trim() : '';
+    const method = methodField ? methodField.value : 'Bkash';
+
+    // প্রাথমিক ভ্যালিডেশন চেক
+    if (!amountField || isNaN(amount) || amount <= 0) {
+        showSmartToast('দয়া করে সঠিক ডিপোজিট পরিমাণ (টাকার অংক) লিখুন', 'error');
         return;
     }
-    // নির্দিষ্ট TrxID ভ্যালিডেশন
-    if(!trxId) {
-        showSmartToast('দয়া করে আপনার পেমেন্টের সঠিক TRXID (ট্রানজেকশন আইডি) দিন', 'error');
+    const minDeposit = systemSettings?.minDeposit || 100;
+    if (amount < minDeposit) {
+        showSmartToast(`ন্যূনতম ডিপোজিট পরিমাণ ৳${minDeposit}`, 'error');
         return;
     }
-    // নির্দিষ্ট অ্যামাউন্ট ভ্যালিডেশন
-    if(!amount || isNaN(amount) || amount <= 0) {
-        showSmartToast('দয়া করে ডিপোজিট করার জন্য একটি সঠিক পরিমাণ (টাকার অংক) লিখুন', 'error');
+    if (!senderNumber) {
+        showSmartToast('দয়া করে যে নাম্বার থেকে টাকা পাঠিয়েছেন তা লিখুন', 'error');
         return;
     }
-            
-            // এডমিন প্যানেল থেকে ডেটা নিবে, না থাকলে ডিফল্ট ১০ ও ৩০০ ব্যবহার করবে
-            const minDeposit = systemSettings.minDeposit || 10;
-            const maxDeposit = systemSettings.maxDeposit || 300;
+    if (!/^01[3-9]\d{8}$/.test(senderNumber)) {
+        showSmartToast('প্রেরক নাম্বারটি ১১ ডিজিটের সঠিক সচল মোবাইল নাম্বার হতে হবে', 'error');
+        return;
+    }
+    if (!trxId) {
+        showSmartToast('দয়া করে আপনার সেন্ড মানি করা ট্রানজেকশন আইডি (TrxID) দিন', 'error');
+        return;
+    }
 
-            if(amount < minDeposit) {
-                showSmartToast(`ন্যূনতম ডিপোজিট পরিমাণ ৳${minDeposit}`, 'error');
-                return;
-            }
-            if(amount > maxDeposit) {
-                showSmartToast(`সর্বোচ্চ ডিপোজিট পরিমাণ ৳${maxDeposit}`, 'error');
-                return;
-            }
-            
-            showLoading();
-            showSmartToast('ডিপোজিট রিকোয়েস্ট পাঠানো হচ্ছে...', 'info');
-            
-            try {
-                const vatPercentage = systemSettings.vatPercentage || 0;
-                const vat = amount * (vatPercentage / 100);
-                const totalAmount = amount + vat;
-                
-                // নতুন আইডি তৈরি করা হলো
-const newReqRef = db.collection("pending_requests").doc();
-const newReqId = newReqRef.id;
-
-await newReqRef.set({ 
-    userId: currentUserId, 
-    type: "Deposit",
-    amount: amount, 
-    vat: vat,
-    totalAmount: totalAmount,
-    trxId: trxId,
-    method: method,
-    senderNumber: senderNumber,
-    userName: currentUserData.name,
-    userPhone: currentUserData.phone,
-    status: "Pending",
-    date: new Date().toLocaleDateString('bn-BD'),
-    time: new Date().toLocaleTimeString('bn-BD'),
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-});
-
-await db.collection("history").doc(newReqId).set({
-    userId: currentUserId,
-    type: "ডিপোজিট",
-    amount: amount,
-    status: "Pending",
-    details: `${method} - TrxID: ${trxId} (Sender: ${senderNumber})`,
-    trxId: trxId,
-    method: method,
-    senderNumber: senderNumber,
-    date: new Date().toLocaleDateString('bn-BD'),
-    time: new Date().toLocaleTimeString('bn-BD'),
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-});               
-                // Send Telegram notification
-                const telegramMessage = `💰 *নতুন ডিপোজিট রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n💳 *মেথড:* ${method}\n📞 *প্রেরক (Sender):* ${senderNumber}\n💵 *ডিপোজিট পরিমাণ:* ৳${amount.toFixed(2)}\n🧾 *TrxID:* ${trxId}\n📊 *ভ্যাট (${vatPercentage}%):* ৳${vat.toFixed(2)}\n💰 *মোট পরিশোধ:* ৳${totalAmount.toFixed(2)}`;
-                await sendTelegramNotification(telegramMessage);
-                
-                showSmartToast('ডিপোজিট রিকোয়েস্ট পাঠানো হয়েছে, এডমিন এপ্রুভ করবেন', 'success');
-                hideLoading();
-                
-                document.getElementById('depositTrxId').value = '';
-                document.getElementById('depositAmount').value = '';
-               document.getElementById('depositSenderNumber').value = ''; window.calculateDepositVAT();
-                
-            } catch (e) {
-                showSmartToast('ডিপোজিট রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
-                hideLoading();
-            }
-        };
+    // সবকিছু সঠিক থাকলে স্লাইড চেকআউট শিট ওপেন হবে
+    window.openDepositCheckout(method, amount, senderNumber, trxId);
+};
         
         // ✅ গ্লোবাল ভেরিয়েবল ফর উইথড্র চেকআউট সেশন
 window.selectedWithdrawCheckout = null;
@@ -7705,25 +7691,25 @@ window.openWithdrawCheckout = (number, amount, method) => {
     document.getElementById('withdrawCheckoutUserAvatar').src = currentUserData.avatar || "https://img.icons8.com/fluency/96/user-male-circle.png";
 
     // মেথড লোগো ও থিম বর্ডার সিঙ্ক
-    const iconImg = document.getElementById('withdrawCheckoutMethodIcon');
-    const iconBg = document.getElementById('withdrawCheckoutIconBg');
-    
-    let iconUrl = "";
-    let themeBg = "bg-[#d12053]";
+const iconImg = document.getElementById('withdrawCheckoutMethodIcon');
+const iconBg = document.getElementById('withdrawCheckoutIconBg');
 
-    if (method === 'bKash') {
-        iconUrl = "https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png";
-        themeBg = "bg-[#d12053]";
-    } else if (method === 'Nagad') {
-        iconUrl = "https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png";
-        themeBg = "bg-[#ea580c]";
-    } else if (method === 'Rocket') {
-        iconUrl = "https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png";
-        themeBg = "bg-[#701a75]";
-    } else if (method === 'USDT') {
-        iconUrl = "https://i.postimg.cc/0QRCvZDV/usdt.png";
-        themeBg = "bg-[#047857]";
-    }
+let iconUrl = "";
+let themeBg = "bg-[#d12053]";
+
+if (method === 'bKash') {
+    iconUrl = "https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png";
+    themeBg = "bg-[#d12053]";
+} else if (method === 'Nagad') {
+    iconUrl = "https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png";
+    themeBg = "bg-[#ea580c]";
+} else if (method === 'Rocket') {
+    iconUrl = "https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png";
+    themeBg = "bg-[#701a75]";
+} else if (method === 'USDT') {
+    iconUrl = "https://i.postimg.cc/0QRCvZDV/usdt.png";
+    themeBg = "bg-[#047857]";
+}
 
     if (iconImg) iconImg.src = iconUrl;
     if (iconBg) iconBg.className = `w-16 h-16 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-2.5 shadow-lg border-2 border-white ${themeBg}`;
@@ -12833,6 +12819,330 @@ window.showPage = (id, defaultTab = null) => {
         }
     }
 };
+
+// =========================================================================
+// 📱 রিচার্জ মডাল ওপেন, ক্লোজ এবং ফায়ারবেস কনফার্মেশন প্রসেস (৩টি বাদ পড়া ফাংশন)
+// =========================================================================
+
+// ১. রিচার্জ মডাল বিবরণী লোডার ও স্লাইড-আপ ফাংশন
+window.openRechargeCheckout = (phone, amount, operator) => {
+    window.selectedRechargeCheckout = { phone, amount, operator }; // ডেটা ক্যাশ সেট
+
+    const fee = systemSettings.rechargeFee || 5;
+    const totalAmount = amount + fee;
+
+    // বিবরণী পেজের ডাইনামিক ফিল্ডসমূহ আপডেট করা
+    const opNameEl = document.getElementById('rechargeCheckoutOperatorName');
+    const numEl = document.getElementById('rechargeCheckoutNumber');
+    const amtEl = document.getElementById('rechargeCheckoutAmount');
+    const feeEl = document.getElementById('rechargeCheckoutFeeAmt');
+    const totalEl = document.getElementById('rechargeCheckoutTotalDeducted');
+    const userNameEl = document.getElementById('rechargeCheckoutUserName');
+    const userAvatarEl = document.getElementById('withdrawCheckoutUserAvatar'); // HTML এ এই ID ই দেওয়া আছে
+
+    if (opNameEl) opNameEl.innerText = operator;
+    if (numEl) numEl.innerText = phone;
+    if (amtEl) amtEl.innerText = "৳" + amount.toFixed(2);
+    if (feeEl) feeEl.innerText = "৳" + fee.toFixed(2);
+    if (totalEl) totalEl.innerText = "৳" + totalAmount.toFixed(2);
+    
+    if (currentUserData) {
+        if (userNameEl) userNameEl.innerText = currentUserData.name || "মেম্বার";
+        if (userAvatarEl) userAvatarEl.src = currentUserData.avatar || "https://img.icons8.com/fluency/96/user-male-circle.png";
+    }
+
+   // অপারেটর অনুযায়ী লোগো এবং কালার থিম সেট করা
+const iconImg = document.getElementById('rechargeCheckoutMethodIcon');
+const iconBg = document.getElementById('rechargeCheckoutIconBg');
+
+let iconUrl = "";
+let themeBg = "bg-[#005cbb]"; // Grameenphone Blue Default
+
+if (operator === 'GP') {
+    iconUrl = "https://i.postimg.cc/65w1n62J/FB-IMG-1769495932877.jpg";
+    themeBg = "bg-[#005cbb]";
+} else if (operator === 'BL') {
+    iconUrl = "https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg";
+    themeBg = "bg-[#f25c05]";
+} else if (operator === 'Robi') {
+    iconUrl = "https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg";
+    themeBg = "bg-[#e60012]";
+} else if (operator === 'Airtel') {
+    iconUrl = "https://i.postimg.cc/Wz0CjhdX/FB-IMG-1769496019329.jpg";
+    themeBg = "bg-[#ff0000]";
+} else if (operator === 'Teletalk') {
+    iconUrl = "https://i.postimg.cc/TYCQbVvT/FB-IMG-1769496047333.jpg";
+    themeBg = "bg-[#008c45]";
+}
+    if (iconImg) iconImg.src = iconUrl;
+    if (iconBg) iconBg.className = `w-16 h-16 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-2.5 shadow-lg border-2 border-white ${themeBg}`;
+
+    // মডাল স্লাইড-আপ (Show) করা
+    const modal = document.getElementById('rechargeCheckoutModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        window.playSound('snd_click');
+    }
+};
+
+// ২. রিচার্জ মডাল বন্ধ করার ফাংশন
+window.closeRechargeCheckout = () => {
+    const modal = document.getElementById('rechargeCheckoutModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+    window.selectedRechargeCheckout = null;
+};
+
+// ৩. পিন এবং অ্যাড যাচাই করার পর চূড়ান্ত রিচার্জ প্রসেসিং ফাংশন
+window.confirmRechargeProcess = async () => {
+    if (!window.selectedRechargeCheckout) return;
+    const { phone, amount, operator } = window.selectedRechargeCheckout;
+
+    window.closeRechargeCheckout(); // বিবরণী উইন্ডো বন্ধ
+
+    // ৪ ডিজিটের পিন ভেরিফিকেশন শুরু
+    window.verifyTransactionPin(async () => {
+        const withinSchedule = isWithinWithdrawalSchedule();
+        const fee = systemSettings.rechargeFee || 5;
+        const totalAmount = amount + fee;
+
+        // মনিটাইজেশন ভিডিও অ্যাড প্লে
+        window.showMonetagAd(async () => {
+            showLoading();
+            try {
+                // ক. ইউজারের রিচার্জ ব্যালেন্স থেকে টাকা কেটে নেওয়া
+                await db.collection("users").doc(currentUserId).update({
+                    rechargeBalance: firebase.firestore.FieldValue.increment(-totalAmount)
+                });
+                
+                // খ. এডমিন প্যানেলের জন্য পেন্ডিং রিকোয়েস্ট তৈরি
+                const newReqRef = db.collection("pending_requests").doc();
+                const newReqId = newReqRef.id;
+
+                await newReqRef.set({
+                    userId: currentUserId, 
+                    type: "Recharge",
+                    number: phone, 
+                    amount: amount, 
+                    fee: fee,
+                    totalAmount: totalAmount,
+                    operator: operator,
+                    userName: currentUserData.name,
+                    userPhone: currentUserData.phone,
+                    status: 'Pending', 
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                }); 
+                
+                // গ. ইউজারের লেনদেন হিস্ট্রিতে রেকর্ড রাখা
+                await db.collection("history").doc(newReqId).set({
+                    userId: currentUserId,
+                    type: "Recharge",
+                    amount: -totalAmount,
+                    status: "Pending",
+                    details: `${operator} - ${phone}`,
+                    method: operator,
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                userRechargeCount++;
+
+                // ঘ. টেলিগ্রাম এডমিন অ্যালার্ট পাঠানো
+                const telegramMessage = `📱 *নতুন রিচার্জ রিকোয়েস্ট*\n\n👤 *ইউজার:* ${currentUserData.name}\n📱 *ফোন:* ${currentUserData.phone}\n📞 *নাম্বার:* ${phone}\n🏢 *অপারেটর:* ${operator}\n💵 *রিচার্জ পরিমাণ:* ৳${amount.toFixed(2)}\n📊 *সার্ভিস চার্জ:* ৳${fee.toFixed(2)}\n💰 *মোট কেটে নেওয়া হবে:* ৳${totalAmount.toFixed(2)}`;
+                await sendTelegramNotification(telegramMessage);
+                
+                window.playSound('snd_success');
+                hideLoading();
+
+                showSmartToast(withinSchedule ? 'রিচার্জ সফল হয়েছে! 📱' : 'সময়সূচীর বাইরে রিচার্জ রিকোয়েস্ট পাঠানো হয়েছে! ⏰', 'success');
+
+                if (withinSchedule) {
+                    Swal.fire({
+                        title: 'রিচার্জ সফল! 📱',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <p class="text-xs text-slate-500 leading-relaxed font-bold">
+                                    আপনার রিচার্জের আবেদনটি সফলভাবে নেওয়া হয়েছে। <br><br>
+                                    আমাদের অফিশিয়াল সময়সূচীর মধ্যে থাকায় আপনার রিচার্জটি <span class="text-green-600">খুব দ্রুতই</span> মোবাইল নম্বরে পাঠিয়ে দেওয়া হবে। ধন্যবাদ!
+                                </p>
+                            </div>
+                        `,
+                        icon: 'success',
+                        confirmButtonText: 'ধন্যবাদ, বুঝেছি',
+                        confirmButtonColor: '#007AFF',
+                        customClass: { popup: 'rounded-[30px]' }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'সময়সূচীর বাইরে! ⏰',
+                        html: `
+                            <div class="text-center animate__animated animate__zoomIn">
+                                <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl mb-4 text-left">
+                                    <h4 class="text-[10px] font-black text-amber-800 uppercase mb-1 flex items-center gap-1">
+                                        <i class="ri-error-warning-fill"></i> গুরুত্বপূর্ণ নোটিশ:
+                                    </h4>
+                                    <p class="text-[11px] text-amber-700 font-semibold leading-normal">
+                                        রিচার্জের অফিশিয়াল সময়সূচী শেষ থাকায় আপনার রিচার্জটি পরবর্তী কার্যদিবসে সম্পূর্ণ করা হবে।
+                                    </p>
+                                </div>
+                                <p class="text-xs text-slate-500 leading-relaxed font-medium">
+                                    আপনার আবেদনটি সফলভাবে সেভ করা হয়েছে এবং পরবর্তী রিচার্জ শিফট চালু হওয়া মাত্রই আপনার নম্বরে রিচার্জ পৌঁছে যাবে।
+                                </p>
+                            </div>
+                        `,
+                        icon: 'warning',
+                        confirmButtonText: 'ঠিক আছে, আমি রাজী',
+                        confirmButtonColor: '#F5A623',
+                        customClass: { popup: 'rounded-[30px]' }
+                    });
+                }
+                
+                // ইনপুট বক্স খালি করা
+                document.getElementById('rechPhone').value = '';
+                document.getElementById('rechAmount').value = '';
+                if(window.calculateRechargeFee) window.calculateRechargeFee();
+                
+            } catch (e) {
+                console.error("Recharge Process Error:", e);
+                showSmartToast('রিচার্জ রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে', 'error');
+                hideLoading();
+            }
+        });
+    });
+};
+
+// ১. ডিপোজিট চেকআউট শিট ওপেন করা
+window.openDepositCheckout = (method, amount, senderNumber, trxId) => {
+    window.selectedDepositCheckout = { method, amount, senderNumber, trxId }; // ক্যাশ ডেটা
+
+    // বিবরণী টেক্সট সেট করা
+    document.getElementById('depositCheckoutMethodName').innerText = method;
+    document.getElementById('depositCheckoutSenderNumber').innerText = senderNumber;
+    document.getElementById('depositCheckoutTrxId').innerText = trxId;
+    document.getElementById('depositCheckoutAmount').innerText = "৳" + parseFloat(amount).toFixed(2);
+    document.getElementById('depositCheckoutUserName').innerText = currentUserData.name || "মেম্বার";
+
+    // মেথড অনুযায়ী লোগো এবং কালার থিম সেট করা
+    const iconImg = document.getElementById('depositCheckoutMethodIcon');
+    const iconBg = document.getElementById('depositCheckoutIconBg');
+    
+    let iconUrl = "";
+    let themeBg = "";
+
+    const methodLower = method.toLowerCase();
+if (methodLower.includes('bkash') || methodLower.includes('বিকাশ')) {
+    iconUrl = "https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png"; // নতুন বিকাশ লোগো
+    themeBg = "bg-[#e2125d]";
+} else if (methodLower.includes('nagad') || methodLower.includes('নগদ')) {
+    iconUrl = "https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png"; // নতুন নগদ লোগো
+    themeBg = "bg-[#f25c05]";
+} else if (methodLower.includes('rocket') || methodLower.includes('রকেট')) {
+    iconUrl = "https://i.postimg.cc/xTbBypgf/vecteezy-rocket-color-logo-mobile-banking-icon-68706013.png"; // নতুন রকেট লোগো
+    themeBg = "bg-[#8c2d19]";
+} else if (methodLower.includes('usdt')) {
+    iconUrl = "https://i.postimg.cc/0QRCvZDV/usdt.png"; // নতুন USDT লোগো
+    themeBg = "bg-[#047857]";
+} else {
+    iconUrl = "https://img.icons8.com/fluency/96/wallet.png"; // ডিফল্ট ওয়ালেট লোগো
+    themeBg = "bg-yellow-500";
+}
+
+    if (iconImg) iconImg.src = iconUrl;
+    if (iconBg) {
+        iconBg.className = `w-16 h-16 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-2.5 shadow-lg border-2 border-white ${themeBg}`;
+    }
+
+    // শিটটি স্লাইড-আপ করা
+    const modal = document.getElementById('depositCheckoutModal');
+    modal.classList.remove('opacity-0', 'pointer-events-none');
+    modal.children[0].classList.remove('translate-y-full');
+};
+
+// ২. ডিপোজিট চেকআউট শিট বন্ধ করা
+window.closeDepositCheckout = () => {
+    const modal = document.getElementById('depositCheckoutModal');
+    if (modal) {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.children[0].classList.add('translate-y-full');
+    }
+};
+
+// ৩. ডিপোজিট কনফার্ম করে ফায়ারবেসে ডেটা পাঠানো
+window.confirmDepositProcess = async () => {
+    if (!window.selectedDepositCheckout) return;
+    const { method, amount, senderNumber, trxId } = window.selectedDepositCheckout;
+
+    window.closeDepositCheckout(); // শিট বন্ধ করা
+    showLoading();
+
+    try {
+        const newReqRef = db.collection("pending_requests").doc();
+        const newReqId = newReqRef.id;
+
+        // ১. পেন্ডিং রিকোয়েস্ট তৈরি করা
+        await newReqRef.set({
+            id: newReqId,
+            userId: currentUserId,
+            userName: currentUserData.name || "মেম্বার",
+            userPhone: currentUserData.phone || "",
+            amount: parseFloat(amount),
+            method: method,
+            senderNumber: senderNumber,
+            trxId: trxId,
+            type: "Deposit",
+            status: "Pending",
+            date: new Date().toLocaleDateString('bn-BD'),
+            time: new Date().toLocaleTimeString('bn-BD'),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // ২. ট্রানজেকশন হিস্ট্রিতে রেকর্ড যোগ করা
+        await db.collection("history").doc(newReqId).set({
+            userId: currentUserId,
+            type: "Deposit",
+            amount: parseFloat(amount),
+            status: "Pending",
+            details: `${method} এর মাধ্যমে ডিপোজিট পেন্ডিং রয়েছে`,
+            date: new Date().toLocaleDateString('bn-BD'),
+            time: new Date().toLocaleTimeString('bn-BD'),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        hideLoading();
+        Swal.fire({
+            icon: 'success',
+            title: 'আবেদন জমা হয়েছে! 🎉',
+            html: `<div style="text-align:center; font-size:13px; font-weight:600; color:#475569;">
+                    আপনার ৳${parseFloat(amount).toFixed(2)} ডিপোজিট আবেদনটি সফলভাবে জমা হয়েছে। <br><br>
+                    অ্যাডমিন খুব শীঘ্রই ভেরিফাই করে আপনার ডিপোজিট ব্যালেন্স যোগ করে দেবে।
+                   </div>`,
+            confirmButtonText: 'ঠিক আছে',
+            confirmButtonColor: '#10b981',
+            customClass: { popup: 'rounded-[30px]' }
+        });
+
+        // ইনপুট ফিল্ডগুলো রিসেট করা (আপনার প্রজেক্টের সঠিক ইনপুট আইডিগুলো নিশ্চিত করুন)
+        const depAmtField = document.getElementById('depAmount');
+        const depNumField = document.getElementById('depPhone');
+        const depTrxField = document.getElementById('depTrx');
+        
+        if (depAmtField) depAmtField.value = '';
+        if (depNumField) depNumField.value = '';
+        if (depTrxField) depTrxField.value = '';
+
+    } catch (e) {
+        console.error("ডিপোজিট নিশ্চিতকরণ এরর:", e);
+        hideLoading();
+        showSmartToast("ডিপোজিট সম্পূর্ণ করতে ব্যর্থ হয়েছে: " + e.message, "error");
+    }
+};
+
     </script>
     
         <audio id="snd_click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
@@ -13259,6 +13569,71 @@ window.showPage = (id, defaultTab = null) => {
             <!-- Cancel Button -->
             <button onclick="window.closeRechargeCheckout()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold py-3.5 rounded-2xl text-xs transition-all">
                 বাতিল
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Deposit Checkout Modal/Sheet (সংশোধিত লাইট ভার্সন) -->
+<div id="depositCheckoutModal" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-50 flex items-end justify-center opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-white rounded-t-[35px] w-full max-w-md p-6 transform translate-y-full transition-all duration-300 shadow-[0_-15px_30px_rgba(0,0,0,0.1)] text-slate-800">
+        <!-- Handle for dragging -->
+        <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-5"></div>
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-5">
+            <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
+                <i class="ri-wallet-3-line text-yellow-500 text-xl"></i> ডিপোজিট বিবরণী
+            </h3>
+            <button onclick="window.closeDepositCheckout()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-all">
+                <i class="ri-close-line text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Dynamic Logo Badge -->
+        <div class="text-center mb-5">
+            <div id="depositCheckoutIconBg" class="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-2.5 shadow-md border-2 border-white">
+                <img id="depositCheckoutMethodIcon" src="" class="w-10 h-10 object-contain">
+            </div>
+            <p id="depositCheckoutMethodName" class="text-sm font-black text-slate-500">Bkash</p>
+        </div>
+
+        <!-- Details List -->
+        <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 mb-5 space-y-3.5">
+            <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500 font-semibold">ডিপোজিটকারী:</span>
+                <span id="depositCheckoutUserName" class="text-slate-800 font-bold">মেম্বার</span>
+            </div>
+            <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500 font-semibold">আপনার প্রেরক নাম্বার:</span>
+                <span id="depositCheckoutSenderNumber" class="text-slate-800 font-bold font-mono">017xxxxxxxx</span>
+            </div>
+            <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500 font-semibold">ট্রানজেকশন ID:</span>
+                <span id="depositCheckoutTrxId" class="text-yellow-600 font-mono font-bold tracking-wider uppercase">TRX12345678</span>
+            </div>
+            <div class="h-px bg-slate-200 my-1"></div>
+            <div class="flex justify-between items-center">
+                <span class="text-slate-500 text-xs font-semibold">ডিপোজিট পরিমাণ:</span>
+                <span id="depositCheckoutAmount" class="text-lg font-black text-green-600 font-mono">৳০.০০</span>
+            </div>
+        </div>
+
+        <!-- Confirmation Note -->
+        <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-3.5 mb-6 flex gap-3">
+            <i class="ri-information-line text-yellow-600 text-lg shrink-0"></i>
+            <p class="text-[10px] text-yellow-700/90 font-semibold leading-relaxed">
+                মামা, সাবমিট করার পর আমাদের অ্যাডমিন প্যানেল আপনার ট্রানজেকশন আইডিটি চেক করবে। সবকিছু সঠিক থাকলে ৫ থেকে ১৫ মিনিটের মধ্যে আপনার ডিপোজিট ব্যালেন্স যুক্ত করে দেওয়া হবে।
+            </p>
+        </div>
+
+        <!-- Buttons Grid (Confirm & Cancel) -->
+        <div class="grid grid-cols-2 gap-3.5">
+            <button onclick="window.closeDepositCheckout()" class="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm rounded-2xl active:scale-95 transition-all">
+                বাতিল করুন
+            </button>
+            <button onclick="window.confirmDepositProcess()" class="w-full py-3.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-black text-sm rounded-2xl shadow-lg shadow-yellow-500/10 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                <i class="ri-checkbox-circle-line text-lg"></i> নিশ্চিত করুন
             </button>
         </div>
     </div>
