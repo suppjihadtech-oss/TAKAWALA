@@ -288,12 +288,6 @@
 
 #mainApp:not(.hidden) {
     display: block !important;
-    animation: fadeInSmooth 0.5s ease-out;
-}
-
-@keyframes fadeInSmooth {
-    from { opacity: 0.7; }
-    to { opacity: 1; }
 }
 
 .hidden:not(#mainApp) { 
@@ -4341,33 +4335,28 @@ window.isAdShowing = false;
 
 // ১. বডি ও লেআউট স্টাইল রিসেট ফাংশন (ঝিলিক বা সাদা স্ক্রিন প্রতিরোধক)
 function ensureMainAppVisible() {
-    document.body.style.overflow = "auto";
-    document.body.style.pointerEvents = "auto";
-    document.body.style.position = "static";
-    document.body.style.backgroundColor = "";
-    document.documentElement.style.overflow = "auto";
+    // বারবার স্টাইল সেট করার কারণে ব্রাউজারের রিফ্লো লুপ হওয়া আটকাতে ভ্যালু চেক করে পরিবর্তন করা
+    if (document.body.style.overflow !== "auto") document.body.style.overflow = "auto";
+    if (document.body.style.pointerEvents !== "auto") document.body.style.pointerEvents = "auto";
+    if (document.body.style.position !== "static") document.body.style.position = "static";
+    if (document.body.style.backgroundColor !== "") document.body.style.backgroundColor = "";
+    if (document.documentElement.style.overflow !== "auto") document.documentElement.style.overflow = "auto";
 
     const mainApp = document.getElementById('mainApp');
-    if (mainApp) {
+    if (mainApp && mainApp.classList.contains('hidden')) {
         mainApp.classList.remove('hidden');
-        mainApp.style.setProperty('display', 'block', 'important');
-        mainApp.style.setProperty('visibility', 'visible', 'important');
-        mainApp.style.setProperty('opacity', '1', 'important');
     }
     
     const bottomNav = document.getElementById('bottomNav');
-    if (bottomNav) {
+    if (bottomNav && bottomNav.classList.contains('hidden')) {
         bottomNav.classList.remove('hidden');
-        bottomNav.style.setProperty('display', 'flex', 'important');
     }
     
     const loader = document.getElementById('loadingOverlay');
-    if (loader) {
+    if (loader && !loader.classList.contains('hidden')) {
         loader.classList.add('hidden');
-        loader.style.setProperty('display', 'none', 'important');
     }
 }
-
 // ২. ডামি ফাংশন (মনেট্যাগ স্ক্রিপ্টের স্বাভাবিক প্রসেস বজায় রাখার জন্য)
 function cleanupAdOverlays() {
     // ফায়ারসেফটি হিসেবে খালি রাখা হলো, যাতে ব্যাক-বাটন চাপলে মনেট্যাগ ক্র্যাশ না করে
@@ -4392,22 +4381,25 @@ window.showMonetagAd = async (callback) => {
                     resolve();
                 }, 8000);
 
-                window['show_10531082']()
-                    .then(() => {
+                try {
+                    // মনেট্যাগ ফাংশনটি কোনো প্রমিজ রিটার্ন করে না, তাই সরাসরি ট্রাই-ক্যাচে কল করা হলো
+                    window['show_10531082']();
+                    
+                    // অ্যাড চালু হওয়ার পর লোডিং স্ক্রিন বন্ধ করার জন্য ২ সেকেন্ডের বাফার টাইম
+                    setTimeout(() => {
                         clearTimeout(safetyTimer);
                         resolve();
-                    })
-                    .catch((err) => {
-                        clearTimeout(safetyTimer);
-                        console.log("Ad Error or Skipped:", err);
-                        resolve();
-                    });
+                    }, 2000);
+                } catch (err) {
+                    clearTimeout(safetyTimer);
+                    console.log("Ad Error or Skipped:", err);
+                    resolve();
+                }
             } else {
                 resolve();
             }
         });
     };
-
     // --- ১ম অ্যাড ---
     showSmartToast('১ম অ্যাড শুরু হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...', 'info');
     await playSingleAd();
@@ -12852,31 +12844,37 @@ window.openRechargeCheckout = (phone, amount, operator) => {
     }
 
    // অপারেটর অনুযায়ী লোগো এবং কালার থিম সেট করা
-const iconImg = document.getElementById('rechargeCheckoutMethodIcon');
-const iconBg = document.getElementById('rechargeCheckoutIconBg');
+        const iconImg = document.getElementById('rechargeCheckoutMethodIcon');
+        const iconBg = document.getElementById('rechargeCheckoutIconBg');
 
-let iconUrl = "";
-let themeBg = "bg-[#005cbb]"; // Grameenphone Blue Default
+        let iconUrl = "";
+        let themeBg = "bg-[#005cbb]"; // Grameenphone Blue Default
 
-if (operator === 'GP') {
-    iconUrl = "https://i.postimg.cc/65w1n62J/FB-IMG-1769495932877.jpg";
-    themeBg = "bg-[#005cbb]";
-} else if (operator === 'BL') {
-    iconUrl = "https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg";
-    themeBg = "bg-[#f25c05]";
-} else if (operator === 'Robi') {
-    iconUrl = "https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg";
-    themeBg = "bg-[#e60012]";
-} else if (operator === 'Airtel') {
-    iconUrl = "https://i.postimg.cc/Wz0CjhdX/FB-IMG-1769496019329.jpg";
-    themeBg = "bg-[#ff0000]";
-} else if (operator === 'Teletalk') {
-    iconUrl = "https://i.postimg.cc/TYCQbVvT/FB-IMG-1769496047333.jpg";
-    themeBg = "bg-[#008c45]";
-}
-    if (iconImg) iconImg.src = iconUrl;
-    if (iconBg) iconBg.className = `w-16 h-16 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-2.5 shadow-lg border-2 border-white ${themeBg}`;
+        // আপনার সিলেক্টর গ্রিডের শতভাগ আসল লোগো লিংকগুলো এখানে ম্যাপ করা হলো
+        if (operator === 'GP') {
+            iconUrl = "https://i.postimg.cc/65w1n62J/FB-IMG-1769495932877.jpg";
+            themeBg = "bg-[#005cbb]";
+        } else if (operator === 'BL') {
+            iconUrl = "https://i.postimg.cc/RFHbQNLZ/FB-IMG-1769495977203.jpg";
+            themeBg = "bg-[#f25c05]";
+        } else if (operator === 'Robi') {
+            iconUrl = "https://i.postimg.cc/gJ8NL1Gx/FB-IMG-1769495999103.jpg";
+            themeBg = "bg-[#e60012]";
+        } else if (operator === 'Airtel') {
+            iconUrl = "https://i.postimg.cc/Wz0CjhdX/FB-IMG-1769496019329.jpg";
+            themeBg = "bg-[#ff0000]";
+        } else if (operator === 'Teletalk') {
+            iconUrl = "https://i.postimg.cc/TYCQbVvT/FB-IMG-1769496047333.jpg";
+            themeBg = "bg-[#008c45]";
+        }
 
+        // ইমেজ ও ব্যাকগ্রাউন্ড থিম সফলভাবে সেট করা
+        if (iconImg) {
+            iconImg.src = iconUrl;
+        }
+        if (iconBg) {
+            iconBg.className = `w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden bg-white text-white text-3xl mx-auto mb-2.5 shadow-lg border-2 border-white ${themeBg}`;
+        }
     // মডাল স্লাইড-আপ (Show) করা
     const modal = document.getElementById('rechargeCheckoutModal');
     if (modal) {
@@ -13522,7 +13520,7 @@ window.confirmDepositProcess = async () => {
         <!-- Dynamic Logo Badge -->
         <div class="text-center mb-5">
             <div id="rechargeCheckoutIconBg" class="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-2.5 shadow-lg border-2 border-white">
-                <img id="withdrawCheckoutMethodIcon" src="" class="w-10 h-10 object-contain">
+                <img id="rechargeCheckoutMethodIcon" src="" class="w-10 h-10 object-contain rounded-lg">
             </div>
             <h3 class="text-xl font-black text-slate-800">রিচার্জ বিবরণী</h3>
             <p class="text-[11px] text-slate-400 font-bold tracking-wide mt-1 uppercase">Recharge Confirmation</p>
