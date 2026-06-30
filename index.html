@@ -1867,7 +1867,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <div class="bg-gradient-to-r from-blue-600 to-cyan-500 w-full h-32 flex items-center justify-between p-5 relative overflow-hidden rounded-[20px]">
                     <div class="absolute left-1/2 bottom-0 w-28 h-28 bg-white/10 rounded-full blur-2xl"></div>
                     <div class="text-white text-left relative z-10">
-                        <h3 class="text-[17px] font-black leading-tight mb-1.5 drop-shadow-md">অ্যাড দেখে আয়!<br><span class="text-cyan-100">প্রতিদিন ১০০ টি  অ্যাড</span></h3>
+                        <h3 class="text-[17px] font-black leading-tight mb-1.5 drop-shadow-md">অ্যাড দেখে আয়!<br><span class="text-cyan-100">প্যাকেজ অনুযায়ী দৈনিক অ্যাড</span></h3>
                         <p class="text-[10px] bg-white/20 inline-block px-2.5 py-0.5 rounded-full backdrop-blur-sm border border-white/20 font-bold">ফ্রি ইনকাম সুযোগ</p>
                     </div>
                     <img src="https://img.icons8.com/fluency/96/play-button-circled.png" class="w-16 h-16 drop-shadow-xl relative z-10">
@@ -1942,7 +1942,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                         <h3 class="text-base font-black leading-none tracking-wide flex items-center gap-2">
                             অ্যাড দেখে আয় 
                         </h3>
-                        <p class="text-[10px] text-pink-50 font-bold mt-1 opacity-90">প্রতিদিন ১০০ টি  অ্যাড দেখুন!</p>
+                        <p class="text-[10px] text-pink-50 font-bold mt-1 opacity-90">আপনার প্যাকেজ অনুযায়ী দৈনিক অ্যাড দেখুন!</p>
                     </div>
                 </div>
                 <div class="bg-white/20 p-1.5 rounded-full backdrop-blur-md relative z-10 group-hover:bg-white/30 transition">
@@ -2021,6 +2021,20 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     <div class="flex bg-white p-1 rounded-2xl shadow-sm mb-6 border">
         <button onclick="window.switchTaskTab('free')" id="tabFreeTask" class="flex-1 py-3 font-bold text-sm rounded-xl bg-green-500 text-white shadow">ফ্রি টাস্ক</button>
         <button onclick="window.switchTaskTab('vip')" id="tabVipTask" class="flex-1 py-3 font-bold text-sm rounded-xl text-slate-500">ভিআইপি টাস্ক</button>
+    </div>
+
+<!-- 🎥 DYNAMIC TUTORIAL BANNER FOR TASKS -->
+    <div onclick="window.openTutorial('task')" class="bg-gradient-to-r from-red-500 via-rose-500 to-red-600 p-3.5 rounded-2xl shadow-sm text-white mb-4 flex items-center justify-between cursor-pointer active:scale-95 transition-all border border-red-400/20">
+        <div class="flex items-center gap-3">
+            <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                <i class="ri-youtube-fill text-2xl text-white animate-pulse"></i>
+            </div>
+            <div class="text-left">
+                <h4 class="text-xs font-black leading-tight text-white uppercase tracking-wide">কাজ করার নিয়ম শিখুন 🎥</h4>
+                <p class="text-[9px] text-red-100 font-medium mt-0.5">টাস্ক সম্পন্ন করার ভিডিও টিউটোরিয়াল দেখুন</p>
+            </div>
+        </div>
+        <span class="bg-white/20 text-white text-[9px] font-black px-2.5 py-1.5 rounded-xl border border-white/20 uppercase tracking-wider flex items-center gap-1">ভিডিও দেখুন <i class="ri-arrow-right-s-line"></i></span>
     </div>
 
     <!-- ✅ এই অংশটি আপনার কোডে ছিল না, এটি অবশ্যই যোগ করুন -->
@@ -2112,6 +2126,20 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
         </div>
     </div>
 
+<!-- 🎥 DYNAMIC TUTORIAL BANNER FOR TRANSFER -->
+        <div onclick="window.openTutorial('transfer')" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 p-3.5 rounded-2xl shadow-sm text-white mb-4 flex items-center justify-between cursor-pointer active:scale-95 transition-all border border-indigo-400/20">
+            <div class="flex items-center gap-3">
+                <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                    <i class="ri-youtube-fill text-2xl text-white animate-pulse"></i>
+                </div>
+                <div class="text-left">
+                    <h4 class="text-xs font-black leading-tight text-white uppercase tracking-wide">ট্রান্সফারের নিয়ম শিখুন 🎥</h4>
+                    <p class="text-[9px] text-indigo-100 font-medium mt-0.5">ব্যালেন্স স্থানান্তরের ভিডিও টিউটোরিয়াল দেখুন</p>
+                </div>
+            </div>
+            <span class="bg-white/20 text-white text-[9px] font-black px-2.5 py-1.5 rounded-xl border border-white/20 uppercase tracking-wider flex items-center gap-1">ভিডিও দেখুন <i class="ri-arrow-right-s-line"></i></span>
+        </div>
+
     <!-- 🔄 ৩ডি স্টাইলিশ ভিজ্যুয়াল ট্রানজিশন কার্ড -->
     <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-6 rounded-[30px] space-y-4 shadow-xl border border-indigo-500/20 relative overflow-hidden mb-6">
         <div class="absolute -right-6 -top-6 bg-indigo-500/10 w-20 h-20 rounded-full blur-xl animate-pulse"></div>
@@ -2195,6 +2223,21 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     </div>
 
     <div id="depositSection">
+        
+        <!-- 🎥 DYNAMIC TUTORIAL BANNER FOR DEPOSIT -->
+        <div onclick="window.openTutorial('deposit')" class="bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 p-3.5 rounded-2xl shadow-sm text-white mb-4 flex items-center justify-between cursor-pointer active:scale-95 transition-all border border-emerald-400/20">
+            <div class="flex items-center gap-3">
+                <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                    <i class="ri-youtube-fill text-2xl text-white animate-pulse"></i>
+                </div>
+                <div class="text-left">
+                    <h4 class="text-xs font-black leading-tight text-white uppercase tracking-wide">ডিপোজিট করার নিয়ম 🎥</h4>
+                    <p class="text-[9px] text-emerald-100 font-medium mt-0.5">অ্যাড মানি করার ভিডিও টিউটোরিয়াল দেখুন</p>
+                </div>
+            </div>
+            <span class="bg-white/20 text-white text-[9px] font-black px-2.5 py-1.5 rounded-xl border border-white/20 uppercase tracking-wider flex items-center gap-1">ভিডিও দেখুন <i class="ri-arrow-right-s-line"></i></span>
+        </div>
+        
         <!-- ১. প্রফেশনাল মেথড সিলেক্টর গ্রিড -->
         <div class="grid grid-cols-4 gap-3 mb-4">
             <div onclick="window.selectPayment(this, 'bKash')" id="payment_bKash" class="bg-white p-2 rounded-2xl border cursor-pointer h-14 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-8 object-contain"></div>
@@ -2290,7 +2333,23 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
     </div>
 
     <div id="withdrawSection">
+        
+        <!-- 🎥 DYNAMIC TUTORIAL BANNER FOR WITHDRAW -->
+    <div onclick="window.openTutorial('withdraw')" class="bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 p-3.5 rounded-2xl shadow-sm text-white mb-4 flex items-center justify-between cursor-pointer active:scale-95 transition-all border border-rose-400/20">
+        <div class="flex items-center gap-3">
+            <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                <i class="ri-youtube-fill text-2xl text-white animate-pulse"></i>
+            </div>
+            <div class="text-left">
+                <h4 class="text-xs font-black leading-tight text-white uppercase tracking-wide">উত্তোলনের নিয়ম শিখুন 🎥</h4>
+                <p class="text-[9px] text-rose-100 font-medium mt-0.5">টাকা উত্তোলনের ভিডিও টিউটোরিয়াল দেখুন</p>
+            </div>
+        </div>
+        <span class="bg-white/20 text-white text-[9px] font-black px-2.5 py-1.5 rounded-xl border border-white/20 uppercase tracking-wider flex items-center gap-1">ভিডিও দেখুন <i class="ri-arrow-right-s-line"></i></span>
+    </div>
+        
          <div class="grid grid-cols-4 gap-3 mb-6">
+                                    
             <!-- প্রথম থেকেই বিকাশ বাটনটি সিলেক্টেড স্টাইলে থাকবে -->
             <div onclick="window.selectWithdrawMethod(this, 'bKash')" id="withdraw_bKash" class="bg-pink-50/40 p-2 rounded-2xl border-2 border-[#d12053] cursor-pointer h-16 flex items-center justify-center transition-all duration-300 scale-105 shadow-sm"><img src="https://i.postimg.cc/C5vDR4nz/1656235223bkash-logo.png" class="h-10 object-contain"></div>
             <div onclick="window.selectWithdrawMethod(this, 'Nagad')" id="withdraw_Nagad" class="bg-white p-2 rounded-2xl border cursor-pointer h-16 flex items-center justify-center transition-all duration-300"><img src="https://i.postimg.cc/k4phWWbK/1679248787Nagad-Logo.png" class="h-8 object-contain"></div>
@@ -2381,6 +2440,21 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                     <img src="https://i.postimg.cc/TYCQbVvT/FB-IMG-1769496047333.jpg" class="h-full object-contain rounded-lg">
                 </div>
             </div>
+            
+            <!-- 🎥 DYNAMIC TUTORIAL BANNER FOR RECHARGE -->
+    <div onclick="window.openTutorial('recharge')" class="bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-600 p-3.5 rounded-2xl shadow-sm text-white mb-4 flex items-center justify-between cursor-pointer active:scale-95 transition-all border border-blue-400/20">
+        <div class="flex items-center gap-3">
+            <div class="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                <i class="ri-youtube-fill text-2xl text-white animate-pulse"></i>
+            </div>
+            <div class="text-left">
+                <h4 class="text-xs font-black leading-tight text-white uppercase tracking-wide">রিচার্জ করার নিয়ম 🎥</h4>
+                <p class="text-[9px] text-blue-100 font-medium mt-0.5">মোবাইল রিচার্জ করার ভিডিও টিউটোরিয়াল দেখুন</p>
+            </div>
+        </div>
+        <span class="bg-white/20 text-white text-[9px] font-black px-2.5 py-1.5 rounded-xl border border-white/20 uppercase tracking-wider flex items-center gap-1">ভিডিও দেখুন <i class="ri-arrow-right-s-line"></i></span>
+    </div>
+            
             <!-- মডার্ন ডাইনামিক রিচার্জ কার্ড (ডিফল্ট জিপি এর নীল গ্রেডিয়েন্টে প্রি-স্টাইলড করা) -->
             <div id="rechargeCard" class="bg-gradient-to-br from-[#005cbb] to-[#003882] text-white border-0 p-6 rounded-[25px] space-y-4 shadow-xl transition-all duration-500">
                 <div class="relative">
@@ -2466,7 +2540,7 @@ body.dark-mode .sum-filter-btn:not(.active-sum) {
                 <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-3.5 rounded-2xl text-white text-center shadow-lg border border-white/10 relative overflow-hidden">
                     <div class="absolute -right-3 -top-3 w-10 h-10 bg-white/10 rounded-full"></div>
                     <p class="text-[9px] font-bold opacity-80 uppercase leading-none mb-1">মোট অ্যাড</p>
-                    <h3 class="text-xl font-black leading-none">১০০</h3>
+<h3 id="watchTotalDisplay" class="text-xl font-black leading-none">--</h3>
                 </div>
 
                 <!-- ২. আজকে দেখা কার্ড (Emerald থিম) -->
@@ -10977,69 +11051,90 @@ window.processMagicPromo = async () => {
 // ==========================================
 let watchCooldownInterval = null;
 const WATCH_REWARD = 0.20; // ২০ পয়সা
-const DAILY_LIMIT = 100; // দৈনিক ১০০টি অ্যাড
-const COOLDOWN_SECONDS = 10; // ০:১০ মিনিট
+const COOLDOWN_SECONDS = 10; // ০:১০ মিনিট (বা আপনার প্রয়োজন অনুযায়ী সেকেন্ড)
 
-// WATCH & EARN SCREEN (বাকি অ্যাডের কাউন্টার হিসাব সহ নতুন সংস্করণ)
-        window.loadWatchEarnStats = async () => {
-            if(!currentUserData) return;
-           
-            const warningBox = document.getElementById('watchEarnActivationWarning');
-            if (warningBox) {
-                if (currentUserData.isActivated === false) {
-                    warningBox.classList.remove('hidden');
-                } else {
-                    warningBox.classList.add('hidden');
-                }
-            }
-            
-            const todayStr = new Date().toLocaleDateString('bn-BD');
-            let watchCount = 0;
-            let todayEarning = 0;
-            
-            // ডাটাবেস চেক করা
-            if(currentUserData.lastWatchDate === todayStr) {
-                watchCount = currentUserData.watchEarnCount || 0;
-                todayEarning = currentUserData.watchEarnToday || 0;
-            } else {
-                // নতুন দিন হলে সব জিরো করে দেওয়া
-                db.collection("users").doc(currentUserId).update({
-                    watchEarnCount: 0,
-                    watchEarnToday: 0,
-                    lastWatchDate: todayStr
-                });
-            }
+// ইউজারের প্যাকেজ অনুযায়ী দৈনিক অ্যাড লিমিট নির্ধারণের ফাংশন
+function getDailyAdLimit() {
+    if (!currentUserData) return 15; // ডাটা না থাকলে ডিফল্ট ১৫
+    const uPlan = (currentUserData.plan || "free").toLowerCase();
+    
+    if (uPlan.includes("platinum") || uPlan.includes("প্লাটিনাম")) {
+        return 50;
+    } else if (uPlan.includes("gold") || uPlan.includes("গোল্ড") || uPlan.includes("vip") || uPlan.includes("ভিআইপি")) {
+        return 40;
+    } else if (uPlan.includes("silver") || uPlan.includes("সিলভার")) {
+        return 30;
+    }
+    return 15; // ফ্রি মেম্বার বা সাধারণ ইউজার
+}
 
-            document.getElementById('watchCountDisplay').innerText = watchCount;
-            document.getElementById('watchEarnDisplay').innerText = todayEarning.toFixed(2);
+// WATCH & EARN SCREEN (স্ট্যাটাস ও লিমিট লোড)
+window.loadWatchEarnStats = async () => {
+    if(!currentUserData) return;
+   
+    const warningBox = document.getElementById('watchEarnActivationWarning');
+    if (warningBox) {
+        if (currentUserData.isActivated === false) {
+            warningBox.classList.remove('hidden');
+        } else {
+            warningBox.classList.add('hidden');
+        }
+    }
+    
+    const todayStr = new Date().toLocaleDateString('bn-BD');
+    let watchCount = 0;
+    let todayEarning = 0;
+    
+    // ডাটাবেস চেক করা
+    if(currentUserData.lastWatchDate === todayStr) {
+        watchCount = currentUserData.watchEarnCount || 0;
+        todayEarning = currentUserData.watchEarnToday || 0;
+    } else {
+        // নতুন দিন হলে ডাটাবেসে রিসেট করে দেওয়া
+        db.collection("users").doc(currentUserId).update({
+            watchEarnCount: 0,
+            watchEarnToday: 0,
+            lastWatchDate: todayStr
+        });
+    }
 
-            // 🎯 বাকি অ্যাড হিসাব করে রিয়েল টাইমে ৩ নম্বর কার্ডে আপডেট করার লজিক
-            const remainingAds = Math.max(0, 100 - watchCount);
-            const remainingEl = document.getElementById('watchRemainingDisplay');
-            if (remainingEl) {
-                remainingEl.innerText = remainingAds;
-            }
+    const currentLimit = getDailyAdLimit();
 
-            // ২. কুলডাউন বা লিমিট চেক করা
-            checkWatchStatus(watchCount, currentUserData.lastWatchTime);
-        };
+    // মোট অ্যাড কার্ডের সংখ্যা ডায়নামিকভাবে আপডেট
+    const totalAdEl = document.getElementById('watchTotalDisplay');
+    if (totalAdEl) {
+        totalAdEl.innerText = currentLimit;
+    }
 
-// ২. অ্যাড শুরু করার ফাংশন
+    document.getElementById('watchCountDisplay').innerText = watchCount;
+    document.getElementById('watchEarnDisplay').innerText = todayEarning.toFixed(2);
+
+    // বাকি অ্যাড হিসাব করে রিয়েল টাইমে ৩ নম্বর কার্ডে আপডেট
+    const remainingAds = Math.max(0, currentLimit - watchCount);
+    const remainingEl = document.getElementById('watchRemainingDisplay');
+    if (remainingEl) {
+        remainingEl.innerText = remainingAds;
+    }
+
+    // কুলডাউন বা লিমিট চেক করা
+    checkWatchStatus(watchCount, currentUserData.lastWatchTime);
+};
+
+// অ্যাড দেখা শুরু করার মেইন ফাংশন
 window.startWatchAd = async () => {
     if(!currentUserData) return;
 
     const todayStr = new Date().toLocaleDateString('bn-BD');
     let watchCount = currentUserData.lastWatchDate === todayStr ? (currentUserData.watchEarnCount || 0) : 0;
+    const currentLimit = getDailyAdLimit();
 
-    if(watchCount >= DAILY_LIMIT) {
+    if(watchCount >= currentLimit) {
         showSmartToast('আজকের লিমিট শেষ! আগামীকাল আবার চেষ্টা করুন।', 'error');
         return;
     }
 
     // বাটনে ক্লিক করলে অ্যাড কল হবে
     window.showMonetagAd(async () => {
-        // অ্যাড দেখা শেষ হলে এই ব্লকটি রান হবে
-        
         try {
             const userRef = db.collection("users").doc(currentUserId);
             const now = new Date();
@@ -11050,7 +11145,7 @@ window.startWatchAd = async () => {
                 watchEarnCount: firebase.firestore.FieldValue.increment(1),
                 watchEarnToday: firebase.firestore.FieldValue.increment(WATCH_REWARD),
                 lastWatchDate: todayStr,
-                lastWatchTime: now.getTime() // সময় সেভ করে রাখছি টাইমারের জন্য
+                lastWatchTime: now.getTime()
             });
 
             // হিস্ট্রিতে সেভ করা
@@ -11059,7 +11154,7 @@ window.startWatchAd = async () => {
                 type: "অ্যাড দেখে আয় ",
                 amount: WATCH_REWARD,
                 status: "Success",
-                details: `ভিডিও অ্যাড বোনাস (${watchCount + 1}/${DAILY_LIMIT})`,
+                details: `ভিডিও অ্যাড বোনাস (${watchCount + 1}/${currentLimit})`,
                 date: todayStr,
                 time: now.toLocaleTimeString('bn-BD'),
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -11073,13 +11168,11 @@ window.startWatchAd = async () => {
             currentUserData.lastWatchTime = now.getTime();
             currentUserData.lastWatchDate = todayStr;
 
-            // ১. ৩ডি বক্স এনিমেশন ট্রিগার (অ্যাড রিওয়ার্ড অ্যামাউন্ট সহ)
             window.trigger3DBoxReward(`৳${WATCH_REWARD.toFixed(2)}`);
 
-            // ২. UI এবং স্ট্যাটাস আপডেট
+            // UI এবং স্ট্যাটাস আপডেট
             window.loadWatchEarnStats();
 
-            // ৩. ৩ডি বক্স এনিমেশন শেষ হওয়ার পর (২ সেকেন্ড পর) গর্জিয়াস পপ-আপ দেখানো
             setTimeout(() => {
                 Swal.fire({
                     title: '🎉 অ্যাড রিওয়ার্ড সফল!',
@@ -11096,24 +11189,23 @@ window.startWatchAd = async () => {
                         </div>
                     `,
                     confirmButtonText: 'ঠিক আছে, ধন্যবাদ',
-                    confirmButtonColor: '#f43f5e', // থিমের সাথে সামঞ্জস্যপূর্ণ রোজ কালার
+                    confirmButtonColor: '#f43f5e',
                     background: '#ffffff',
                     customClass: {
                         popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
                         confirmButton: 'rounded-xl px-8 py-3 font-bold'
                     }
                 });
-            }, 2000); // ২ সেকেন্ড (২০০০ মিলি-সেকেন্ড) বিলম্ব
+            }, 2000);
 
         } catch (e) {
             console.error("Watch Earn Error:", e);
             showSmartToast('রিওয়ার্ড যোগ করতে সমস্যা হয়েছে', 'error');
         }
-        
     });
 };
 
-// ৩. সিকিউরড কুলডাউন টাইমার চেক
+// সিকিউরড কুলডাউন ও বাটন স্ট্যাটাস চেক
 function checkWatchStatus(count, lastTimeMillis) {
     const btn = document.getElementById('btnWatchAd');
     const cooldownBox = document.getElementById('cooldownBox');
@@ -11122,8 +11214,9 @@ function checkWatchStatus(count, lastTimeMillis) {
 
     if(watchCooldownInterval) clearInterval(watchCooldownInterval);
 
-    if(count >= DAILY_LIMIT) {
-        // লিমিট শেষ
+    const currentLimit = getDailyAdLimit();
+
+    if(count >= currentLimit) {
         btn.classList.add('opacity-50', 'grayscale', 'cursor-not-allowed', 'pointer-events-none');
         title.innerText = "আজকের কাজ শেষ ✅";
         text.innerText = "আগামীকাল আবার নতুন অ্যাড পাবেন";
@@ -11136,10 +11229,9 @@ function checkWatchStatus(count, lastTimeMillis) {
         const diffSeconds = Math.floor((now - lastTimeMillis) / 1000);
 
         if(diffSeconds < COOLDOWN_SECONDS) {
-            // কুলডাউন চলছে
             btn.classList.add('opacity-50', 'grayscale', 'cursor-not-allowed', 'pointer-events-none');
             title.innerText = "অপেক্ষা করুন ⏳";
-            text.innerText = "পরবর্তী অ্যাডটি তৈরি হচ্ছে, ৩০ সেকেন্ড অপেক্ষা করুন";
+            text.innerText = "পরবর্তী অ্যাডটি তৈরি হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন";
             cooldownBox.classList.remove('hidden');
 
             let timeLeft = COOLDOWN_SECONDS - diffSeconds;
@@ -11152,18 +11244,17 @@ function checkWatchStatus(count, lastTimeMillis) {
 
                 if(timeLeft <= 0) {
                     clearInterval(watchCooldownInterval);
-                    window.loadWatchEarnStats(); // রিফ্রেশ
+                    window.loadWatchEarnStats();
                 }
             }, 1000);
             return;
         }
     }
 
-    // সব ঠিক থাকলে বাটন এক্টিভ
     btn.classList.remove('opacity-50', 'grayscale', 'cursor-not-allowed', 'pointer-events-none');
     title.innerText = "ভিডিও দেখতে ক্লিক করুন";
-text.innerText = `প্রতিটি অ্যাড দেখার জন্য ইনস্ট্যান্ট পাবেন ৳${WATCH_REWARD}`; // অটোমেটিক রিওয়ার্ড এমাউন্ট বসবে
-cooldownBox.classList.add('hidden');
+    text.innerText = `প্রতিটি অ্যাড দেখার জন্য ইনস্ট্যান্ট পাবেন ৳${WATCH_REWARD}`;
+    cooldownBox.classList.add('hidden');
 }
 
 // ==========================================
@@ -13138,6 +13229,61 @@ window.confirmDepositProcess = async () => {
         console.error("ডিপোজিট নিশ্চিতকরণ এরর:", e);
         hideLoading();
         showSmartToast("ডিপোজিট সম্পূর্ণ করতে ব্যর্থ হয়েছে: " + e.message, "error");
+    }
+};
+
+// ==========================================
+// 🎥 DYNAMIC TUTORIAL REDIRECTOR MODULE
+// ==========================================
+window.openTutorial = (type) => {
+    if (typeof window.playSound === 'function') window.playSound('snd_click');
+    
+    let url = "";
+    let sectionName = "";
+
+    // টাইপ অনুযায়ী ডাটাবেসের লিংক ও নাম নির্ধারণ
+    if (type === 'task') {
+        url = systemSettings.taskTutorialUrl || "";
+        sectionName = "টাস্ক সম্পন্ন করার";
+    } else if (type === 'recharge') {
+        url = systemSettings.rechargeTutorialUrl || "";
+        sectionName = "মোবাইল রিচার্জ করার";
+    } else if (type === 'withdraw') {
+        url = systemSettings.withdrawTutorialUrl || "";
+        sectionName = "টাকা উত্তোলনের";
+    } else if (type === 'deposit') {
+        url = systemSettings.depositTutorialUrl || "";
+        sectionName = "ডিপোজিট (অ্যাড মানি)";
+    } else if (type === 'transfer') {
+        url = systemSettings.transferTutorialUrl || "";
+        sectionName = "ব্যালেন্স স্থানান্তরের";
+    }
+
+    // যদি ফায়ারস্টোরে লিংক থাকে এবং সেটি 'http' দিয়ে শুরু হয়
+    if (url && url.trim() !== "" && url.trim().toLowerCase().startsWith('http')) {
+        showSmartToast('ভিডিও টিউটোরিয়ালে নিয়ে যাওয়া হচ্ছে...', 'info');
+        setTimeout(() => {
+            window.open(url.trim(), '_blank');
+        }, 800);
+    } else {
+        // ফায়ারস্টোরে লিংক না থাকলে সুন্দর পপ-আপ সতর্কবার্তা
+        Swal.fire({
+            title: 'টিউটোরিয়াল আসছে... 🛠️',
+            html: `
+                <div class="text-center animate__animated animate__zoomIn">
+                    <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-100">
+                        <i class="ri-youtube-fill text-4xl text-red-500 animate-pulse"></i>
+                    </div>
+                    <h4 class="font-extrabold text-slate-800 text-sm mb-1">${sectionName} ভিডিও টিউটোরিয়াল</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed px-2 font-medium">
+                        মামা, এই সেকশনের কাজ ও নিয়মনীতি বোঝানোর ভিডিওটি বর্তমানে তৈরি হচ্ছে। খুব শীঘ্রই আমাদের অফিশিয়াল ইউটিউব চ্যানেলে ভিডিওটি আপলোড করে এখানে লিংক যুক্ত করে দেওয়া হবে।
+                    </p>
+                </div>
+            `,
+            confirmButtonText: 'ঠিক আছে, ধন্যবাদ',
+            confirmButtonColor: '#ef4444',
+            customClass: { popup: 'rounded-[30px]' }
+        });
     }
 };
 
