@@ -4407,14 +4407,76 @@ let lastValues = { main: 0, dep: 0, rech: 0, ref: 0 }; // আগের ভ্য
 // 🛡️ গ্লোবাল অ্যাড কনকারেন্সি লক ও নিরাপদ মেমরি ট্র্যাকিং
 window.isAdShowing = false;
 
-// ১. বডি ও লেআউট স্টাইল রিসেট ফাংশন (ঝিলিক বা সাদা স্ক্রিন প্রতিরোধক)
+// ১. বডি ও লেআউট স্টাইল রিসেট এবং ব্রাউজার রিফ্লো রি-ক্যালকুলেশন ফাংশন (ঝিলিক ও সাদা স্ক্রিন দূর করতে)
+function forceViewportReflow() {
+    // বডি ও এইচটিএমএল এর ইনলাইন স্টাইল রিসেট করা
+    document.documentElement.style.cssText = "width: 100% !important; height: 100% !important; overflow: auto !important; position: relative !important;";
+    document.body.style.cssText = "width: 100% !important; height: 100% !important; overflow: auto !important; position: relative !important; background-color: #f8fafc !important;";
+    
+    // ডার্ক মোডের জন্য ব্যাকগ্রাউন্ড ধরে রাখা
+    if (document.body.classList.contains('dark-mode')) {
+        document.body.style.setProperty('background-color', '#0f172a', 'important');
+    }
+
+    // ব্রাউজার লেআউট রেন্ডারিং পুনরায় হিসাব করতে বাধ্য করা (Reflow)
+    const mainApp = document.getElementById('mainApp');
+    if (mainApp) {
+        const originalDisplay = mainApp.style.display;
+        mainApp.style.display = 'none';
+        mainApp.offsetHeight; // Reflow ফায়ার করা
+        mainApp.style.display = originalDisplay || 'block';
+    }
+
+    // টেলিগ্রাম ওয়েবভিউ স্ক্রল বাগ ফিক্স
+    window.scrollTo(0, 0);
+}
+
+// ২. মনেট্যাগ অ্যাড এর ফ্লোটিং ওভারলে ও আইফ্রেম সম্পূর্ণ মুছে ফেলার ফাংশন
+function cleanupAdOverlays() {
+    // আপনার অ্যাপে কোনো আইফ্রেম (iframe) নেই। তাই মনেট্যাগ এর স্ক্রিপ্ট দিয়ে তৈরি হওয়া সব আইফ্রেম ডিলিট করা হলো
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach(iframe => {
+        try {
+            iframe.remove();
+        } catch (e) {
+            console.error("Failed to remove iframe:", e);
+        }
+    });
+
+    // ডাইনামিকলি তৈরি হওয়া কোনো ফ্লোটিং অ্যাড কন্টেইনার বা স্ক্রিন ব্লকার থাকলে তা ডিলিট করা
+    const bodyChildren = Array.from(document.body.children);
+    const knownIds = [
+        'bannedScreen', 'maintenanceScreen', 'globalChatIcon', 'twaiChatbotIcon',
+        'loadingOverlay', 'smartToast', 'loginNoticeModal', 'twaiModal', 'authScreen',
+        'forgotPasswordScreen', 'mainApp', 'proofModal', 'userReceiptModal',
+        'forceJoinModal', 'taskNudge', 'inboxModal', 'pinVerifyModal',
+        'passwordChangeModal', 'shareModal', 'packageCheckoutModal',
+        'withdrawCheckoutModal', 'rechargeCheckoutModal', 'depositCheckoutModal',
+        'snd_click', 'snd_success', 'snd_bonus', 'snd_welcome'
+    ];
+
+    bodyChildren.forEach(child => {
+        if (child.tagName === 'DIV' || child.tagName === 'IFRAME') {
+            const id = child.getAttribute('id');
+            // যদি এলিমেন্টটি আমাদের পরিচিত লিস্টে না থাকে এবং পজিশন ফিক্সড বা এবসলিউট হয়, তবে তা রিমুভ করা
+            if (!id || !knownIds.includes(id)) {
+                const style = window.getComputedStyle(child);
+                if (style.position === 'fixed' || style.position === 'absolute' || child.tagName === 'IFRAME') {
+                    try {
+                        child.remove();
+                    } catch (e) {
+                        console.error("Failed to remove dynamic ad overlay:", e);
+                    }
+                }
+            }
+        }
+    });
+}
+
 function ensureMainAppVisible() {
-    // বারবার স্টাইল সেট করার কারণে ব্রাউজারের রিফ্লো লুপ হওয়া আটকাতে ভ্যালু চেক করে পরিবর্তন করা
-    if (document.body.style.overflow !== "auto") document.body.style.overflow = "auto";
-    if (document.body.style.pointerEvents !== "auto") document.body.style.pointerEvents = "auto";
-    if (document.body.style.position !== "static") document.body.style.position = "static";
-    if (document.body.style.backgroundColor !== "") document.body.style.backgroundColor = "";
-    if (document.documentElement.style.overflow !== "auto") document.documentElement.style.overflow = "auto";
+    // মনেট্যাগ দ্বারা পরিবর্তিত সকল লেআউট বাগ ক্লিন করা
+    cleanupAdOverlays();
+    forceViewportReflow();
 
     const mainApp = document.getElementById('mainApp');
     if (mainApp && mainApp.classList.contains('hidden')) {
@@ -4431,10 +4493,21 @@ function ensureMainAppVisible() {
         loader.classList.add('hidden');
     }
 }
-// ২. ডামি ফাংশন (মনেট্যাগ স্ক্রিপ্টের স্বাভাবিক প্রসেস বজায় রাখার জন্য)
-function cleanupAdOverlays() {
-    // ফায়ারসেফটি হিসেবে খালি রাখা হলো, যাতে ব্যাক-বাটন চাপলে মনেট্যাগ ক্র্যাশ না করে
-}
+
+// ৩. অটোমেটিকালি ইউজার অ্যাড দেখে ব্যাক বাটনে ক্লিক করে ফিরে আসলে স্ক্রিন ও লেআউট ঠিক করার লিসেনার
+window.addEventListener('focus', () => {
+    cleanupAdOverlays();
+    forceViewportReflow();
+    ensureMainAppVisible();
+});
+
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        cleanupAdOverlays();
+        forceViewportReflow();
+        ensureMainAppVisible();
+    }
+});
 
 // ৩. লাইটওয়েট ও স্থিতিশীল Monetag অ্যাড ফাংশন
 window.showMonetagAd = async (callback) => {
@@ -11836,115 +11909,164 @@ window.downloadAPK = () => {
     });
 };
 
-// ✅ ১০ টাকা দিয়ে আইডি অ্যাক্টিভেশন ফাংশন
-window.handleActivation = async () => {
-    if (!currentUserData) return;
-    
-    const activationFee = 10;
-    const currentDeposit = currentUserData.depositBalance || 0;
-
-    // ১. ব্যালেন্স চেক
-    if (currentDeposit < activationFee) {
-        Swal.fire({
-            icon: 'error',
-            title: 'ব্যালেন্স পর্যাপ্ত নয়!',
-            html: `আইডি অ্যাক্টিভ করতে <b>৳১০</b> প্রয়োজন। আপনার বর্তমান ডিপোজিট ব্যালেন্স <b>৳${currentDeposit.toFixed(2)}</b>। দয়া করে আগে ১০ টাকা ডিপোজিট করুন।`,
-            confirmButtonText: 'ডিপোজিট করুন',
-            confirmButtonColor: '#059669',
-            showCancelButton: true,
-            cancelButtonText: 'পরে করব'
-        }).then((result) => {
-            if (result.isConfirmed) window.showPage('walletScreen');
-        });
+// ✅ ১০ টাকা দিয়ে আইডি অ্যাক্টিভেশন মডাল স্লাইড-আপ
+window.handleActivation = () => {
+    if (!currentUserData) {
+        showSmartToast('আপনার তথ্য লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন।', 'warning');
         return;
     }
 
-    // ২. কনফার্মেশন পপ-আপ
-    const confirmResult = await Swal.fire({
-        title: 'আইডি অ্যাক্টিভ করবেন?',
-        text: "আপনার ডিপোজিট ব্যালেন্স থেকে ১০ টাকা কেটে নেওয়া হবে।",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'হ্যাঁ, অ্যাক্টিভ করুন',
-        cancelButtonText: 'বাতিল',
-        confirmButtonColor: '#059669'
-    });
+    const activationFee = 10;
+    const currentDeposit = parseFloat(currentUserData.depositBalance) || 0;
 
-    if (confirmResult.isConfirmed) {
-        showLoading();
-        try {
-            const userRef = db.collection("users").doc(currentUserId);
+    // চেকআউট শিটের লাইভ ডেটা ম্যাপ করা
+    document.getElementById('activationCheckoutUserName').innerText = currentUserData.name || "মেম্বার";
+    document.getElementById('activationCheckoutUserAvatar').src = currentUserData.avatar || "https://img.icons8.com/fluency/96/user-male-circle.png";
+    document.getElementById('activationCheckoutUserDeposit').innerText = "৳" + currentDeposit.toFixed(2);
 
-            // ৩. ফায়ারবেস আপডেট (টাকা কাটা ও অ্যাক্টিভ করা)
-            await userRef.update({
-                depositBalance: firebase.firestore.FieldValue.increment(-activationFee),
-                isActivated: true
-            });
-// 🎁 রেফারেল অ্যাক্টিভেশন বোনাস লজিক (মামা স্পেশাল)
-            if (currentUserData.referredBy) {
-                const refCode = currentUserData.referredBy.trim();
-                const referrers = await db.collection("users").where("referralCode", "==", refCode).get();
+    const buyBtn = document.getElementById('activationConfirmBuyBtn');
+    const depBtn = document.getElementById('activationDepositBtn');
+    const warningBox = document.getElementById('activationCheckoutWarningBox');
 
-                if (!referrers.empty) {
-                    const referrerDoc = referrers.docs[0];
-                    const referrerId = referrerDoc.id;
-                    const refBonus = 3; // বোনাস ৩ টাকা
+    if (currentDeposit >= activationFee) {
+        // ব্যালেন্স পর্যাপ্ত থাকলে অ্যাক্টিভেশন বাটন দেখাবে
+        buyBtn.classList.remove('hidden');
+        depBtn.classList.add('hidden');
+        warningBox.classList.add('hidden');
+    } else {
+        // ব্যালেন্স কম থাকলে ডিপোজিট বাটন ও ওয়ার্নিং দেখাবে
+        buyBtn.classList.add('hidden');
+        depBtn.classList.remove('hidden');
+        warningBox.classList.remove('hidden');
+    }
 
-                    // ১. রেফারারের একাউন্টে টাকা যোগ করা
-                    await db.collection("users").doc(referrerId).update({
-                        mainBalance: firebase.firestore.FieldValue.increment(refBonus),
-                        totalEarnings: firebase.firestore.FieldValue.increment(refBonus)
-                    });
+    // মডাল ওপেন করা (স্লাইড-আপ)
+    const modal = document.getElementById('activationCheckoutModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        window.playSound('snd_click');
+    }
+};
 
-                    // ২. রেফারারের হিস্ট্রিতে রেকর্ড রাখা
-                    await db.collection("history").add({
-                        userId: referrerId,
-                        type: "রেফার অ্যাক্টিভেশন বোনাস",
-                        amount: refBonus,
-                        status: "Success",
-                        details: `${currentUserData.name} আইডি অ্যাক্টিভ করেছে!`,
-                        date: new Date().toLocaleDateString('bn-BD'),
-                        time: new Date().toLocaleTimeString('bn-BD'),
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+// মডাল বন্ধ করার ফাংশন
+window.closeActivationCheckout = () => {
+    const modal = document.getElementById('activationCheckoutModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+    }
+};
 
-                    // ৩. রেফারারকে টেলিগ্রামে জানিয়ে দেওয়া
-                    const refData = referrerDoc.data();
-                    const tgMsg = `🎁 *রেফার অ্যাক্টিভেশন বোনাস!*\n\n👤 আপনার বন্ধু *${currentUserData.name}* তার আইডি অ্যাক্টিভ করেছে।\n💰 আপনি পেয়েছেন: *৳${refBonus}*`;
-                    // এখানে টেলিগ্রাম নোটিফিকেশন ফাংশন কল করা যেতে পারে (ঐচ্ছিক)
-                }
+// ডিপোজিট পেজে রি-রাউট করার ফাংশন
+window.redirectToDepositFromActivation = () => {
+    window.closeActivationCheckout();
+    window.showPage('depositScreen');
+};
+
+// চূড়ান্ত আইডি অ্যাক্টিভেশন প্রসেস (ডাটাবেস ও টেলিগ্রাম ইন্টিগ্রেশন)
+window.confirmActivationProcess = async () => {
+    window.closeActivationCheckout();
+    showLoading();
+
+    const activationFee = 10;
+    
+    try {
+        const userRef = db.collection("users").doc(currentUserId);
+
+        // ১. ফায়ারবেস আপডেট (ডিপোজিট থেকে ১০ টাকা কাটা এবং আইডি সক্রিয় করা)
+        await userRef.update({
+            depositBalance: firebase.firestore.FieldValue.increment(-activationFee),
+            isActivated: true
+        });
+
+        // ২. রেফারেল অ্যাক্টিভেশন বোনাস লজিক
+        if (currentUserData.referredBy) {
+            const refCode = currentUserData.referredBy.trim();
+            const referrers = await db.collection("users").where("referralCode", "==", refCode).get();
+
+            if (!referrers.empty) {
+                const referrerDoc = referrers.docs[0];
+                const referrerId = referrerDoc.id;
+                const refBonus = 3; // রেফারার পাবে ৩ টাকা বোনাস
+
+                await db.collection("users").doc(referrerId).update({
+                    mainBalance: firebase.firestore.FieldValue.increment(refBonus),
+                    totalEarnings: firebase.firestore.FieldValue.increment(refBonus)
+                });
+
+                await db.collection("history").add({
+                    userId: referrerId,
+                    type: "রেফার অ্যাক্টিভেশন বোনাস",
+                    amount: refBonus,
+                    status: "Success",
+                    details: `${currentUserData.name} আইডি অ্যাক্টিভ করেছে!`,
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    time: new Date().toLocaleTimeString('bn-BD'),
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // রেফারারকে টেলিগ্রামে সুসংবাদ পাঠানো
+                const refData = referrerDoc.data();
+                const refTgMsg = `🎁 <b>রেফার অ্যাক্টিভেশন বোনাস!</b>\n\n👤 আপনার রেফারকৃত মেম্বার <b>${escapeHTML(currentUserData.name)}</b> তার আইডি অ্যাক্টিভ করেছে।\n💰 আপনি পেয়েছেন: <b>৳${refBonus}</b>`;
+                await sendTelegramNotification(refTgMsg).catch(e => console.log(e));
             }
-
-            // ৪. হিস্ট্রি লগ রাখা
-            await db.collection("history").add({
-                userId: currentUserId,
-                type: "আইডি অ্যাক্টিভেশন",
-                amount: -activationFee,
-                status: "Success",
-                details: "১০ টাকা ফি দিয়ে আইডি অ্যাক্টিভ করা হয়েছে।",
-                date: new Date().toLocaleDateString('bn-BD'),
-                time: new Date().toLocaleTimeString('bn-BD'),
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            hideLoading();
-            
-            // ৫. সাকসেস মেসেজ ও অটো রিলোড
-            await Swal.fire({
-                icon: 'success',
-                title: 'অভিনন্দন! 🎉',
-                text: 'আপনার আইডি সফলভাবে অ্যাক্টিভ হয়েছে। এখন আপনি সব কাজ করতে পারবেন।',
-                confirmButtonText: 'ধন্যবাদ',
-                confirmButtonColor: '#059669'
-            });
-            
-            location.reload(); // পেজ রিলোড
-
-        } catch (e) {
-            console.error("Activation Error:", e);
-            showSmartToast('অ্যাক্টিভ করতে সমস্যা হয়েছে, আবার চেষ্টা করুন।', 'error');
-            hideLoading();
         }
+
+        // ৩. ইউজারের ব্যক্তিগত ট্রানজেকশন হিস্ট্রিতে রেকর্ড রাখা
+        await db.collection("history").add({
+            userId: currentUserId,
+            type: "আইডি অ্যাক্টিভেশন",
+            amount: -activationFee,
+            status: "Success",
+            details: "৳১০ ফি দিয়ে আইডি অ্যাক্টিভ করা হয়েছে।",
+            date: new Date().toLocaleDateString('bn-BD'),
+            time: new Date().toLocaleTimeString('bn-BD'),
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // ৪. সফল অ্যাক্টিভেশনের তথ্য টেলিগ্রাম এলার্ট চ্যানেলে পাঠানো
+        const adminTgMsg = `🛡️ <b>আইডি অ্যাক্টিভেশন সফল!</b>\n\n` +
+                           `👤 <b>মেম্বার:</b> ${escapeHTML(currentUserData.name)}\n` +
+                           `📱 <b>ফোন:</b> \`${escapeHTML(currentUserData.phone || "N/A")}\`\n` +
+                           `💰 <b>অ্যাক্টিভেশন ফি:</b> ৳${activationFee}\n` +
+                           `✅ আইডি সফলভাবে অ্যাক্টিভ করা হয়েছে।`;
+        await sendTelegramNotification(adminTgMsg).catch(e => console.log(e));
+
+        hideLoading();
+
+        // ৫. ফায়ারওয়ার্কস (কনফেটি) এবং সাকসেস অডিও
+        if(typeof confetti === 'function') {
+            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+        }
+        window.playSound('snd_success');
+
+        // সাকসেস পপ-আপ
+        await Swal.fire({
+            icon: 'success',
+            title: 'অ্যাক্টিভেশন সফল! 🎉',
+            html: `
+                <div class="text-center animate__animated animate__zoomIn">
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100 p-4 rounded-2xl mb-4 mt-2 shadow-sm">
+                        <p class="text-slate-400 font-bold text-[10px] uppercase">আপনার আইডি স্ট্যাটাস</p>
+                        <h2 class="text-2xl font-black text-emerald-600 mt-1">সক্রিয় (ACTIVATED)</h2>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+                        অভিনন্দন! আপনার অ্যাকাউন্টটি সফলভাবে ভেরিফাই ও অ্যাক্টিভ করা হয়েছে। এখন আপনি টাকাওয়ালা অ্যাপের সকল কাজ নির্বিঘ্নে করতে পারবেন। 🚀
+                    </p>
+                </div>
+            `,
+            confirmButtonText: 'ধন্যবাদ, কাজ শুরু করুন',
+            confirmButtonColor: '#059669',
+            customClass: { popup: 'rounded-[30px]' }
+        });
+
+        location.reload(); // রিলোড করে হোমপেজ আপডেট করা
+
+    } catch (e) {
+        console.error("Activation Error:", e);
+        showSmartToast('অ্যাক্টিভ করতে সমস্যা হয়েছে, আবার চেষ্টা করুন।', 'error');
+        hideLoading();
     }
 };
          
@@ -12193,7 +12315,11 @@ async function runGmailAutoProcessor() {
 
             // খ. মেইন হিস্ট্রিতে স্ট্যাটাস Success করা
             const histRef = db.collection("history").doc(hId);
-            batch.update(histRef, { status: "Success" });
+            
+            
+            
+            //  তার পরিবর্তে এই সুরক্ষিত লাইনটি দিন (যা ক্র্যাশ প্রতিরোধ করবে):
+            batch.set(histRef, { status: "Success" }, { merge: true }); 
 
             // গ. ইউজারের মেইন ব্যালেন্সে টাকা যোগ করা
             const userRef = db.collection("users").doc(uId);
@@ -12207,7 +12333,6 @@ async function runGmailAutoProcessor() {
         });
     } catch (e) { console.log("AutoProcessor Error:", e); }
 }
-
 // ✅ ৩ডি বক্স এনিমেশন কন্ট্রোলার
 window.trigger3DBoxReward = (amountLabel) => {
     // সাউন্ড প্লে
@@ -13007,7 +13132,7 @@ window.confirmRechargeProcess = async () => {
                     rechargeBalance: firebase.firestore.FieldValue.increment(-totalAmount)
                 });
                 
-                // খ. এডমিন প্যানেলের জন্য পেন্ডিং রিকোয়েস্ট তৈরি
+                // খ. এডমিন প্যানেলের জন্য পেন্ডিং রিকোয়েস্ট তৈরি (এটি অ্যাডমিনের সুবিধার জন্য 'Recharge' রাখা হলো)
                 const newReqRef = db.collection("pending_requests").doc();
                 const newReqId = newReqRef.id;
 
@@ -13027,10 +13152,10 @@ window.confirmRechargeProcess = async () => {
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 }); 
                 
-                // গ. ইউজারের লেনদেন হিস্ট্রিতে রেকর্ড রাখা
+                // গ. ইউজারের লেনদেন হিস্ট্রিতে রেকর্ড রাখা (ইউজার প্যানেলে বাংলায় দেখানোর জন্য 'রিচার্জ' করা হলো)
                 await db.collection("history").doc(newReqId).set({
                     userId: currentUserId,
-                    type: "Recharge",
+                    type: "রিচার্জ", // 'Recharge' থেকে পরিবর্তন করে 'রিচার্জ' করা হলো
                     amount: -totalAmount,
                     status: "Pending",
                     details: `${operator} - ${phone}`,
@@ -13105,7 +13230,6 @@ window.confirmRechargeProcess = async () => {
         });
     });
 };
-
 // ১. ডিপোজিট চেকআউট শিট ওপেন করা
 window.openDepositCheckout = (method, amount, senderNumber, trxId) => {
     window.selectedDepositCheckout = { method, amount, senderNumber, trxId }; // ক্যাশ ডেটা
@@ -13162,7 +13286,7 @@ window.closeDepositCheckout = () => {
     }
 };
 
-// ৩. ডিপোজিট কনফার্ম করে ফায়ারবেসে ডেটা পাঠানো
+// ৩. ডিপোজিট কনফার্ম করে ফায়ারবেসে ডেটা পাঠানো এবং টেলিগ্রামে নোটিফিকেশন পাঠানো
 window.confirmDepositProcess = async () => {
     if (!window.selectedDepositCheckout) return;
     const { method, amount, senderNumber, trxId } = window.selectedDepositCheckout;
@@ -13174,7 +13298,7 @@ window.confirmDepositProcess = async () => {
         const newReqRef = db.collection("pending_requests").doc();
         const newReqId = newReqRef.id;
 
-        // ১. পেন্ডিং রিকোয়েস্ট তৈরি করা
+        // ১. পেন্ডিং রিকোয়েস্ট তৈরি করা (অ্যাডমিন প্যানেলের জন্য এটি 'Deposit' থাকবে)
         await newReqRef.set({
             id: newReqId,
             userId: currentUserId,
@@ -13191,10 +13315,10 @@ window.confirmDepositProcess = async () => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        // ২. ট্রানজেকশন হিস্ট্রিতে রেকর্ড যোগ করা
+        // ২. ট্রানজেকশন হিস্ট্রিতে রেকর্ড যোগ করা (ইউজার প্যানেলে বাংলায় দেখানোর জন্য 'ডিপোজিট' করা হলো)
         await db.collection("history").doc(newReqId).set({
             userId: currentUserId,
-            type: "Deposit",
+            type: "ডিপোজিট", // 'Deposit' থেকে পরিবর্তন করে 'ডিপোজিট' করা হলো
             amount: parseFloat(amount),
             status: "Pending",
             details: `${method} এর মাধ্যমে ডিপোজিট পেন্ডিং রয়েছে`,
@@ -13202,6 +13326,17 @@ window.confirmDepositProcess = async () => {
             time: new Date().toLocaleTimeString('bn-BD'),
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
+
+        // ৩. টেলিগ্রাম এপিআই এর মাধ্যমে এডমিনের কাছে ডিপোজিট নোটিফিকেশন পাঠানো
+        const telegramMessage = `💵 <b>নতুন ডিপোজিট আবেদন</b> 💵\n\n` +
+                                `👤 <b>ইউজার:</b> ${escapeHTML(currentUserData.name || "মেম্বার")}\n` +
+                                `📱 <b>ফোন:</b> \`${escapeHTML(currentUserData.phone || "N/A")}\`\n` +
+                                `💳 <b>মেথড:</b> ${method}\n` +
+                                `📞 <b>সেন্ডার নাম্বার:</b> \`${senderNumber}\`\n` +
+                                `🎫 <b>TrxID / Hash:</b> <code>${escapeHTML(trxId)}</code>\n` +
+                                `💰 <b>ডিপোজিট পরিমাণ:</b> ৳${parseFloat(amount).toFixed(2)}`;
+        
+        await sendTelegramNotification(telegramMessage);
 
         hideLoading();
         Swal.fire({
@@ -13216,14 +13351,17 @@ window.confirmDepositProcess = async () => {
             customClass: { popup: 'rounded-[30px]' }
         });
 
-        // ইনপুট ফিল্ডগুলো রিসেট করা (আপনার প্রজেক্টের সঠিক ইনপুট আইডিগুলো নিশ্চিত করুন)
-        const depAmtField = document.getElementById('depAmount');
-        const depNumField = document.getElementById('depPhone');
-        const depTrxField = document.getElementById('depTrx');
+        // ইনপুট ফিল্ডগুলো রিসেট করা
+        const depAmtField = document.getElementById('depositAmount');
+        const depNumField = document.getElementById('depositSenderNumber');
+        const depTrxField = document.getElementById('depositTrxId');
         
         if (depAmtField) depAmtField.value = '';
         if (depNumField) depNumField.value = '';
         if (depTrxField) depTrxField.value = '';
+
+        // ভ্যাট রিসেট করা
+        if (window.calculateDepositVAT) window.calculateDepositVAT();
 
     } catch (e) {
         console.error("ডিপোজিট নিশ্চিতকরণ এরর:", e);
@@ -13231,7 +13369,6 @@ window.confirmDepositProcess = async () => {
         showSmartToast("ডিপোজিট সম্পূর্ণ করতে ব্যর্থ হয়েছে: " + e.message, "error");
     }
 };
-
 // ==========================================
 // 🎥 DYNAMIC TUTORIAL REDIRECTOR MODULE
 // ==========================================
@@ -13778,6 +13915,87 @@ window.openTutorial = (type) => {
             </button>
             <button onclick="window.confirmDepositProcess()" class="w-full py-3.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-black text-sm rounded-2xl shadow-lg shadow-yellow-500/10 active:scale-95 transition-all flex items-center justify-center gap-1.5">
                 <i class="ri-checkbox-circle-line text-lg"></i> নিশ্চিত করুন
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 🛡️ ULTRA PREMIUM ACTIVATION CHECKOUT MODAL (BENGALI) -->
+<div id="activationCheckoutModal" class="hidden fixed inset-0 z-[999999] flex flex-col items-center justify-end transition-all duration-300">
+    <!-- Backdrop with premium blurry glass mask -->
+    <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" onclick="window.closeActivationCheckout()"></div>
+    
+    <!-- iOS Style Sliding Checkout Sheet -->
+    <div class="bg-white w-full max-w-md rounded-t-[35px] shadow-2xl p-6 relative z-10 animate__animated animate__slideInUp duration-300 overflow-hidden max-h-[90vh] overflow-y-auto">
+        <!-- iOS Style Indicator Bar -->
+        <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-5"></div>
+        
+        <!-- Dynamic Glowing Shield Badge -->
+        <div class="text-center mb-5">
+            <div class="w-16 h-16 bg-gradient-to-tr from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-2.5 shadow-lg border-2 border-white animate-pulse">
+                <i class="ri-shield-user-fill"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-800">আইডি অ্যাক্টিভেশন</h3>
+            <p class="text-[11px] text-slate-400 font-bold tracking-wide mt-1 uppercase">Identity Verification Pass</p>
+        </div>
+
+        <!-- Checkout Billing Specification Card -->
+        <div class="bg-slate-50 border border-slate-100 rounded-3xl p-5 space-y-3.5 mb-5 shadow-inner">
+            <!-- User Info Segment -->
+            <div class="flex items-center gap-2.5 pb-3 border-b border-dashed border-slate-200">
+                <img id="activationCheckoutUserAvatar" src="https://img.icons8.com/fluency/96/user-male-circle.png" class="w-8 h-8 rounded-full border border-slate-200">
+                <p class="text-xs font-bold text-slate-600">মেম্বার নাম: <span id="activationCheckoutUserName" class="text-slate-800 font-black">---</span></p>
+            </div>
+
+            <!-- Invoice Rows -->
+            <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500 font-bold">সার্ভিস টাইপ</span>
+                <span class="font-black text-slate-700 bg-emerald-100 text-emerald-700 px-2.5 py-0.5 rounded text-[10px] uppercase">আইডি অ্যাক্টিভেশন</span>
+            </div>
+            <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500 font-bold">মেয়াদকাল</span>
+                <span class="font-bold text-slate-700">লাইফটাইম (LIFETIME)</span>
+            </div>
+            <div class="flex justify-between items-center pt-3 border-t border-dashed border-slate-200">
+                <span class="text-slate-800 font-black text-sm">এককালীন ফি</span>
+                <span class="font-black text-2xl text-emerald-600">৳১০.০০</span>
+            </div>
+        </div>
+
+        <!-- Balance Status Card -->
+        <div class="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl mb-5">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-emerald-500 text-white rounded-lg flex items-center justify-center text-sm shadow-sm"><i class="ri-wallet-3-fill"></i></div>
+                    <span class="text-xs font-bold text-slate-600">আপনার ডিপোজিট ব্যালেন্স</span>
+                </div>
+                <span id="activationCheckoutUserDeposit" class="font-black text-slate-800 text-sm">৳০.০০</span>
+            </div>
+        </div>
+
+        <!-- Warning Alert (if balance is low) -->
+        <div id="activationCheckoutWarningBox" class="hidden bg-rose-50 border border-rose-100 p-3.5 rounded-2xl mb-5 flex items-start gap-2.5 animate__animated animate__shakeX">
+            <i class="ri-error-warning-fill text-rose-500 text-lg shrink-0 mt-0.5"></i>
+            <div class="text-left text-[11px] font-bold text-rose-700 leading-normal">
+                দুঃখিত মামা, আপনার ডিপোজিট ব্যালেন্স কম রয়েছে! আইডি অ্যাক্টিভ করতে আগে মিনিমাম ডিপোজিট করে নিন।
+            </div>
+        </div>
+
+        <!-- Dynamic CTA Bottom Buttons -->
+        <div class="space-y-2">
+            <!-- 1. Active Purchase Button -->
+            <button id="activationConfirmBuyBtn" onclick="window.confirmActivationProcess()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                <i class="ri-shield-flash-fill text-lg animate-pulse"></i> আইডি অ্যাক্টিভ করুন 🚀
+            </button>
+            
+            <!-- 2. Re-Route Deposit Button (High Priority if Balance is Low) -->
+            <button id="activationDepositBtn" onclick="window.redirectToDepositFromActivation()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-black py-4 rounded-2xl shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-sm uppercase tracking-wider">
+                <i class="ri-add-circle-fill text-lg"></i> আগে ডিপোজিট করুন
+            </button>
+
+            <!-- 3. Dismiss Sheet Button -->
+            <button onclick="window.closeActivationCheckout()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold py-3.5 rounded-2xl text-xs transition-all">
+                বাতিল করুন
             </button>
         </div>
     </div>
