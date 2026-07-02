@@ -4444,16 +4444,17 @@ function cleanupAdOverlays() {
     });
 
     // ডাইনামিকলি তৈরি হওয়া কোনো ফ্লোটিং অ্যাড কন্টেইনার বা স্ক্রিন ব্লকার থাকলে তা ডিলিট করা
-    const bodyChildren = Array.from(document.body.children);
-    const knownIds = [
-        'bannedScreen', 'maintenanceScreen', 'globalChatIcon', 'twaiChatbotIcon',
-        'loadingOverlay', 'smartToast', 'loginNoticeModal', 'twaiModal', 'authScreen',
-        'forgotPasswordScreen', 'mainApp', 'proofModal', 'userReceiptModal',
-        'forceJoinModal', 'taskNudge', 'inboxModal', 'pinVerifyModal',
-        'passwordChangeModal', 'shareModal', 'packageCheckoutModal',
-        'withdrawCheckoutModal', 'rechargeCheckoutModal', 'depositCheckoutModal',
-        'snd_click', 'snd_success', 'snd_bonus', 'snd_welcome'
-    ];
+        const bodyChildren = Array.from(document.body.children);
+        const knownIds = [
+            'bannedScreen', 'maintenanceScreen', 'globalChatIcon', 'twaiChatbotIcon',
+            'loadingOverlay', 'smartToast', 'loginNoticeModal', 'twaiModal', 'authScreen',
+            'forgotPasswordScreen', 'mainApp', 'proofModal', 'userReceiptModal',
+            'forceJoinModal', 'taskNudge', 'inboxModal', 'pinVerifyModal',
+            'passwordChangeModal', 'shareModal', 'packageCheckoutModal',
+            'withdrawCheckoutModal', 'rechargeCheckoutModal', 'depositCheckoutModal',
+            'activationCheckoutModal', // 👈 নতুন সিকিউরড আইডি অ্যাক্টিভেশন মডাল যুক্ত করা হলো
+            'snd_click', 'snd_success', 'snd_bonus', 'snd_welcome'
+        ];
 
     bodyChildren.forEach(child => {
         if (child.tagName === 'DIV' || child.tagName === 'IFRAME') {
